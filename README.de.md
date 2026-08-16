@@ -43,10 +43,12 @@ und auf ein einheitliches Schema normalisiert. Referenzprojekt: ROCK IM DORF Fes
   Sponsoren-Grid, Ticket-Einbindung.
 - **PWA komplett**: installierbar (Android/iOS-Hinweise eingebaut), offline-fähig,
   automatische Updates, Daten-Refresh im Betrieb ohne App-Rebuild (~2 min).
-- **Dark/Light-Theme** und **Deutsch/Englisch** umschaltbar.
+- **Dark/Light-Theme** und wählbare App-Sprache: **Deutsch, Englisch,
+  Französisch, Spanisch**.
 - **Anonyme Statistik** (optional): Seitenaufrufe ohne Nutzerbezug, Auswertung im CMS.
 - **Mini-CMS** (optional, PHP): News-Editor mit Planung & Push, POI-/Kategorien-Pflege,
-  Statistik, Wetter-Konfiguration – erreichbar vom Handy des Orga-Teams.
+  Statistik, Wetter-Konfiguration – erreichbar vom Handy des Orga-Teams;
+  Oberfläche in **vier Sprachen** (de/en/fr/es, umschaltbar unter Einstellungen).
 
 ## Architektur
 
@@ -140,7 +142,7 @@ Geheimnisse (privater VAPID-Key, CMS-Tokens) niemals mit `VITE_` benennen.
   (Dark- und Light-Theme), Token-Struktur in [`packages/tokens`](packages/tokens).
 - **Logo & Icons**: `public/icons/` (SVG-Quellen, `pnpm run gen-icons` erzeugt die
   PWA-PNGs), Header-Logo und Hintergrundgrafik unter `public/`.
-- **Texte**: App-Texte zweisprachig unter `src/i18n/`.
+- **Texte**: App-Texte viersprachig unter `src/i18n/` (`de`/`en`/`fr`/`es`).
 
 ## Deployment (statisches Hosting)
 
@@ -162,5 +164,7 @@ gesetzt ist. Telegram-Live-News: [`docs/TELEGRAM.md`](docs/TELEGRAM.md).
 
 ## Lizenz
 
-Code unter [MIT](LICENSE). Inhalte, Logos, Karten und Marken des Referenzprojekts
-sind davon ausgenommen.
+Code unter der [GNU AGPLv3](LICENSE): frei nutzbar, veränderbar und selbst
+hostbar; wer eine veränderte Version als Netzwerkdienst betreibt, muss seine
+Änderungen unter derselben Lizenz veröffentlichen. Inhalte, Logos, Karten und
+Marken des Referenzprojekts sind davon ausgenommen.

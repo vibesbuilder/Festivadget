@@ -43,11 +43,14 @@ single schema. Reference project: ROCK IM DORF Festival
   grid, ticket shop embedding.
 - **Full PWA**: installable (with built-in Android/iOS hints), offline-capable,
   automatic updates, content refresh in production without an app rebuild (~2 min).
-- **Dark/light theme** and **German/English** toggle.
+- **Dark/light theme** and selectable app language: **German, English, French,
+  Spanish**.
 - **Anonymous statistics** (optional): page views without user tracking, evaluated
   in the CMS.
 - **Mini CMS** (optional, PHP): news editor with scheduling & push, POI/category
-  management, statistics, weather configuration – usable from the orga team's phone.
+  management, statistics, weather configuration – usable from the orga team's
+  phone; interface in **four languages** (de/en/fr/es, switchable under
+  Settings).
 
 ## Architecture
 
@@ -70,14 +73,14 @@ React (TanStack Query) ◄── fetch /data/*.json ◄── version.json (2-mi
   poll `version.json` every 2 minutes and re-fetch only changed files.
 - **Web push backend** (optional): PHP endpoints + MySQL + cron under
   [`push/`](push/) on the same shared-hosting web space; VAPID key pair, the public
-  key is embedded into the client build. Details: [`docs/PUSH.md`](docs/PUSH.md)
-  (German).
+  key is embedded into the client build. Details: [`docs/PUSH.en.md`](docs/PUSH.en.md).
 - **CMS** (optional): PHP interface under `push/cms/` (news, POIs, statistics,
-  weather). Details: [`docs/ADMIN.md`](docs/ADMIN.md) (German).
+  weather; UI in de/en/fr/es). Details: [`docs/ADMIN.en.md`](docs/ADMIN.en.md).
 
-Deep dives (German): [`IMPLEMENTATION.md`](IMPLEMENTATION.md) (concept),
-[`docs/DATEN.md`](docs/DATEN.md) (content sources),
-[`docs/TELEGRAM.md`](docs/TELEGRAM.md) (live news).
+Deep dives: [`IMPLEMENTATION.en.md`](IMPLEMENTATION.en.md) (concept),
+[`docs/DATEN.en.md`](docs/DATEN.en.md) (content sources),
+[`docs/TELEGRAM.en.md`](docs/TELEGRAM.en.md) (live news). All docs are also
+available in German, French and Spanish (language links at the top of each file).
 
 ## Setup
 
@@ -121,7 +124,7 @@ All content is data, not code. Which domain comes from which source is controlle
 | `sponsors.json` | sponsor grid |
 
 Guide including CMS integration and replacing the sample data:
-[`docs/DATEN.md`](docs/DATEN.md) (German).
+[`docs/DATEN.en.md`](docs/DATEN.en.md).
 
 ### Environment variables (`.env`)
 
@@ -142,7 +145,8 @@ Never prefix secrets (private VAPID key, CMS tokens) with `VITE_`.
   (dark and light theme), token structure in [`packages/tokens`](packages/tokens).
 - **Logo & icons**: `public/icons/` (SVG sources, `pnpm run gen-icons` produces the
   PWA PNGs), header logo and background artwork under `public/`.
-- **Copy**: app texts in both languages under `src/i18n/`.
+- **Copy**: app texts in all four languages under `src/i18n/`
+  (`de`/`en`/`fr`/`es`).
 
 ## Deployment (static hosting)
 
@@ -159,12 +163,14 @@ backend.
 
 ## Web push & CMS (optional)
 
-Setting up VAPID, MySQL and cron on shared hosting: [`docs/PUSH.md`](docs/PUSH.md)
-(German). The push toggle appears in the app under **More** as soon as
+Setting up VAPID, MySQL and cron on shared hosting: [`docs/PUSH.en.md`](docs/PUSH.en.md).
+The push toggle appears in the app under **More** as soon as
 `VITE_VAPID_PUBLIC_KEY` is set. Telegram live news:
-[`docs/TELEGRAM.md`](docs/TELEGRAM.md) (German).
+[`docs/TELEGRAM.en.md`](docs/TELEGRAM.en.md).
 
 ## License
 
-Code under [MIT](LICENSE). Content, logos, maps and trademarks of the reference
-project are excluded.
+Code under the [GNU AGPLv3](LICENSE): free to use, modify and self-host; if you
+run a modified version as a network service, you must publish your changes under
+the same license. Content, logos, maps and trademarks of the reference project
+are excluded.

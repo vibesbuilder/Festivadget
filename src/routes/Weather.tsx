@@ -23,15 +23,17 @@ export default function Weather() {
 
   const dayLabel = (index: number) =>
     [t("weather.today"), t("weather.tomorrow"), t("weather.dayAfter")][index] ?? "";
+  // Datums-Locale passend zur App-Sprache.
+  const locale =
+    { de: "de-AT", en: "en-GB", fr: "fr-FR", es: "es-ES" }[i18n.language] ?? "de-AT";
   const weekday = (date: string) =>
-    new Date(`${date}T12:00:00`).toLocaleDateString(
-      i18n.language === "en" ? "en-GB" : "de-AT",
-      { weekday: "long" },
-    );
-  const updated = new Date(data.fetchedAt).toLocaleString(
-    i18n.language === "en" ? "en-GB" : "de-AT",
-    { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" },
-  );
+    new Date(`${date}T12:00:00`).toLocaleDateString(locale, { weekday: "long" });
+  const updated = new Date(data.fetchedAt).toLocaleString(locale, {
+    day: "2-digit",
+    month: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 
   return (
     <section className="space-y-4">

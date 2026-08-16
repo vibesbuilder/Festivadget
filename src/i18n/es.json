@@ -1,0 +1,92 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "lineup": "Cartel",
+    "timetable": "Horarios",
+    "myplan": "Mi plan",
+    "map": "Mapa",
+    "more": "Más"
+  },
+  "more": {
+    "title": "Más",
+    "favorites": "Mi plan",
+    "news": "Noticias",
+    "map": "Mapa",
+    "info": "Información",
+    "sponsors": "Patrocinadores",
+    "tickets": "Entradas",
+    "search": "Buscar",
+    "contact": "Contacto",
+    "impressum": "Aviso legal",
+    "language": "Idioma",
+    "theme": "Oscuro / Claro",
+    "weather": "El tiempo"
+  },
+  "common": {
+    "loading": "Cargando …",
+    "error": "Algo salió mal.",
+    "retry": "Reintentar",
+    "offline": "Sin conexión",
+    "lastUpdate": "Actualizado: {{time}}",
+    "empty": "Aún no hay contenido."
+  },
+  "home": {
+    "now": "Ahora",
+    "upNext": "A continuación",
+    "overview": "Resumen del programa",
+    "newsfeed": "Noticias",
+    "nextFavorite": "Tu próximo favorito"
+  },
+  "lineup": {
+    "title": "Cartel",
+    "allGenres": "Todos",
+    "headliner": "Cabeza de cartel"
+  },
+  "timetable": {
+    "title": "Horarios",
+    "grid": "Cuadrícula",
+    "list": "Lista",
+    "favoritesOnly": "Solo favoritos",
+    "now": "Ahora",
+    "clash": "Solapamiento"
+  },
+  "favorites": {
+    "title": "Mi plan",
+    "empty": "Aún no hay favoritos. Toca la estrella de un artista.",
+    "emptyTitle": "Aún no hay favoritos",
+    "explain": "Toca la estrella de un artista en el cartel o en los horarios para añadirlo a tu plan personal. Aquí aparecerán todos tus favoritos en orden cronológico, con aviso de solapamientos y exportación .ics para tu calendario.",
+    "exportAll": "Guardar todo en el calendario",
+    "reminder": "Recordatorio (.ics)",
+    "clashWarning": "Al menos una actuación se solapa con otro favorito."
+  },
+  "artist": {
+    "playtimes": "Stage Time",
+    "favorite": "Añadir a favoritos",
+    "favorited": "En favoritos"
+  },
+  "install": {
+    "cta": "Instala la app para usarla sin conexión.",
+    "ios1": "A la pantalla de inicio:",
+    "ios2": "Compartir → «Añadir a pantalla de inicio».",
+    "button": "Instalar",
+    "close": "Cerrar"
+  },
+  "weather": {
+    "title": "El tiempo",
+    "today": "Hoy",
+    "tomorrow": "Mañana",
+    "dayAfter": "Pasado mañana",
+    "todayShort": "hoy",
+    "tomorrowShort": "mañana",
+    "now": "ahora",
+    "updated": "Actualizado",
+    "stale": "datos posiblemente obsoletos",
+    "noData": "aún sin datos",
+    "section": {
+      "morning": "Por la mañana",
+      "noon": "Mediodía",
+      "evening": "Por la tarde",
+      "night": "Por la noche"
+    }
+  }
+}

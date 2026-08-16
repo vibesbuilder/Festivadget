@@ -1,5 +1,7 @@
 # Web-Push einrichten (Phase 5)
 
+**🇬🇧 [English](PUSH.en.md) · 🇫🇷 [Français](PUSH.fr.md) · 🇪🇸 [Español](PUSH.es.md)**
+
 Web-Push erlaubt Benachrichtigungen auf den Sperrbildschirm, **auch wenn die App
 geschlossen ist** – für Safety-Durchsagen, kurzfristige Änderungen und „läuft gleich"-Hinweise.
 

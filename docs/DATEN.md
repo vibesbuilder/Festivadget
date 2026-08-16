@@ -1,5 +1,7 @@
 # Daten pflegen & anbinden
 
+**🇬🇧 [English](DATEN.en.md) · 🇫🇷 [Français](DATEN.fr.md) · 🇪🇸 [Español](DATEN.es.md)**
+
 Diese Anleitung erklärt zwei Dinge:
 
 1. **Joomla-Anbindung aktivieren** – einzelne Bereiche automatisch von einer Joomla-Website holen.

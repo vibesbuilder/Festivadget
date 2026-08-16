@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Download, Share, X } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 // Install-Hinweise (§13): Android/Chrome via beforeinstallprompt-Button,
 // iOS via Teilen-Hinweis. Einmal dismissbar (localStorage).
@@ -24,6 +25,7 @@ function isStandalone(): boolean {
 }
 
 export function InstallHint() {
+  const { t } = useTranslation();
   const [deferred, setDeferred] = useState<BeforeInstallPromptEvent | null>(null);
   const [show, setShow] = useState(false);
 
@@ -64,11 +66,10 @@ export function InstallHint() {
         <Download size={20} className="shrink-0 text-rid-accent" />
         <div className="min-w-0 flex-1 text-sm">
           {deferred ? (
-            <span>App installieren für Offline-Nutzung.</span>
+            <span>{t("install.cta")}</span>
           ) : (
             <span className="inline-flex flex-wrap items-center gap-1">
-              Zum Home-Bildschirm: <Share size={14} className="inline" /> Teilen → „Zum
-              Home-Bildschirm".
+              {t("install.ios1")} <Share size={14} className="inline" /> {t("install.ios2")}
             </span>
           )}
         </div>
@@ -77,10 +78,10 @@ export function InstallHint() {
             onClick={install}
             className="shrink-0 rounded-full bg-rid-accent px-3 py-1.5 text-sm font-medium text-black"
           >
-            Installieren
+            {t("install.button")}
           </button>
         )}
-        <button onClick={dismiss} aria-label="Schließen" className="shrink-0 p-1 text-rid-muted">
+        <button onClick={dismiss} aria-label={t("install.close")} className="shrink-0 p-1 text-rid-muted">
           <X size={18} />
         </button>
       </div>

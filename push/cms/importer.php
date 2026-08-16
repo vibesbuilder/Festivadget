@@ -300,7 +300,7 @@ function cms_import_info(): array
         $loc = trim((string) ($it['sourceLocator'] ?? ''));
         try {
             if ($loc === '') {
-                throw new RuntimeException('Locator (Artikel-ID/Slug) fehlt.');
+                throw new RuntimeException(cms_t('Locator (Artikel-ID/Slug) fehlt.'));
             }
             $a = $src === 'joomla'
                 ? cms_joomla_article($loc, (array) ($conns['joomla'] ?? []))
@@ -313,8 +313,8 @@ function cms_import_info(): array
                 $it['body'] = $a['body'];
             }
             $report[$id] = $emptyBody
-                ? "⚠️ aus $src geholt, aber Text war leer (Titel übernommen)."
-                : "✅ aus $src importiert.";
+                ? cms_t('⚠️ aus %s geholt, aber Text war leer (Titel übernommen).', $src)
+                : cms_t('✅ aus %s importiert.', $src);
         } catch (Throwable $e) {
             $report[$id] = '❌ ' . $e->getMessage();
         }
@@ -407,12 +407,12 @@ function cms_run_import(): array
                 ? cms_import_joomla($binding, (array) ($conns['joomla'] ?? []))
                 : cms_import_wordpress($binding, (array) ($conns['wordpress'] ?? []));
             if (!$records) {
-                $report[$domain] = '⚠️ 0 Datensätze – nichts geschrieben.';
+                $report[$domain] = cms_t('⚠️ 0 Datensätze – nichts geschrieben.');
                 continue;
             }
             $report[$domain] = cms_write_json("app-$domain.json", $records)
-                ? '✅ ' . count($records) . ' importiert.'
-                : '❌ Schreiben fehlgeschlagen (Schreibrechte?).';
+                ? cms_t('✅ %d importiert.', count($records))
+                : cms_t('❌ Schreiben fehlgeschlagen (Schreibrechte?).');
         } catch (Throwable $e) {
             $report[$domain] = '❌ ' . $e->getMessage();
         }

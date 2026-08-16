@@ -51,3 +51,6 @@ node_modules/.tmp
 # Wetter: CMS-Einstellungen (enthaelt API-Keys) + Server-Cache
 push/weather-settings.json
 push/weather-cache.json
+
+# CMS: serverseitige Einstellungen (z. B. gewaehlte CMS-Sprache)
+push/cms-settings.json

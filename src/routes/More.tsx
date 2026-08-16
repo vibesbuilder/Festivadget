@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useUi } from "@/store/ui";
-import i18n from "@/i18n/config";
+import i18n, { LANGUAGES, type AppLanguage } from "@/i18n/config";
 import { InstallHint } from "@/components/InstallHint";
 import { useAppConfig } from "@/data/useAppConfig";
 
@@ -39,8 +39,7 @@ export default function More() {
   const { moreHidden } = useAppConfig();
   const hidden = (key: string) => moreHidden.includes(key);
 
-  const toggleLang = () => {
-    const next = language === "de" ? "en" : "de";
+  const selectLang = (next: AppLanguage) => {
     setLanguage(next);
     void i18n.changeLanguage(next);
   };
@@ -107,13 +106,23 @@ export default function More() {
         )}
         {!hidden("language") && (
         <li>
-          <button
-            onClick={toggleLang}
-            className="rid-card flex w-full items-center gap-3 p-4 text-left hover:border-rid-accent"
-          >
-            <Languages size={20} className="text-rid-accent" />
-            <span className="font-medium">{t("more.language")}</span>
-          </button>
+          <div className="rid-card p-4">
+            <div className="flex items-center gap-3">
+              <Languages size={20} className="text-rid-accent" />
+              <span className="font-medium">{t("more.language")}</span>
+            </div>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {(Object.keys(LANGUAGES) as AppLanguage[]).map((code) => (
+                <button
+                  key={code}
+                  onClick={() => selectLang(code)}
+                  className={language === code ? "rid-chip rid-chip-active" : "rid-chip"}
+                >
+                  {LANGUAGES[code]}
+                </button>
+              ))}
+            </div>
+          </div>
         </li>
         )}
       </ul>

@@ -18,7 +18,7 @@
     "search": "Suche",
     "contact": "Kontakt",
     "impressum": "Impressum",
-    "language": "English / Deutsch",
+    "language": "Sprache",
     "theme": "Dark / Light",
     "weather": "Wetter"
   },
@@ -63,6 +63,13 @@
     "playtimes": "Stage Time",
     "favorite": "Favorisieren",
     "favorited": "Favorisiert"
+  },
+  "install": {
+    "cta": "App installieren für Offline-Nutzung.",
+    "ios1": "Zum Home-Bildschirm:",
+    "ios2": "Teilen → „Zum Home-Bildschirm\".",
+    "button": "Installieren",
+    "close": "Schließen"
   },
   "weather": {
     "title": "Wetter",

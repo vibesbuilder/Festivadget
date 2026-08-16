@@ -1,0 +1,92 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "lineup": "Line-up",
+    "timetable": "Programme",
+    "myplan": "Mon planning",
+    "map": "Carte",
+    "more": "Plus"
+  },
+  "more": {
+    "title": "Plus",
+    "favorites": "Mon planning",
+    "news": "Actualités",
+    "map": "Carte",
+    "info": "Infos",
+    "sponsors": "Sponsors",
+    "tickets": "Billets",
+    "search": "Recherche",
+    "contact": "Contact",
+    "impressum": "Mentions légales",
+    "language": "Langue",
+    "theme": "Sombre / Clair",
+    "weather": "Météo"
+  },
+  "common": {
+    "loading": "Chargement …",
+    "error": "Une erreur est survenue.",
+    "retry": "Réessayer",
+    "offline": "Hors ligne",
+    "lastUpdate": "Mise à jour : {{time}}",
+    "empty": "Pas encore de contenu."
+  },
+  "home": {
+    "now": "En ce moment",
+    "upNext": "À suivre",
+    "overview": "Aperçu du programme",
+    "newsfeed": "Actualités",
+    "nextFavorite": "Ton prochain favori"
+  },
+  "lineup": {
+    "title": "Line-up",
+    "allGenres": "Tous",
+    "headliner": "Tête d'affiche"
+  },
+  "timetable": {
+    "title": "Programme",
+    "grid": "Grille",
+    "list": "Liste",
+    "favoritesOnly": "Favoris uniquement",
+    "now": "Maintenant",
+    "clash": "Chevauchement"
+  },
+  "favorites": {
+    "title": "Mon planning",
+    "empty": "Pas encore de favoris. Touche l'étoile d'un artiste.",
+    "emptyTitle": "Pas encore de favoris",
+    "explain": "Touche l'étoile d'un artiste dans le line-up ou le programme pour l'ajouter à ton planning personnel. Tous tes favoris apparaissent ici par ordre chronologique – avec alerte en cas de chevauchement et export .ics pour ton calendrier.",
+    "exportAll": "Tout enregistrer dans le calendrier",
+    "reminder": "Rappel (.ics)",
+    "clashWarning": "Au moins un créneau chevauche un autre favori."
+  },
+  "artist": {
+    "playtimes": "Stage Time",
+    "favorite": "Ajouter aux favoris",
+    "favorited": "Dans les favoris"
+  },
+  "install": {
+    "cta": "Installe l'app pour l'utiliser hors ligne.",
+    "ios1": "Sur l'écran d'accueil :",
+    "ios2": "Partager → « Sur l'écran d'accueil ».",
+    "button": "Installer",
+    "close": "Fermer"
+  },
+  "weather": {
+    "title": "Météo",
+    "today": "Aujourd'hui",
+    "tomorrow": "Demain",
+    "dayAfter": "Après-demain",
+    "todayShort": "auj.",
+    "tomorrowShort": "demain",
+    "now": "actuel",
+    "updated": "Actualisé",
+    "stale": "données possiblement obsolètes",
+    "noData": "pas encore de données",
+    "section": {
+      "morning": "Matin",
+      "noon": "Midi",
+      "evening": "Soir",
+      "night": "Nuit"
+    }
+  }
+}
