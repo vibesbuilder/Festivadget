@@ -7,7 +7,7 @@
 
 # Wetter: CMS-Einstellungen (enthalten ggf. API-Keys!) und Server-Cache sind
 # reine Server-Dateien – die App spricht nur weather.php an.
-<FilesMatch "^weather-(settings|cache)\.json(\.tmp.*)?$">
+<FilesMatch "^(weather-(settings|cache)|cms-settings)\.json(\.tmp.*)?$">
   Require all denied
 </FilesMatch>
 

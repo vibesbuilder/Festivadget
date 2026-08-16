@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
+import type { AppLanguage } from "@/i18n/config";
 
 export type TimetableView = "grid" | "list";
 export type Theme = "dark" | "light";
@@ -11,7 +12,7 @@ interface UiState {
   favoritesOnly: boolean;
   lineupDayId: string | null; // Line-Up-Filter nach Tag (null = alle)
   hiddenStageIds: string[]; // im Timetable ausgeblendete Bühnen
-  language: "de" | "en";
+  language: AppLanguage;
   theme: Theme; // Hell-/Dunkel-Modus
   themeExplicit: boolean; // true = User hat selbst gewählt (Admin-Default greift dann nicht mehr)
   setSelectedDay: (dayId: string | null) => void;
@@ -19,7 +20,7 @@ interface UiState {
   setFavoritesOnly: (only: boolean) => void;
   setLineupDay: (dayId: string | null) => void;
   toggleStageHidden: (stageId: string) => void;
-  setLanguage: (lang: "de" | "en") => void;
+  setLanguage: (lang: AppLanguage) => void;
   setTheme: (theme: Theme) => void;
   toggleTheme: () => void;
   applyServerThemeDefault: (theme: Theme) => void; // nur wirksam, solange !themeExplicit

@@ -1,5 +1,7 @@
 # IMPLEMENTATION.md — ROCK IM DORF Festival App (PWA)
 
+**🇬🇧 [English](IMPLEMENTATION.en.md) · 🇫🇷 [Français](IMPLEMENTATION.fr.md) · 🇪🇸 [Español](IMPLEMENTATION.es.md)**
+
 > Arbeitsdokument für die Entwicklung mit Claude Code.
 > Projektname (Vorschlag): `rid-festival-app`
 > Ziel: installierbare, offline-fähige Progressive Web App für Festivalbesucher,
@@ -676,7 +678,7 @@ RewriteRule . /index.html [L]
 - **CLAUDE.md**: deutsche Kommentare; Bestätigung erforderlich bei Änderungen an
   Datenschema, Dependencies, Kernlogik (Caching/Timetable/Favoriten) und an `content-sources.config.ts`.
 - **README.md**: Setup, `import`/`build:data`/`build`, Deployment, Quellen-Konfiguration.
-- **LICENSE**: bewusst wählen (z. B. MIT für Code; Inhalte/Logos/Karten ausgenommen).
+- **LICENSE**: **GNU AGPLv3** für den Code (Inhalte/Logos/Karten ausgenommen).
 - **CI (optional)**: GitHub Action `build` (lint + typecheck + build).
 - **Versionierung**: **SemVer**; **Changelog im „Keep a Changelog"-Format** (§18); Tag pro Release.
 

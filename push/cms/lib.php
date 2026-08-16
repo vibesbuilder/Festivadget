@@ -7,6 +7,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../db.php'; // push_config()
+require_once __DIR__ . '/i18n.php';  // cms_t()/cms_lang() – CMS-Mehrsprachigkeit
 
 // Session-Cookie härten (Keys/Inhalte hängen an dieser Session): kein JS-Zugriff,
 // Lax gegen Cross-Site-POSTs, secure auf HTTPS (lokal/HTTP bleibt nutzbar).
@@ -52,7 +53,7 @@ function cms_handle_auth(): ?string
             return null;
         }
         app_log('warn', 'auth', 'CMS-Login fehlgeschlagen (falsches Passwort).');
-        return 'Falsches Passwort.';
+        return cms_t('Falsches Passwort.');
     }
     if ($do === 'logout') {
         session_destroy();
@@ -321,7 +322,7 @@ function cms_field_input(string $iname, array $f, $value): string
             $v = is_array($value) ? implode(', ', $value) : '';
             return '<input type="text" name="' . $n . '" value="' . cms_h($v) . '">';
         case 'image':
-            return '<input type="text" name="' . $n . '" value="' . cms_h((string) $value) . '" placeholder="/data/uploads/… (Tab Bilder)">';
+            return '<input type="text" name="' . $n . '" value="' . cms_h((string) $value) . '" placeholder="' . cms_h(cms_t('/data/uploads/… (Tab Bilder)')) . '">';
         default:
             return '<input type="text" name="' . $n . '" value="' . cms_h((string) $value) . '">';
     }
@@ -383,7 +384,7 @@ const CMS_MORE_ITEMS = [
     'contact'   => 'Kontakt',
     'impressum' => 'Impressum',
     'theme'     => 'Dark / Light',
-    'language'  => 'English / Deutsch',
+    'language'  => 'Sprache',
 ];
 
 // Bekannte Info-Icons (müssen in src/components/InfoIcon.tsx gemappt sein).

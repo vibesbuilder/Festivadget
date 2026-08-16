@@ -1,5 +1,7 @@
 # Telegram-Live-News einrichten
 
+**🇬🇧 [English](TELEGRAM.en.md) · 🇫🇷 [Français](TELEGRAM.fr.md) · 🇪🇸 [Español](TELEGRAM.es.md)**
+
 Sende eine Nachricht an deinen Telegram-Bot → sie erscheint **innerhalb von ~2 Minuten**
 in der App, **ohne Deploy**. Unmoderiert, nur für **erlaubte Absender** (du).
 

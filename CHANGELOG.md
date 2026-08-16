@@ -7,6 +7,30 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.0.0/), Versionier
 
 ### Added
 
+- **App-Sprachen Französisch & Spanisch:** Die App ist jetzt viersprachig
+  (Deutsch/Englisch/Französisch/Spanisch). Die Sprachwahl unter **Mehr** ist vom
+  De/En-Umschalter auf eine Chip-Auswahl mit allen vier Sprachen umgebaut; die
+  gewählte Sprache wird beim App-Start wieder angewendet (vorher ging die
+  Auswahl beim Neuladen verloren). Wetter-Datumsformate folgen der Sprache;
+  der Install-Hinweis ist ebenfalls übersetzt.
+- **CMS mehrsprachig (de/en/fr/es):** Die komplette Admin-Oberfläche
+  (`push/cms/`) läuft über eine Übersetzungsschicht (`push/cms/i18n.php`,
+  Deutsch = Quellsprache). Die CMS-Sprache wird im Tab **Einstellungen** →
+  „CMS-Sprache" umgestellt (serverseitig in `push/cms-settings.json`, per
+  `.htaccess` gesperrt, gitignored). **Einstellungen ist jetzt der Start-Tab**
+  beim Öffnen der CMS-URL.
+- **Doku in Englisch, Französisch und Spanisch:** `PUSH`, `ADMIN`, `DATEN`,
+  `TELEGRAM` (unter `docs/`) und `IMPLEMENTATION` liegen jetzt zusätzlich als
+  `.en`/`.fr`/`.es`-Varianten vor, mit Sprach-Kreuzlinks in allen Dateien; die
+  englische README verlinkt die englischen Varianten.
+
+### Changed
+
+- **Lizenz: GNU AGPLv3** statt MIT (LICENSE, READMEs, `package.json`).
+  Inhalte/Logos/Karten des Referenzprojekts bleiben ausgenommen.
+
+### Added
+
 - **Home-Kopf ausblendbar:** Neue Checkbox „Home: Festivalname und Datum anzeigen" im Admin unter **Einstellungen** (`app-config.json` → `homeHeader`). Abgewählt verschwindet der Kopf (z. B. „ROCK IM DORF Festival 2026 · 31. Juli – 2. August 2026") ganz oben auf Home; Standard bleibt sichtbar. Übernahme in der App wie üblich binnen ~2 Minuten.
 
 - **Festival-Kurzname (`shortName`) in den Eckdaten** (`festival.json`, z. B. „ROCK IM DORF"). Steuert das **Home-Bildschirm-Label** beim iOS-„Zum Home-Bildschirm" (Meta `apple-mobile-web-app-title` wird zur Laufzeit datengetrieben gesetzt; `index.html` bleibt statischer Fallback) und den **App-Namen im iOS-Install-Popup** (vorher fix „Festivadget").

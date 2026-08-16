@@ -1,5 +1,7 @@
 # Admin-UI (CMS)
 
+**🇬🇧 [English](ADMIN.en.md) · 🇫🇷 [Français](ADMIN.fr.md) · 🇪🇸 [Español](ADMIN.es.md)**
+
 Passwortgeschützte Weboberfläche auf dem Webspace zum Steuern der App **ohne
 Neu-Deploy**. Liegt unter `push/cms/` und nutzt die vorhandene `push/`-Auth.
 
@@ -25,6 +27,17 @@ push/cms/index.php  ──(schreibt)──►  data/app-config.json   ──(App
 ## Aufruf
 
 `https://app.rockimdorf.at/push/cms/` → mit dem Admin-Passwort anmelden.
+Nach dem Login öffnet sich der Tab **„Einstellungen"** (Start-Tab).
+
+## Sprache der Oberfläche
+
+Das CMS ist in **Deutsch, Englisch, Französisch und Spanisch** verfügbar. Die
+Sprache wird im Tab **„Einstellungen"** → „CMS-Sprache" umgestellt und gilt
+serverseitig für alle Admins (gespeichert in `push/cms-settings.json`, per
+`.htaccess` gesperrt, nie im Repo). Deutsch ist die Quellsprache; die
+Übersetzungstabelle liegt in `push/cms/i18n.php` (Funktion `cms_t()`), fehlende
+Schlüssel fallen auf Deutsch zurück. Die **App-Sprache** wählt jeder Gast
+unabhängig davon selbst in der App (Deutsch/Englisch/Französisch/Spanisch).
 
 ## Deployment
 
