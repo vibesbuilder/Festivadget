@@ -39,6 +39,15 @@ in `push/cms/i18n.php` (function `cms_t()`), missing keys fall back to German.
 The **app language** is chosen by each visitor independently in the app itself
 (German/English/French/Spanish).
 
+## Help tab
+
+The **"Help"** tab links all manuals (ADMIN, DATEN, PUSH, TELEGRAM,
+IMPLEMENTATION) as Markdown files in all four languages. The files are copied
+to `dist/docs/` during the app build and uploaded with `deploy-data.bat full`
+(reachable under `/docs/<name>.md`); missing files are hidden by the tab.
+Custom background image: selectable from the uploads under **Settings** →
+"Background image" (`backgroundImage` in `app-config.json`).
+
 ## Deployment
 
 Upload `push/cms/` via FTP into the `push/` folder (like the rest of `push/`).
@@ -165,6 +174,7 @@ token invalid/missing.
 | `moreHidden`       | `string[]`          | Hidden More menu items (keys, see below).              |
 | `lineupImageLimit` | `number?`           | Acts with image in the line-up (otherwise 20).         |
 | `background`       | `boolean?`          | Background artwork on/off (default: on).               |
+| `backgroundImage`  | `string?`           | Custom background image (`/data/uploads/…`, empty = bundled artwork). |
 | `themeDefault`     | `"dark"\|"light"?`  | Default theme until the visitor picks one themselves.  |
 
 More menu keys: `news`, `map`, `info`, `sponsors`, `tickets`, `contact`,

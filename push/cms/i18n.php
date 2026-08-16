@@ -98,6 +98,7 @@ const CMS_I18N = [
     'Wetter'         => ['en' => 'Weather', 'fr' => 'Météo', 'es' => 'Tiempo'],
     'Statistik'      => ['en' => 'Statistics', 'fr' => 'Statistiques', 'es' => 'Estadísticas'],
     'Protokoll'      => ['en' => 'Log', 'fr' => 'Journal', 'es' => 'Registro'],
+    'Hilfe'          => ['en' => 'Help', 'fr' => 'Aide', 'es' => 'Ayuda'],
 
     // --- MEHR-Menü-Tab ------------------------------------------------------
     'Sichtbare Punkte im MEHR-Menü' => [
@@ -369,6 +370,17 @@ const CMS_I18N = [
     'Dark'  => ['en' => 'Dark', 'fr' => 'Sombre', 'es' => 'Oscuro'],
     'Light' => ['en' => 'Light', 'fr' => 'Clair', 'es' => 'Claro'],
     'Hintergrundgrafik anzeigen' => ['en' => 'Show background artwork', 'fr' => 'Afficher le fond graphique', 'es' => 'Mostrar gráfico de fondo'],
+    'Hintergrundbild' => ['en' => 'Background image', 'fr' => 'Image de fond', 'es' => 'Imagen de fondo'],
+    'Standard (mitgelieferte Grafik)' => [
+        'en' => 'Default (bundled artwork)',
+        'fr' => 'Standard (visuel fourni)',
+        'es' => 'Predeterminado (gráfico incluido)',
+    ],
+    'Eigenes Bild zuerst im Tab „Bilder" hochladen (Querformat empfohlen). Wirkt nur, solange „Hintergrundgrafik anzeigen" aktiv ist.' => [
+        'en' => 'Upload your own image in the "Images" tab first (landscape recommended). Only takes effect while "Show background artwork" is active.',
+        'fr' => "Téléverse d'abord ta propre image dans l'onglet « Images » (paysage recommandé). N'agit que tant que « Afficher le fond graphique » est actif.",
+        'es' => 'Sube primero tu propia imagen en la pestaña «Imágenes» (se recomienda horizontal). Solo tiene efecto mientras «Mostrar gráfico de fondo» esté activo.',
+    ],
     'Home: Festivalname und Datum anzeigen' => [
         'en' => 'Home: show festival name and date',
         'fr' => 'Accueil : afficher le nom et les dates du festival',
@@ -708,6 +720,53 @@ const CMS_I18N = [
         'es' => 'Registro vaciado (%d entradas eliminadas).',
     ],
     'Leeren fehlgeschlagen: %s' => ['en' => 'Clearing failed: %s', 'fr' => 'Échec du vidage : %s', 'es' => 'Falló el vaciado: %s'],
+
+    // --- Hilfe-Tab ----------------------------------------------------------
+    'Handbücher' => ['en' => 'Manuals', 'fr' => 'Manuels', 'es' => 'Manuales'],
+    'Alle Handbücher als Markdown-Dateien, jeweils in Deutsch, Englisch, Französisch und Spanisch. Sie werden mit der App ausgeliefert (Ordner /docs).' => [
+        'en' => 'All manuals as Markdown files, each in German, English, French and Spanish. They are shipped with the app (folder /docs).',
+        'fr' => "Tous les manuels en fichiers Markdown, chacun en allemand, anglais, français et espagnol. Ils sont livrés avec l'app (dossier /docs).",
+        'es' => 'Todos los manuales como archivos Markdown, cada uno en alemán, inglés, francés y español. Se entregan con la app (carpeta /docs).',
+    ],
+    'Admin-UI (CMS)' => ['en' => 'Admin UI (CMS)', 'fr' => "Interface d'administration (CMS)", 'es' => 'Interfaz de administración (CMS)'],
+    'Bedienung dieser Admin-Oberfläche (Tabs, Overrides, Importer).' => [
+        'en' => 'How to use this admin interface (tabs, overrides, importer).',
+        'fr' => "Utilisation de cette interface d'administration (onglets, overrides, importeur).",
+        'es' => 'Manejo de esta interfaz de administración (pestañas, overrides, importador).',
+    ],
+    'Daten pflegen & anbinden' => [
+        'en' => 'Maintaining & connecting data',
+        'fr' => 'Gérer & connecter les données',
+        'es' => 'Mantener y conectar datos',
+    ],
+    'Inhalte ersetzen, Joomla/WordPress-Anbindung, Felder & Icons.' => [
+        'en' => 'Replacing content, Joomla/WordPress connection, fields & icons.',
+        'fr' => 'Remplacer les contenus, connexion Joomla/WordPress, champs & icônes.',
+        'es' => 'Sustituir contenidos, conexión Joomla/WordPress, campos e iconos.',
+    ],
+    'Web-Push einrichten' => ['en' => 'Setting up web push', 'fr' => 'Configurer le web push', 'es' => 'Configurar el web push'],
+    'VAPID, MySQL, Cron, Push-Kategorien, „Mein Plan"-Erinnerungen.' => [
+        'en' => 'VAPID, MySQL, cron, push categories, "My plan" reminders.',
+        'fr' => 'VAPID, MySQL, cron, catégories de push, rappels « Mon planning ».',
+        'es' => 'VAPID, MySQL, cron, categorías de push, recordatorios de «Mi plan».',
+    ],
+    'Telegram-Live-News' => ['en' => 'Telegram live news', 'fr' => 'Actus live Telegram', 'es' => 'Noticias en vivo por Telegram'],
+    'Bot einrichten, Tags, Befehle, Gruppen.' => [
+        'en' => 'Setting up the bot, tags, commands, groups.',
+        'fr' => 'Configurer le bot, tags, commandes, groupes.',
+        'es' => 'Configurar el bot, etiquetas, comandos, grupos.',
+    ],
+    'Technisches Konzept' => ['en' => 'Technical concept', 'fr' => 'Concept technique', 'es' => 'Concepto técnico'],
+    'Architektur, Datenmodell, Caching, Roadmap.' => [
+        'en' => 'Architecture, data model, caching, roadmap.',
+        'fr' => 'Architecture, modèle de données, cache, feuille de route.',
+        'es' => 'Arquitectura, modelo de datos, caché, hoja de ruta.',
+    ],
+    'Noch keine Handbücher auf dem Server – sie kommen mit dem nächsten App-Deployment („deploy-data.bat full", Ordner /docs).' => [
+        'en' => 'No manuals on the server yet – they arrive with the next app deployment ("deploy-data.bat full", folder /docs).',
+        'fr' => "Pas encore de manuels sur le serveur – ils arrivent avec le prochain déploiement de l'app (« deploy-data.bat full », dossier /docs).",
+        'es' => 'Aún no hay manuales en el servidor; llegan con el próximo despliegue de la app («deploy-data.bat full», carpeta /docs).',
+    ],
 
     // --- Generische Speicher-Meldungen --------------------------------------
     'Gespeichert. Die App übernimmt es binnen ~2 Minuten (oder beim Neuladen).' => [

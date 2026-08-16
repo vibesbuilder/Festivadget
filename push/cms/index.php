@@ -207,6 +207,13 @@ if (cms_logged_in() && ($_POST['do'] ?? '') !== '' && $_POST['do'] !== 'logout')
                     $cfg['lineupImageLimit'] = max(0, (int) $lim);
                 }
                 $cfg['background'] = !empty($_POST['background']);
+                // Eigenes Hintergrundbild (nur Uploads-Pfade zulassen; leer = Build-Grafik).
+                $bgi = trim((string) ($_POST['backgroundImage'] ?? ''));
+                if ($bgi !== '' && preg_match('#^/data/uploads/[A-Za-z0-9._-]+$#', $bgi)) {
+                    $cfg['backgroundImage'] = $bgi;
+                } else {
+                    unset($cfg['backgroundImage']);
+                }
                 // Home-Kopf (Festivalname + Datum) ein-/ausblenden.
                 $cfg['homeHeader'] = !empty($_POST['homeHeader']);
                 $td = (string) ($_POST['themeDefault'] ?? '');
@@ -626,7 +633,7 @@ $csrf = cms_csrf_token();
 
   <nav class="tabs">
     <?php
-    $tabs = ['settings' => 'Einstellungen', 'more' => 'MEHR-Menü', 'info' => 'Infos', 'content' => 'Inhalte', 'upload' => 'Bilder', 'sources' => 'Quellen', 'news' => 'News', 'push' => 'Push', 'weather' => 'Wetter', 'stats' => 'Statistik', 'log' => 'Protokoll'];
+    $tabs = ['settings' => 'Einstellungen', 'more' => 'MEHR-Menü', 'info' => 'Infos', 'content' => 'Inhalte', 'upload' => 'Bilder', 'sources' => 'Quellen', 'news' => 'News', 'push' => 'Push', 'weather' => 'Wetter', 'stats' => 'Statistik', 'log' => 'Protokoll', 'help' => 'Hilfe'];
     foreach ($tabs as $k => $label):
     ?>
       <a class="<?= $tab === $k ? 'active' : '' ?>" href="?tab=<?= cms_h($k) ?>"><?= cms_h(cms_t($label)) ?></a>
@@ -945,7 +952,9 @@ $csrf = cms_csrf_token();
     $pushCats = (array) ($cfg['pushNewsCategories'] ?? []);
     $auUpcoming = ($cfg['autoPushUpcoming'] ?? true) !== false;
     $auNews     = ($cfg['autoPushNews'] ?? true) !== false;
-    $winMin     = $cfg['upcomingWindowMin'] ?? ''; ?>
+    $winMin     = $cfg['upcomingWindowMin'] ?? '';
+    $bgImage    = (string) ($cfg['backgroundImage'] ?? '');
+    $bgUploads  = cms_list_uploads(); ?>
     <form method="post" class="card">
       <input type="hidden" name="do" value="save_settings">
       <input type="hidden" name="csrf" value="<?= cms_h($csrf) ?>">
@@ -977,6 +986,16 @@ $csrf = cms_csrf_token();
         <input type="checkbox" name="background" value="1" <?= $bg ? 'checked' : '' ?>>
         <span><?= cms_h(cms_t('Hintergrundgrafik anzeigen')) ?></span>
       </label>
+
+      <label class="fld" style="margin-top:.6rem"><span><?= cms_h(cms_t('Hintergrundbild')) ?></span>
+        <select name="backgroundImage">
+          <option value="" <?= $bgImage === '' ? 'selected' : '' ?>><?= cms_h(cms_t('Standard (mitgelieferte Grafik)')) ?></option>
+          <?php foreach ($bgUploads as $u): ?>
+            <option value="<?= cms_h($u['path']) ?>" <?= $bgImage === $u['path'] ? 'selected' : '' ?>><?= cms_h($u['name']) ?></option>
+          <?php endforeach; ?>
+        </select>
+      </label>
+      <p class="muted" style="margin-top:0"><?= cms_h(cms_t('Eigenes Bild zuerst im Tab „Bilder" hochladen (Querformat empfohlen). Wirkt nur, solange „Hintergrundgrafik anzeigen" aktiv ist.')) ?></p>
 
       <label class="row">
         <input type="checkbox" name="homeHeader" value="1" <?= $hh ? 'checked' : '' ?>>
@@ -1441,6 +1460,43 @@ $csrf = cms_csrf_token();
             onclick="return confirm('<?= cms_j(cms_t('Protokoll wirklich komplett leeren?')) ?>')"><?= cms_h(cms_t('Protokoll leeren')) ?></button>
         </form>
       </div>
+    </div>
+
+  <?php elseif ($tab === 'help'):
+    // Handbücher: Markdown-Dateien, die mit der App unter /docs/ ausgeliefert
+    // werden (Build kopiert sie nach dist/docs; Upload via deploy-data.bat full).
+    // Später sollen hier PDF-Varianten verlinkt werden – die Liste bleibt datengetrieben.
+    $docsDir = dirname(dirname(cms_data_path('version.json'))) . '/docs';
+    $manuals = [
+        ['file' => 'ADMIN',          'title' => cms_t('Admin-UI (CMS)'),        'desc' => cms_t('Bedienung dieser Admin-Oberfläche (Tabs, Overrides, Importer).')],
+        ['file' => 'DATEN',          'title' => cms_t('Daten pflegen & anbinden'), 'desc' => cms_t('Inhalte ersetzen, Joomla/WordPress-Anbindung, Felder & Icons.')],
+        ['file' => 'PUSH',           'title' => cms_t('Web-Push einrichten'),   'desc' => cms_t('VAPID, MySQL, Cron, Push-Kategorien, „Mein Plan"-Erinnerungen.')],
+        ['file' => 'TELEGRAM',       'title' => cms_t('Telegram-Live-News'),    'desc' => cms_t('Bot einrichten, Tags, Befehle, Gruppen.')],
+        ['file' => 'IMPLEMENTATION', 'title' => cms_t('Technisches Konzept'),   'desc' => cms_t('Architektur, Datenmodell, Caching, Roadmap.')],
+    ];
+    $docLangs = ['de' => '', 'en' => '.en', 'fr' => '.fr', 'es' => '.es'];
+    $anyDoc = false; ?>
+    <div class="card">
+      <h2 style="margin-top:0"><?= cms_h(cms_t('Handbücher')) ?></h2>
+      <p class="muted"><?= cms_h(cms_t('Alle Handbücher als Markdown-Dateien, jeweils in Deutsch, Englisch, Französisch und Spanisch. Sie werden mit der App ausgeliefert (Ordner /docs).')) ?></p>
+      <?php foreach ($manuals as $m): ?>
+        <div class="item">
+          <div class="head"><strong><?= cms_h($m['title']) ?></strong></div>
+          <p class="muted" style="margin:.3rem 0 .5rem"><?= cms_h($m['desc']) ?></p>
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+            <?php foreach ($docLangs as $dl => $suffix):
+                $fname = $m['file'] . $suffix . '.md';
+                if (is_file($docsDir . '/' . $fname)):
+                    $anyDoc = true; ?>
+                  <a href="/docs/<?= cms_h($fname) ?>" target="_blank" rel="noopener"
+                     style="padding:.25rem .7rem;border-radius:999px;background:var(--surface2);border:1px solid var(--border);font-size:.85rem;text-decoration:none<?= cms_lang() === $dl ? ';border-color:var(--accent)' : '' ?>"><?= cms_h(strtoupper($dl)) ?></a>
+            <?php endif; endforeach; ?>
+          </div>
+        </div>
+      <?php endforeach; ?>
+      <?php if (!$anyDoc): ?>
+        <p class="muted" style="margin-bottom:0"><?= cms_h(cms_t('Noch keine Handbücher auf dem Server – sie kommen mit dem nächsten App-Deployment („deploy-data.bat full", Ordner /docs).')) ?></p>
+      <?php endif; ?>
     </div>
 
   <?php endif; ?>

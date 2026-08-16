@@ -90,9 +90,21 @@ export function initTracking(): void {
     (navigator as { standalone?: boolean }).standalone === true;
   if (standalone) send({ page: "_standalone" });
 
+  // Bekanntes Fremd-Rauschen (Browser-Erweiterungen, In-App-Browser-Bridges von
+  // Instagram/Facebook & Co.): keine App-Fehler → nicht ins Server-Protokoll.
+  const IGNORED_PATTERNS = [
+    "Script error", // Cross-Origin ohne Details (Erweiterungen/Fremd-Skripte)
+    "webkit.messageHandlers", // iOS-In-App-Browser-Bridge
+    "@webkit-masked-url", // iOS-Safari-Erweiterungen
+    "runtime.sendMessage", // Chrome-Extension-API
+    "Java object is gone", // Android-WebView-Bridge
+    "-extension://", // chrome-extension:// / moz-extension:// / safari-extension://
+  ];
+
   let errorsSent = 0;
   const reportError = (message: string) => {
     if (errorsSent >= MAX_ERRORS_PER_SESSION) return;
+    if (IGNORED_PATTERNS.some((p) => message.includes(p))) return;
     errorsSent++;
     send({
       type: "error",

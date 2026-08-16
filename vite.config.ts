@@ -1,7 +1,30 @@
-import { defineConfig } from "vite";
+import { defineConfig, type Plugin } from "vite";
 import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
 import { fileURLToPath, URL } from "node:url";
+import { copyFileSync, mkdirSync, readdirSync } from "node:fs";
+import { join } from "node:path";
+
+// Handbücher (Markdown, alle Sprachen) mit ausliefern: docs/*.md und
+// IMPLEMENTATION*.md landen unter dist/docs/ – der CMS-Tab „Hilfe" verlinkt
+// sie als /docs/<name>.md. Bewusst NICHT im SW-Precache (nur Admin-Lektüre).
+function copyDocsPlugin(): Plugin {
+  return {
+    name: "festivadget:copy-docs",
+    apply: "build",
+    closeBundle() {
+      const root = fileURLToPath(new URL(".", import.meta.url));
+      const out = join(root, "dist", "docs");
+      mkdirSync(out, { recursive: true });
+      for (const f of readdirSync(join(root, "docs"))) {
+        if (f.endsWith(".md")) copyFileSync(join(root, "docs", f), join(out, f));
+      }
+      for (const f of readdirSync(root)) {
+        if (/^IMPLEMENTATION(\.\w+)?\.md$/.test(f)) copyFileSync(join(root, f), join(out, f));
+      }
+    },
+  };
+}
 
 // Festivadget – Vite-Konfiguration.
 // PWA: App-Shell wird precached; Laufzeit-Caching gemäß IMPLEMENTATION.md §5.1.
@@ -41,6 +64,7 @@ export default defineConfig({
   },
   plugins: [
     react(),
+    copyDocsPlugin(),
     VitePWA({
       registerType: "autoUpdate",
       // Eigener Service Worker (Phase 5: Web-Push). Caching-Logik liegt in src/sw.ts.

@@ -10,6 +10,7 @@ export interface AppConfig {
   // Globale Einstellungen (Phase 3) – optional, sonst gelten Client-Defaults.
   lineupImageLimit?: number; // Acts mit Bild im Line-Up (sonst LINEUP_IMAGE_LIMIT)
   background?: boolean; // Hintergrundgrafik an/aus (Default: an)
+  backgroundImage?: string; // eigenes Hintergrundbild (/data/uploads/…, leer = Build-Grafik)
   homeHeader?: boolean; // Home-Kopf: Festivalname + Datum (Default: an)
   themeDefault?: "dark" | "light"; // Standard-Theme, solange der User nicht selbst wählt
 }

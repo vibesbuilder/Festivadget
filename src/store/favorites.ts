@@ -13,8 +13,15 @@ interface FavoritesState {
   clear: () => void;
 }
 
+// IndexedDB kann fehlen oder wegbrechen (Safari-Privatmodus, iOS-Lockdown,
+// „Connection to Indexed Database server lost") – Favoriten gelten dann nur
+// für die laufende Sitzung, statt Unhandled Rejections zu werfen.
 async function persist(set: Set<string>): Promise<void> {
-  await idbSet(IDB_KEY, Array.from(set));
+  try {
+    await idbSet(IDB_KEY, Array.from(set));
+  } catch {
+    // bewusst still – siehe oben
+  }
 }
 
 export const useFavorites = create<FavoritesState>((set, getState) => ({
@@ -22,7 +29,12 @@ export const useFavorites = create<FavoritesState>((set, getState) => ({
   hydrated: false,
 
   hydrate: async () => {
-    const stored = (await idbGet<string[]>(IDB_KEY)) ?? [];
+    let stored: string[] = [];
+    try {
+      stored = (await idbGet<string[]>(IDB_KEY)) ?? [];
+    } catch {
+      // IndexedDB nicht verfügbar → leer starten (Sitzungs-Favoriten möglich).
+    }
     set({ favorites: new Set(stored), hydrated: true });
   },
 

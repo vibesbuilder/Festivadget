@@ -41,6 +41,16 @@ tabla de traducción está en `push/cms/i18n.php` (función `cms_t()`), las clav
 que falten recaen en alemán. El **idioma de la app** lo elige cada visitante de
 forma independiente dentro de la propia app (alemán/inglés/francés/español).
 
+## Pestaña Ayuda
+
+La pestaña **«Ayuda»** enlaza todos los manuales (ADMIN, DATEN, PUSH, TELEGRAM,
+IMPLEMENTATION) como archivos Markdown en los cuatro idiomas. Los archivos se
+copian a `dist/docs/` en el build de la app y se suben con
+`deploy-data.bat full` (accesibles en `/docs/<nombre>.md`); la pestaña oculta
+los archivos que falten. Imagen de fondo propia: seleccionable entre las
+subidas en **Ajustes** → «Imagen de fondo» (`backgroundImage` en
+`app-config.json`).
+
 ## Despliegue
 
 Subir `push/cms/` por FTP a la carpeta `push/` (como el resto de `push/`).
@@ -179,6 +189,7 @@ inválido/ausente.
 | `moreHidden`       | `string[]`          | Elementos ocultos del menú Más (claves, ver abajo).         |
 | `lineupImageLimit` | `number?`           | Artistas con imagen en el cartel (si no, 20).               |
 | `background`       | `boolean?`          | Gráfico de fondo on/off (por defecto: on).                  |
+| `backgroundImage`  | `string?`           | Imagen de fondo propia (`/data/uploads/…`, vacío = gráfico incluido). |
 | `themeDefault`     | `"dark"\|"light"?`  | Tema por defecto mientras el visitante no elija él mismo.   |
 
 Claves del menú Más: `news`, `map`, `info`, `sponsors`, `tickets`, `contact`,

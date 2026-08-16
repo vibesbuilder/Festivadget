@@ -7,6 +7,33 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.0.0/), Versionier
 
 ### Added
 
+- **Einstellungen: Hintergrundbild wählbar.** Im CMS unter Einstellungen gibt es
+  jetzt ein Dropdown „Hintergrundbild" mit allen Uploads aus dem Tab „Bilder"
+  (`app-config.json` → `backgroundImage`, nur `/data/uploads/…`-Pfade). Die App
+  überschreibt damit zur Laufzeit die Build-Grafik (`--rid-bg-image`); „Standard"
+  stellt die mitgelieferte Grafik wieder her. Wirkt nur, solange
+  „Hintergrundgrafik anzeigen" aktiv ist.
+- **CMS-Tab „Hilfe".** Verlinkt alle Handbücher (ADMIN, DATEN, PUSH, TELEGRAM,
+  IMPLEMENTATION) als Markdown in allen vier Sprachen. Der App-Build kopiert die
+  Dateien nach `dist/docs/` (Vite-Plugin, bewusst nicht im SW-Precache); auf dem
+  Server liegen sie dann unter `/docs/<Name>.md`. Fehlende Dateien blendet der
+  Tab aus und zeigt einen Deploy-Hinweis. (PDF-Varianten später geplant – die
+  Liste ist datengetrieben.)
+
+### Fixed
+
+- **Protokoll: Fremd-Rauschen gefiltert.** Fehler aus Browser-Erweiterungen und
+  In-App-Browser-Bridges („Script error", `webkit.messageHandlers`,
+  `runtime.sendMessage`, „Java object is gone", `…-extension://`) werden nicht
+  mehr als Client-Fehler ins Server-Protokoll gemeldet – es sind keine
+  App-Fehler.
+- **IndexedDB-Ausfälle abgefangen** (Safari-Privatmodus/Lockdown, „Connection to
+  Indexed Database server lost"): Favoriten-Store und Versions-Cache werfen
+  keine Unhandled Rejections mehr; Favoriten gelten dann nur für die Sitzung,
+  der Versionsabruf bleibt erfolgreich.
+
+### Added
+
 - **App-Sprachen Französisch & Spanisch:** Die App ist jetzt viersprachig
   (Deutsch/Englisch/Französisch/Spanisch). Die Sprachwahl unter **Mehr** ist vom
   De/En-Umschalter auf eine Chip-Auswahl mit allen vier Sprachen umgebaut; die

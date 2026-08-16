@@ -58,6 +58,19 @@ export function AppShell() {
     document.documentElement.dataset.bg = config.background === false ? "off" : "on";
   }, [config.background]);
 
+  // Eigenes Hintergrundbild aus dem Admin (app-config.json → backgroundImage,
+  // z. B. /data/uploads/hero.webp). Inline-Var nur setzen, solange die Grafik
+  // aktiv ist – sonst würde sie das data-bg="off"-Stylesheet überstimmen.
+  useEffect(() => {
+    const root = document.documentElement;
+    const img = config.background !== false ? config.backgroundImage : undefined;
+    if (img && /^\/[\w/.-]+$/.test(img)) {
+      root.style.setProperty("--rid-bg-image", `url("${img}")`);
+    } else {
+      root.style.removeProperty("--rid-bg-image");
+    }
+  }, [config.backgroundImage, config.background]);
+
   // Einmalig: PWA-Install-/Standalone-Events + Client-Fehler-Protokoll
   // (nur Produktiv-Build, siehe lib/track.ts).
   useEffect(() => {
