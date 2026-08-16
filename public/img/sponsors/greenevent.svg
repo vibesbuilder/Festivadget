@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 96" width="240" height="96">
+  <rect width="240" height="96" rx="12" fill="#1c1c1c"/>
+  <circle cx="44" cy="48" r="18" fill="#4caf50"/>
+  <text x="138" y="55" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="700" fill="#ffffff">Green Event</text>
+</svg>

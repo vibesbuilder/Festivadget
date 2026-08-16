@@ -1,0 +1,330 @@
+[
+  {
+    "id": "fr-plus-karaoke-fr",
+    "artistId": "karaoke-fr",
+    "stageId": "plus",
+    "dayId": "fr",
+    "start": "2026-07-31T15:00:00+02:00",
+    "end": "2026-07-31T18:00:00+02:00"
+  },
+  {
+    "id": "fr-main-luisa-schweig",
+    "artistId": "luisa-schweig",
+    "stageId": "main",
+    "dayId": "fr",
+    "start": "2026-07-31T18:30:00+02:00",
+    "end": "2026-07-31T19:00:00+02:00"
+  },
+  {
+    "id": "fr-main-ok-danke-tschuess",
+    "artistId": "ok-danke-tschuess",
+    "stageId": "main",
+    "dayId": "fr",
+    "start": "2026-07-31T19:45:00+02:00",
+    "end": "2026-07-31T20:35:00+02:00"
+  },
+  {
+    "id": "fr-main-paula-carolina",
+    "artistId": "paula-carolina",
+    "stageId": "main",
+    "dayId": "fr",
+    "start": "2026-07-31T21:35:00+02:00",
+    "end": "2026-07-31T22:35:00+02:00"
+  },
+  {
+    "id": "fr-main-greeen",
+    "artistId": "greeen",
+    "stageId": "main",
+    "dayId": "fr",
+    "start": "2026-07-31T23:35:00+02:00",
+    "end": "2026-08-01T01:05:00+02:00"
+  },
+  {
+    "id": "fr-second-leeta",
+    "artistId": "leeta",
+    "stageId": "second",
+    "dayId": "fr",
+    "start": "2026-07-31T18:00:00+02:00",
+    "end": "2026-07-31T18:30:00+02:00"
+  },
+  {
+    "id": "fr-second-magdalena-wawra",
+    "artistId": "magdalena-wawra",
+    "stageId": "second",
+    "dayId": "fr",
+    "start": "2026-07-31T19:00:00+02:00",
+    "end": "2026-07-31T19:45:00+02:00"
+  },
+  {
+    "id": "fr-second-adam-angst",
+    "artistId": "adam-angst",
+    "stageId": "second",
+    "dayId": "fr",
+    "start": "2026-07-31T20:35:00+02:00",
+    "end": "2026-07-31T21:35:00+02:00"
+  },
+  {
+    "id": "fr-second-heckspoiler",
+    "artistId": "heckspoiler",
+    "stageId": "second",
+    "dayId": "fr",
+    "start": "2026-07-31T22:35:00+02:00",
+    "end": "2026-07-31T23:35:00+02:00"
+  },
+  {
+    "id": "fr-second-vicky",
+    "artistId": "vicky",
+    "stageId": "second",
+    "dayId": "fr",
+    "start": "2026-08-01T01:05:00+02:00",
+    "end": "2026-08-01T02:00:00+02:00"
+  },
+  {
+    "id": "fr-party-dj-wellness",
+    "artistId": "dj-wellness",
+    "stageId": "party",
+    "dayId": "fr",
+    "start": "2026-07-31T18:00:00+02:00",
+    "end": "2026-07-31T19:30:00+02:00"
+  },
+  {
+    "id": "fr-party-fondue92",
+    "artistId": "fondue92",
+    "stageId": "party",
+    "dayId": "fr",
+    "start": "2026-07-31T19:30:00+02:00",
+    "end": "2026-07-31T21:00:00+02:00"
+  },
+  {
+    "id": "fr-party-little-bastard",
+    "artistId": "little-bastard",
+    "stageId": "party",
+    "dayId": "fr",
+    "start": "2026-07-31T21:00:00+02:00",
+    "end": "2026-07-31T22:30:00+02:00"
+  },
+  {
+    "id": "fr-party-evva",
+    "artistId": "evva",
+    "stageId": "party",
+    "dayId": "fr",
+    "start": "2026-07-31T22:30:00+02:00",
+    "end": "2026-08-01T00:00:00+02:00"
+  },
+  {
+    "id": "fr-party-lpp-b2b-leolaessig",
+    "artistId": "lpp-b2b-leolaessig",
+    "stageId": "party",
+    "dayId": "fr",
+    "start": "2026-08-01T00:00:00+02:00",
+    "end": "2026-08-01T01:30:00+02:00"
+  },
+  {
+    "id": "fr-party-chri5i",
+    "artistId": "chri5i",
+    "stageId": "party",
+    "dayId": "fr",
+    "start": "2026-08-01T01:30:00+02:00",
+    "end": "2026-08-01T03:00:00+02:00"
+  },
+  {
+    "id": "sa-plus-turntable-tennis",
+    "artistId": "turntable-tennis",
+    "stageId": "plus",
+    "dayId": "sa",
+    "start": "2026-08-01T12:00:00+02:00",
+    "end": "2026-08-01T13:00:00+02:00"
+  },
+  {
+    "id": "sa-plus-yoga",
+    "artistId": "yoga",
+    "stageId": "plus",
+    "dayId": "sa",
+    "start": "2026-08-01T13:00:00+02:00",
+    "end": "2026-08-01T14:00:00+02:00"
+  },
+  {
+    "id": "sa-party-pub-quiz",
+    "artistId": "pub-quiz",
+    "stageId": "party",
+    "dayId": "sa",
+    "start": "2026-08-01T13:30:00+02:00",
+    "end": "2026-08-01T15:30:00+02:00"
+  },
+  {
+    "id": "sa-plus-karaoke-sa",
+    "artistId": "karaoke-sa",
+    "stageId": "plus",
+    "dayId": "sa",
+    "start": "2026-08-01T14:00:00+02:00",
+    "end": "2026-08-01T17:00:00+02:00"
+  },
+  {
+    "id": "sa-plus-date-im-dorf",
+    "artistId": "date-im-dorf",
+    "stageId": "plus",
+    "dayId": "sa",
+    "start": "2026-08-01T15:00:00+02:00",
+    "end": "2026-08-01T16:00:00+02:00"
+  },
+  {
+    "id": "sa-main-magda",
+    "artistId": "magda",
+    "stageId": "main",
+    "dayId": "sa",
+    "start": "2026-08-01T16:45:00+02:00",
+    "end": "2026-08-01T17:15:00+02:00"
+  },
+  {
+    "id": "sa-main-laurenz-nikolaus",
+    "artistId": "laurenz-nikolaus",
+    "stageId": "main",
+    "dayId": "sa",
+    "start": "2026-08-01T18:00:00+02:00",
+    "end": "2026-08-01T18:45:00+02:00"
+  },
+  {
+    "id": "sa-main-uche-yara",
+    "artistId": "uche-yara",
+    "stageId": "main",
+    "dayId": "sa",
+    "start": "2026-08-01T19:30:00+02:00",
+    "end": "2026-08-01T20:30:00+02:00"
+  },
+  {
+    "id": "sa-main-die-sterne",
+    "artistId": "die-sterne",
+    "stageId": "main",
+    "dayId": "sa",
+    "start": "2026-08-01T21:30:00+02:00",
+    "end": "2026-08-01T22:30:00+02:00"
+  },
+  {
+    "id": "sa-main-bibiza",
+    "artistId": "bibiza",
+    "stageId": "main",
+    "dayId": "sa",
+    "start": "2026-08-01T23:30:00+02:00",
+    "end": "2026-08-02T01:00:00+02:00"
+  },
+  {
+    "id": "sa-second-af90",
+    "artistId": "af90",
+    "stageId": "second",
+    "dayId": "sa",
+    "start": "2026-08-01T16:15:00+02:00",
+    "end": "2026-08-01T16:45:00+02:00"
+  },
+  {
+    "id": "sa-second-julia-effekt",
+    "artistId": "julia-effekt",
+    "stageId": "second",
+    "dayId": "sa",
+    "start": "2026-08-01T17:15:00+02:00",
+    "end": "2026-08-01T18:00:00+02:00"
+  },
+  {
+    "id": "sa-second-nenda",
+    "artistId": "nenda",
+    "stageId": "second",
+    "dayId": "sa",
+    "start": "2026-08-01T18:45:00+02:00",
+    "end": "2026-08-01T19:30:00+02:00"
+  },
+  {
+    "id": "sa-second-spilif",
+    "artistId": "spilif",
+    "stageId": "second",
+    "dayId": "sa",
+    "start": "2026-08-01T20:30:00+02:00",
+    "end": "2026-08-01T21:30:00+02:00"
+  },
+  {
+    "id": "sa-second-poebel-mc",
+    "artistId": "poebel-mc",
+    "stageId": "second",
+    "dayId": "sa",
+    "start": "2026-08-01T22:30:00+02:00",
+    "end": "2026-08-01T23:30:00+02:00"
+  },
+  {
+    "id": "sa-second-kochkraft-durch-kma",
+    "artistId": "kochkraft-durch-kma",
+    "stageId": "second",
+    "dayId": "sa",
+    "start": "2026-08-02T01:00:00+02:00",
+    "end": "2026-08-02T02:00:00+02:00"
+  },
+  {
+    "id": "sa-party-el-capintero-mad-mav",
+    "artistId": "el-capintero-mad-mav",
+    "stageId": "party",
+    "dayId": "sa",
+    "start": "2026-08-01T09:00:00+02:00",
+    "end": "2026-08-01T13:00:00+02:00"
+  },
+  {
+    "id": "sa-party-mia",
+    "artistId": "mia",
+    "stageId": "party",
+    "dayId": "sa",
+    "start": "2026-08-01T16:00:00+02:00",
+    "end": "2026-08-01T18:00:00+02:00"
+  },
+  {
+    "id": "sa-party-donna-the-summer",
+    "artistId": "donna-the-summer",
+    "stageId": "party",
+    "dayId": "sa",
+    "start": "2026-08-01T18:00:00+02:00",
+    "end": "2026-08-01T19:30:00+02:00"
+  },
+  {
+    "id": "sa-party-mischmasch",
+    "artistId": "mischmasch",
+    "stageId": "party",
+    "dayId": "sa",
+    "start": "2026-08-01T19:30:00+02:00",
+    "end": "2026-08-01T21:00:00+02:00"
+  },
+  {
+    "id": "sa-party-stur-sensibel",
+    "artistId": "stur-sensibel",
+    "stageId": "party",
+    "dayId": "sa",
+    "start": "2026-08-01T21:00:00+02:00",
+    "end": "2026-08-01T22:30:00+02:00"
+  },
+  {
+    "id": "sa-party-system-breakdown",
+    "artistId": "system-breakdown",
+    "stageId": "party",
+    "dayId": "sa",
+    "start": "2026-08-01T22:30:00+02:00",
+    "end": "2026-08-02T00:00:00+02:00"
+  },
+  {
+    "id": "sa-party-killkid",
+    "artistId": "killkid",
+    "stageId": "party",
+    "dayId": "sa",
+    "start": "2026-08-02T00:00:00+02:00",
+    "end": "2026-08-02T01:30:00+02:00"
+  },
+  {
+    "id": "sa-party-2-mal-3-streifen",
+    "artistId": "2-mal-3-streifen",
+    "stageId": "party",
+    "dayId": "sa",
+    "start": "2026-08-02T01:30:00+02:00",
+    "end": "2026-08-02T03:00:00+02:00"
+  },
+  {
+    "id": "so-second-musikverein",
+    "artistId": "musikverein",
+    "stageId": "second",
+    "dayId": "so",
+    "start": "2026-08-02T11:00:00+02:00",
+    "end": "2026-08-02T14:00:00+02:00"
+  }
+]

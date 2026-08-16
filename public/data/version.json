@@ -1,0 +1,17 @@
+{
+  "generatedAt": "2026-08-13T15:07:58.223+02:00",
+  "datasets": {
+    "artists": "a420ddbe",
+    "festival": "eda7170e",
+    "info": "1cc07a85",
+    "map": "161908e6",
+    "news": "3c5b74b8",
+    "poi-categories": "56dc7e9d",
+    "pois": "09bc3546",
+    "slots": "613f83be",
+    "sponsors": "ac192257",
+    "stages": "e9d9949b",
+    "tickets": "62ba33fe",
+    "weather": "494f369b"
+  }
+}

@@ -1,0 +1,17 @@
+[
+  { "id": "sp-gasteiner", "name": "Gasteiner", "logo": "/img/sponsors/logo-gasteiner.svg", "tier": "main", "url": "https://gasteiner.at", "order": 1 },
+  { "id": "sp-ottakringer", "name": "Ottakringer", "logo": "/img/sponsors/logo-ottakringer.svg", "tier": "premium", "url": "https://www.ottakringerbrauerei.at", "order": 2 },
+  { "id": "sp-akooe", "name": "Arbeiterkammer OÖ", "logo": "/img/sponsors/logo-arbeiterkammer-ooe.svg", "tier": "premium", "url": "https://ooe.arbeiterkammer.at/index.html", "order": 3 },
+  { "id": "sp-eskimo", "name": "Eskimo", "logo": "/img/sponsors/logo-eskimo.svg", "tier": "premium", "url": "https://www.eskimo.at", "order": 4 },
+  { "id": "sp-cute", "name": "Cute Concerts", "logo": "/img/sponsors/logo-cute-concerts-orange.svg", "tier": "premium", "url": "https://cuteconcerts.com/", "order": 5 },
+  
+  { "id": "sp-hildegard", "name": "Bar-Café Hildegard", "logo": "/img/sponsors/logo-hildegard.svg", "tier": "partner", "url": "https://hildegard.bar", "order": 6 },
+  { "id": "sp-radiob138", "name": "Radio B138", "logo": "/img/sponsors/logo-radiob138.svg", "tier": "partner", "url": "https://radiob138.at/", "order": 7 },
+  { "id": "sp-haidlmair", "name": "Haidlmair GmbH", "logo": "/img/sponsors/logo-haidlmair.svg", "tier": "partner", "url": "https://haidlmair.at/", "order": 8 },
+  { "id": "sp-spes", "name": "SPES Zukunftsakademie", "logo": "/img/sponsors/logo-spes.svg", "tier": "partner", "url": "https://spes.co.at/", "order": 9 },
+  
+  { "id": "sp-fm4", "name": "Radio FM4", "logo": "/img/sponsors/logo-fm4.svg", "tier": "supporter", "url": "https://fm4.orf.at", "order": 10 },
+  { "id": "sp-greenevent", "name": "Green Event", "logo": "/img/sponsors/logo-green-event-ooe.svg", "tier": "supporter", "url": "https://oberoesterreich.klimabuendnis.at", "order": 11 },
+  { "id": "sp-klimabuendnis", "name": "Klimabündnis", "logo": "/img/sponsors/logo-umwelt-landeslogo.svg", "tier": "supporter", "url": "https://oberoesterreich.klimabuendnis.at", "order": 12 },
+  { "id": "sp-makava", "name": "Makava", "logo": "/img/sponsors/logo-makava.svg", "tier": "supporter", "url": "https://makava.bio", "order": 13 }
+]

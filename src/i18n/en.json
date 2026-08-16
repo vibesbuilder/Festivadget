@@ -1,0 +1,85 @@
+{
+  "nav": {
+    "home": "Home",
+    "lineup": "Line-Up",
+    "timetable": "Timetable",
+    "myplan": "My Plan",
+    "map": "Map",
+    "more": "More"
+  },
+  "more": {
+    "title": "More",
+    "favorites": "My Timetable",
+    "news": "Newsfeed",
+    "map": "Map",
+    "info": "Info",
+    "sponsors": "Sponsors",
+    "tickets": "Tickets",
+    "search": "Search",
+    "contact": "Contact",
+    "impressum": "Imprint",
+    "language": "English / Deutsch",
+    "theme": "Dark / Light",
+    "weather": "Weather"
+  },
+  "common": {
+    "loading": "Loading …",
+    "error": "Something went wrong.",
+    "retry": "Try again",
+    "offline": "Offline",
+    "lastUpdate": "As of: {{time}}",
+    "empty": "No content yet."
+  },
+  "home": {
+    "now": "Now",
+    "upNext": "Up next",
+    "overview": "Programme overview",
+    "newsfeed": "Newsfeed",
+    "nextFavorite": "Your next favorite"
+  },
+  "lineup": {
+    "title": "Line-Up",
+    "allGenres": "All",
+    "headliner": "Headliner"
+  },
+  "timetable": {
+    "title": "Timetable",
+    "grid": "Grid",
+    "list": "List",
+    "favoritesOnly": "Favorites only",
+    "now": "Now",
+    "clash": "Clash"
+  },
+  "favorites": {
+    "title": "My Plan",
+    "empty": "No favorites yet. Tap the star on an act.",
+    "emptyTitle": "No favorites yet",
+    "explain": "Tap the star on an act in the Line-Up or Timetable to add it to your personal plan. All your favorites then appear here chronologically – including clash warnings and .ics export for your calendar.",
+    "exportAll": "Save all to calendar",
+    "reminder": "Reminder (.ics)",
+    "clashWarning": "At least one item overlaps with another favorite."
+  },
+  "artist": {
+    "playtimes": "Stage Time",
+    "favorite": "Add to favorites",
+    "favorited": "Favorited"
+  },
+  "weather": {
+    "title": "Weather",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "dayAfter": "Day after",
+    "todayShort": "today",
+    "tomorrowShort": "tomorrow",
+    "now": "now",
+    "updated": "Updated",
+    "stale": "data may be outdated",
+    "noData": "no data yet",
+    "section": {
+      "morning": "Morning",
+      "noon": "Noon",
+      "evening": "Evening",
+      "night": "Night"
+    }
+  }
+}

@@ -1,0 +1,381 @@
+[
+  {
+    "id": "news-welcome",
+    "title": "Willkommen beim ROCK IM DORF Festival 2026!",
+    "body": "Schön, dass du da bist! Wir feiern gemeinsam Musik abseits des Mainstreams. Drei Tage auf drei Bühnen, garniert mit guter Kulinarik und Begleitprogramm.",
+    "category": "general",
+    "publishAt": "2026-05-31T10:00:00+02:00",
+	"expiresAt": "2026-08-01T21:15:00+02:00",
+    "pinned": true,
+    "hideAfterFirstOpenMin": 60
+  },
+  {
+    "id": "news-safety-heat",
+    "title": "Bei Hitze: genug trinken!",
+    "body": "An den Wasserstellen gibt es kostenloses Trinkwasser. Passt aufeinander auf.",
+    "category": "safety",
+    "publishAt": "2026-05-31T12:15:00+02:00",
+	"expiresAt": "2026-08-01T18:45:00+02:00"
+  },
+  {
+    "id": "news-lineup-update-1",
+    "title": "Der Timetable für das Wochenende steht",
+    "body": "Alle Spielzeiten findest du in der App. Plane deinen Tag mit [Mein Plan](/favorites).",
+    "category": "lineup",
+    "publishAt": "2026-05-31T14:00:00+02:00"
+  },
+  {
+    "id": "slot-fr-plus-karaoke-fr",
+    "title": "Gleich: Karaoke",
+    "body": "15:00 - 18:00 Uhr - Plus",
+    "category": "lineup",
+    "publishAt": "2026-05-31T14:45:00+02:00"
+  },
+  {
+    "id": "news-safety-exits-1",
+    "title": "Notausgänge & Sammelplatz",
+    "body": "Mach dich bitte mit den **Notausgängen** vertraut. In jede Himmelsrichtung gibt es Fluchtwege. Die breitesten Fluchtwege findest du bei der Main Stage und der Container Stage.",
+    "category": "safety",
+    "publishAt": "2026-05-31T18:50:00+02:00",
+	"expiresAt": "2026-08-01T20:45:00+02:00"
+  },
+  {
+    "id": "slot-fr-second-leeta",
+    "title": "Gleich eröffnet LEETA das RID26",
+    "body": "18:00 - 18:30 Uhr - Container Stage",
+    "category": "lineup",
+    "publishAt": "2026-07-31T17:45:00+02:00"
+  },
+  {
+    "id": "slot-fr-party-dj-wellness",
+    "title": "Gleich: DJ Wellness",
+    "body": "18:00 - 19:30 Uhr - Party Stage",
+    "category": "lineup",
+    "publishAt": "2026-07-31T17:45:00+02:00"
+  },
+  {
+    "id": "slot-fr-main-luisa-schweig",
+    "title": "Gleich: Luisa Schweig",
+    "body": "18:30 - 19:00 Uhr - Main Stage",
+    "category": "lineup",
+    "publishAt": "2026-07-31T18:15:00+02:00"
+  },
+  {
+    "id": "slot-fr-second-magdalena-wawra",
+    "title": "Gleich: Magdalena Wawra",
+    "body": "19:00 - 19:45 Uhr - Container Stage",
+    "category": "lineup",
+    "publishAt": "2026-07-31T18:45:00+02:00"
+  },
+  {
+    "id": "slot-fr-party-fondue92",
+    "title": "Gleich: fondue92",
+    "body": "19:30 - 21:00 Uhr - Party Stage",
+    "category": "lineup",
+    "publishAt": "2026-07-31T19:15:00+02:00"
+  },
+  {
+    "id": "slot-fr-main-ok-danke-tschuess",
+    "title": "Gleich: ok.danke.tschüss",
+    "body": "19:45 - 20:35 Uhr - Main Stage",
+    "category": "lineup",
+    "publishAt": "2026-07-31T19:30:00+02:00"
+  },
+  {
+    "id": "slot-fr-second-adam-angst",
+    "title": "Gleich: Adam Angst",
+    "body": "20:35 - 21:35 Uhr - Container Stage",
+    "category": "lineup",
+    "publishAt": "2026-07-31T20:20:00+02:00"
+  },
+  {
+    "id": "slot-fr-party-little-bastard",
+    "title": "Gleich: little bastard",
+    "body": "21:00 - 22:30 Uhr - Party Stage",
+    "category": "lineup",
+    "publishAt": "2026-07-31T20:45:00+02:00"
+  },
+  {
+    "id": "slot-fr-main-paula-carolina",
+    "title": "Gleich: Paula Carolina",
+    "body": "21:35 - 22:35 Uhr - Main Stage",
+    "category": "lineup",
+    "publishAt": "2026-07-31T21:20:00+02:00"
+  },
+  {
+    "id": "slot-fr-party-evva",
+    "title": "Gleich: Evva",
+    "body": "22:30 - 00:00 Uhr - Party Stage",
+    "category": "lineup",
+    "publishAt": "2026-07-31T22:15:00+02:00"
+  },
+  {
+    "id": "slot-fr-second-heckspoiler",
+    "title": "Gleich: Heckspoiler",
+    "body": "22:35 - 23:35 Uhr - Container Stage",
+    "category": "lineup",
+    "publishAt": "2026-07-31T22:20:00+02:00"
+  },
+  {
+    "id": "slot-fr-main-greeen",
+    "title": "Gleich: GReeeN",
+    "body": "23:35 - 01:05 Uhr - Main Stage",
+    "category": "lineup",
+    "publishAt": "2026-07-31T23:20:00+02:00"
+  },
+  {
+    "id": "slot-fr-party-lpp-b2b-leolaessig",
+    "title": "Gleich: LPP b2b LEOLAESSIG",
+    "body": "00:00 - 01:30 Uhr - Party Stage",
+    "category": "lineup",
+    "publishAt": "2026-07-31T23:45:00+02:00"
+  },
+  {
+    "id": "news-tickets-rid27-1",
+    "title": "Limitierte Early Bird Tickets für RID27 kaufen",
+    "body": "Als Special gibt es nur dieses Wochenende Early Bird Tickets für das ROCK IM DORF Festival 2027 zum Vorzugspreis bereits jetzt zu kaufen unter *Tickets*.",
+    "category": "general",
+    "publishAt": "2026-06-01T00:15:00+02:00",
+    "link": {
+      "label": "Zu den Tickets",
+      "url": "https://rockimdorf.at/tickets"
+    }
+  },
+  {
+    "id": "slot-fr-second-vicky",
+    "title": "Gleich: VICKY",
+    "body": "01:05 - 02:00 Uhr - Container Stage",
+    "category": "lineup",
+    "publishAt": "2026-08-01T00:50:00+02:00"
+  },
+  {
+    "id": "slot-fr-party-chri5i",
+    "title": "Gleich: Chri5i",
+    "body": "01:30 - 03:00 Uhr - Party Stage",
+    "category": "lineup",
+    "publishAt": "2026-08-01T01:15:00+02:00"
+  },
+  {
+    "id": "news-lineup-update-2",
+    "title": "Guten Morgen! Tag 2 ist bereit gerockt zu werden.",
+    "body": "Alle Spielzeiten findest du in der App. Plane deinen Tag mit [Mein Plan](/favorites).",
+    "category": "lineup",
+    "publishAt": "2026-08-01T08:30:00+02:00"
+  },
+  {
+    "id": "slot-sa-party-el-capintero-mad-mav",
+    "title": "Gleich:  El Capintero & Mad Mav Selektah",
+    "body": "09:00 - 13:00 Uhr - Party Stage",
+    "category": "lineup",
+    "publishAt": "2026-08-01T08:45:00+02:00"
+  },
+  {
+    "id": "slot-sa-plus-turntable-tennis",
+    "title": "Gleich: Turntable Tennis",
+    "body": "12:00 - 13:00 Uhr - Plus",
+    "category": "lineup",
+    "publishAt": "2026-08-01T11:45:00+02:00"
+  },
+  {
+    "id": "news-safety-heat",
+    "title": "Bei Hitze: genug trinken!",
+    "body": "An den Wasserstellen gibt es kostenloses Trinkwasser. Passt aufeinander auf.",
+    "category": "safety",
+    "publishAt": "2026-08-01T12:15:00+02:00",
+	"expiresAt": "2026-08-01T18:45:00+02:00"
+  },
+  {
+    "id": "slot-sa-plus-yoga",
+    "title": "Gleich: Yoga",
+    "body": "13:00 - 14:00 Uhr - Plus",
+    "category": "lineup",
+    "publishAt": "2026-08-01T12:45:00+02:00"
+  },
+  {
+    "id": "slot-sa-party-pub-quiz",
+    "title": "Gleich: Pub Quiz",
+    "body": "13:30 - 15:30 Uhr - Party Stage",
+    "category": "lineup",
+    "publishAt": "2026-08-01T13:15:00+02:00"
+  },
+  {
+    "id": "slot-sa-plus-karaoke-sa",
+    "title": "Gleich: Karaoke",
+    "body": "14:00 - 17:00 Uhr - Plus",
+    "category": "lineup",
+    "publishAt": "2026-08-01T13:45:00+02:00"
+  },
+  {
+    "id": "slot-sa-plus-date-im-dorf",
+    "title": "Gleich: Date im Dorf",
+    "body": "15:00 - 16:00 Uhr - Plus",
+    "category": "lineup",
+    "publishAt": "2026-08-01T14:45:00+02:00"
+  },
+  {
+    "id": "news-safety-exits-2",
+    "title": "Notausgänge & Sammelplatz",
+    "body": "Mach dich bitte mit den **Notausgängen** vertraut. In jede Himmelsrichtung gibt es Fluchtwege. Die breitesten Fluchtwege findest du bei der Main Stage und der Container Stage.",
+    "category": "safety",
+    "publishAt": "2026-08-01T18:50:00+02:00",
+	"expiresAt": "2026-08-01T20:45:00+02:00"
+  },
+  {
+    "id": "slot-sa-party-mia",
+    "title": "Gleich: Mia",
+    "body": "16:00 - 18:00 Uhr - Party Stage",
+    "category": "lineup",
+    "publishAt": "2026-08-01T15:45:00+02:00"
+  },
+  {
+    "id": "slot-sa-second-af90",
+    "title": "Gleich: AF90",
+    "body": "16:15 - 16:45 Uhr - Container Stage",
+    "category": "lineup",
+    "publishAt": "2026-08-01T16:00:00+02:00"
+  },
+  {
+    "id": "slot-sa-main-magda",
+    "title": "Gleich: Magda",
+    "body": "16:45 - 17:15 Uhr - Main Stage",
+    "category": "lineup",
+    "publishAt": "2026-08-01T16:30:00+02:00"
+  },
+  {
+    "id": "slot-sa-second-julia-effekt",
+    "title": "Gleich: Julia Effekt",
+    "body": "17:15 - 18:00 Uhr - Container Stage",
+    "category": "lineup",
+    "publishAt": "2026-08-01T17:00:00+02:00"
+  },
+  {
+    "id": "slot-sa-main-laurenz-nikolaus",
+    "title": "Gleich: Laurenz Nikolaus",
+    "body": "18:00 - 18:45 Uhr - Main Stage",
+    "category": "lineup",
+    "publishAt": "2026-08-01T17:45:00+02:00"
+  },
+  {
+    "id": "slot-sa-party-donna-the-summer",
+    "title": "Gleich: Donna & the summer",
+    "body": "18:00 - 19:30 Uhr - Party Stage",
+    "category": "lineup",
+    "publishAt": "2026-08-01T17:45:00+02:00"
+  },
+  {
+    "id": "slot-sa-second-nenda",
+    "title": "Gleich: Nenda",
+    "body": "18:45 - 19:30 Uhr - Container Stage",
+    "category": "lineup",
+    "publishAt": "2026-08-01T18:30:00+02:00"
+  },
+  {
+    "id": "slot-sa-main-uche-yara",
+    "title": "Gleich: UCHE YARA",
+    "body": "19:30 - 20:30 Uhr - Main Stage",
+    "category": "lineup",
+    "publishAt": "2026-08-01T19:15:00+02:00"
+  },
+  {
+    "id": "slot-sa-party-mischmasch",
+    "title": "Gleich: Mischmasch",
+    "body": "19:30 - 21:00 Uhr - Party Stage",
+    "category": "lineup",
+    "publishAt": "2026-08-01T19:15:00+02:00"
+  },
+  {
+    "id": "slot-sa-second-spilif",
+    "title": "Gleich: Spilif",
+    "body": "20:30 - 21:30 Uhr - Container Stage",
+    "category": "lineup",
+    "publishAt": "2026-08-01T20:15:00+02:00"
+  },
+  {
+    "id": "slot-sa-party-stur-sensibel",
+    "title": "Gleich: Stur & Sensibel",
+    "body": "21:00 - 22:30 Uhr - Party Stage",
+    "category": "lineup",
+    "publishAt": "2026-08-01T20:45:00+02:00"
+  },
+  {
+    "id": "slot-sa-main-die-sterne",
+    "title": "Gleich: Die Sterne",
+    "body": "21:30 - 22:30 Uhr - Main Stage",
+    "category": "lineup",
+    "publishAt": "2026-08-01T21:15:00+02:00"
+  },
+  {
+    "id": "slot-sa-second-poebel-mc",
+    "title": "Gleich: Pöbel MC",
+    "body": "22:30 - 23:30 Uhr - Container Stage",
+    "category": "lineup",
+    "publishAt": "2026-08-01T22:15:00+02:00"
+  },
+  {
+    "id": "slot-sa-party-system-breakdown",
+    "title": "Gleich: System Breakdown",
+    "body": "22:30 - 00:00 Uhr - Party Stage",
+    "category": "lineup",
+    "publishAt": "2026-08-01T22:15:00+02:00"
+  },
+  {
+    "id": "slot-sa-main-bibiza",
+    "title": "Gleich: Bibiza",
+    "body": "23:30 - 01:00 Uhr - Main Stage",
+    "category": "lineup",
+    "publishAt": "2026-08-01T23:15:00+02:00"
+  },
+  {
+    "id": "slot-sa-party-killkid",
+    "title": "Gleich: Killkid",
+    "body": "00:00 - 01:30 Uhr - Party Stage",
+    "category": "lineup",
+    "publishAt": "2026-08-01T23:45:00+02:00"
+  },
+  {
+    "id": "news-tickets-rid27-2",
+    "title": "Limitierte Early Bird Tickets für RID27 kaufen",
+    "body": "Als Special gibt es nur dieses Wochenende Early Bird Tickets für das ROCK IM DORF Festival 2027 zum Vorzugspreis bereits jetzt zu kaufen unter *Tickets*.",
+    "category": "general",
+    "publishAt": "2026-08-02T00:15:00+02:00",
+    "link": {
+      "label": "Zu den Tickets",
+      "url": "https://rockimdorf.at/tickets"
+    }
+  },
+  {
+    "id": "slot-sa-second-kochkraft-durch-kma",
+    "title": "Gleich: Kochkraft durch KMA",
+    "body": "01:00 - 02:00 Uhr - Container Stage",
+    "category": "lineup",
+    "publishAt": "2026-08-02T00:45:00+02:00"
+  },
+  {
+    "id": "slot-sa-party-2-mal-3-streifen",
+    "title": "Gleich: 2 Mal 3 Streifen",
+    "body": "01:30 - 03:00 Uhr - Party Stage",
+    "category": "lineup",
+    "publishAt": "2026-08-02T01:15:00+02:00"
+  },
+  {
+    "id": "feedback",
+    "title": "Gib uns bitte Feedback",
+    "body": "Wir freuen uns über jede einzelne Stimme, die uns Feedback gibt. Unter allen Teilnehmern verlosen wir 1x2 Tickets für das nächste RID.",
+    "category": "general",
+    "publishAt": "2026-08-02T03:15:00+02:00"
+  },
+  {
+    "id": "news-lineup-update-3",
+    "title": "Frühschoppen mit gutem Essen vor der Heimreise",
+    "body": "Das Festivalgelände öffnet um 9:00 Uhr seine Tore. Komm vorbei auf ein Frühstück oder ein Hangover-Meal vor der Heimreise. Der Musikverein Weinzierl-Altpernstein begleitet uns ab ca. 11:00 Uhr durch den restlichen Tag.",
+    "category": "lineup",
+    "publishAt": "2026-08-01T07:00:00+02:00"
+  },
+  {
+    "id": "slot-so-second-musikverein",
+    "title": "Gleich: Musikverein Weinzierl-Altpernstein",
+    "body": "11:00 - 14:00 Uhr - Container Stage",
+    "category": "lineup",
+    "publishAt": "2026-08-02T10:30:00+02:00"
+  }
+]

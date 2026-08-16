@@ -1,0 +1,14 @@
+﻿packages:
+  - "packages/*"
+
+# Install-Skripte (pnpm 11): esbuild braucht sein postinstall nicht (native
+# Binary kommt als optionalDependency) - explizit ablehnen, sonst bricht
+# pnpm mit ERR_PNPM_IGNORED_BUILDS ab. sharp laedt im Skript seine Binary.
+allowBuilds:
+  esbuild: false
+  sharp: true
+
+# esbuild 0.28.2 kommt ohne aufgeloeste Plattform-Binaries an (Supply-Chain-
+# Filter auf das frische Release) - auf den bewaehrten Stand pinnen.
+overrides:
+  "esbuild@>=0.22.0 <0.29.0": 0.28.1

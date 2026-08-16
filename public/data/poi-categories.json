@@ -1,0 +1,17 @@
+[
+  { "id": "stage", "label": "Bühne", "color": "#ffb300", "icon": "🎤", "order": 1 },
+  { "id": "entrance", "label": "Eingang", "color": "#4caf50", "icon": "🚪", "order": 2 },
+  { "id": "exit", "label": "Ausgang", "color": "#9aa0a6", "icon": "🚪", "order": 3 },
+  { "id": "info", "label": "Info", "color": "#5b8def", "icon": "ℹ️", "order": 4 },
+  { "id": "wc", "label": "WC", "color": "#5b8def", "icon": "🚻", "order": 5 },
+  { "id": "food", "label": "Essen", "color": "#e4572e", "icon": "🍔", "order": 6 },
+  { "id": "drink", "label": "Getränke", "color": "#e4a72e", "icon": "🍺", "order": 7 },
+  { "id": "firstaid", "label": "Sanitäter", "color": "#e23b3b", "icon": "➕", "order": 8 },
+  { "id": "atm", "label": "Bankomat", "color": "#4caf50", "icon": "🏧", "order": 9 },
+  { "id": "cashless", "label": "Cashless", "color": "#b06ef2", "icon": "💳", "order": 10 },
+  { "id": "merch", "label": "Merch", "color": "#e4572e", "icon": "👕", "order": 11 },
+  { "id": "camping", "label": "Camping", "color": "#7da57a", "icon": "⛺", "order": 12 },
+  { "id": "caravan", "label": "Caravan", "color": "#7da57a", "icon": "🚐", "order": 13 },
+  { "id": "shuttle", "label": "Shuttle", "color": "#5b8def", "icon": "🚌", "order": 14 },
+  { "id": "parking", "label": "Parken", "color": "#9aa0a6", "icon": "🅿️", "order": 15 }
+]

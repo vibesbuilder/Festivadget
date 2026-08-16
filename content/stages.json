@@ -1,0 +1,6 @@
+[
+  { "id": "main", "name": "Main Stage", "shortName": "Main", "color": "#5f3c91", "order": 1, "poiId": "poi-main" },
+  { "id": "second", "name": "Container Stage", "shortName": "Container", "color": "#ff2200", "order": 2, "poiId": "poi-second" },
+  { "id": "party", "name": "Party Stage", "shortName": "Party", "color": "#3c57a7", "order": 3, "poiId": "poi-party" },
+  { "id": "plus", "name": "Plus", "shortName": "Plus", "color": "#6dc0a1", "order": 4, "poiId": "poi-fun" }
+]

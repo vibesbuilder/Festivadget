@@ -1,0 +1,106 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Design-Tokens (IMPLEMENTATION.md §2) – Platzhalter, exakte Hex/Fonts aus T4-CSS verifizieren.
+   Als RGB-Kanäle hinterlegt, damit Tailwind-Alpha-Varianten (z. B. text-rid-muted/60) funktionieren. */
+:root {
+  --rid-bg: 18 18 18;
+  --rid-surface: 28 28 28;
+  --rid-surface-2: 38 38 38;
+  --rid-text: 255 255 255;
+  --rid-muted: 179 179 179;
+  --rid-accent: 255 179 0; /* #ffb300 */
+  --rid-accent-2: 228 87 46; /* sekundär (NowLine etc.) */
+  --rid-border: 46 46 46;
+
+  --rid-font-display: "Oswald", "Bebas Neue", system-ui, sans-serif;
+  --rid-font-sans: "Inter", system-ui, -apple-system, sans-serif;
+
+  /* Hintergrund: Farbe ODER Grafik.
+     - Nur Farbe (Standard):  --rid-bg-image: none;
+     - Grafik:                --rid-bg-image: url('/img/background.webp');
+     Der „Schleier" dunkelt die Grafik für die Lesbarkeit ab (Stärke über die Alpha,
+     z. B. 0.78). Da seine Farbe = Hintergrundfarbe ist, sieht der reine Farb-Modus
+     identisch aus. */
+  --rid-bg-image: url("/img/background.webp");
+  --rid-bg-scrim: rgba(18, 18, 18, 0.78);
+
+  /* Safe-Area-Hilfen für Notch/Home-Indicator */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Light Mode – nur die Farb-Tokens werden überschrieben; Akzent (Gelb/Rot) bleibt
+   als Marke erhalten. Aktiviert über <html data-theme="light"> (siehe AppShell). */
+:root[data-theme="light"] {
+  --rid-bg: 244 244 245;
+  --rid-surface: 255 255 255;
+  --rid-surface-2: 236 236 238;
+  --rid-text: 20 20 22;
+  --rid-muted: 91 91 96;
+  --rid-border: 222 222 226;
+
+  /* Heller Schleier über der Hintergrundgrafik (statt des dunklen). */
+  --rid-bg-scrim: rgba(244, 244, 245, 0.86);
+}
+
+/* Hintergrundgrafik per Admin abschaltbar (AppShell setzt data-bg="off"). */
+:root[data-bg="off"] {
+  --rid-bg-image: none;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    margin: 0;
+    background-color: rgb(var(--rid-bg));
+    /* Schleier über der optionalen Grafik (Grafik liegt darunter). */
+    background-image: linear-gradient(var(--rid-bg-scrim), var(--rid-bg-scrim)),
+      var(--rid-bg-image);
+    background-size: cover;
+    background-position: center top;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    color: rgb(var(--rid-text));
+    font-family: var(--rid-font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overscroll-behavior-y: none;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--rid-font-display);
+    letter-spacing: 0.01em;
+  }
+
+  a {
+    color: inherit;
+  }
+
+  /* Tap-Highlight auf Mobile entfernen */
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+@layer components {
+  .rid-card {
+    @apply rounded-xl bg-rid-surface border border-rid-border;
+  }
+
+  .rid-chip {
+    @apply inline-flex items-center rounded-full px-[0.65rem] py-1 text-sm bg-rid-surface-2 text-rid-muted border border-rid-border;
+  }
+
+  .rid-chip-active {
+    @apply bg-rid-accent text-black border-rid-accent;
+  }
+}
