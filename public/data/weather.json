@@ -1,0 +1,33 @@
+{
+  "generatedAt": "2026-07-30T18:00:00+02:00",
+  "source": "open-meteo",
+  "days": [
+    {
+      "dayId": "fr",
+      "date": "31.07.",
+      "tempMin": 17,
+      "tempMax": 28,
+      "symbolCode": "clear",
+      "precipitationProb": 5,
+      "summary": "Sonnig"
+    },
+    {
+      "dayId": "sa",
+      "date": "01.08.",
+      "tempMin": 18,
+      "tempMax": 26,
+      "symbolCode": "partly",
+      "precipitationProb": 20,
+      "summary": "Wolkig"
+    },
+    {
+      "dayId": "so",
+      "date": "02.08.",
+      "tempMin": 16,
+      "tempMax": 23,
+      "symbolCode": "rain",
+      "precipitationProb": 60,
+      "summary": "Schauer"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+# Festivadget – Apache-Konfiguration (IMPLEMENTATION.md §15).
+# Wird von Vite nach dist/ kopiert. HTTPS ist Pflicht.
+
+RewriteEngine On
+
+# HTTPS erzwingen (falls vom Hoster nicht ohnehin)
+RewriteCond %{HTTPS} off
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# SPA-Fallback: existierende Dateien/Ordner direkt, sonst index.html
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.html [L]
+
+<IfModule mod_headers.c>
+  # Server-Default zuerst entfernen, dann gezielt setzen (sonst doppelte Header).
+  # "always" greift auch, wenn der Hoster den Header erst spät hinzufügt.
+
+  # CORS für die öffentlichen Daten-JSONs: CrewCare (crew.rockimdorf.at) liest
+  # Karte/POIs/Infos zur Laufzeit von hier. Daten sind öffentlich & read-only.
+  # index.html gehört dazu: fehlende app-*.json-Overrides beantwortet der
+  # SPA-Fallback mit index.html – ohne den Header meldet der Browser dann bei
+  # CrewCares Override-Proben einen CORS-Fehler in der Konsole.
+  <FilesMatch "\.json$|^index\.html$">
+    Header always set Access-Control-Allow-Origin "*"
+  </FilesMatch>
+
+  # Gehashte App-Shell-Assets: langlebig + immutable
+  <FilesMatch "\.(js|css|woff2)$">
+    Header unset Cache-Control
+    Header always set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+
+  # Bilder/Karten
+  <FilesMatch "\.(webp|png|svg)$">
+    Header unset Cache-Control
+    Header always set Cache-Control "public, max-age=86400"
+  </FilesMatch>
+
+  # version.json: nie cachen
+  <FilesMatch "version\.json$">
+    Header unset Cache-Control
+    Header always set Cache-Control "no-cache"
+  </FilesMatch>
+
+  # übrige Inhalts-JSON: kurz cachen (~2 min)
+  <FilesMatch "^(?!version).*\.json$">
+    Header unset Cache-Control
+    Header always set Cache-Control "public, max-age=120"
+  </FilesMatch>
+
+  # App-Shell-Einstieg + Service Worker: nie cachen
+  # (Service Worker zusätzlich explizit, da am wichtigsten für Updates.)
+  <FilesMatch "(index\.html|sw\.js)$">
+    Header unset Cache-Control
+    Header always set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>

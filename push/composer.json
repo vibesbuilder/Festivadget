@@ -1,0 +1,8 @@
+{
+  "name": "festivadget/push",
+  "description": "Web-Push-Backend für Festivadget (Phase 5) – läuft auf einfachem PHP-Webspace.",
+  "require": {
+    "php": ">=8.1",
+    "minishlink/web-push": "^9.0"
+  }
+}

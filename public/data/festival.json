@@ -1,0 +1,31 @@
+{
+  "name": "ROCK IM DORF Festival 2026",
+  "shortName": "ROCK IM DORF",
+  "timezone": "Europe/Vienna",
+  "start": "2026-06-29T14:00:00+02:00",
+  "end": "2026-07-01T14:00:00+02:00",
+  "days": [
+    {
+      "id": "fr",
+      "label": "Freitag",
+      "dayStart": "2026-06-29T14:00:00+02:00",
+      "dayEnd": "2026-06-30T03:00:00+02:00"
+    },
+    {
+      "id": "sa",
+      "label": "Samstag",
+      "dayStart": "2026-06-30T09:00:00+02:00",
+      "dayEnd": "2026-07-01T03:00:00+02:00"
+    },
+    {
+      "id": "so",
+      "label": "Sonntag",
+      "dayStart": "2026-07-01T09:00:00+02:00",
+      "dayEnd": "2026-07-01T14:00:00+02:00"
+    }
+  ],
+  "contact": {
+    "email": "office@rockimdorf.at",
+    "web": "https://rockimdorf.at"
+  }
+}

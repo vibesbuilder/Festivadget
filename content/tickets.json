@@ -1,0 +1,11 @@
+{
+  "providers": [
+    {
+      "id": "kupf-shop",
+      "name": "KUPF Ticketshop",
+      "embedType": "link",
+      "url": "https://kupfticket.com/events/rid27",
+      "note": "Sichere dir jetzt deine limitierten Early Bird Tickets für das ROCK IM DORF Festival 2027."
+    }
+  ]
+}

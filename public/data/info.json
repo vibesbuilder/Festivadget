@@ -1,0 +1,53 @@
+[
+  {
+    "id": "anreise",
+    "title": "Anreise",
+    "icon": "car",
+    "order": 1,
+    "body": "## Mit dem Auto\nFolge der Beschilderung ab der Ortseinfahrt. Parkplätze sind ausgeschildert.\n\n## Öffentlich\nShuttle ab Bahnhof im 30-Minuten-Takt."
+  },
+  {
+    "id": "parken",
+    "title": "Parken",
+    "icon": "parken",
+    "order": 1.5,
+    "hidden": true,
+    "body": "Informationen zu Parkplätzen, Anfahrt und Gebühren werden hier veröffentlicht."
+  },
+  {
+    "id": "camping",
+    "title": "Camping & Caravan",
+    "icon": "tent",
+    "order": 2,
+    "body": "Der Campingplatz öffnet **Freitag 12:00**. Lagerfeuer sind nicht erlaubt, Gaskocher sind ok."
+  },
+  {
+    "id": "bringmichheim-bus",
+    "title": "BringMichHeim Bus",
+    "icon": "bus",
+    "order": 4,
+    "body": "Mit dem **BringMichHeim Bus** kommst du nach dem Festival sicher nach Hause. Routen, Haltestellen und Abfahrtszeiten werden hier bekannt gegeben."
+  },
+  {
+    "id": "platzordnung",
+    "title": "Platzordnung",
+    "icon": "platzordnung",
+    "order": 5,
+    "body": "Damit alle sicher und entspannt feiern können, gilt am gesamten Gelände die **Platzordnung**. Die vollständigen Regeln werden hier veröffentlicht."
+  },
+  {
+    "id": "cashless",
+    "title": "Cashless",
+    "icon": "credit-card",
+    "order": 3,
+    "body": "Am Gelände gilt **Cashless**. Aufladen an den Cashless-Stationen oder online. Restguthaben wird rückerstattet."
+  },
+  {
+    "id": "faq",
+    "title": "FAQ",
+    "icon": "help-circle",
+    "order": 9,
+    "faq": true,
+    "body": "## Darf ich Getränke mitbringen?\nKeine Glasflaschen, kein Alkohol von außen.\n\n## Gibt es Garderoben?\nJa, beim Infopoint."
+  }
+]

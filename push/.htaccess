@@ -1,0 +1,15 @@
+# Schutz für das Push-Backend.
+
+# Konfiguration und Composer-Manifest niemals ausliefern (Defense-in-Depth).
+<FilesMatch "^(config\.php|config\.example\.php|composer\.(json|lock))$">
+  Require all denied
+</FilesMatch>
+
+# Wetter: CMS-Einstellungen (enthalten ggf. API-Keys!) und Server-Cache sind
+# reine Server-Dateien – die App spricht nur weather.php an.
+<FilesMatch "^weather-(settings|cache)\.json(\.tmp.*)?$">
+  Require all denied
+</FilesMatch>
+
+# Abhängigkeiten nicht direkt erreichbar machen.
+RedirectMatch 404 /push/vendor/.*$

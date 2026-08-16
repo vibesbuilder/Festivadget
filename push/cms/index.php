@@ -1,0 +1,1433 @@
+<?php
+// Admin-UI (CMS). Tabs: MEHR-Menü, Infos (CRUD), Einstellungen, News, Push.
+// Schreibt server-eigene JSONs unter data/, die die App live einliest.
+
+declare(strict_types=1);
+
+require_once __DIR__ . '/lib.php';
+require_once __DIR__ . '/importer.php';
+
+$error    = cms_handle_auth();
+$notice   = null;
+$uploaded = null; // Pfad der zuletzt hochgeladenen Datei (für Anzeige)
+$importReport = null; // Ergebnis von „Jetzt importieren"
+
+// --- CSV-Export: anonymer Abo-Verlauf (nur eingeloggt) ---------------------
+if (cms_logged_in() && ($_GET['export'] ?? '') === 'push-stats') {
+    try {
+        $rows = push_db()->query(
+            'SELECT taken_at, total, c_info, c_lineup, c_general FROM push_stats ORDER BY taken_at ASC'
+        )->fetchAll();
+    } catch (Throwable $e) {
+        $rows = [];
+    }
+    header('Content-Type: text/csv; charset=utf-8');
+    header('Content-Disposition: attachment; filename="push-abo-verlauf.csv"');
+    $out = fopen('php://output', 'w');
+    fwrite($out, "\xEF\xBB\xBF"); // BOM für Excel
+    fputcsv($out, ['Zeitpunkt', 'Abos gesamt', 'Infos', 'Line-Up', 'Allgemein']);
+    foreach ($rows as $r) {
+        fputcsv($out, [$r['taken_at'], (int) $r['total'], (int) $r['c_info'], (int) $r['c_lineup'], (int) $r['c_general']]);
+    }
+    fclose($out);
+    exit;
+}
+
+// --- POST-Aktionen ---------------------------------------------------------
+if (cms_logged_in() && ($_POST['do'] ?? '') !== '' && $_POST['do'] !== 'logout') {
+    if (!cms_check_csrf()) {
+        $error = 'Sicherheits-Token ungültig – bitte erneut speichern.';
+    } else {
+        switch ($_POST['do']) {
+            case 'save_weather':
+                // Wetter-Einstellungen → push/weather-settings.json (per .htaccess
+                // geschützt, enthält ggf. API-Keys). Überschreibt config.php['weather'].
+                require_once __DIR__ . '/../weather-providers.php';
+                $prov = (string) ($_POST['wprovider'] ?? 'geosphere');
+                if (!isset(WEATHER_PROVIDERS[$prov])) {
+                    $prov = 'geosphere';
+                }
+                $num = static function ($v, float $min, float $max): ?float {
+                    $s = str_replace(',', '.', trim((string) $v));
+                    if (!is_numeric($s)) {
+                        return null; // sonst würde z. B. "abc" still zu 0.0
+                    }
+                    $f = (float) $s;
+                    return ($f >= $min && $f <= $max) ? $f : null;
+                };
+                $lat = $num($_POST['wlat'] ?? '', -90, 90);
+                $lon = $num($_POST['wlon'] ?? '', -180, 180);
+                if ($lat === null || $lon === null) {
+                    $error = 'Ungültige Koordinaten (Breite -90..90, Länge -180..180).';
+                    break;
+                }
+                $settings = [
+                    'provider'            => $prov,
+                    'lat'                 => $lat,
+                    'lon'                 => $lon,
+                    'location'            => trim((string) ($_POST['wlocation'] ?? '')),
+                    'station_id'          => trim((string) ($_POST['wstation'] ?? '')),
+                    'api_key_openweather' => trim((string) ($_POST['wkey_ow'] ?? '')),
+                    'api_key_weatherapi'  => trim((string) ($_POST['wkey_wa'] ?? '')),
+                ];
+                $tmp = WEATHER_SETTINGS_FILE . '.tmp';
+                $ok  = @file_put_contents($tmp, json_encode($settings, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)) !== false
+                    && @rename($tmp, WEATHER_SETTINGS_FILE);
+                if (!$ok) {
+                    $error = 'Speichern fehlgeschlagen – Schreibrechte des push-Ordners prüfen.';
+                    break;
+                }
+                @unlink(__DIR__ . '/../weather-cache.json'); // alter Anbieter-Cache ist wertlos
+                require_once __DIR__ . '/../log.php';
+                app_log('info', 'weather', 'Einstellungen gespeichert (Anbieter: ' . WEATHER_PROVIDERS[$prov]['label'] . ').');
+                $notice = 'Wetter-Einstellungen gespeichert (Cache geleert).';
+                // Optional: gleich live testen (zweiter Submit-Button).
+                if (!empty($_POST['test'])) {
+                    try {
+                        $rows = weather_fetch_rows(weather_config());
+                        $first = null;
+                        foreach ($rows as $r) {
+                            if ($r['temp'] !== null) {
+                                $first = $r;
+                                break;
+                            }
+                        }
+                        $notice .= ' Verbindungstest OK: ' . count($rows) . ' Vorhersage-Zeilen von '
+                            . WEATHER_PROVIDERS[$prov]['label']
+                            . ($first !== null ? ', nächste Temperatur ' . round($first['temp'], 1) . ' °C.' : '.');
+                    } catch (Throwable $e) {
+                        $error = 'Verbindungstest fehlgeschlagen: ' . $e->getMessage();
+                    }
+                }
+                break;
+
+            case 'clear_weather_cache':
+                $notice = @unlink(__DIR__ . '/../weather-cache.json')
+                    ? 'Wetter-Cache geleert – der nächste App-Abruf holt frische Daten.'
+                    : 'Kein Wetter-Cache vorhanden.';
+                break;
+
+            case 'reset_stats':
+                // Nutzungsstatistik komplett zurücksetzen (z. B. nach der Testphase).
+                require_once __DIR__ . '/../stats-db.php';
+                require_once __DIR__ . '/../log.php';
+                try {
+                    $pdo = stats_db();
+                    $n = (int) $pdo->query('SELECT COUNT(*) FROM app_stats_events')->fetchColumn();
+                    $pdo->exec('DELETE FROM app_stats_events');
+                    app_log('info', 'stats', "Statistik im CMS zurückgesetzt ($n Einträge gelöscht).");
+                    $notice = "Statistik zurückgesetzt ($n Einträge gelöscht).";
+                } catch (Throwable $e) {
+                    $error = 'Zurücksetzen fehlgeschlagen: ' . $e->getMessage();
+                }
+                break;
+
+            case 'clear_log':
+                // Protokoll leeren (unabhängig von der 90-Tage-Bereinigung).
+                require_once __DIR__ . '/../log.php';
+                try {
+                    $pdo = stats_db();
+                    app_log_init($pdo);
+                    $n = (int) $pdo->query('SELECT COUNT(*) FROM app_log')->fetchColumn();
+                    $pdo->exec('DELETE FROM app_log');
+                    app_log('info', 'stats', "Protokoll im CMS geleert ($n Einträge gelöscht).");
+                    $notice = "Protokoll geleert ($n Einträge gelöscht).";
+                } catch (Throwable $e) {
+                    $error = 'Leeren fehlgeschlagen: ' . $e->getMessage();
+                }
+                break;
+
+            case 'save_more':
+                $checked = array_keys($_POST['more'] ?? []);
+                $hidden  = array_values(array_diff(array_keys(CMS_MORE_ITEMS), $checked));
+                $cfg = cms_read_config();
+                $cfg['moreHidden'] = $hidden;
+                $notice = cms_write_config($cfg)
+                    ? 'Gespeichert. Die App übernimmt es binnen ~2 Minuten (oder beim Neuladen).'
+                    : 'Speichern fehlgeschlagen – Schreibrechte des data-Ordners prüfen.';
+                break;
+
+            case 'save_info':
+                $out = [];
+                foreach (($_POST['items'] ?? []) as $row) {
+                    if (!empty($row['delete'])) {
+                        continue;
+                    }
+                    $title = trim((string) ($row['title'] ?? ''));
+                    if ($title === '') {
+                        continue; // leere/ungenutzte Zeile überspringen
+                    }
+                    $id = trim((string) ($row['id'] ?? '')) ?: cms_slug($title);
+                    $icon = trim((string) ($row['icon'] ?? ''));
+                    $item = [
+                        'id'    => $id,
+                        'title' => $title,
+                        'order' => (float) ($row['order'] ?? 0),
+                        'body'  => (string) ($row['body'] ?? ''),
+                    ];
+                    if ($icon !== '') {
+                        $item['icon'] = $icon;
+                    }
+                    if (!empty($row['hidden'])) {
+                        $item['hidden'] = true;
+                    }
+                    if (!empty($row['faq'])) {
+                        $item['faq'] = true; // Body als Frage/Antwort-Accordion anzeigen
+                    }
+                    // Quelle je Eintrag (manual = getippte Werte; joomla/wordpress = Import).
+                    $src = (string) ($row['source'] ?? 'manual');
+                    if (in_array($src, ['joomla', 'wordpress'], true)) {
+                        $item['source'] = $src;
+                        $loc = trim((string) ($row['sourceLocator'] ?? ''));
+                        if ($loc !== '') {
+                            $item['sourceLocator'] = $loc;
+                        }
+                    }
+                    $out[] = $item;
+                }
+                usort($out, static fn($a, $b) => ((float) $a['order']) <=> ((float) $b['order']));
+                $notice = cms_write_json('app-info.json', $out)
+                    ? 'Infos gespeichert. Übernahme in der App binnen ~2 Minuten.'
+                    : 'Speichern fehlgeschlagen – Schreibrechte des data-Ordners prüfen.';
+                break;
+
+            case 'save_settings':
+                $cfg = cms_read_config();
+                $lim = trim((string) ($_POST['lineupImageLimit'] ?? ''));
+                if ($lim === '') {
+                    unset($cfg['lineupImageLimit']);
+                } else {
+                    $cfg['lineupImageLimit'] = max(0, (int) $lim);
+                }
+                $cfg['background'] = !empty($_POST['background']);
+                // Home-Kopf (Festivalname + Datum) ein-/ausblenden.
+                $cfg['homeHeader'] = !empty($_POST['homeHeader']);
+                $td = (string) ($_POST['themeDefault'] ?? '');
+                if (in_array($td, ['dark', 'light'], true)) {
+                    $cfg['themeDefault'] = $td;
+                } else {
+                    unset($cfg['themeDefault']);
+                }
+                // Auto-Push-Schalter (überschreiben config.php; vom Cron gelesen).
+                $cfg['autoPushUpcoming'] = !empty($_POST['autoPushUpcoming']);
+                $cfg['autoPushNews']     = !empty($_POST['autoPushNews']);
+                $win = trim((string) ($_POST['upcomingWindowMin'] ?? ''));
+                if ($win === '') {
+                    unset($cfg['upcomingWindowMin']);
+                } else {
+                    $cfg['upcomingWindowMin'] = max(1, (int) $win);
+                }
+                // Auto-Push-Kategorien (Safety immer implizit, daher nicht gespeichert).
+                $pc = array_values(array_intersect(
+                    ['info', 'lineup', 'general'],
+                    array_keys((array) ($_POST['pushcat'] ?? []))
+                ));
+                $cfg['pushNewsCategories'] = $pc;
+                $notice = cms_write_config($cfg)
+                    ? 'Einstellungen gespeichert. Übernahme in der App binnen ~2 Minuten.'
+                    : 'Speichern fehlgeschlagen – Schreibrechte des data-Ordners prüfen.';
+                break;
+
+            case 'save_news':
+                $out = [];
+                $pushNow = []; // id => true, wenn „Sofort pushen" angehakt
+                foreach (($_POST['news'] ?? []) as $row) {
+                    if (!empty($row['delete'])) {
+                        continue;
+                    }
+                    $title = trim((string) ($row['title'] ?? ''));
+                    if ($title === '') {
+                        continue;
+                    }
+                    $id = trim((string) ($row['id'] ?? ''));
+                    if ($id === '') {
+                        $id = 'admin-' . (cms_slug($title) ?: 'news') . '-' . bin2hex(random_bytes(2));
+                    }
+                    $cat = (string) ($row['category'] ?? 'general');
+                    if (!isset(CMS_NEWS_CATEGORIES[$cat])) {
+                        $cat = 'general';
+                    }
+                    $pub = cms_dt_iso((string) ($row['publishAt'] ?? ''))
+                        ?? (new DateTimeImmutable('now', new DateTimeZone(cms_tz())))->format('c');
+                    $item = ['id' => $id, 'title' => $title, 'body' => (string) ($row['body'] ?? ''), 'category' => $cat, 'publishAt' => $pub];
+                    if ($exp = cms_dt_iso((string) ($row['expiresAt'] ?? ''))) {
+                        $item['expiresAt'] = $exp;
+                    }
+                    if (!empty($row['pinned'])) {
+                        $item['pinned'] = true;
+                    }
+                    $lurl = trim((string) ($row['linkUrl'] ?? ''));
+                    if ($lurl !== '') {
+                        $item['link'] = ['label' => (trim((string) ($row['linkLabel'] ?? '')) ?: 'Mehr'), 'url' => $lurl];
+                    }
+                    $pushNow[$id] = !empty($row['pushNow']);
+                    $out[] = $item;
+                }
+                usort($out, static fn($a, $b) => strcmp((string) $b['publishAt'], (string) $a['publishAt']));
+                $ok = cms_write_json('admin-news.json', $out);
+                $notice = $ok
+                    ? 'News gespeichert. Übernahme in der App binnen ~2 Minuten.'
+                    : 'Speichern fehlgeschlagen – Schreibrechte des data-Ordners prüfen.';
+
+                // „Sofort pushen": markierte, bereits veröffentlichte Einträge einmalig
+                // pushen (kategoriebewusst). push_log verhindert Doppelung mit dem Cron.
+                $pushIds = array_keys(array_filter($pushNow));
+                if ($ok && $pushIds) {
+                    try {
+                        require_once __DIR__ . '/../sender.php';
+                        $pdo  = push_db();
+                        $seen = array_flip($pdo->query('SELECT ref FROM push_log')->fetchAll(PDO::FETCH_COLUMN));
+                        $ins  = $pdo->prepare('INSERT IGNORE INTO push_log (ref) VALUES (?)');
+                        $nowDt = new DateTimeImmutable('now', new DateTimeZone(cms_tz()));
+                        $byId = [];
+                        foreach ($out as $it) {
+                            $byId[$it['id']] = $it;
+                        }
+                        $sent = 0; $skipped = 0;
+                        foreach ($pushIds as $pid) {
+                            $it  = $byId[$pid] ?? null;
+                            $ref = 'news:' . $pid;
+                            if (!$it || isset($seen[$ref])) { $skipped++; continue; }
+                            try {
+                                $pub = new DateTimeImmutable($it['publishAt']);
+                            } catch (Throwable $e) {
+                                $skipped++; continue;
+                            }
+                            if ($pub > $nowDt) { $skipped++; continue; } // erst ab Veröffentlichung
+                            $body = (string) ($it['body'] ?? '');
+                            if (mb_strlen($body) > 180) {
+                                $body = mb_substr($body, 0, 177) . '…';
+                            }
+                            $r = push_send_news(
+                                ['title' => (string) $it['title'], 'body' => $body, 'url' => '/news', 'tag' => 'news'],
+                                (string) ($it['category'] ?? 'general')
+                            );
+                            $ins->execute([$ref]);
+                            $sent += (int) ($r['sent'] ?? 0);
+                        }
+                        $notice .= ' Sofort gepusht: ' . $sent . ' zugestellt'
+                            . ($skipped ? " · $skipped übersprungen (schon gepusht oder noch nicht veröffentlicht)" : '') . '.';
+                    } catch (Throwable $e) {
+                        $notice .= ' (Sofort-Push fehlgeschlagen: ' . $e->getMessage() . ')';
+                    }
+                }
+                break;
+
+            case 'send_push':
+                $ptitle = trim((string) ($_POST['ptitle'] ?? ''));
+                $pbody  = trim((string) ($_POST['pbody'] ?? ''));
+                $purl   = trim((string) ($_POST['purl'] ?? '')) ?: '/';
+                if ($ptitle === '') {
+                    $error = 'Push-Titel fehlt.';
+                    break;
+                }
+                try {
+                    require_once __DIR__ . '/../sender.php';
+                    $r = push_broadcast(['title' => $ptitle, 'body' => $pbody, 'url' => $purl, 'tag' => 'admin']);
+                    $notice = 'Push gesendet: ' . (int) ($r['sent'] ?? 0) . ' zugestellt · '
+                        . (int) ($r['removed'] ?? 0) . ' abgelaufen entfernt · '
+                        . (int) ($r['total'] ?? 0) . ' Abos gesamt.';
+                } catch (Throwable $e) {
+                    $error = 'Push fehlgeschlagen: ' . $e->getMessage();
+                }
+                break;
+
+            case 'save_content':
+                $domain = (string) ($_POST['domain'] ?? '');
+                if (!isset(CMS_CONTENT_DOMAINS[$domain])) {
+                    $error = 'Unbekannte Domäne.';
+                    break;
+                }
+                $data = json_decode((string) ($_POST['json'] ?? ''), true);
+                if (!is_array($data)) {
+                    $error = 'Ungültiges JSON: ' . json_last_error_msg();
+                    break;
+                }
+                $type   = CMS_CONTENT_DOMAINS[$domain]['type'];
+                $isList = array_is_list($data);
+                if ($type === 'array' && !$isList && $data !== []) {
+                    $error = 'Erwartet wird eine Liste [ … ].';
+                    break;
+                }
+                if ($type === 'object' && $isList && $data !== []) {
+                    $error = 'Erwartet wird ein Objekt { … }.';
+                    break;
+                }
+                $notice = cms_write_json("app-$domain.json", $data)
+                    ? 'Gespeichert. Übernahme in der App binnen ~2 Minuten.'
+                    : 'Speichern fehlgeschlagen – Schreibrechte des data-Ordners prüfen.';
+                break;
+
+            case 'delete_content':
+                $domain = (string) ($_POST['domain'] ?? '');
+                if (!isset(CMS_CONTENT_DOMAINS[$domain])) {
+                    $error = 'Unbekannte Domäne.';
+                    break;
+                }
+                $f = cms_data_path("app-$domain.json");
+                if (is_file($f)) {
+                    @unlink($f);
+                }
+                $notice = 'Override entfernt – die App nutzt wieder den Build-Stand.';
+                break;
+
+            case 'save_records':
+                $domain = (string) ($_POST['domain'] ?? '');
+                if (!isset(CMS_DOMAIN_FIELDS[$domain])) {
+                    $error = 'Unbekannte Domäne.';
+                    break;
+                }
+                $fields = CMS_DOMAIN_FIELDS[$domain];
+                $out = [];
+                foreach (($_POST['rec'] ?? []) as $row) {
+                    if (!empty($row['__delete'])) {
+                        continue;
+                    }
+                    // Identitäts-Feld: i. d. R. „name", für Kategorien „label" bzw. die getippte ID.
+                    $primary = trim((string) ($row['name'] ?? $row['label'] ?? $row['id'] ?? ''));
+                    if ($primary === '') {
+                        continue; // leere/ungenutzte Zeile
+                    }
+                    $id  = trim((string) ($row['__id'] ?? ''))
+                        ?: trim((string) ($row['id'] ?? ''))
+                        ?: (cms_slug($primary) ?: 'item-' . bin2hex(random_bytes(2)));
+                    $rec = ['id' => $id];
+                    foreach ($fields as $f) {
+                        $key = $f['key'];
+                        $val = $row[$key] ?? null;
+                        switch ($f['type']) {
+                            case 'number':
+                                if (trim((string) $val) !== '') {
+                                    $rec[$key] = cms_to_number((string) $val);
+                                }
+                                break;
+                            case 'checkbox':
+                                $checked = !empty($val);
+                                if (!empty($f['omitWhenFalse'])) {
+                                    if ($checked) {
+                                        $rec[$key] = true;
+                                    }
+                                } elseif (($f['default'] ?? null) === true) {
+                                    if (!$checked) {
+                                        $rec[$key] = false;
+                                    }
+                                } else {
+                                    $rec[$key] = $checked;
+                                }
+                                break;
+                            case 'list':
+                                $rec[$key] = array_values(array_filter(array_map('trim', preg_split('/[\n,]+/', (string) $val) ?: [])));
+                                break;
+                            default:
+                                $s = trim((string) $val);
+                                if ($s !== '') {
+                                    $rec[$key] = $s;
+                                }
+                        }
+                    }
+                    if ($domain === 'artists' && empty($rec['slug'])) {
+                        $rec['slug'] = $id;
+                    }
+                    $out[] = $rec;
+                }
+                $needSort = false;
+                foreach ($out as $r) {
+                    if (isset($r['order'])) {
+                        $needSort = true;
+                        break;
+                    }
+                }
+                if ($needSort) {
+                    usort($out, static fn($a, $b) => (($a['order'] ?? PHP_FLOAT_MAX) <=> ($b['order'] ?? PHP_FLOAT_MAX)));
+                }
+                $notice = cms_write_json("app-$domain.json", $out)
+                    ? 'Gespeichert. Übernahme in der App binnen ~2 Minuten.'
+                    : 'Speichern fehlgeschlagen – Schreibrechte des data-Ordners prüfen.';
+                break;
+
+            case 'save_slots':
+                $out = [];
+                foreach (($_POST['slot'] ?? []) as $row) {
+                    if (!empty($row['__delete'])) {
+                        continue;
+                    }
+                    $artistId = trim((string) ($row['artistId'] ?? ''));
+                    $stageId  = trim((string) ($row['stageId'] ?? ''));
+                    $dayId    = trim((string) ($row['dayId'] ?? ''));
+                    if ($artistId === '' || $stageId === '' || $dayId === '') {
+                        continue; // unvollständige/leere Zeile
+                    }
+                    $id  = trim((string) ($row['__id'] ?? '')) ?: ($dayId . '-' . $stageId . '-' . cms_slug($artistId));
+                    $rec = ['id' => $id, 'artistId' => $artistId, 'stageId' => $stageId, 'dayId' => $dayId];
+                    if ($s = cms_dt_iso((string) ($row['start'] ?? ''))) {
+                        $rec['start'] = $s;
+                    }
+                    if ($e = cms_dt_iso((string) ($row['end'] ?? ''))) {
+                        $rec['end'] = $e;
+                    }
+                    $note = trim((string) ($row['note'] ?? ''));
+                    if ($note !== '') {
+                        $rec['note'] = $note;
+                    }
+                    if (!empty($row['cancelled'])) {
+                        $rec['cancelled'] = true;
+                    }
+                    $out[] = $rec;
+                }
+                $notice = cms_write_json('app-slots.json', $out)
+                    ? 'Timetable gespeichert. Übernahme in der App binnen ~2 Minuten.'
+                    : 'Speichern fehlgeschlagen – Schreibrechte des data-Ordners prüfen.';
+                break;
+
+            case 'upload':
+                $file = $_FILES['file'] ?? null;
+                if (!$file || ($file['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
+                    $error = 'Keine Datei gewählt.';
+                    break;
+                }
+                if (($file['error'] ?? 1) !== UPLOAD_ERR_OK) {
+                    $error = 'Upload-Fehler (Code ' . (int) $file['error'] . ').';
+                    break;
+                }
+                if (($file['size'] ?? 0) > CMS_UPLOAD_MAXSIZE) {
+                    $error = 'Datei zu groß (max. 5 MB).';
+                    break;
+                }
+                $name = cms_safe_filename((string) ($file['name'] ?? ''));
+                $ext  = strtolower((string) pathinfo($name, PATHINFO_EXTENSION));
+                if (!in_array($ext, CMS_UPLOAD_EXT, true)) {
+                    $error = 'Nur ' . implode(' / ', CMS_UPLOAD_EXT) . ' erlaubt.';
+                    break;
+                }
+                $custom = cms_slug((string) ($_POST['rename'] ?? ''));
+                if ($custom !== '') {
+                    $name = $custom . '.' . $ext;
+                }
+                $dir = cms_uploads_dir();
+                if (!is_dir($dir) || !is_writable($dir)) {
+                    $error = 'Upload-Ordner (data/uploads) nicht beschreibbar – Schreibrechte prüfen.';
+                    break;
+                }
+                if (!move_uploaded_file((string) $file['tmp_name'], $dir . '/' . $name)) {
+                    $error = 'Konnte Datei nicht speichern.';
+                    break;
+                }
+                $uploaded = '/data/uploads/' . $name;
+                $notice   = 'Hochgeladen. Pfad unten kopieren und z. B. als Artist-„image" oder Sponsor-„logo" einsetzen.';
+                break;
+
+            case 'save_sources':
+                $sc = [];
+                foreach (CMS_CONTENT_DOMAINS as $domain => $m) {
+                    $prov = (string) ($_POST['provider'][$domain] ?? 'manual');
+                    if (!in_array($prov, ['manual', 'joomla', 'wordpress'], true)) {
+                        $prov = 'manual';
+                    }
+                    $loc = trim((string) ($_POST['locator'][$domain] ?? ''));
+                    $sc[$domain] = ['provider' => $prov] + ($loc !== '' ? ['locator' => $loc] : []);
+                }
+                $notice = cms_write_json('source-config.json', $sc)
+                    ? 'Quellen gespeichert.'
+                    : 'Speichern fehlgeschlagen – Schreibrechte des data-Ordners prüfen.';
+                break;
+
+            case 'run_import':
+                $importReport = cms_run_import();
+                $notice = $importReport ? 'Import ausgeführt.' : 'Keine Domäne auf Joomla/WordPress gesetzt – nichts zu importieren.';
+                break;
+
+            case 'import_info':
+                $importReport = cms_import_info();
+                $notice = $importReport ? 'Info-Import ausgeführt.' : 'Kein Info-Eintrag auf Joomla/WordPress gesetzt – nichts zu importieren.';
+                break;
+        }
+    }
+}
+
+$tab  = $_GET['tab'] ?? 'more';
+$csrf = cms_csrf_token();
+?>
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>ROCK IM DORF · Admin</title>
+<style>
+  :root { --bg:#121212; --surface:#1c1c1c; --surface2:#262626; --text:#fff; --muted:#b3b3b3; --accent:#ffb300; --border:#2e2e2e; }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body { margin:0; background:var(--bg); color:var(--text); font-family: system-ui, -apple-system, sans-serif; }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 1.25rem 1rem 4rem; }
+  h1 { font-size: 1.4rem; margin: .2rem 0 1rem; }
+  h2 { font-size: 1.05rem; margin: 1.4rem 0 .6rem; }
+  a { color: var(--accent); }
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:1rem; margin-bottom:1rem; }
+  label.row { display:flex; align-items:center; gap:.7rem; padding:.55rem .2rem; border-bottom:1px solid var(--border); cursor:pointer; }
+  label.row:last-child { border-bottom:0; }
+  .fld { display:block; margin:.5rem 0; }
+  .fld span { display:block; font-size:.78rem; color:var(--muted); margin-bottom:.2rem; }
+  input[type=text], input[type=number], input[type=password], textarea, select {
+    width:100%; padding:.55rem .7rem; border-radius:10px; border:1px solid var(--border); background:var(--surface2); color:var(--text); font-size:1rem; font-family:inherit; }
+  textarea { min-height:7rem; resize:vertical; }
+  input[type=checkbox]{ width:1.15rem; height:1.15rem; accent-color: var(--accent); }
+  button { background:var(--accent); color:#000; border:0; border-radius:999px; padding:.6rem 1.1rem; font-weight:700; font-size:.95rem; cursor:pointer; }
+  button.ghost { background:var(--surface2); color:var(--text); border:1px solid var(--border); }
+  .bar { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1rem; }
+  /* Aktionsleiste (Speichern etc.) – auch oben, klebrig beim Scrollen langer Listen. */
+  .actions { display:flex; gap:.6rem; flex-wrap:wrap; margin-top:.5rem; }
+  .actions.top { position:sticky; top:0; z-index:5; margin:-.4rem -1rem .8rem; padding:.6rem 1rem; background:var(--surface); border-bottom:1px solid var(--border); }
+  .msg { padding:.7rem .9rem; border-radius:10px; margin-bottom:1rem; }
+  .msg.err { background:#3a1f1a; border:1px solid #e4572e; }
+  .msg.ok  { background:#1f2a1f; border:1px solid #4caf50; }
+  .muted { color:var(--muted); font-size:.85rem; }
+  .item { border:1px solid var(--border); border-radius:12px; padding:.8rem; margin-bottom:.8rem; background:var(--surface2); }
+  .item .head { display:flex; align-items:center; gap:.8rem; justify-content:space-between; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:.6rem; }
+  nav.tabs { display:flex; flex-wrap:wrap; gap:.4rem; margin-bottom:1rem; }
+  nav.tabs a { padding:.35rem .7rem; border-radius:999px; background:var(--surface2); color:var(--muted); font-size:.85rem; border:1px solid var(--border); text-decoration:none; }
+  nav.tabs a.active { background:var(--accent); color:#000; border-color:var(--accent); font-weight:700; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<?php if ($error): ?><div class="msg err"><?= cms_h($error) ?></div><?php endif; ?>
+<?php if ($notice): ?><div class="msg ok"><?= cms_h($notice) ?></div><?php endif; ?>
+
+<?php if (!cms_logged_in()): ?>
+
+  <h1>ROCK IM DORF · Admin</h1>
+  <form method="post" class="card" autocomplete="off">
+    <input type="hidden" name="do" value="login">
+    <h2 style="margin-top:0">Anmelden</h2>
+    <input type="password" name="password" placeholder="Passwort" autofocus required>
+    <div style="margin-top:.9rem"><button type="submit">Anmelden</button></div>
+    <p class="muted" style="margin-bottom:0">Passwort = Admin-Passwort aus <code>push/config.php</code>.</p>
+  </form>
+
+<?php else: ?>
+
+  <div class="bar">
+    <h1 style="margin:0">ROCK IM DORF · Admin</h1>
+    <form method="post"><input type="hidden" name="do" value="logout"><button class="ghost" type="submit">Abmelden</button></form>
+  </div>
+
+  <nav class="tabs">
+    <?php
+    $tabs = ['more' => 'MEHR-Menü', 'info' => 'Infos', 'content' => 'Inhalte', 'upload' => 'Bilder', 'sources' => 'Quellen', 'settings' => 'Einstellungen', 'news' => 'News', 'push' => 'Push', 'weather' => 'Wetter', 'stats' => 'Statistik', 'log' => 'Protokoll'];
+    foreach ($tabs as $k => $label):
+    ?>
+      <a class="<?= $tab === $k ? 'active' : '' ?>" href="?tab=<?= cms_h($k) ?>"><?= cms_h($label) ?></a>
+    <?php endforeach; ?>
+  </nav>
+
+  <?php if ($tab === 'more'):
+    $hidden = (array) (cms_read_config()['moreHidden'] ?? []); ?>
+    <form method="post" class="card">
+      <input type="hidden" name="do" value="save_more">
+      <input type="hidden" name="csrf" value="<?= cms_h($csrf) ?>">
+      <h2 style="margin-top:0">Sichtbare Punkte im MEHR-Menü</h2>
+      <p class="muted">Angehakt = sichtbar. Abgehakte Punkte werden in der App ausgeblendet.</p>
+      <?php foreach (CMS_MORE_ITEMS as $key => $label): ?>
+        <label class="row">
+          <input type="checkbox" name="more[<?= cms_h($key) ?>]" value="1" <?= in_array($key, $hidden, true) ? '' : 'checked' ?>>
+          <span><?= cms_h($label) ?></span>
+        </label>
+      <?php endforeach; ?>
+      <div style="margin-top:1rem"><button type="submit">Speichern</button></div>
+    </form>
+
+  <?php elseif ($tab === 'info'):
+    $items = cms_info_items();
+    // Eine leere „neue Zeile" anhängen.
+    $items[] = ['id' => '', 'title' => '', 'icon' => '', 'order' => '', 'body' => '', 'hidden' => false, '__new' => true];
+    ?>
+    <?php if ($importReport !== null): ?>
+      <div class="card">
+        <h2 style="margin-top:0">Import-Ergebnis</h2>
+        <?php if (!$importReport): ?>
+          <p class="muted">Kein Info-Eintrag auf Joomla/WordPress gesetzt.</p>
+        <?php else: foreach ($importReport as $d => $st): ?>
+          <div class="row" style="justify-content:space-between"><span><?= cms_h((string) $d) ?></span><span><?= cms_h((string) $st) ?></span></div>
+        <?php endforeach; endif; ?>
+      </div>
+    <?php endif; ?>
+    <form method="post" class="card">
+      <input type="hidden" name="do" value="save_info">
+      <input type="hidden" name="csrf" value="<?= cms_h($csrf) ?>">
+      <h2 style="margin-top:0">Infos verwalten</h2>
+      <p class="muted">Ein-/ausblenden (Häkchen „Sichtbar"), umbenennen, Text und Reihenfolge ändern, neue Einträge unten hinzufügen, „Löschen" entfernt beim Speichern. Reihenfolge darf Dezimal sein (z. B. 1.5). Text = Markdown; Leerzeile = neuer Absatz.</p>
+      <p class="muted"><b>Quelle je Eintrag:</b> <code>manual</code> = die hier getippten Werte. <code>joomla</code>/<code>wordpress</code> = Titel/Text werden beim Import aus dem Artikel (Locator: Joomla-Artikel-ID bzw. WP-Slug/ID) gezogen; Reihenfolge/Icon/Sichtbarkeit bleiben hier. Erst <b>Speichern</b>, dann <b>Importieren</b>.</p>
+      <datalist id="icons"><?php foreach (CMS_INFO_ICONS as $ic): ?><option value="<?= cms_h($ic) ?>"></option><?php endforeach; ?></datalist>
+      <?php $infoBar = '<button type="submit">Speichern</button>'
+        . '<button type="submit" form="impinfo" class="ghost" onclick="return confirm(\'Titel/Text aller auf Joomla/WordPress gesetzten Einträge jetzt importieren? (zuvor gespeicherte Quellen)\')">Aus Joomla/WordPress importieren</button>'; ?>
+      <div class="actions top"><?= $infoBar ?></div>
+
+      <?php foreach ($items as $i => $it):
+        $isNew = !empty($it['__new']); ?>
+        <div class="item">
+          <div class="head">
+            <strong><?= $isNew ? 'Neuer Eintrag' : cms_h((string) $it['title']) ?></strong>
+            <?php if (!$isNew): ?>
+              <label class="muted" style="display:flex;align-items:center;gap:.4rem">
+                <input type="checkbox" name="items[<?= $i ?>][delete]" value="1"> Löschen
+              </label>
+            <?php endif; ?>
+          </div>
+          <?php if (!$isNew): ?>
+            <input type="hidden" name="items[<?= $i ?>][id]" value="<?= cms_h((string) ($it['id'] ?? '')) ?>">
+          <?php endif; ?>
+          <div class="grid2">
+            <label class="fld"><span>Titel</span>
+              <input type="text" name="items[<?= $i ?>][title]" value="<?= cms_h((string) ($it['title'] ?? '')) ?>"></label>
+            <label class="fld"><span>Reihenfolge</span>
+              <input type="number" step="0.1" name="items[<?= $i ?>][order]" value="<?= cms_h((string) ($it['order'] ?? '')) ?>"></label>
+          </div>
+          <div class="grid2">
+            <label class="fld"><span>Icon (optional)</span>
+              <input type="text" list="icons" name="items[<?= $i ?>][icon]" value="<?= cms_h((string) ($it['icon'] ?? '')) ?>"></label>
+            <label class="fld" style="align-self:end">
+              <span>&nbsp;</span>
+              <label style="display:flex;align-items:center;gap:.5rem;padding:.55rem 0">
+                <input type="checkbox" name="items[<?= $i ?>][hidden]" value="1" <?= !empty($it['hidden']) ? 'checked' : '' ?>>
+                Versteckt (nicht im Menü/Suche)
+              </label>
+            </label>
+          </div>
+          <label class="fld">
+            <label style="display:flex;align-items:center;gap:.5rem;padding:.3rem 0">
+              <input type="checkbox" name="items[<?= $i ?>][faq]" value="1" <?= !empty($it['faq']) ? 'checked' : '' ?>>
+              Als Frage/Antwort-Accordion anzeigen (jede „## Frage“ wird aufklappbar; Text davor = Intro)
+            </label>
+          </label>
+          <?php $src = (string) ($it['source'] ?? 'manual'); ?>
+          <div class="grid2">
+            <label class="fld"><span>Quelle</span>
+              <select name="items[<?= $i ?>][source]">
+                <?php foreach (['manual' => 'manual (getippt)', 'joomla' => 'Joomla', 'wordpress' => 'WordPress'] as $sk => $sl): ?>
+                  <option value="<?= cms_h($sk) ?>" <?= $src === $sk ? 'selected' : '' ?>><?= cms_h($sl) ?></option>
+                <?php endforeach; ?>
+              </select></label>
+            <label class="fld"><span>Locator (Joomla-Artikel-ID / WP-Slug)</span>
+              <input type="text" name="items[<?= $i ?>][sourceLocator]" value="<?= cms_h((string) ($it['sourceLocator'] ?? '')) ?>" placeholder="z. B. 123"></label>
+          </div>
+          <label class="fld"><span>Text (Markdown)</span>
+            <textarea name="items[<?= $i ?>][body]"><?= cms_h((string) ($it['body'] ?? '')) ?></textarea></label>
+        </div>
+      <?php endforeach; ?>
+      <div class="actions"><?= $infoBar ?></div>
+    </form>
+    <form id="impinfo" method="post" style="display:none">
+      <input type="hidden" name="do" value="import_info">
+      <input type="hidden" name="csrf" value="<?= cms_h($csrf) ?>">
+    </form>
+
+  <?php elseif ($tab === 'content'):
+    $domain = (string) ($_GET['domain'] ?? 'sponsors');
+    if (!isset(CMS_CONTENT_DOMAINS[$domain])) {
+        $domain = 'sponsors';
+    }
+    $hasForm = ($domain === 'slots') || isset(CMS_DOMAIN_FIELDS[$domain]);
+    $mode = (!$hasForm || ($_GET['mode'] ?? '') === 'json') ? 'json' : 'form';
+    $hasOverride = cms_content_override_exists($domain);
+    $delBtn = $hasOverride
+        ? '<button type="submit" form="delovr" class="ghost" onclick="return confirm(\'Override entfernen und zum Build-Stand zurück?\')">Override entfernen</button>'
+        : '';
+    $saveBar = '<button type="submit">Speichern</button>' . $delBtn; ?>
+    <div class="card">
+      <h2 style="margin-top:0">Inhalte</h2>
+      <p class="muted">Jede Datei aus <code>/content</code> bearbeitbar → live wirksam (überschreibt den Build-Stand). „Override entfernen" stellt den Build-Stand wieder her.</p>
+      <form method="get">
+        <input type="hidden" name="tab" value="content">
+        <?php if ($mode === 'json' && $hasForm): ?><input type="hidden" name="mode" value="json"><?php endif; ?>
+        <label class="fld"><span>Domäne</span>
+          <select name="domain" onchange="this.form.submit()">
+            <?php foreach (CMS_CONTENT_DOMAINS as $k => $d): ?>
+              <option value="<?= cms_h($k) ?>" <?= $domain === $k ? 'selected' : '' ?>><?= cms_h($d['label']) ?></option>
+            <?php endforeach; ?>
+          </select>
+        </label>
+      </form>
+      <p class="muted">
+        <?= $hasOverride ? '🟡 Override aktiv.' : '⚪ Kein Override – Build-Stand.' ?>
+        <?php if ($hasForm): ?> ·
+          <?php if ($mode === 'form'): ?><a href="?tab=content&amp;domain=<?= cms_h($domain) ?>&amp;mode=json">Als JSON bearbeiten</a>
+          <?php else: ?><a href="?tab=content&amp;domain=<?= cms_h($domain) ?>">Formular-Ansicht</a><?php endif; ?>
+        <?php endif; ?>
+      </p>
+
+      <?php if ($mode === 'json'):
+        $raw = cms_content_raw($domain); ?>
+        <form method="post">
+          <input type="hidden" name="do" value="save_content">
+          <input type="hidden" name="csrf" value="<?= cms_h($csrf) ?>">
+          <input type="hidden" name="domain" value="<?= cms_h($domain) ?>">
+          <div class="actions top"><?= $saveBar ?></div>
+          <textarea name="json" spellcheck="false" style="min-height:24rem;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.82rem"><?= cms_h($raw) ?></textarea>
+          <div class="actions"><?= $saveBar ?></div>
+        </form>
+
+      <?php elseif ($domain === 'slots'):
+        $artists = cms_domain_records('artists');
+        $stages  = cms_domain_records('stages');
+        $festival = json_decode(cms_content_raw('festival'), true) ?: [];
+        $days = is_array($festival['days'] ?? null) ? $festival['days'] : [];
+        $slots = cms_domain_records('slots');
+        $slots[] = ['__new' => true];
+        $opt = static function (array $items, string $vk, string $lk, string $sel): string {
+            $h = '';
+            foreach ($items as $it) {
+                $v = (string) ($it[$vk] ?? '');
+                $h .= '<option value="' . cms_h($v) . '"' . ($sel === $v ? ' selected' : '') . '>' . cms_h((string) ($it[$lk] ?? $v)) . '</option>';
+            }
+            return $h;
+        }; ?>
+        <p class="muted">Pro Slot: Act, Bühne, Tag, Beginn/Ende. Neue Zeile unten. „Löschen" entfernt beim Speichern. (Acts/Bühnen/Tage kommen aus den jeweiligen Inhalten.)</p>
+        <form method="post">
+          <input type="hidden" name="do" value="save_slots">
+          <input type="hidden" name="csrf" value="<?= cms_h($csrf) ?>">
+          <div class="actions top"><?= $saveBar ?></div>
+          <?php foreach ($slots as $i => $s): $isNew = !empty($s['__new']); ?>
+            <div class="item">
+              <div class="head">
+                <strong><?= $isNew ? 'Neuer Slot' : cms_h((string) ($s['artistId'] ?? '')) ?></strong>
+                <?php if (!$isNew): ?><label class="muted" style="display:flex;align-items:center;gap:.4rem"><input type="checkbox" name="slot[<?= $i ?>][__delete]" value="1"> Löschen</label><?php endif; ?>
+              </div>
+              <?php if (!$isNew): ?><input type="hidden" name="slot[<?= $i ?>][__id]" value="<?= cms_h((string) ($s['id'] ?? '')) ?>"><?php endif; ?>
+              <div class="grid2">
+                <label class="fld"><span>Act</span><select name="slot[<?= $i ?>][artistId]"><option value=""></option><?= $opt($artists, 'id', 'name', (string) ($s['artistId'] ?? '')) ?></select></label>
+                <label class="fld"><span>Bühne</span><select name="slot[<?= $i ?>][stageId]"><option value=""></option><?= $opt($stages, 'id', 'name', (string) ($s['stageId'] ?? '')) ?></select></label>
+                <label class="fld"><span>Tag</span><select name="slot[<?= $i ?>][dayId]"><option value=""></option><?= $opt($days, 'id', 'label', (string) ($s['dayId'] ?? '')) ?></select></label>
+                <label class="fld" style="align-self:end"><label style="display:flex;align-items:center;gap:.5rem;padding:.55rem 0"><input type="checkbox" name="slot[<?= $i ?>][cancelled]" value="1" <?= !empty($s['cancelled']) ? 'checked' : '' ?>> abgesagt</label></label>
+                <label class="fld"><span>Beginn</span><input type="datetime-local" name="slot[<?= $i ?>][start]" value="<?= cms_h(cms_dt_local($s['start'] ?? null)) ?>"></label>
+                <label class="fld"><span>Ende</span><input type="datetime-local" name="slot[<?= $i ?>][end]" value="<?= cms_h(cms_dt_local($s['end'] ?? null)) ?>"></label>
+              </div>
+              <label class="fld"><span>Notiz (optional)</span><input type="text" name="slot[<?= $i ?>][note]" value="<?= cms_h((string) ($s['note'] ?? '')) ?>"></label>
+            </div>
+          <?php endforeach; ?>
+          <div class="actions"><?= $saveBar ?></div>
+        </form>
+
+      <?php else:
+        $fields  = CMS_DOMAIN_FIELDS[$domain];
+        // POI-Kategorie-Dropdown dynamisch aus den vorhandenen Kategorien füllen.
+        if ($domain === 'pois') {
+            $catIds = array_values(array_filter(array_map(
+                static fn($c) => is_array($c) ? (string) ($c['id'] ?? '') : '',
+                cms_domain_records('poi-categories')
+            )));
+            if ($catIds) {
+                foreach ($fields as &$cf) {
+                    if (($cf['key'] ?? '') === 'type') {
+                        $cf['options'] = $catIds;
+                    }
+                }
+                unset($cf);
+            }
+        }
+        $records = cms_domain_records($domain);
+        $records[] = ['__new' => true]; ?>
+        <form method="post">
+          <input type="hidden" name="do" value="save_records">
+          <input type="hidden" name="csrf" value="<?= cms_h($csrf) ?>">
+          <input type="hidden" name="domain" value="<?= cms_h($domain) ?>">
+          <div class="actions top"><?= $saveBar ?></div>
+          <?php foreach ($records as $i => $rec): $isNew = !empty($rec['__new']); ?>
+            <div class="item">
+              <div class="head">
+                <strong><?= $isNew ? 'Neuer Eintrag' : cms_h((string) ($rec['name'] ?? $rec['label'] ?? $rec['id'] ?? '')) ?></strong>
+                <?php if (!$isNew): ?><label class="muted" style="display:flex;align-items:center;gap:.4rem"><input type="checkbox" name="rec[<?= $i ?>][__delete]" value="1"> Löschen</label><?php endif; ?>
+              </div>
+              <?php if (!$isNew): ?><input type="hidden" name="rec[<?= $i ?>][__id]" value="<?= cms_h((string) ($rec['id'] ?? '')) ?>"><?php endif; ?>
+              <?php foreach ($fields as $f): ?>
+                <label class="fld"><span><?= cms_h($f['label']) ?></span><?= cms_field_input("rec[$i][{$f['key']}]", $f, $rec[$f['key']] ?? null) ?></label>
+              <?php endforeach; ?>
+            </div>
+          <?php endforeach; ?>
+          <div class="actions"><?= $saveBar ?></div>
+        </form>
+      <?php endif; ?>
+
+      <?php if ($hasOverride): ?>
+        <form id="delovr" method="post" style="display:none">
+          <input type="hidden" name="do" value="delete_content">
+          <input type="hidden" name="csrf" value="<?= cms_h($csrf) ?>">
+          <input type="hidden" name="domain" value="<?= cms_h($domain) ?>">
+        </form>
+      <?php endif; ?>
+    </div>
+
+  <?php elseif ($tab === 'upload'):
+    $uploads = cms_list_uploads(); ?>
+    <form method="post" class="card" enctype="multipart/form-data">
+      <input type="hidden" name="do" value="upload">
+      <input type="hidden" name="csrf" value="<?= cms_h($csrf) ?>">
+      <h2 style="margin-top:0">Bild hochladen</h2>
+      <p class="muted">Erlaubt: <?= cms_h(implode(', ', CMS_UPLOAD_EXT)) ?> · max. 5 MB. Wird unter <code>/data/uploads/</code> gespeichert; den angezeigten Pfad kopierst du in „Inhalte" (z. B. Artist-<code>image</code> oder Sponsor-<code>logo</code>).</p>
+      <label class="fld"><span>Datei</span><input type="file" name="file" accept=".webp,.png,.jpg,.jpeg,.svg" required></label>
+      <label class="fld"><span>Dateiname überschreiben (optional, ohne Endung)</span><input type="text" name="rename" placeholder="z. B. logo-firma"></label>
+      <div style="margin-top:.5rem"><button type="submit">Hochladen</button></div>
+      <?php if ($uploaded): ?>
+        <p style="margin-top:1rem">Pfad: <code><?= cms_h($uploaded) ?></code></p>
+      <?php endif; ?>
+    </form>
+    <?php if ($uploads): ?>
+      <div class="card">
+        <h2 style="margin-top:0">Vorhandene Uploads</h2>
+        <?php foreach ($uploads as $u): ?>
+          <div class="row" style="justify-content:space-between">
+            <code style="font-size:.8rem"><?= cms_h($u['path']) ?></code>
+            <img src="<?= cms_h($u['path']) ?>" alt="" style="height:34px;width:auto;max-width:90px;object-fit:contain">
+          </div>
+        <?php endforeach; ?>
+      </div>
+    <?php endif; ?>
+
+  <?php elseif ($tab === 'sources'):
+    $sc = cms_source_config(); ?>
+    <?php if ($importReport !== null): ?>
+      <div class="card">
+        <h2 style="margin-top:0">Import-Ergebnis</h2>
+        <?php if (!$importReport): ?>
+          <p class="muted">Keine Domäne auf Joomla/WordPress gesetzt.</p>
+        <?php else: foreach ($importReport as $d => $st): ?>
+          <div class="row" style="justify-content:space-between"><span><?= cms_h($d) ?></span><span><?= cms_h($st) ?></span></div>
+        <?php endforeach; endif; ?>
+      </div>
+    <?php endif; ?>
+    <form method="post" class="card">
+      <input type="hidden" name="do" value="save_sources">
+      <input type="hidden" name="csrf" value="<?= cms_h($csrf) ?>">
+      <h2 style="margin-top:0">Datenquelle je Domäne</h2>
+      <p class="muted">Pro Domäne wählen, woher die Daten kommen. <b>manual</b> = der „Inhalte"-Editor bzw. Build-Stand. <b>joomla</b>/<b>wordpress</b> = Server-Import. Locator: Joomla = Kategorie-ID, WordPress = Kategorie-Slug. Verbindung/Token in <code>push/config.php</code> → <code>sources</code>. <i>Generisches Mapping (Titel/Text); strukturierte Domänen ggf. im „Inhalte"-Tab nachbearbeiten.</i></p>
+      <?php foreach (CMS_CONTENT_DOMAINS as $domain => $m):
+        $prov = (string) ($sc[$domain]['provider'] ?? 'manual');
+        $loc  = (string) ($sc[$domain]['locator'] ?? ''); ?>
+        <div class="grid2" style="align-items:end;border-bottom:1px solid var(--border);padding:.5rem 0">
+          <label class="fld" style="margin:0"><span><?= cms_h($m['label']) ?> (<?= cms_h($domain) ?>)</span>
+            <select name="provider[<?= cms_h($domain) ?>]">
+              <?php foreach (['manual' => 'manual', 'joomla' => 'Joomla', 'wordpress' => 'WordPress'] as $pk => $pl): ?>
+                <option value="<?= cms_h($pk) ?>" <?= $prov === $pk ? 'selected' : '' ?>><?= cms_h($pl) ?></option>
+              <?php endforeach; ?>
+            </select></label>
+          <label class="fld" style="margin:0"><span>Locator (Kategorie-ID / -Slug)</span>
+            <input type="text" name="locator[<?= cms_h($domain) ?>]" value="<?= cms_h($loc) ?>"></label>
+        </div>
+      <?php endforeach; ?>
+      <div style="margin-top:1rem;display:flex;gap:.6rem;flex-wrap:wrap">
+        <button type="submit">Quellen speichern</button>
+        <button type="submit" form="runimp" class="ghost" onclick="return confirm('Jetzt aus den konfigurierten Quellen importieren?')">Jetzt importieren</button>
+      </div>
+    </form>
+    <form id="runimp" method="post" style="display:none">
+      <input type="hidden" name="do" value="run_import">
+      <input type="hidden" name="csrf" value="<?= cms_h($csrf) ?>">
+    </form>
+
+  <?php elseif ($tab === 'settings'):
+    $cfg = cms_read_config();
+    $lim = $cfg['lineupImageLimit'] ?? '';
+    $bg  = ($cfg['background'] ?? true) !== false;
+    $hh  = ($cfg['homeHeader'] ?? true) !== false;
+    $td  = (string) ($cfg['themeDefault'] ?? '');
+    $pushCats = (array) ($cfg['pushNewsCategories'] ?? []);
+    $auUpcoming = ($cfg['autoPushUpcoming'] ?? true) !== false;
+    $auNews     = ($cfg['autoPushNews'] ?? true) !== false;
+    $winMin     = $cfg['upcomingWindowMin'] ?? ''; ?>
+    <form method="post" class="card">
+      <input type="hidden" name="do" value="save_settings">
+      <input type="hidden" name="csrf" value="<?= cms_h($csrf) ?>">
+      <h2 style="margin-top:0">Globale Einstellungen</h2>
+
+      <label class="fld"><span>Line-Up: Anzahl Acts mit Bild</span>
+        <input type="number" min="0" step="1" name="lineupImageLimit" value="<?= cms_h((string) $lim) ?>" placeholder="Standard (20)">
+      </label>
+      <p class="muted" style="margin-top:0">Leer = Standardwert aus dem App-Code (20). Alle weiteren Acts ohne Bild.</p>
+
+      <label class="fld"><span>Standard-Theme (solange der Gast nicht selbst wählt)</span>
+        <select name="themeDefault">
+          <option value="" <?= $td === '' ? 'selected' : '' ?>>App-Standard (Dark)</option>
+          <option value="dark" <?= $td === 'dark' ? 'selected' : '' ?>>Dark</option>
+          <option value="light" <?= $td === 'light' ? 'selected' : '' ?>>Light</option>
+        </select>
+      </label>
+
+      <label class="row" style="margin-top:.6rem">
+        <input type="checkbox" name="background" value="1" <?= $bg ? 'checked' : '' ?>>
+        <span>Hintergrundgrafik anzeigen</span>
+      </label>
+
+      <label class="row">
+        <input type="checkbox" name="homeHeader" value="1" <?= $hh ? 'checked' : '' ?>>
+        <span>Home: Festivalname und Datum anzeigen</span>
+      </label>
+
+      <h2>Push-Automatik</h2>
+      <p class="muted" style="margin-top:0">Steuert die automatischen Pushes des Cron-Jobs (läuft je nach Server z. B. stündlich). Greift nur, wenn der Cron eingerichtet ist (siehe <code>docs/PUSH.md</code>).</p>
+      <label class="row">
+        <input type="checkbox" name="autoPushUpcoming" value="1" <?= $auUpcoming ? 'checked' : '' ?>>
+        <span>Konzert-Digest „Gleich live" (Timetable: bald startende Acts)</span>
+      </label>
+      <label class="fld"><span>Digest-Vorlaufzeit (Minuten) – an die Cron-Frequenz anpassen</span>
+        <input type="number" min="1" step="1" name="upcomingWindowMin" value="<?= cms_h((string) $winMin) ?>" placeholder="Standard (60)">
+      </label>
+      <p class="muted" style="margin-top:0">Acts, die innerhalb dieser Zeit starten, werden (einmalig) gepusht. Bei häufigem Cron kleiner wählen (z. B. 15–20), sonst kommt der Push zu früh. Leer = 60.</p>
+      <label class="row">
+        <input type="checkbox" name="autoPushNews" value="1" <?= $auNews ? 'checked' : '' ?>>
+        <span>Neue News automatisch pushen</span>
+      </label>
+
+      <h2>Auto-Push: Kategorien</h2>
+      <p class="muted" style="margin-top:0">Welche News-Kategorien automatisch als Push gehen (sofern „Neue News automatisch pushen" aktiv ist). <b>Sicherheit</b> wird <b>immer</b> gepusht. Welche dieser Kategorien jeder Gast tatsächlich erhält, wählt er zusätzlich selbst in der App.</p>
+      <?php foreach (['info' => 'Infos', 'lineup' => 'Line-Up', 'general' => 'Allgemein'] as $ck => $cl): ?>
+        <label class="row">
+          <input type="checkbox" name="pushcat[<?= cms_h($ck) ?>]" value="1" <?= in_array($ck, $pushCats, true) ? 'checked' : '' ?>>
+          <span><?= cms_h($cl) ?></span>
+        </label>
+      <?php endforeach; ?>
+      <label class="row">
+        <input type="checkbox" checked disabled>
+        <span>Sicherheit <span class="muted">(immer aktiv)</span></span>
+      </label>
+
+      <div style="margin-top:1rem"><button type="submit">Speichern</button></div>
+    </form>
+
+  <?php elseif ($tab === 'news'):
+    $items = cms_news_items();
+    $items[] = ['id' => '', 'title' => '', 'body' => '', 'category' => 'general', 'publishAt' => '', 'expiresAt' => '', 'pinned' => false, 'link' => null, '__new' => true]; ?>
+    <form method="post" class="card">
+      <input type="hidden" name="do" value="save_news">
+      <input type="hidden" name="csrf" value="<?= cms_h($csrf) ?>">
+      <h2 style="margin-top:0">News verwalten</h2>
+      <p class="muted">Diese News erscheinen im Newsfeed (zusätzlich zu Telegram-Live-News). Sichtbar ab „Veröffentlichen am", optional bis „Ablauf am". „Angepinnt" und „Sicherheit" stehen oben. Text = Markdown.</p>
+      <div class="actions top"><button type="submit">Speichern</button></div>
+
+      <?php foreach ($items as $i => $it):
+        $isNew = !empty($it['__new']); ?>
+        <div class="item">
+          <div class="head">
+            <strong><?= $isNew ? 'Neue News' : cms_h((string) $it['title']) ?></strong>
+            <?php if (!$isNew): ?>
+              <label class="muted" style="display:flex;align-items:center;gap:.4rem">
+                <input type="checkbox" name="news[<?= $i ?>][delete]" value="1"> Löschen
+              </label>
+            <?php endif; ?>
+          </div>
+          <?php if (!$isNew): ?>
+            <input type="hidden" name="news[<?= $i ?>][id]" value="<?= cms_h((string) ($it['id'] ?? '')) ?>">
+          <?php endif; ?>
+          <label class="fld"><span>Titel</span>
+            <input type="text" name="news[<?= $i ?>][title]" value="<?= cms_h((string) ($it['title'] ?? '')) ?>"></label>
+          <label class="fld"><span>Text (Markdown)</span>
+            <textarea name="news[<?= $i ?>][body]"><?= cms_h((string) ($it['body'] ?? '')) ?></textarea></label>
+          <div class="grid2">
+            <label class="fld"><span>Kategorie</span>
+              <select name="news[<?= $i ?>][category]">
+                <?php foreach (CMS_NEWS_CATEGORIES as $ck => $cl): ?>
+                  <option value="<?= cms_h($ck) ?>" <?= ($it['category'] ?? 'general') === $ck ? 'selected' : '' ?>><?= cms_h($cl) ?></option>
+                <?php endforeach; ?>
+              </select></label>
+            <label class="fld" style="align-self:end">
+              <label style="display:flex;align-items:center;gap:.5rem;padding:.55rem 0">
+                <input type="checkbox" name="news[<?= $i ?>][pinned]" value="1" <?= !empty($it['pinned']) ? 'checked' : '' ?>> Angepinnt
+              </label>
+            </label>
+          </div>
+          <div class="grid2">
+            <label class="fld"><span>Veröffentlichen am</span>
+              <input type="datetime-local" name="news[<?= $i ?>][publishAt]" value="<?= cms_h(cms_dt_local($it['publishAt'] ?? null)) ?>"></label>
+            <label class="fld"><span>Ablauf am (optional)</span>
+              <input type="datetime-local" name="news[<?= $i ?>][expiresAt]" value="<?= cms_h(cms_dt_local($it['expiresAt'] ?? null)) ?>"></label>
+          </div>
+          <div class="grid2">
+            <label class="fld"><span>Link-Text (optional)</span>
+              <input type="text" name="news[<?= $i ?>][linkLabel]" value="<?= cms_h((string) ($it['link']['label'] ?? '')) ?>"></label>
+            <label class="fld"><span>Link-URL (optional)</span>
+              <input type="text" name="news[<?= $i ?>][linkUrl]" value="<?= cms_h((string) ($it['link']['url'] ?? '')) ?>"></label>
+          </div>
+          <label class="row">
+            <input type="checkbox" name="news[<?= $i ?>][pushNow]" value="1">
+            <span>Beim Speichern <b>sofort pushen</b> <span class="muted">(einmalig; nur wenn bereits veröffentlicht; Web-Push muss eingerichtet sein)</span></span>
+          </label>
+        </div>
+      <?php endforeach; ?>
+      <div class="actions"><button type="submit">Speichern</button></div>
+    </form>
+
+  <?php elseif ($tab === 'push'): ?>
+    <form method="post" class="card">
+      <input type="hidden" name="do" value="send_push">
+      <input type="hidden" name="csrf" value="<?= cms_h($csrf) ?>">
+      <h2 style="margin-top:0">Push-Nachricht senden</h2>
+      <p class="muted">Geht sofort an alle Push-Abos (Web-Push muss eingerichtet sein, siehe <code>docs/PUSH.md</code>). Für getimte/automatische Pushes siehe News &amp; Cron.</p>
+      <label class="fld"><span>Titel</span><input type="text" name="ptitle" required></label>
+      <label class="fld"><span>Text</span><textarea name="pbody"></textarea></label>
+      <label class="fld"><span>Ziel-URL (optional)</span><input type="text" name="purl" placeholder="/"></label>
+      <div style="margin-top:.5rem"><button type="submit" onclick="return confirm('Push jetzt an alle Abos senden?')">Senden</button></div>
+    </form>
+
+    <?php try {
+        $stat = push_stats_current();
+        $hist = push_stats_recent(24); ?>
+      <div class="card">
+        <h2 style="margin-top:0">Abo-Statistik <span class="muted" style="font-weight:400">(anonym)</span></h2>
+        <p class="muted" style="margin-top:0">Aktuelle Push-Abos und gewählte Kategorien. Es werden ausschließlich <b>Zähler</b> gespeichert – keine personenbezogenen Daten. Der Verlauf wird vom Cron (~stündlich) fortgeschrieben.</p>
+        <div class="grid2">
+          <div class="item"><div class="muted">Abos gesamt</div><strong style="font-size:1.4rem"><?= (int) $stat['total'] ?></strong></div>
+          <div class="item"><div class="muted">Sicherheit</div><strong style="font-size:1.4rem"><?= (int) $stat['total'] ?></strong><div class="muted">immer aktiv</div></div>
+          <div class="item"><div class="muted">Infos</div><strong style="font-size:1.4rem"><?= (int) $stat['c_info'] ?></strong></div>
+          <div class="item"><div class="muted">Line-Up</div><strong style="font-size:1.4rem"><?= (int) $stat['c_lineup'] ?></strong></div>
+          <div class="item"><div class="muted">Allgemein</div><strong style="font-size:1.4rem"><?= (int) $stat['c_general'] ?></strong></div>
+        </div>
+        <?php if ($hist): ?>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem">
+            <h2>Verlauf</h2>
+            <a href="?export=push-stats" class="ghost" style="text-decoration:none;padding:.4rem .9rem;border-radius:999px;background:var(--surface2);border:1px solid var(--border);font-size:.85rem">Als CSV exportieren</a>
+          </div>
+          <div style="overflow-x:auto">
+            <table style="width:100%;border-collapse:collapse;font-size:.85rem">
+              <tr style="text-align:left;color:var(--muted)"><th>Zeit</th><th>Gesamt</th><th>Infos</th><th>Line-Up</th><th>Allgemein</th></tr>
+              <?php foreach ($hist as $r): ?>
+                <tr style="border-top:1px solid var(--border)">
+                  <td><?= cms_h((string) ($r['taken_at'] ?? '')) ?></td>
+                  <td><?= (int) $r['total'] ?></td>
+                  <td><?= (int) $r['c_info'] ?></td>
+                  <td><?= (int) $r['c_lineup'] ?></td>
+                  <td><?= (int) $r['c_general'] ?></td>
+                </tr>
+              <?php endforeach; ?>
+            </table>
+          </div>
+        <?php else: ?>
+          <p class="muted">Noch keine Verlaufsdaten – der erste Snapshot entsteht beim nächsten Cron-Lauf.</p>
+        <?php endif; ?>
+      </div>
+    <?php } catch (Throwable $e) {
+        echo '<div class="card"><p class="muted">Abo-Statistik nicht verfügbar (DB/Push nicht eingerichtet).</p></div>';
+    } ?>
+
+  <?php elseif ($tab === 'weather'):
+    // Wetter-Anbieter + Standort (wie CrewCare). Gespeichert wird in
+    // push/weather-settings.json (geschützt, überschreibt config.php['weather']).
+    require_once __DIR__ . '/../weather-providers.php';
+    $wcfg  = weather_config();
+    $wprov = weather_provider_key($wcfg);
+    $wcacheFile = __DIR__ . '/../weather-cache.json';
+    $wcache = is_file($wcacheFile) ? json_decode((string) @file_get_contents($wcacheFile), true) : null;
+  ?>
+    <form method="post" action="?tab=weather" class="card">
+      <input type="hidden" name="do" value="save_weather">
+      <input type="hidden" name="csrf" value="<?= cms_h($csrf) ?>">
+      <h2 style="margin-top:0">Wetter-Anbieter</h2>
+      <label class="fld"><span>Anbieter (Vorhersage fürs Home-Widget + Wetterseite)</span>
+        <select name="wprovider">
+          <?php foreach (WEATHER_PROVIDERS as $k => $meta): ?>
+            <option value="<?= cms_h($k) ?>" <?= $wprov === $k ? 'selected' : '' ?>><?= cms_h($meta['label']) ?> – <?= cms_h($meta['hint']) ?></option>
+          <?php endforeach; ?>
+        </select>
+      </label>
+      <div class="grid2">
+        <label class="fld"><span>Breite (Latitude)</span>
+          <input type="text" name="wlat" value="<?= cms_h((string) $wcfg['lat']) ?>" required></label>
+        <label class="fld"><span>Länge (Longitude)</span>
+          <input type="text" name="wlon" value="<?= cms_h((string) $wcfg['lon']) ?>" required></label>
+      </div>
+      <label class="fld"><span>Standortname (Anzeige in der App)</span>
+        <input type="text" name="wlocation" value="<?= cms_h((string) $wcfg['location']) ?>"></label>
+      <label class="fld"><span>TAWES-Station-ID (optional, NUR GeoSphere – Messwert „aktuell")</span>
+        <input type="text" name="wstation" value="<?= cms_h((string) $wcfg['station_id']) ?>"></label>
+      <label class="fld"><span>API-Key OpenWeather (nur bei Anbieter OpenWeather nötig)</span>
+        <input type="password" name="wkey_ow" value="<?= cms_h((string) $wcfg['api_key_openweather']) ?>" autocomplete="off"></label>
+      <label class="fld"><span>API-Key WeatherAPI.com (nur bei Anbieter WeatherAPI.com nötig)</span>
+        <input type="password" name="wkey_wa" value="<?= cms_h((string) $wcfg['api_key_weatherapi']) ?>" autocomplete="off"></label>
+      <div class="actions">
+        <button type="submit">Speichern</button>
+        <button type="submit" name="test" value="1" class="ghost">Speichern &amp; Verbindung testen</button>
+      </div>
+      <p class="muted" style="margin-bottom:0">Attribution in der App: „<?= cms_h(WEATHER_PROVIDERS[$wprov]['attribution']) ?>". GeoSphere/MET Norway sind ohne Key nutzbar; die Keys landen in <code>push/weather-settings.json</code> (per .htaccess gesperrt, nie im Repo).</p>
+    </form>
+
+    <div class="card">
+      <h2 style="margin-top:0">Status</h2>
+      <?php if (is_array($wcache)): ?>
+        <p style="margin:0">Cache vom <?= cms_h((string) ($wcache['fetchedAt'] ?? '?')) ?>
+          <span class="muted">(Anbieter: <?= cms_h((string) ($wcache['provider'] ?? '?')) ?>,
+          aktuell <?= cms_h((string) ($wcache['current']['temp'] ?? '–')) ?> °C)</span></p>
+      <?php else: ?>
+        <p class="muted" style="margin:0">Kein Cache vorhanden – der nächste App-Abruf holt frische Daten (TTL 15 min).</p>
+      <?php endif; ?>
+      <form method="post" action="?tab=weather" style="margin-top:.8rem">
+        <input type="hidden" name="do" value="clear_weather_cache">
+        <input type="hidden" name="csrf" value="<?= cms_h($csrf) ?>">
+        <button type="submit" class="ghost">Wetter-Cache leeren</button>
+      </form>
+    </div>
+
+  <?php elseif ($tab === 'stats'):
+    // App-Nutzungsstatistik (anonym, aus app_stats_events via push/track.php).
+    require_once __DIR__ . '/../stats-db.php';
+    try {
+        $pdo   = stats_db();
+        $vTz   = new DateTimeZone('Europe/Vienna');
+        $today = (new DateTimeImmutable('now', $vTz))->format('Y-m-d');
+        $week  = (new DateTimeImmutable('now', $vTz))->modify('-6 days')->format('Y-m-d');
+        // Meta-Events (_install/_standalone) zählen nicht als Seitenaufruf.
+        $noMeta = "SUBSTR(page,1,1) <> '_'";
+
+        $scope = static function (string $where, array $args) use ($pdo, $noMeta): array {
+            $st = $pdo->prepare(
+                "SELECT COUNT(*) views, COUNT(DISTINCT anon) users, COUNT(DISTINCT session) sessions
+                 FROM app_stats_events WHERE $noMeta $where"
+            );
+            $st->execute($args);
+            return $st->fetch() ?: ['views' => 0, 'users' => 0, 'sessions' => 0];
+        };
+        $kpi = [
+            'Gesamt'        => $scope('', []),
+            'Letzte 7 Tage' => $scope('AND day >= ?', [$week]),
+            'Heute'         => $scope('AND day = ?', [$today]),
+        ];
+
+        $pages = $pdo->query(
+            "SELECT page, COUNT(*) views, COUNT(DISTINCT anon) users
+             FROM app_stats_events WHERE $noMeta GROUP BY page ORDER BY views DESC LIMIT 20"
+        )->fetchAll();
+
+        $daily = $pdo->query(
+            "SELECT day, COUNT(*) views, COUNT(DISTINCT anon) users, COUNT(DISTINCT session) sessions
+             FROM app_stats_events WHERE $noMeta GROUP BY day ORDER BY day DESC LIMIT 14"
+        )->fetchAll();
+
+        // PWA: appinstalled-Events + Geräte, die als installierte App starten.
+        $installs   = (int) $pdo->query("SELECT COUNT(*) FROM app_stats_events WHERE page = '_install'")->fetchColumn();
+        $standalone = (int) $pdo->query("SELECT COUNT(DISTINCT anon) FROM app_stats_events WHERE page = '_standalone'")->fetchColumn();
+        $devices    = (int) $pdo->query('SELECT COUNT(DISTINCT anon) FROM app_stats_events')->fetchColumn();
+
+        // Sprache/Theme: letzter bekannter Stand je Gerät (Window-Funktion, MySQL 8/SQLite).
+        $distribution = static function (string $col) use ($pdo): array {
+            return $pdo->query(
+                "SELECT $col val, COUNT(*) n FROM (
+                    SELECT anon, $col, ROW_NUMBER() OVER (PARTITION BY anon ORDER BY ts DESC) rn
+                    FROM app_stats_events WHERE $col <> ''
+                 ) t WHERE rn = 1 GROUP BY $col ORDER BY n DESC"
+            )->fetchAll();
+        };
+        $langs  = $distribution('lang');
+        $themes = $distribution('theme');
+
+        // Stunden-Verteilung: Festivaltage (festival.json), sonst letzte 7 Tage.
+        $festDays = [];
+        foreach ((array) (cms_read_json('festival.json')['days'] ?? []) as $d) {
+            if (!empty($d['dayStart'])) {
+                $festDays[] = substr((string) $d['dayStart'], 0, 10);
+            }
+        }
+        $hourly = [];
+        $hourlyLabel = '';
+        if ($festDays !== []) {
+            $in = implode(',', array_fill(0, count($festDays), '?'));
+            $st = $pdo->prepare(
+                "SELECT SUBSTR(ts,12,2) h, COUNT(*) n FROM app_stats_events
+                 WHERE $noMeta AND day IN ($in) GROUP BY SUBSTR(ts,12,2) ORDER BY h"
+            );
+            $st->execute($festDays);
+            $hourly = $st->fetchAll();
+            $hourlyLabel = 'Festivaltage (' . implode(', ', $festDays) . ')';
+        }
+        if ($hourly === []) {
+            $st = $pdo->prepare(
+                "SELECT SUBSTR(ts,12,2) h, COUNT(*) n FROM app_stats_events
+                 WHERE $noMeta AND day >= ? GROUP BY SUBSTR(ts,12,2) ORDER BY h"
+            );
+            $st->execute([$week]);
+            $hourly = $st->fetchAll();
+            $hourlyLabel = 'letzte 7 Tage' . ($festDays !== [] ? ' – an den Festivaltagen noch keine Daten' : '');
+        }
+        $hourlyMax = max(1, ...array_map(static fn ($r) => (int) $r['n'], $hourly ?: [['n' => 1]]));
+
+        $fmtN = static fn ($v): string => number_format((int) $v, 0, ',', '.');
+    ?>
+    <?php foreach ($kpi as $label => $k): ?>
+      <div class="card">
+        <h2 style="margin-top:0"><?= cms_h((string) $label) ?></h2>
+        <div class="grid2">
+          <div class="item"><div class="muted">Eindeutige Nutzer</div><strong style="font-size:1.4rem"><?= $fmtN($k['users']) ?></strong></div>
+          <div class="item"><div class="muted">Sitzungen</div><strong style="font-size:1.4rem"><?= $fmtN($k['sessions']) ?></strong></div>
+          <div class="item"><div class="muted">Seitenaufrufe</div><strong style="font-size:1.4rem"><?= $fmtN($k['views']) ?></strong></div>
+          <div class="item"><div class="muted">Sitzungen je Nutzer</div><strong style="font-size:1.4rem"><?= (int) $k['users'] > 0 ? number_format((int) $k['sessions'] / (int) $k['users'], 1, ',', '.') : '–' ?></strong></div>
+        </div>
+      </div>
+    <?php endforeach; ?>
+
+    <div class="card">
+      <h2 style="margin-top:0">Meistgenutzte Bereiche</h2>
+      <?php if ($pages === []): ?><p class="muted">Noch keine Daten.</p><?php else: ?>
+        <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.85rem">
+          <tr style="text-align:left;color:var(--muted)"><th>Seite</th><th style="text-align:right">Aufrufe</th><th style="text-align:right">Nutzer</th></tr>
+          <?php foreach ($pages as $p): ?>
+            <tr style="border-top:1px solid var(--border)">
+              <td><?= cms_h((string) $p['page']) ?></td>
+              <td style="text-align:right"><?= $fmtN($p['views']) ?></td>
+              <td style="text-align:right"><?= $fmtN($p['users']) ?></td>
+            </tr>
+          <?php endforeach; ?>
+        </table></div>
+      <?php endif; ?>
+    </div>
+
+    <div class="card">
+      <h2 style="margin-top:0">Stunden-Verteilung <span class="muted" style="font-weight:400">(<?= cms_h($hourlyLabel) ?>)</span></h2>
+      <?php if ($hourly === []): ?><p class="muted">Noch keine Daten.</p><?php else: ?>
+        <?php foreach ($hourly as $r): ?>
+          <div style="display:flex;align-items:center;gap:.6rem;margin:.15rem 0">
+            <span class="muted" style="width:3.2rem;font-variant-numeric:tabular-nums"><?= cms_h((string) $r['h']) ?> Uhr</span>
+            <div style="flex:1;background:var(--surface2);border-radius:6px;overflow:hidden">
+              <div style="height:.9rem;width:<?= max(2, (int) round(100 * (int) $r['n'] / $hourlyMax)) ?>%;background:var(--accent)"></div>
+            </div>
+            <span style="width:3.5rem;text-align:right;font-variant-numeric:tabular-nums"><?= $fmtN($r['n']) ?></span>
+          </div>
+        <?php endforeach; ?>
+      <?php endif; ?>
+    </div>
+
+    <div class="card">
+      <h2 style="margin-top:0">PWA-Installationen</h2>
+      <div class="grid2">
+        <div class="item"><div class="muted">„Installiert"-Events (Android/Chrome)</div><strong style="font-size:1.4rem"><?= $fmtN($installs) ?></strong></div>
+        <div class="item"><div class="muted">Geräte mit App-Start (standalone)</div><strong style="font-size:1.4rem"><?= $fmtN($standalone) ?></strong><div class="muted">von <?= $fmtN($devices) ?> Geräten<?= $devices > 0 ? ' (' . number_format(100 * $standalone / $devices, 0) . ' %)' : '' ?></div></div>
+      </div>
+      <p class="muted" style="margin-bottom:0">iOS meldet kein Installations-Event – dort zählt nur der App-Start vom Home-Bildschirm (standalone).</p>
+    </div>
+
+    <div class="grid2">
+      <div class="card" style="margin-bottom:0">
+        <h2 style="margin-top:0">Sprache</h2>
+        <?php if ($langs === []): ?><p class="muted">Noch keine Daten.</p><?php else: foreach ($langs as $r): ?>
+          <div style="display:flex;justify-content:space-between;border-top:1px solid var(--border);padding:.3rem 0">
+            <span><?= cms_h(strtoupper((string) $r['val'])) ?></span><strong><?= $fmtN($r['n']) ?></strong>
+          </div>
+        <?php endforeach; endif; ?>
+        <p class="muted" style="margin-bottom:0">je Gerät, letzter Stand</p>
+      </div>
+      <div class="card" style="margin-bottom:0">
+        <h2 style="margin-top:0">Theme</h2>
+        <?php if ($themes === []): ?><p class="muted">Noch keine Daten.</p><?php else: foreach ($themes as $r): ?>
+          <div style="display:flex;justify-content:space-between;border-top:1px solid var(--border);padding:.3rem 0">
+            <span><?= cms_h((string) $r['val'] === 'dark' ? 'Dunkel' : ((string) $r['val'] === 'light' ? 'Hell' : (string) $r['val'])) ?></span><strong><?= $fmtN($r['n']) ?></strong>
+          </div>
+        <?php endforeach; endif; ?>
+        <p class="muted" style="margin-bottom:0">je Gerät, letzter Stand</p>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:1rem">
+      <h2 style="margin-top:0">Push-Abo-Verlauf</h2>
+      <?php try {
+          $pStat = push_stats_current();
+          $pHist = push_stats_recent(24); ?>
+        <p style="margin-top:0">Aktuell <strong><?= (int) $pStat['total'] ?></strong> Abos
+          <span class="muted">(Infos <?= (int) $pStat['c_info'] ?> · Line-Up <?= (int) $pStat['c_lineup'] ?> · Allgemein <?= (int) $pStat['c_general'] ?>)</span>
+          · <a href="?export=push-stats">Als CSV exportieren</a></p>
+        <?php if ($pHist): ?>
+          <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.85rem">
+            <tr style="text-align:left;color:var(--muted)"><th>Zeit</th><th>Gesamt</th><th>Infos</th><th>Line-Up</th><th>Allgemein</th></tr>
+            <?php foreach ($pHist as $r): ?>
+              <tr style="border-top:1px solid var(--border)">
+                <td><?= cms_h((string) ($r['taken_at'] ?? '')) ?></td>
+                <td><?= (int) $r['total'] ?></td><td><?= (int) $r['c_info'] ?></td>
+                <td><?= (int) $r['c_lineup'] ?></td><td><?= (int) $r['c_general'] ?></td>
+              </tr>
+            <?php endforeach; ?>
+          </table></div>
+        <?php else: ?>
+          <p class="muted" style="margin-bottom:0">Noch keine Verlaufsdaten – der erste Snapshot entsteht beim nächsten Cron-Lauf.</p>
+        <?php endif;
+      } catch (Throwable $e) {
+          echo '<p class="muted" style="margin-bottom:0">Push-Abo-Verlauf nicht verfügbar (Push nicht eingerichtet).</p>';
+      } ?>
+    </div>
+
+    <div class="card" style="display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap">
+      <p class="muted" style="margin:0;flex:1;min-width:14rem">Anonym erhoben: zufällige Geräte-/Sitzungskennung, Seitenname, Sprache/Theme, Zeitpunkt. Keine IP-Adressen, keine User-Agents, keine personenbezogenen Daten.</p>
+      <form method="post" action="?tab=stats" style="margin:0">
+        <input type="hidden" name="do" value="reset_stats">
+        <input type="hidden" name="csrf" value="<?= cms_h($csrf) ?>">
+        <button type="submit" class="ghost" style="border-color:#e4572e;color:#e4572e"
+          onclick="return confirm('Wirklich ALLE Statistik-Daten unwiderruflich löschen? (Push-Abo-Verlauf bleibt erhalten)')">Statistik zurücksetzen</button>
+      </form>
+    </div>
+    <?php } catch (Throwable $e) {
+        echo '<div class="card"><p class="muted">Statistik nicht verfügbar: Datenbank nicht erreichbar (MySQL-Zugang in <code>push/config.php</code> prüfen).</p></div>';
+    } ?>
+
+  <?php elseif ($tab === 'log'):
+    // Server-Protokoll (app_log): Push-Versand, Logins, Wetter-/Client-Fehler.
+    require_once __DIR__ . '/../log.php';
+    $fLevel  = (string) ($_GET['level'] ?? '');
+    $fSource = (string) ($_GET['src'] ?? '');
+    $entries = app_log_recent($fLevel ?: null, $fSource ?: null, 200);
+    $sources = app_log_sources();
+    $badge = static function (string $level): string {
+        $bg = ['error' => '#e4572e', 'warn' => '#b58900'][$level] ?? 'var(--surface2)';
+        $fg = isset(['error' => 1, 'warn' => 1][$level]) ? '#000' : 'var(--muted)';
+        return '<span style="background:' . $bg . ';color:' . $fg . ';border-radius:6px;padding:.05rem .45rem;font-size:.75rem;font-weight:700">' . cms_h($level) . '</span>';
+    };
+  ?>
+    <form method="get" class="card" style="display:flex;gap:.6rem;align-items:end;flex-wrap:wrap">
+      <input type="hidden" name="tab" value="log">
+      <label class="fld" style="flex:1;min-width:9rem;margin:0"><span>Stufe</span>
+        <select name="level">
+          <option value="">alle</option>
+          <?php foreach (['info', 'warn', 'error'] as $lv): ?>
+            <option value="<?= $lv ?>" <?= $fLevel === $lv ? 'selected' : '' ?>><?= $lv ?></option>
+          <?php endforeach; ?>
+        </select>
+      </label>
+      <label class="fld" style="flex:1;min-width:9rem;margin:0"><span>Quelle</span>
+        <select name="src">
+          <option value="">alle</option>
+          <?php foreach ($sources as $s): ?>
+            <option value="<?= cms_h($s) ?>" <?= $fSource === $s ? 'selected' : '' ?>><?= cms_h($s) ?></option>
+          <?php endforeach; ?>
+        </select>
+      </label>
+      <button type="submit">Filtern</button>
+    </form>
+
+    <div class="card">
+      <h2 style="margin-top:0">Protokoll <span class="muted" style="font-weight:400">(neueste zuerst, max. 200)</span></h2>
+      <?php if ($entries === []): ?>
+        <p class="muted" style="margin-bottom:0">Keine Einträge<?= ($fLevel || $fSource) ? ' für diesen Filter' : ' – das Protokoll füllt sich mit Push-Versand, Logins, Wetter- und App-Fehlern' ?>.</p>
+      <?php else: ?>
+        <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.85rem">
+          <tr style="text-align:left;color:var(--muted)"><th>Zeit</th><th>Stufe</th><th>Quelle</th><th>Meldung</th></tr>
+          <?php foreach ($entries as $e): ?>
+            <tr style="border-top:1px solid var(--border);vertical-align:top">
+              <td style="white-space:nowrap"><?= cms_h(substr((string) $e['ts'], 0, 19)) ?></td>
+              <td><?= $badge((string) $e['level']) ?></td>
+              <td><?= cms_h((string) $e['source']) ?></td>
+              <td><?= cms_h((string) $e['message']) ?></td>
+            </tr>
+          <?php endforeach; ?>
+        </table></div>
+      <?php endif; ?>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-top:.6rem">
+        <p class="muted" style="margin:0;flex:1;min-width:14rem">Aufbewahrung ~90 Tage (ältere Einträge werden automatisch bereinigt). Keine IPs, keine personenbezogenen Daten.</p>
+        <form method="post" action="?tab=log" style="margin:0">
+          <input type="hidden" name="do" value="clear_log">
+          <input type="hidden" name="csrf" value="<?= cms_h($csrf) ?>">
+          <button type="submit" class="ghost" style="border-color:#e4572e;color:#e4572e"
+            onclick="return confirm('Protokoll wirklich komplett leeren?')">Protokoll leeren</button>
+        </form>
+      </div>
+    </div>
+
+  <?php endif; ?>
+
+<?php endif; ?>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,53 @@
+# Dependencies
+node_modules
+
+# Build-Artefakte
+dist
+*.local
+
+# Umgebungs-/Credentials – NIE committen (§6.6)
+.env
+.env.*
+!.env.example
+
+# Web-Push-Backend: echte Config + Composer-Vendor nicht committen (Phase 5)
+push/config.php
+push/vendor
+push/composer.lock
+
+# Deploy-Zugangsdaten (FTP) nicht committen
+deploy.env.bat
+
+# Live-News (Telegram) gehören dem Server – nie lokal bauen/committen/hochladen
+public/data/live-news.json
+
+# Admin-UI/Importer-Dateien gehören dem Server – nie lokal committen/hochladen
+public/data/app-config.json
+public/data/app-*.json
+public/data/admin-news.json
+public/data/source-config.json
+public/data/uploads/
+
+# Generierte Inhaltsdaten (Beispieldaten werden getrackt, echte Importe nicht)
+# Auskommentiert lassen, solange Beispieldaten im Repo dienen sollen:
+# public/data/*.json
+# public/img/artists/*
+# public/img/sponsors/*
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editor / OS
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+Thumbs.db
+
+# TS build cache
+node_modules/.tmp
+
+# Wetter: CMS-Einstellungen (enthaelt API-Keys) + Server-Cache
+push/weather-settings.json
+push/weather-cache.json

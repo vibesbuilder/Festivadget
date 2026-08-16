@@ -1,0 +1,85 @@
+{
+  "nav": {
+    "home": "Home",
+    "lineup": "Line-Up",
+    "timetable": "Timetable",
+    "myplan": "Mein Plan",
+    "map": "Karte",
+    "more": "Mehr"
+  },
+  "more": {
+    "title": "Mehr",
+    "favorites": "Mein Timetable",
+    "news": "Newsfeed",
+    "map": "Karte",
+    "info": "Infos",
+    "sponsors": "Sponsoren",
+    "tickets": "Tickets",
+    "search": "Suche",
+    "contact": "Kontakt",
+    "impressum": "Impressum",
+    "language": "English / Deutsch",
+    "theme": "Dark / Light",
+    "weather": "Wetter"
+  },
+  "common": {
+    "loading": "Lädt …",
+    "error": "Etwas ist schiefgelaufen.",
+    "retry": "Erneut versuchen",
+    "offline": "Offline",
+    "lastUpdate": "Stand: {{time}}",
+    "empty": "Noch keine Inhalte."
+  },
+  "home": {
+    "now": "Jetzt",
+    "upNext": "Als Nächstes",
+    "overview": "Programmübersicht",
+    "newsfeed": "Newsfeed",
+    "nextFavorite": "Dein nächster Favorit"
+  },
+  "lineup": {
+    "title": "Line-Up",
+    "allGenres": "Alle",
+    "headliner": "Headliner"
+  },
+  "timetable": {
+    "title": "Timetable",
+    "grid": "Raster",
+    "list": "Liste",
+    "favoritesOnly": "Nur Favoriten",
+    "now": "Jetzt",
+    "clash": "Überschneidung"
+  },
+  "favorites": {
+    "title": "Mein Plan",
+    "empty": "Noch keine Favoriten. Tippe auf den Stern bei einem Act.",
+    "emptyTitle": "Noch keine Favoriten",
+    "explain": "Tippe im Line-Up oder im Timetable bei einem Act auf den Stern, um ihn zu deinem persönlichen Plan hinzuzufügen. Hier erscheinen dann alle deine Favoriten chronologisch – inklusive Warnung bei Überschneidungen und Export als .ics für deinen Kalender.",
+    "exportAll": "Alle Termine in Kalender speichern",
+    "reminder": "Erinnerung (.ics)",
+    "clashWarning": "Mindestens ein Programmpunkt überschneidet sich mit einem anderen Favoriten."
+  },
+  "artist": {
+    "playtimes": "Stage Time",
+    "favorite": "Favorisieren",
+    "favorited": "Favorisiert"
+  },
+  "weather": {
+    "title": "Wetter",
+    "today": "Heute",
+    "tomorrow": "Morgen",
+    "dayAfter": "Übermorgen",
+    "todayShort": "heute",
+    "tomorrowShort": "morgen",
+    "now": "aktuell",
+    "updated": "Aktualisiert",
+    "stale": "Daten evtl. veraltet",
+    "noData": "noch keine Daten",
+    "section": {
+      "morning": "Morgens",
+      "noon": "Mittags",
+      "evening": "Abends",
+      "night": "Nachts"
+    }
+  }
+}
