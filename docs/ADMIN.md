@@ -39,6 +39,15 @@ serverseitig für alle Admins (gespeichert in `push/cms-settings.json`, per
 Schlüssel fallen auf Deutsch zurück. Die **App-Sprache** wählt jeder Gast
 unabhängig davon selbst in der App (Deutsch/Englisch/Französisch/Spanisch).
 
+## Hilfe-Tab
+
+Der Tab **„Hilfe"** verlinkt alle Handbücher (ADMIN, DATEN, PUSH, TELEGRAM,
+IMPLEMENTATION) als Markdown-Dateien in allen vier Sprachen. Die Dateien werden
+beim App-Build nach `dist/docs/` kopiert und mit `deploy-data.bat full`
+hochgeladen (erreichbar unter `/docs/<Name>.md`); fehlende Dateien blendet der
+Tab aus. Eigenes Hintergrundbild: unter **Einstellungen** → „Hintergrundbild"
+aus den Uploads wählbar (`backgroundImage` in `app-config.json`).
+
 ## Deployment
 
 `push/cms/` per FTP in den `push/`-Ordner hochladen (wie der Rest von `push/`).
@@ -155,6 +164,7 @@ Der Token wird **in Joomla erzeugt** (pro Benutzer), nicht irgendwo „gefunden"
 | `moreHidden`       | `string[]`          | Ausgeblendete MEHR-Punkte (Schlüssel, siehe unten). |
 | `lineupImageLimit` | `number?`           | Acts mit Bild im Line-Up (sonst 20).                |
 | `background`       | `boolean?`          | Hintergrundgrafik an/aus (Default: an).             |
+| `backgroundImage`  | `string?`           | Eigenes Hintergrundbild (`/data/uploads/…`, leer = Build-Grafik). |
 | `themeDefault`     | `"dark"\|"light"?`  | Standard-Theme, solange der Gast nicht selbst wählt.|
 
 MEHR-Schlüssel: `news`, `map`, `info`, `sponsors`, `tickets`, `contact`,

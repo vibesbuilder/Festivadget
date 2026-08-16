@@ -41,6 +41,16 @@ les clés manquantes retombent sur l'allemand. La **langue de l'app** est
 choisie indépendamment par chaque visiteur dans l'app elle-même
 (allemand/anglais/français/espagnol).
 
+## Onglet Aide
+
+L'onglet **« Aide »** relie tous les manuels (ADMIN, DATEN, PUSH, TELEGRAM,
+IMPLEMENTATION) en fichiers Markdown dans les quatre langues. Les fichiers sont
+copiés vers `dist/docs/` au build de l'app et téléversés avec
+`deploy-data.bat full` (accessibles sous `/docs/<nom>.md`) ; l'onglet masque
+les fichiers manquants. Image de fond personnalisée : sélectionnable parmi les
+uploads sous **Réglages** → « Image de fond » (`backgroundImage` dans
+`app-config.json`).
+
 ## Déploiement
 
 Téléverser `push/cms/` par FTP dans le dossier `push/` (comme le reste de
@@ -179,6 +189,7 @@ jeton invalide/manquant.
 | `moreHidden`       | `string[]`          | Éléments du menu Plus masqués (clés, voir ci-dessous).     |
 | `lineupImageLimit` | `number?`           | Artistes avec image dans le line-up (sinon 20).            |
 | `background`       | `boolean?`          | Fond graphique on/off (défaut : on).                       |
+| `backgroundImage`  | `string?`           | Image de fond personnalisée (`/data/uploads/…`, vide = visuel fourni). |
 | `themeDefault`     | `"dark"\|"light"?`  | Thème par défaut tant que le visiteur n'a pas choisi.      |
 
 Clés du menu Plus : `news`, `map`, `info`, `sponsors`, `tickets`, `contact`,

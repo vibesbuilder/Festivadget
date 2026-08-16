@@ -20,10 +20,12 @@ export function useVersion() {
     queryFn: async ({ signal }) => {
       try {
         const manifest = await fetchJson<VersionManifest>(VERSION_FILE, signal);
-        await idbSet(LAST_VERSION_KEY, manifest);
+        // IndexedDB-Fehler (Safari-Privatmodus/Verbindungsabriss) dürfen den
+        // erfolgreichen Abruf nicht scheitern lassen – Cache ist nachrangig.
+        await idbSet(LAST_VERSION_KEY, manifest).catch(() => undefined);
         return manifest;
       } catch (err) {
-        const cached = await idbGet<VersionManifest>(LAST_VERSION_KEY);
+        const cached = await idbGet<VersionManifest>(LAST_VERSION_KEY).catch(() => undefined);
         if (cached) return cached;
         throw err;
       }
