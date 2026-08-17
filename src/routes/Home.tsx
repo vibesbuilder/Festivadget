@@ -4,6 +4,7 @@ import { ChevronRight } from "lucide-react";
 import { NowNextWidget } from "@/components/NowNextWidget";
 import { NewsfeedPreview } from "@/features/news/NewsfeedPreview";
 import { NotificationsToggle } from "@/components/NotificationsToggle";
+import { HomeVideo } from "@/components/HomeVideo";
 import { WeatherHomeCard } from "@/features/weather/WeatherHomeCard";
 import { useFestival } from "@/data/queries";
 import { useAppConfig } from "@/data/useAppConfig";
@@ -32,6 +33,9 @@ export default function Home() {
       )}
 
       <NotificationsToggle />
+
+      {/* Intro-Video (CMS-Tab „Branding") – volle Breite oberhalb des Newsfeeds. */}
+      <HomeVideo />
 
       {/* Newsfeed zuerst (oberhalb der Programmübersicht). */}
       <section>

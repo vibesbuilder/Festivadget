@@ -66,6 +66,10 @@ removed values automatically fall back to the build defaults.
   the server generates 192/512 px plus a maskable icon via GD (dark
   background colour, 80 % safe zone). Requires the PHP **GD** extension on
   the server.
+- **Intro video (home)**: shown full-width above the news feed. Source
+  "Link/file" (direct video file via FTP/https; YouTube/Vimeo embedded as
+  players automatically) or "Microsoft cloud" (OneDrive/SharePoint embed
+  URL); enabled via checkbox.
 - **Manifest**: as soon as a title, short name or icons are set, the app
   swaps the manifest link at runtime to `/push/manifest.php` (dynamic: name,
   colours, icons from the CMS). Without a PHP backend the static
@@ -201,6 +205,7 @@ token invalid/missing.
 | `background`       | `boolean?`          | Background artwork on/off (default: on).               |
 | `backgroundImage`  | `string?`           | Custom background image (`/data/uploads/…`, empty = bundled artwork). |
 | `themeDefault`     | `"dark"\|"light"?`  | Default theme until the visitor picks one themselves.  |
+| `homeVideo`        | `object?`           | Intro video on home (`{url, source, enabled}`), managed in the CMS "Branding" tab. |
 | `branding`         | `object?`           | Customer branding (colours, font, logo, title, icons) – managed via the CMS "Branding" tab. |
 
 More menu keys: `news`, `map`, `info`, `sponsors`, `tickets`, `contact`,

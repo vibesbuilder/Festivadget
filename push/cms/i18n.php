@@ -844,6 +844,32 @@ const CMS_I18N = [
         'fr' => "Tous les manuels en fichiers Markdown, chacun en allemand, anglais, français et espagnol. Ils sont livrés avec l'app (dossier /docs).",
         'es' => 'Todos los manuales como archivos Markdown, cada uno en alemán, inglés, francés y español. Se entregan con la app (carpeta /docs).',
     ],
+    // --- Intro-Video auf Home (Branding-Tab) ---
+    'Intro-Video (Home)' => ['en' => 'Intro video (home)', 'fr' => 'Vidéo d’intro (accueil)', 'es' => 'Vídeo de intro (inicio)'],
+    'Wird in voller Breite oberhalb des Newsfeeds angezeigt. Quelle „Link/Datei": direkte Videodatei (per FTP hochgeladen oder https-Link; YouTube/Vimeo werden automatisch als Player eingebettet). Quelle „Microsoft-Cloud": in OneDrive/SharePoint „Einbetten" wählen und die iframe-URL eintragen.' => [
+        'en' => 'Shown full-width above the news feed. Source "Link/file": a direct video file (uploaded via FTP or an https link; YouTube/Vimeo are embedded as players automatically). Source "Microsoft cloud": choose "Embed" in OneDrive/SharePoint and paste the iframe URL.',
+        'fr' => "Affichée en pleine largeur au-dessus du fil d'actualités. Source « Lien/fichier » : fichier vidéo direct (téléversé par FTP ou lien https ; YouTube/Vimeo sont intégrés automatiquement). Source « Cloud Microsoft » : choisir « Incorporer » dans OneDrive/SharePoint et coller l'URL de l'iframe.",
+        'es' => 'Se muestra a ancho completo encima del feed de noticias. Fuente «Enlace/archivo»: archivo de vídeo directo (subido por FTP o enlace https; YouTube/Vimeo se incrustan automáticamente). Fuente «Nube de Microsoft»: elegir «Insertar» en OneDrive/SharePoint y pegar la URL del iframe.',
+    ],
+    'Quelle' => ['en' => 'Source', 'fr' => 'Source', 'es' => 'Fuente'],
+    'Link/Datei (FTP, YouTube, Vimeo)' => ['en' => 'Link/file (FTP, YouTube, Vimeo)', 'fr' => 'Lien/fichier (FTP, YouTube, Vimeo)', 'es' => 'Enlace/archivo (FTP, YouTube, Vimeo)'],
+    'Microsoft-Cloud (OneDrive/SharePoint-Einbetten-Link)' => [
+        'en' => 'Microsoft cloud (OneDrive/SharePoint embed link)',
+        'fr' => 'Cloud Microsoft (lien d’intégration OneDrive/SharePoint)',
+        'es' => 'Nube de Microsoft (enlace de inserción de OneDrive/SharePoint)',
+    ],
+    'Video-URL (leer = Video entfernen)' => ['en' => 'Video URL (empty = remove video)', 'fr' => 'URL de la vidéo (vide = retirer la vidéo)', 'es' => 'URL del vídeo (vacío = quitar el vídeo)'],
+    'Video auf der Home-Seite anzeigen' => ['en' => 'Show the video on the home page', 'fr' => "Afficher la vidéo sur la page d'accueil", 'es' => 'Mostrar el vídeo en la página de inicio'],
+    'Video-URL muss mit https:// (oder /data/uploads/…) beginnen.' => [
+        'en' => 'The video URL must start with https:// (or /data/uploads/…).',
+        'fr' => "L'URL de la vidéo doit commencer par https:// (ou /data/uploads/…).",
+        'es' => 'La URL del vídeo debe empezar por https:// (o /data/uploads/…).',
+    ],
+    'Intro-Video entfernt.' => ['en' => 'Intro video removed.', 'fr' => 'Vidéo d’intro retirée.', 'es' => 'Vídeo de intro quitado.'],
+    'Intro-Video gespeichert (%s).' => ['en' => 'Intro video saved (%s).', 'fr' => 'Vidéo d’intro enregistrée (%s).', 'es' => 'Vídeo de intro guardado (%s).'],
+    'aktiv' => ['en' => 'active', 'fr' => 'active', 'es' => 'activo'],
+    'deaktiviert' => ['en' => 'disabled', 'fr' => 'désactivée', 'es' => 'desactivado'],
+
     // --- Update-Tab (Task #92.4, 1-Klick-Updater) ---
     'Update' => ['en' => 'Update', 'fr' => 'Mise à jour', 'es' => 'Actualización'],
     'App-Update einspielen' => ['en' => 'Apply app update', 'fr' => 'Appliquer la mise à jour', 'es' => 'Aplicar actualización'],

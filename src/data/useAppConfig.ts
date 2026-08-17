@@ -15,6 +15,8 @@ export interface AppConfig {
   homeHeader?: boolean; // Home-Kopf: Festivalname + Datum (Default: an)
   themeDefault?: "dark" | "light"; // Standard-Theme, solange der User nicht selbst wählt
   branding?: Branding; // Kunden-Branding (CMS-Tab „Branding", Paket Y)
+  // Intro-Video auf Home (CMS-Tab „Branding"): Link/FTP oder Microsoft-Cloud.
+  homeVideo?: { url: string; source?: "link" | "mscloud"; enabled?: boolean };
 }
 
 const DEFAULT_CONFIG: AppConfig = { moreHidden: [] };

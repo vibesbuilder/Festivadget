@@ -296,6 +296,30 @@ if (cms_logged_in() && ($_POST['do'] ?? '') !== '' && $_POST['do'] !== 'logout')
                 $notice = cms_t('Icons entfernt – es gelten wieder die mitgelieferten App-Icons.');
                 break;
 
+            case 'save_home_video':
+                // Intro-Video auf Home (Branding-Tab): Link/FTP oder Microsoft-Cloud.
+                $url = trim((string) ($_POST['hv_url'] ?? ''));
+                $source = ($_POST['hv_source'] ?? 'link') === 'mscloud' ? 'mscloud' : 'link';
+                $enabled = !empty($_POST['hv_enabled']);
+                if ($url !== '' && !preg_match('#^(https?://|/)#', $url)) {
+                    $error = cms_t('Video-URL muss mit https:// (oder /data/uploads/…) beginnen.');
+                    break;
+                }
+                $cfg = cms_read_config();
+                if ($url === '') {
+                    unset($cfg['homeVideo']);
+                } else {
+                    $cfg['homeVideo'] = ['url' => $url, 'source' => $source, 'enabled' => $enabled];
+                }
+                if (!cms_write_config($cfg)) {
+                    $error = cms_t('Speichern fehlgeschlagen – Schreibrechte des data-Ordners prüfen.');
+                    break;
+                }
+                $notice = $url === ''
+                    ? cms_t('Intro-Video entfernt.')
+                    : cms_t('Intro-Video gespeichert (%s).', $enabled ? cms_t('aktiv') : cms_t('deaktiviert'));
+                break;
+
             case 'save_more':
                 $checked = array_keys($_POST['more'] ?? []);
                 $hidden  = array_values(array_diff(array_keys(CMS_MORE_ITEMS), $checked));
@@ -1736,6 +1760,35 @@ $csrf = cms_csrf_token();
           <button type="submit" class="ghost"><?= cms_h(cms_t('Icons entfernen')) ?></button>
         </form>
       <?php endif; ?>
+    </div>
+
+    <?php
+    // Intro-Video auf Home (volle Breite oberhalb des Newsfeeds).
+    $hv = cms_read_config()['homeVideo'] ?? [];
+    $hvUrl = (string) ($hv['url'] ?? '');
+    $hvSource = ($hv['source'] ?? 'link') === 'mscloud' ? 'mscloud' : 'link';
+    $hvEnabled = !empty($hv['enabled']); ?>
+    <div class="card">
+      <h2 style="margin-top:0"><?= cms_h(cms_t('Intro-Video (Home)')) ?></h2>
+      <p class="muted"><?= cms_h(cms_t('Wird in voller Breite oberhalb des Newsfeeds angezeigt. Quelle „Link/Datei": direkte Videodatei (per FTP hochgeladen oder https-Link; YouTube/Vimeo werden automatisch als Player eingebettet). Quelle „Microsoft-Cloud": in OneDrive/SharePoint „Einbetten" wählen und die iframe-URL eintragen.')) ?></p>
+      <form method="post">
+        <input type="hidden" name="do" value="save_home_video">
+        <input type="hidden" name="csrf" value="<?= cms_h($csrf) ?>">
+        <label><?= cms_h(cms_t('Quelle')) ?>
+          <select name="hv_source">
+            <option value="link" <?= $hvSource === 'link' ? 'selected' : '' ?>><?= cms_h(cms_t('Link/Datei (FTP, YouTube, Vimeo)')) ?></option>
+            <option value="mscloud" <?= $hvSource === 'mscloud' ? 'selected' : '' ?>><?= cms_h(cms_t('Microsoft-Cloud (OneDrive/SharePoint-Einbetten-Link)')) ?></option>
+          </select>
+        </label>
+        <label><?= cms_h(cms_t('Video-URL (leer = Video entfernen)')) ?>
+          <input type="text" name="hv_url" value="<?= cms_h($hvUrl) ?>" placeholder="/data/uploads/intro.mp4">
+        </label>
+        <label style="display:flex;gap:.5rem;align-items:center">
+          <input type="checkbox" name="hv_enabled" value="1" <?= $hvEnabled ? 'checked' : '' ?> style="width:auto">
+          <?= cms_h(cms_t('Video auf der Home-Seite anzeigen')) ?>
+        </label>
+        <button type="submit"><?= cms_h(cms_t('Speichern')) ?></button>
+      </form>
     </div>
 
   <?php elseif ($tab === 'update'):
