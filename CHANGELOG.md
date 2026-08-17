@@ -7,6 +7,19 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.0.0/), Versionier
 
 ### Added
 
+- **Kunden-Branding im CMS (Tab „Branding").** Farben (Akzente + komplette
+  Dunkel-/Hell-Paletten), Schrift-Set (Standard/System/Serifen/Plakat als reine
+  CSS-Stacks), eigenes Header-Logo, App-Titel + Kurzname sowie PWA-Icons –
+  alles zur Laufzeit ohne neuen Build, gespeichert in `app-config.json` →
+  `branding`. Die App setzt die `--rid-*`-Design-Tokens je aktivem Theme
+  (`src/lib/branding.ts`); entfernte Werte fallen auf den Build-Stand zurück.
+  Aus einem hochgeladenen quadratischen PNG erzeugt der Server per GD die
+  Icons 192/512 px + maskable (dunkle Hintergrundfarbe, 80 % Safe-Zone). Neu:
+  `push/manifest.php` liefert ein dynamisches PWA-Manifest (Name, Farben,
+  Icons aus dem CMS); die App tauscht den Manifest-Link zur Laufzeit, sobald
+  Branding-Titel/-Icons gesetzt sind – ohne PHP-Backend gilt weiter das
+  statische `manifest.webmanifest`. Doku: `docs/ADMIN*.md`.
+
 - **Einstellungen: Hintergrundbild wählbar.** Im CMS unter Einstellungen gibt es
   jetzt ein Dropdown „Hintergrundbild" mit allen Uploads aus dem Tab „Bilder"
   (`app-config.json` → `backgroundImage`, nur `/data/uploads/…`-Pfade). Die App

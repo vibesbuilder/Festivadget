@@ -51,6 +51,33 @@ les fichiers manquants. Image de fond personnalisée : sélectionnable parmi les
 uploads sous **Réglages** → « Image de fond » (`backgroundImage` dans
 `app-config.json`).
 
+## Onglet Branding (identité client sans build)
+
+L'onglet **« Branding »** personnalise l'apparence de l'app à l'exécution –
+sans nouveau build. Tout est enregistré dans `app-config.json` → `branding` ;
+les valeurs supprimées reviennent automatiquement aux réglages du build.
+
+- **Titre & nom court** : titre de l'onglet du navigateur et libellé de
+  l'écran d'accueil (nom court : 12 caractères max.). Les deux alimentent
+  aussi le manifeste PWA.
+- **Jeu de polices** : 4 jeux composés de piles système/web-safe pures
+  (Standard, Système, Serif, Affiche) – aucun fichier de police requis,
+  l'app reste utilisable hors ligne.
+- **Couleurs** : couleurs d'accent + palettes complètes séparées pour les
+  thèmes sombre et clair (valeurs hex, préremplies avec les valeurs du
+  build). La case « Réinitialiser les couleurs » supprime toutes les
+  couleurs personnalisées.
+- **Logo** : remplace le logo de l'en-tête (`/data/uploads/branding-logo.*`).
+- **Icônes PWA** : téléverser un PNG carré (192 px min., 512 px recommandé) –
+  le serveur génère via GD les icônes 192/512 px + maskable (fond sombre,
+  zone de sécurité 80 %). Prérequis : extension PHP **GD** sur le serveur.
+- **Manifeste** : dès qu'un titre, un nom court ou des icônes sont définis,
+  l'app bascule le lien du manifeste à l'exécution vers `/push/manifest.php`
+  (dynamique : nom, couleurs, icônes du CMS). Sans backend PHP, le
+  `manifest.webmanifest` statique du build reste en vigueur. Les nouvelles
+  icônes/noms s'appliquent à la **prochaine installation** de la PWA (les
+  installations existantes sont rafraîchies par l'OS avec un délai).
+
 ## Déploiement
 
 Téléverser `push/cms/` par FTP dans le dossier `push/` (comme le reste de
@@ -191,6 +218,7 @@ jeton invalide/manquant.
 | `background`       | `boolean?`          | Fond graphique on/off (défaut : on).                       |
 | `backgroundImage`  | `string?`           | Image de fond personnalisée (`/data/uploads/…`, vide = visuel fourni). |
 | `themeDefault`     | `"dark"\|"light"?`  | Thème par défaut tant que le visiteur n'a pas choisi.      |
+| `branding`         | `object?`           | Identité client (couleurs, police, logo, titre, icônes) – gérée via l'onglet CMS « Branding ». |
 
 Clés du menu Plus : `news`, `map`, `info`, `sponsors`, `tickets`, `contact`,
 `impressum`, `theme`, `language` (doivent correspondre à `src/routes/More.tsx`).

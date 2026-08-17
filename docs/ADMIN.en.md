@@ -48,6 +48,31 @@ to `dist/docs/` during the app build and uploaded with `deploy-data.bat full`
 Custom background image: selectable from the uploads under **Settings** →
 "Background image" (`backgroundImage` in `app-config.json`).
 
+## Branding tab (customer branding without a build)
+
+The **"Branding"** tab customises the app's appearance at runtime – no new
+build required. Everything is stored in `app-config.json` → `branding`;
+removed values automatically fall back to the build defaults.
+
+- **Title & short name**: browser tab title and home screen label
+  (short name max. 12 characters). Both also feed the PWA manifest.
+- **Font set**: 4 sets built from pure system/web-safe stacks (Standard,
+  System, Serif, Poster) – no font files needed, stays offline-capable.
+- **Colours**: accent colours plus complete palettes for the dark and light
+  theme separately (hex values, pre-filled with the build defaults). The
+  "Reset colours" checkbox removes all custom colours again.
+- **Logo**: replaces the logo in the top bar (`/data/uploads/branding-logo.*`).
+- **PWA icons**: upload one square PNG (min. 192 px, 512 px recommended) –
+  the server generates 192/512 px plus a maskable icon via GD (dark
+  background colour, 80 % safe zone). Requires the PHP **GD** extension on
+  the server.
+- **Manifest**: as soon as a title, short name or icons are set, the app
+  swaps the manifest link at runtime to `/push/manifest.php` (dynamic: name,
+  colours, icons from the CMS). Without a PHP backend the static
+  `manifest.webmanifest` from the build keeps applying. New icons/names take
+  effect on the **next installation** of the PWA (existing installations are
+  refreshed by the OS with a delay).
+
 ## Deployment
 
 Upload `push/cms/` via FTP into the `push/` folder (like the rest of `push/`).
@@ -176,6 +201,7 @@ token invalid/missing.
 | `background`       | `boolean?`          | Background artwork on/off (default: on).               |
 | `backgroundImage`  | `string?`           | Custom background image (`/data/uploads/…`, empty = bundled artwork). |
 | `themeDefault`     | `"dark"\|"light"?`  | Default theme until the visitor picks one themselves.  |
+| `branding`         | `object?`           | Customer branding (colours, font, logo, title, icons) – managed via the CMS "Branding" tab. |
 
 More menu keys: `news`, `map`, `info`, `sponsors`, `tickets`, `contact`,
 `impressum`, `theme`, `language` (must match `src/routes/More.tsx`).

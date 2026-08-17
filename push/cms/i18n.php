@@ -721,6 +721,122 @@ const CMS_I18N = [
     ],
     'Leeren fehlgeschlagen: %s' => ['en' => 'Clearing failed: %s', 'fr' => 'Échec du vidage : %s', 'es' => 'Falló el vaciado: %s'],
 
+    // --- Branding-Tab (Paket Y) ---------------------------------------------
+    'Branding' => ['en' => 'Branding', 'fr' => 'Branding', 'es' => 'Branding'],
+    'Farben, Logo, Titel, Schrift und App-Icons der Besucher-App – vorausgefüllt mit den Standardwerten. Änderungen wirken ohne Neu-Build binnen ~2 Minuten.' => [
+        'en' => 'Colors, logo, title, font and app icons of the visitor app – pre-filled with the defaults. Changes take effect without a rebuild within ~2 minutes.',
+        'fr' => "Couleurs, logo, titre, police et icônes de l'app visiteurs – préremplis avec les valeurs par défaut. Les changements prennent effet sans rebuild sous ~2 minutes.",
+        'es' => 'Colores, logo, título, tipografía e iconos de la app de visitantes, prellenados con los valores predeterminados. Los cambios se aplican sin rebuild en ~2 minutos.',
+    ],
+    'Titel & App-Name' => ['en' => 'Title & app name', 'fr' => "Titre & nom de l'app", 'es' => 'Título y nombre de la app'],
+    'Browser-Titel / App-Name (leer = Festivalname)' => [
+        'en' => 'Browser title / app name (empty = festival name)',
+        'fr' => "Titre du navigateur / nom de l'app (vide = nom du festival)",
+        'es' => 'Título del navegador / nombre de la app (vacío = nombre del festival)',
+    ],
+    'Kurzname (Home-Bildschirm, max. 12 Zeichen; leer = Festival-Kurzname)' => [
+        'en' => 'Short name (home screen, max. 12 characters; empty = festival short name)',
+        'fr' => "Nom court (écran d'accueil, 12 caractères max ; vide = nom court du festival)",
+        'es' => 'Nombre corto (pantalla de inicio, máx. 12 caracteres; vacío = nombre corto del festival)',
+    ],
+    'Schrift' => ['en' => 'Font', 'fr' => 'Police', 'es' => 'Tipografía'],
+    'Schrift-Set (systemweite Schriften, keine Downloads nötig)' => [
+        'en' => 'Font set (system fonts, no downloads needed)',
+        'fr' => 'Jeu de polices (polices système, aucun téléchargement nécessaire)',
+        'es' => 'Conjunto tipográfico (fuentes del sistema, sin descargas)',
+    ],
+    'Standard (Oswald & Inter, kondensiert)' => [
+        'en' => 'Default (Oswald & Inter, condensed)',
+        'fr' => 'Standard (Oswald & Inter, condensé)',
+        'es' => 'Predeterminado (Oswald e Inter, condensada)',
+    ],
+    'System (neutral, Gerätestandard)' => [
+        'en' => 'System (neutral, device default)',
+        'fr' => "Système (neutre, standard de l'appareil)",
+        'es' => 'Sistema (neutral, estándar del dispositivo)',
+    ],
+    'Serif (klassisch, Georgia)' => [
+        'en' => 'Serif (classic, Georgia)',
+        'fr' => 'Serif (classique, Georgia)',
+        'es' => 'Serif (clásica, Georgia)',
+    ],
+    'Plakativ (fett, Arial Black)' => [
+        'en' => 'Poster (bold, Arial Black)',
+        'fr' => 'Affiche (gras, Arial Black)',
+        'es' => 'Cartel (negrita, Arial Black)',
+    ],
+    'Farben' => ['en' => 'Colors', 'fr' => 'Couleurs', 'es' => 'Colores'],
+    'Akzentfarbe' => ['en' => 'Accent color', 'fr' => "Couleur d'accent", 'es' => 'Color de acento'],
+    'Sekundärfarbe' => ['en' => 'Secondary color', 'fr' => 'Couleur secondaire', 'es' => 'Color secundario'],
+    'Dunkles Theme' => ['en' => 'Dark theme', 'fr' => 'Thème sombre', 'es' => 'Tema oscuro'],
+    'Helles Theme' => ['en' => 'Light theme', 'fr' => 'Thème clair', 'es' => 'Tema claro'],
+    'Hintergrund' => ['en' => 'Background', 'fr' => 'Fond', 'es' => 'Fondo'],
+    'Fläche' => ['en' => 'Surface', 'fr' => 'Surface', 'es' => 'Superficie'],
+    'Fläche 2' => ['en' => 'Surface 2', 'fr' => 'Surface 2', 'es' => 'Superficie 2'],
+    'Gedämpfter Text' => ['en' => 'Muted text', 'fr' => 'Texte atténué', 'es' => 'Texto atenuado'],
+    'Rahmen' => ['en' => 'Border', 'fr' => 'Bordure', 'es' => 'Borde'],
+    'Beim Speichern alle Farben auf die Standardwerte zurücksetzen' => [
+        'en' => 'Reset all colors to the defaults when saving',
+        'fr' => "Réinitialiser toutes les couleurs aux valeurs par défaut à l'enregistrement",
+        'es' => 'Restablecer todos los colores a los valores predeterminados al guardar',
+    ],
+    'Logo' => ['en' => 'Logo', 'fr' => 'Logo', 'es' => 'Logo'],
+    'Ersetzt das Kopfzeilen-Logo der App (Querformat empfohlen, wird 36 px hoch angezeigt). Leer = mitgeliefertes Logo.' => [
+        'en' => "Replaces the app's header logo (landscape recommended, displayed 36 px tall). Empty = bundled logo.",
+        'fr' => "Remplace le logo d'en-tête de l'app (paysage recommandé, affiché sur 36 px de haut). Vide = logo fourni.",
+        'es' => 'Sustituye el logo de la cabecera de la app (se recomienda horizontal; se muestra con 36 px de alto). Vacío = logo incluido.',
+    ],
+    'Logo entfernen' => ['en' => 'Remove logo', 'fr' => 'Retirer le logo', 'es' => 'Quitar el logo'],
+    'App-Icon (PWA)' => ['en' => 'App icon (PWA)', 'fr' => "Icône de l'app (PWA)", 'es' => 'Icono de la app (PWA)'],
+    'Quadratisches PNG hochladen (mindestens 192×192, empfohlen 512×512; transparenter Hintergrund möglich). Daraus werden die Install-Icons erzeugt (192, 512 und „maskable" mit der dunklen Hintergrundfarbe). Bereits installierte Apps übernehmen neue Icons erst verzögert.' => [
+        'en' => 'Upload a square PNG (at least 192×192, recommended 512×512; transparent background allowed). The install icons are generated from it (192, 512 and "maskable" with the dark background color). Already installed apps pick up new icons with a delay.',
+        'fr' => "Téléverse un PNG carré (au moins 192×192, recommandé 512×512 ; fond transparent possible). Les icônes d'installation en sont générées (192, 512 et « maskable » avec la couleur de fond sombre). Les apps déjà installées reprennent les nouvelles icônes avec du retard.",
+        'es' => 'Sube un PNG cuadrado (mínimo 192×192, recomendado 512×512; fondo transparente permitido). A partir de él se generan los iconos de instalación (192, 512 y «maskable» con el color de fondo oscuro). Las apps ya instaladas adoptan los iconos nuevos con retraso.',
+    ],
+    'Vorschau' => ['en' => 'Preview', 'fr' => 'Aperçu', 'es' => 'Vista previa'],
+    'Icons entfernen' => ['en' => 'Remove icons', 'fr' => 'Retirer les icônes', 'es' => 'Quitar los iconos'],
+    'Branding gespeichert. Übernahme in der App binnen ~2 Minuten.' => [
+        'en' => 'Branding saved. The app picks it up within ~2 minutes.',
+        'fr' => "Branding enregistré. L'app le reprend sous ~2 minutes.",
+        'es' => 'Branding guardado. La app lo aplica en ~2 minutos.',
+    ],
+    'Logo hochgeladen. Übernahme in der App binnen ~2 Minuten.' => [
+        'en' => 'Logo uploaded. The app picks it up within ~2 minutes.',
+        'fr' => "Logo téléversé. L'app le reprend sous ~2 minutes.",
+        'es' => 'Logo subido. La app lo aplica en ~2 minutos.',
+    ],
+    'Logo entfernt – die App zeigt wieder das mitgelieferte Logo.' => [
+        'en' => 'Logo removed – the app shows the bundled logo again.',
+        'fr' => "Logo retiré – l'app affiche à nouveau le logo fourni.",
+        'es' => 'Logo eliminado; la app vuelve a mostrar el logo incluido.',
+    ],
+    'App-Icons erzeugt (192, 512, maskable). Übernahme in der App binnen ~2 Minuten.' => [
+        'en' => 'App icons generated (192, 512, maskable). The app picks them up within ~2 minutes.',
+        'fr' => "Icônes de l'app générées (192, 512, maskable). L'app les reprend sous ~2 minutes.",
+        'es' => 'Iconos de la app generados (192, 512, maskable). La app los aplica en ~2 minutos.',
+    ],
+    'Icons entfernt – es gelten wieder die mitgelieferten App-Icons.' => [
+        'en' => 'Icons removed – the bundled app icons apply again.',
+        'fr' => "Icônes retirées – les icônes fournies s'appliquent à nouveau.",
+        'es' => 'Iconos eliminados; vuelven a regir los iconos incluidos.',
+    ],
+    'Die PHP-Erweiterung GD fehlt auf dem Server – Icons können nicht erzeugt werden.' => [
+        'en' => 'The PHP GD extension is missing on the server – icons cannot be generated.',
+        'fr' => "L'extension PHP GD manque sur le serveur – les icônes ne peuvent pas être générées.",
+        'es' => 'Falta la extensión GD de PHP en el servidor; no se pueden generar los iconos.',
+    ],
+    'PNG konnte nicht gelesen werden.' => [
+        'en' => 'The PNG could not be read.',
+        'fr' => 'Le PNG n\'a pas pu être lu.',
+        'es' => 'No se pudo leer el PNG.',
+    ],
+    'Bild zu klein – mindestens 192×192 Pixel.' => [
+        'en' => 'Image too small – at least 192×192 pixels.',
+        'fr' => 'Image trop petite – au moins 192×192 pixels.',
+        'es' => 'Imagen demasiado pequeña; mínimo 192×192 píxeles.',
+    ],
+    'Nur PNG erlaubt.' => ['en' => 'Only PNG allowed.', 'fr' => 'Seul le PNG est autorisé.', 'es' => 'Solo se permite PNG.'],
+
     // --- Hilfe-Tab ----------------------------------------------------------
     'Handbücher' => ['en' => 'Manuals', 'fr' => 'Manuels', 'es' => 'Manuales'],
     'Alle Handbücher als Markdown-Dateien, jeweils in Deutsch, Englisch, Französisch und Spanisch. Sie werden mit der App ausgeliefert (Ordner /docs).' => [

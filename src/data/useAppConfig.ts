@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchJson } from "./fetchJson";
+import type { Branding } from "@/lib/branding";
 
 // Server-eigene App-Konfiguration (data/app-config.json), vom PHP-Admin geschrieben
 // und live eingelesen (2-Minuten-Poll, wie die Telegram-Live-News). Fehlt die Datei
@@ -13,6 +14,7 @@ export interface AppConfig {
   backgroundImage?: string; // eigenes Hintergrundbild (/data/uploads/…, leer = Build-Grafik)
   homeHeader?: boolean; // Home-Kopf: Festivalname + Datum (Default: an)
   themeDefault?: "dark" | "light"; // Standard-Theme, solange der User nicht selbst wählt
+  branding?: Branding; // Kunden-Branding (CMS-Tab „Branding", Paket Y)
 }
 
 const DEFAULT_CONFIG: AppConfig = { moreHidden: [] };
