@@ -32,12 +32,22 @@ The installer checks all requirements itself and shows what is missing.
    background image are all managed in the CMS (see [ADMIN.en.md](ADMIN.en.md)).
    With web push, also add the cron job ([PUSH.en.md](PUSH.en.md), step 6).
 
-## Updates (manual)
+## Updates
 
-When applying a new version, customer content stays untouched: **never
-overwrite `data/` (content + uploads) and `push/config.php`** – everything
-else (app files, `push/*.php`, `push/cms/`, `push/vendor/`) may be replaced.
-A convenient one-click updater is planned.
+Updates use the dedicated **update package** `festivadget-update-vX.Y.Z.zip`
+(like the release, but **without `data/` and without `install/`**). Customer
+content stays untouched in both variants – `data/` (content, uploads,
+branding), `push/config.php` and the CMS/weather settings are never
+overwritten.
+
+- **Convenient (one click):** In the CMS, open **Update** and upload the
+  update package – done. The CMS validates the package (full release
+  packages are rejected), applies only unprotected files and shows the
+  installed version (file `VERSION`). Requires the PHP `zip` (or `phar`)
+  extension.
+- **Minimal (FTP):** Extract the update package and copy it over the
+  installation via FTP (overwrite). Since `data/` and `install/` are not in
+  the package, nothing else needs attention.
 
 ## Building the release package yourself (maintainer)
 

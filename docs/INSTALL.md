@@ -33,12 +33,21 @@ Der Installer prüft alle Voraussetzungen selbst und zeigt an, was fehlt.
    Hintergrundbild pflegst du komplett im CMS (siehe [ADMIN.md](ADMIN.md)).
    Mit Web-Push noch den Cronjob anlegen ([PUSH.md](PUSH.md), Schritt 6).
 
-## Updates (manuell)
+## Updates
 
-Beim Einspielen einer neuen Version bleiben die Kundeninhalte unangetastet:
-**`data/` (Inhalte + Uploads) und `push/config.php` niemals überschreiben** –
-alles andere (App-Dateien, `push/*.php`, `push/cms/`, `push/vendor/`) darf
-ersetzt werden. Ein komfortabler 1-Klick-Updater ist geplant.
+Für Updates gibt es das eigene **Update-Paket** `festivadget-update-vX.Y.Z.zip`
+(wie das Release, aber **ohne `data/` und ohne `install/`**). Kundeninhalte
+bleiben in beiden Varianten unangetastet – `data/` (Inhalte, Uploads,
+Branding), `push/config.php` und die CMS-/Wetter-Einstellungen werden nie
+überschrieben.
+
+- **Komfort (1-Klick):** Im CMS unter **Update** das Update-Paket hochladen –
+  fertig. Das CMS prüft das Paket (volle Release-Pakete werden abgelehnt),
+  spielt nur ungeschützte Dateien ein und zeigt die installierte Version
+  (Datei `VERSION`). Braucht die PHP-Erweiterung `zip` (oder `phar`).
+- **Minimal (FTP):** Update-Paket entpacken und per FTP über die Installation
+  kopieren (überschreiben). Da `data/` und `install/` nicht im Paket sind,
+  ist nichts weiter zu beachten.
 
 ## Release-Paket selbst bauen (Maintainer)
 

@@ -59,6 +59,9 @@ if (-not (Test-Path "$staging\docs")) { Write-Warning "docs/ fehlt im Build (Man
 
 # --- 4. ZIP -----------------------------------------------------------------------
 $version = (Get-Content "$app\package.json" -Raw | ConvertFrom-Json).version
+# VERSION-Datei: zeigt dem CMS-Update-Tab den installierten Stand.
+Set-Content -Path "$staging\VERSION" -Value $version -Encoding ascii -NoNewline
+
 $zip = "$app\release\festivadget-v$version.zip"
 if (Test-Path $zip) { Remove-Item $zip -Force }
 Write-Host "== Packe $zip"
@@ -80,8 +83,29 @@ try {
     $archive.Dispose()
 }
 
+# Update-Paket: wie das Release, aber OHNE data/ (Kundeninhalte!) und ohne
+# install/. Zum Einspielen per FTP-Ueberschreiben (Minimal) oder 1-Klick im
+# CMS-Tab "Update" (Komfort) - data/, config.php und Uploads bleiben unberuehrt.
+$updateZip = "$app\release\festivadget-update-v$version.zip"
+if (Test-Path $updateZip) { Remove-Item $updateZip -Force }
+Write-Host "== Packe $updateZip"
+$archive = [System.IO.Compression.ZipFile]::Open($updateZip, 'Create')
+try {
+    $base = (Resolve-Path $staging).Path
+    Get-ChildItem $staging -Recurse -File | ForEach-Object {
+        $entry = $_.FullName.Substring($base.Length + 1) -replace '\\', '/'
+        if ($entry -like 'data/*' -or $entry -like 'install/*') { return }
+        [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile(
+            $archive, $_.FullName, $entry,
+            [System.IO.Compression.CompressionLevel]::Optimal) | Out-Null
+    }
+} finally {
+    $archive.Dispose()
+}
+
 $mb = [math]::Round((Get-Item $zip).Length / 1MB, 1)
+$umb = [math]::Round((Get-Item $updateZip).Length / 1MB, 1)
 Write-Host ""
-Write-Host "Fertig: $zip ($mb MB)"
+Write-Host "Fertig: $zip ($mb MB) + Update-Paket ($umb MB)"
 Write-Host "Hinweis: data/ im Paket = aktueller Build-Stand (public/data) -"
 Write-Host "vor einem oeffentlichen Release Beispieldaten statt Echtdaten verwenden."

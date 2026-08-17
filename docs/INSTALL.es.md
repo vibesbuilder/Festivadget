@@ -33,12 +33,22 @@ El instalador comprueba todos los requisitos y muestra lo que falta.
    fondo se gestionan por completo en el CMS (ver [ADMIN.es.md](ADMIN.es.md)).
    Con web push, añadir también la tarea cron ([PUSH.es.md](PUSH.es.md), paso 6).
 
-## Actualizaciones (manuales)
+## Actualizaciones
 
-Al aplicar una versión nueva, el contenido del cliente queda intacto: **nunca
-sobrescribir `data/` (contenidos + subidas) ni `push/config.php`** – todo lo
-demás (archivos de la app, `push/*.php`, `push/cms/`, `push/vendor/`) puede
-reemplazarse. Está previsto un actualizador de un clic.
+Las actualizaciones usan el **paquete de actualización** dedicado
+`festivadget-update-vX.Y.Z.zip` (como la release, pero **sin `data/` y sin
+`install/`**). El contenido del cliente queda intacto en ambas variantes:
+`data/` (contenidos, subidas, branding), `push/config.php` y los ajustes de
+CMS/meteo nunca se sobrescriben.
+
+- **Cómodo (un clic):** en el CMS, abrir **Actualización** y subir el
+  paquete; listo. El CMS valida el paquete (los paquetes de release
+  completos se rechazan), aplica solo archivos no protegidos y muestra la
+  versión instalada (archivo `VERSION`). Requiere la extensión PHP `zip`
+  (o `phar`).
+- **Mínimo (FTP):** descomprimir el paquete y copiarlo por FTP sobre la
+  instalación (sobrescribir). Como `data/` e `install/` no están en el
+  paquete, no hay nada más que vigilar.
 
 ## Construir el paquete uno mismo (mantenedor)
 

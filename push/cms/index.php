@@ -8,6 +8,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/lib.php';
 require_once __DIR__ . '/importer.php';
 require_once __DIR__ . '/branding.php';
+require_once __DIR__ . '/update.php';
 
 $error    = cms_handle_auth();
 $notice   = null;
@@ -137,6 +138,49 @@ if (cms_logged_in() && ($_POST['do'] ?? '') !== '' && $_POST['do'] !== 'logout')
                     $notice = cms_t('Protokoll geleert (%d Einträge gelöscht).', $n);
                 } catch (Throwable $e) {
                     $error = cms_t('Leeren fehlgeschlagen: %s', $e->getMessage());
+                }
+                break;
+
+            case 'apply_update':
+                $file = $_FILES['file'] ?? null;
+                if (!$file || ($file['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
+                    $error = cms_t('Keine Datei gewählt.');
+                    break;
+                }
+                if (($file['error'] ?? 1) !== UPLOAD_ERR_OK) {
+                    $error = cms_t('Upload-Fehler (Code %d).', (int) $file['error']);
+                    break;
+                }
+                if (strtolower((string) pathinfo((string) $file['name'], PATHINFO_EXTENSION)) !== 'zip') {
+                    $error = cms_t('Nur ZIP-Dateien (festivadget-update-v*.zip) erlaubt.');
+                    break;
+                }
+                // PharData-Fallback braucht die .zip-Endung → erst umkopieren.
+                $tmpZip = sys_get_temp_dir() . '/festivadget-update-' . bin2hex(random_bytes(6)) . '.zip';
+                if (!move_uploaded_file((string) $file['tmp_name'], $tmpZip)) {
+                    $error = cms_t('Upload konnte nicht gespeichert werden.');
+                    break;
+                }
+                $result = cms_update_apply($tmpZip);
+                @unlink($tmpZip);
+                if ($result['ok']) {
+                    $notice = cms_t(
+                        'Update eingespielt: %1$d Dateien aktualisiert, %2$d geschützte übersprungen. Installierte Version: %3$s.',
+                        $result['updated'],
+                        $result['skipped'],
+                        $result['version'] !== '' ? $result['version'] : '–'
+                    );
+                } else {
+                    $updateErrors = [
+                        'zip-invalid'        => cms_t('ZIP-Datei konnte nicht gelesen werden.'),
+                        'zip-missing'        => cms_t('Am Server fehlt die PHP-Erweiterung zip (und phar).'),
+                        'not-update-package' => cms_t('Das ist kein Festivadget-Update-Paket.'),
+                        'full-package'       => cms_t('Das ist das VOLLE Release-Paket (enthält data/) – zum Updaten bitte das Update-Paket (festivadget-update-v*.zip) verwenden.'),
+                        'bad-path'           => cms_t('Unsicherer Pfad im Paket – Update abgebrochen.'),
+                        'read-failed'        => cms_t('Paket unvollständig lesbar – Update abgebrochen.'),
+                        'write-failed'       => cms_t('Schreiben fehlgeschlagen (Datei-Rechte prüfen) – Update unvollständig!'),
+                    ];
+                    $error = $updateErrors[$result['error']] ?? (string) $result['error'];
                 }
                 break;
 
@@ -746,7 +790,7 @@ $csrf = cms_csrf_token();
 
   <nav class="tabs">
     <?php
-    $tabs = ['settings' => 'Einstellungen', 'branding' => 'Branding', 'more' => 'MEHR-Menü', 'info' => 'Infos', 'content' => 'Inhalte', 'upload' => 'Bilder', 'sources' => 'Quellen', 'news' => 'News', 'push' => 'Push', 'weather' => 'Wetter', 'stats' => 'Statistik', 'log' => 'Protokoll', 'help' => 'Hilfe'];
+    $tabs = ['settings' => 'Einstellungen', 'branding' => 'Branding', 'more' => 'MEHR-Menü', 'info' => 'Infos', 'content' => 'Inhalte', 'upload' => 'Bilder', 'sources' => 'Quellen', 'news' => 'News', 'push' => 'Push', 'weather' => 'Wetter', 'stats' => 'Statistik', 'log' => 'Protokoll', 'update' => 'Update', 'help' => 'Hilfe'];
     foreach ($tabs as $k => $label):
     ?>
       <a class="<?= $tab === $k ? 'active' : '' ?>" href="?tab=<?= cms_h($k) ?>"><?= cms_h(cms_t($label)) ?></a>
@@ -1691,6 +1735,28 @@ $csrf = cms_csrf_token();
           <input type="hidden" name="csrf" value="<?= cms_h($csrf) ?>">
           <button type="submit" class="ghost"><?= cms_h(cms_t('Icons entfernen')) ?></button>
         </form>
+      <?php endif; ?>
+    </div>
+
+  <?php elseif ($tab === 'update'):
+    // 1-Klick-Updater (Komfort): Update-Paket hochladen und einspielen.
+    $curVersion = cms_update_version();
+    $zipAvailable = class_exists('ZipArchive') || extension_loaded('phar'); ?>
+    <div class="card">
+      <h2 style="margin-top:0"><?= cms_h(cms_t('App-Update einspielen')) ?></h2>
+      <p class="muted"><?= cms_h(cms_t('Installierte Version: %s', $curVersion !== '' ? $curVersion : cms_t('unbekannt (keine VERSION-Datei – Installation stammt nicht aus einem Release-Paket)'))) ?></p>
+      <p><?= cms_h(cms_t('Hier das Update-Paket (festivadget-update-v*.zip) hochladen. Deine Inhalte bleiben unangetastet: data/ (Inhalte, Uploads, Branding), push/config.php sowie CMS-/Wetter-Einstellungen werden nie überschrieben.')) ?></p>
+      <?php if (!$zipAvailable): ?>
+        <p class="error"><?= cms_h(cms_t('Am Server fehlt die PHP-Erweiterung zip (und phar).')) ?></p>
+      <?php else: ?>
+        <form method="post" enctype="multipart/form-data">
+          <input type="hidden" name="csrf" value="<?= cms_h($csrf) ?>">
+          <input type="hidden" name="do" value="apply_update">
+          <input type="file" name="file" accept=".zip" required>
+          <button type="submit" onclick="return confirm(<?= cms_j(cms_t('Update jetzt einspielen? Die App ist währenddessen kurz inkonsistent.')) ?>)"><?= cms_h(cms_t('Update einspielen')) ?></button>
+        </form>
+        <p class="muted" style="margin-top:.6rem"><?= cms_h(cms_t('Maximale Upload-Größe (PHP): %s', (string) ini_get('upload_max_filesize'))) ?></p>
+        <p class="muted"><?= cms_h(cms_t('Alternative ohne CMS (Minimal): Update-Paket entpacken und per FTP über die Installation kopieren – data/ und push/config.php sind im Update-Paket nicht enthalten. Details: Hilfe → Installation.')) ?></p>
       <?php endif; ?>
     </div>
 
