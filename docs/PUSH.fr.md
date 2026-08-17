@@ -105,14 +105,25 @@ cron-job.org) sur
 *(AUCUN cron n'est nécessaire pour les notifications Telegram `#push` – elles
 partent immédiatement.)*
 
-**Fréquence du cron & latence des actus :** les push automatiques d'actus ne
-partent qu'au prochain passage du cron – l'intervalle détermine donc la
-**latence**. Plusieurs entrées cron (décalées), p. ex. toutes les 10–15 min, la
-réduisent d'autant. Mais alors réduire aussi le **délai d'annonce du digest**
-(CMS → Réglages → `upcomingWindowMin`) en conséquence (p. ex. 15–20 min), sinon
-« Bientôt en live » annonce des artistes jusqu'à 60 min trop tôt. Ne **pas**
-mettre plusieurs crons sur la même minute (sinon envoi théoriquement double
-avant que `push_log` n'agisse) – les décaler de quelques minutes.
+**Fréquence du cron, latence des actus & délai « Bientôt en live » :** les
+push automatiques d'actus ne partent qu'au prochain passage du cron –
+l'intervalle détermine donc la **latence** (cron toutes les 2 min = actus sous
+2 min). Le **délai d'annonce du digest** (CMS → Réglages → `upcomingWindowMin`)
+n'est **pas** un rythme de cron : il définit **combien de temps avant le début
+du concert** la notification « Bientôt en live » arrive. Chaque artiste est
+poussé exactement **une fois** (idempotent via `push_log`) – au premier passage
+du cron où son début tombe dans le délai. Deux règles en découlent :
+
+- **Délai ≥ intervalle du cron.** S'il est plus petit, des artistes peuvent
+  passer entre deux exécutions et ne jamais être annoncés (cron horaire ⇒ au
+  moins 60 min).
+- Avec un **cron rapide** (p. ex. toutes les 2 min), choisir le délai selon le
+  **préavis souhaité**, pas selon le rythme du cron : 15 min ⇒ notification
+  ~15 min avant le début (précis à ± l'intervalle du cron). Avec un cron
+  horaire, le préavis varie inévitablement entre 0 et 60 min.
+
+Ne **pas** mettre plusieurs crons sur la même minute (sinon envoi théoriquement
+double avant que `push_log` n'agisse) – les décaler de quelques minutes.
 
 **Plusieurs entrées cron chez le même hébergeur :** si l'hébergeur n'accepte
 pas plusieurs fois le même chemin de fichier en cron, utiliser les wrappers

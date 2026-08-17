@@ -93,12 +93,23 @@ Nur HTTP-Cron möglich? Externen Pinger (z. B. cron-job.org) auf
 `https://app.rockimdorf.at/push/cron-send.php?key=<cronSecret>` zeigen lassen.
 *(Für die Telegram-`#push`-Benachrichtigungen ist KEIN Cron nötig – die gehen sofort raus.)*
 
-**Cron-Frequenz & News-Latenz:** Automatische News-Pushes gehen erst beim nächsten Cron-Lauf
-raus – das Intervall bestimmt also die **Latenz**. Mehrere (gestaffelte) Cron-Einträge, z. B.
-alle 10–15 Min, drücken sie entsprechend. Dann aber die **Digest-Vorlaufzeit** (CMS →
-Einstellungen → `upcomingWindowMin`) passend verkleinern (z. B. 15–20 Min), sonst meldet
-„Gleich live" Acts bis zu 60 Min zu früh. Mehrere Crons **nicht auf dieselbe Minute** legen
-(sonst theoretisch doppelter Versand, bevor `push_log` greift) – ein paar Minuten versetzen.
+**Cron-Frequenz, News-Latenz & „Gleich live"-Vorlauf:** Automatische News-Pushes gehen
+erst beim nächsten Cron-Lauf raus – das Intervall bestimmt also die **Latenz** (2-Min-Cron
+= News nach spätestens 2 Min). Die **Digest-Vorlaufzeit** (CMS → Einstellungen →
+`upcomingWindowMin`) ist dagegen **kein** Cron-Takt, sondern legt fest, **wie früh vor
+Konzertbeginn** die „Gleich live"-Meldung ankommt: Jeder Act wird genau **einmal** gepusht
+(idempotent über `push_log`) – beim ersten Cron-Lauf, bei dem sein Beginn innerhalb der
+Vorlaufzeit liegt. Daraus folgen zwei Regeln:
+
+- **Vorlaufzeit ≥ Cron-Intervall.** Ist sie kleiner, können Acts zwischen zwei Läufen
+  „durchrutschen" und werden nie gemeldet (Stunden-Cron ⇒ mindestens 60 Min).
+- Bei **schnellem Cron** (z. B. alle 2 Min) die Vorlaufzeit nach dem **gewünschten
+  Vorlauf** wählen, nicht nach dem Cron-Takt: 15 Min ⇒ Meldung ~15 Min vor Beginn
+  (auf ± Cron-Intervall genau). Beim Stunden-Cron schwankt der Vorlauf zwangsläufig
+  zwischen 0 und 60 Min.
+
+Mehrere Crons **nicht auf dieselbe Minute** legen (sonst theoretisch doppelter Versand,
+bevor `push_log` greift) – ein paar Minuten versetzen.
 
 **Mehrere Cron-Einträge beim selben Hoster:** Erlaubt dein Hoster denselben Dateipfad nicht
 mehrfach als Cron, nutze die mitgelieferten Wrapper `push/cron-send-1.php` … `cron-send-5.php`

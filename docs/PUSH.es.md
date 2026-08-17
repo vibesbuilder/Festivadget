@@ -101,14 +101,25 @@ a `https://app.rockimdorf.at/push/cron-send.php?key=<cronSecret>`.
 *(Para las notificaciones `#push` de Telegram NO hace falta cron: salen al
 instante.)*
 
-**Frecuencia del cron y latencia de noticias:** los push automáticos de
-noticias solo salen en la siguiente ejecución del cron; el intervalo determina
-la **latencia**. Varias entradas cron (escalonadas), p. ej. cada 10–15 min, la
-reducen en consecuencia. Pero entonces reduce también la **antelación del
-resumen** (CMS → Ajustes → `upcomingWindowMin`) de forma acorde (p. ej.
-15–20 min); si no, «En breve» anuncia artistas hasta 60 min antes de tiempo. No
-pongas varios crons **en el mismo minuto** (en teoría, envío doble antes de que
-actúe `push_log`); desplázalos unos minutos.
+**Frecuencia del cron, latencia de noticias y antelación de «En breve»:** los
+push automáticos de noticias solo salen en la siguiente ejecución del cron; el
+intervalo determina la **latencia** (cron cada 2 min = noticias en máx. 2 min).
+La **antelación del resumen** (CMS → Ajustes → `upcomingWindowMin`) **no** es
+un ritmo de cron: define **cuánto antes del inicio del concierto** llega la
+notificación «En breve». Cada artista se envía exactamente **una vez**
+(idempotente vía `push_log`), en la primera ejecución del cron en la que su
+inicio cae dentro de la antelación. De ahí dos reglas:
+
+- **Antelación ≥ intervalo del cron.** Si es menor, hay artistas que pueden
+  «colarse» entre dos ejecuciones y no anunciarse nunca (cron horario ⇒ mínimo
+  60 min).
+- Con un **cron rápido** (p. ej. cada 2 min), elige la antelación según el
+  **aviso deseado**, no según el ritmo del cron: 15 min ⇒ notificación ~15 min
+  antes del inicio (con precisión de ± el intervalo del cron). Con un cron
+  horario la antelación varía inevitablemente entre 0 y 60 min.
+
+No pongas varios crons **en el mismo minuto** (en teoría, envío doble antes de
+que actúe `push_log`); desplázalos unos minutos.
 
 **Varias entradas cron en el mismo hosting:** si tu proveedor no permite la
 misma ruta de archivo varias veces como cron, usa los wrappers incluidos

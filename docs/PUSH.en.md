@@ -97,14 +97,23 @@ Only HTTP cron possible? Point an external pinger (e.g. cron-job.org) at
 `https://app.rockimdorf.at/push/cron-send.php?key=<cronSecret>`.
 *(NO cron is needed for the Telegram `#push` notifications – they go out immediately.)*
 
-**Cron frequency & news latency:** automatic news pushes only go out on the
-next cron run – the interval therefore determines the **latency**. Several
-(staggered) cron entries, e.g. every 10–15 min, reduce it accordingly. But then
-also reduce the **digest lead time** (CMS → Settings → `upcomingWindowMin`)
-appropriately (e.g. 15–20 min), otherwise "On soon" reports acts up to 60 min
-too early. Do **not** put several crons on the same minute (otherwise
-theoretically double sending before `push_log` kicks in) – offset by a few
-minutes.
+**Cron frequency, news latency & "on soon" lead time:** automatic news pushes
+only go out on the next cron run – the interval therefore determines the
+**latency** (a 2-min cron = news within 2 minutes). The **digest lead time**
+(CMS → Settings → `upcomingWindowMin`) is **not** a cron interval: it defines
+**how early before the concert starts** the "on soon" notification arrives.
+Each act is pushed exactly **once** (idempotent via `push_log`) – on the first
+cron run where its start time falls within the lead time. Two rules follow:
+
+- **Lead time ≥ cron interval.** If it is smaller, acts can slip through
+  between two runs and are never announced (hourly cron ⇒ at least 60 min).
+- With a **fast cron** (e.g. every 2 min), pick the lead time by the
+  **desired advance notice**, not by the cron interval: 15 min ⇒ notification
+  ~15 min before the start (accurate to ± the cron interval). With an hourly
+  cron the advance notice inevitably varies between 0 and 60 min.
+
+Do **not** put several crons on the same minute (otherwise theoretically
+double sending before `push_log` kicks in) – offset by a few minutes.
 
 **Several cron entries with the same hoster:** if your hoster does not allow
 the same file path multiple times as cron, use the bundled wrappers
