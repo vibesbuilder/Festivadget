@@ -57,7 +57,7 @@ Dans le dossier du projet :
 npx web-push generate-vapid-keys
 ```
 Affiche la **clé publique** et la **clé privée**.
-- **Clé publique** → plus tard dans le `.env` de l'app (`VITE_VAPID_PUBLIC_KEY`) **et** dans `config.php`.
+- **Clé publique** → dans `config.php` (l'app la récupère à l'exécution via `push/vapid.php`).
 - **Clé privée** → uniquement dans `config.php`. **Ne jamais commiter.**
 
 *(Alternative sans Node : `push/vapid-keys.php` – nécessite toutefois PHP sur
@@ -84,13 +84,15 @@ Renseigner : accès BDD (étape 3), `vapid.publicKey`/`privateKey` (étape 1),
 `adminPasswordHash` (à générer sur le PC : `php -r "echo password_hash('TON_MOT_DE_PASSE', PASSWORD_DEFAULT);"`),
 un `cronSecret` (chaîne aléatoire). `config.php` est gitignored.
 
-### 5. 💻 Construire & déployer l'app avec la clé publique
-Dans le `.env` de l'app (PC) :
-```ini
-VITE_VAPID_PUBLIC_KEY=<clé publique de l'étape 1>
-```
-Puis **`deploy-data.bat full`**. L'interrupteur « Notifications » sous **Plus**
-n'apparaît que si cette clé est définie.
+### 5. 💻 Déployer l'app
+La clé publique n'a plus besoin d'entrer dans le build : l'app la récupère à
+l'exécution via `push/vapid.php` (qui lit `config.php`) et la mémorise dans
+`localStorage`. Il suffit d'exécuter **`deploy-data.bat full`** –
+l'interrupteur « Notifications » sous **Plus** apparaît dès que la clé est
+joignable.
+*(Repli optionnel : définir `VITE_VAPID_PUBLIC_KEY` dans le `.env` de l'app –
+l'interrupteur est alors présent dès le tout premier chargement, sans requête
+backend.)*
 
 ### 6. 🌐 Configurer le cron (seulement pour le digest de début de concert)
 Dans l'**espace client** de l'hébergeur → tâches cron, toutes les heures :

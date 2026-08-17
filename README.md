@@ -134,7 +134,7 @@ Copy the template: `cp .env.example .env`
 |---|---|---|
 | `JOOMLA_API_TOKEN` | Joomla API token (build-time import) | **secret** – Node script only |
 | `WP_USER`, `WP_APP_PW` | WordPress application password (build-time import) | **secret** |
-| `VITE_VAPID_PUBLIC_KEY` | public VAPID key for web push | public (client build) |
+| `VITE_VAPID_PUBLIC_KEY` | public VAPID key for web push (optional fallback – fetched at runtime from `/push/vapid.php`) | public (client build) |
 
 **Security rule:** only variables prefixed with `VITE_` end up in browser code.
 Never prefix secrets (private VAPID key, CMS tokens) with `VITE_`.
@@ -164,8 +164,9 @@ backend.
 ## Web push & CMS (optional)
 
 Setting up VAPID, MySQL and cron on shared hosting: [`docs/PUSH.en.md`](docs/PUSH.en.md).
-The push toggle appears in the app under **More** as soon as
-`VITE_VAPID_PUBLIC_KEY` is set. Telegram live news:
+The push toggle appears in the app under **More** as soon as a VAPID key is
+available (fetched at runtime from `/push/vapid.php`; `VITE_VAPID_PUBLIC_KEY`
+is an optional build-time fallback). Telegram live news:
 [`docs/TELEGRAM.en.md`](docs/TELEGRAM.en.md).
 
 ## License

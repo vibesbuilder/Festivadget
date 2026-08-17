@@ -5,6 +5,16 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.0.0/), Versionier
 
 ## [Unreleased]
 
+### Changed
+
+- **VAPID-Public-Key kommt zur Laufzeit vom Server.** Neuer Endpoint
+  `push/vapid.php` liefert den öffentlichen Key aus `push/config.php`; der
+  Client (`src/lib/push.ts`) holt ihn beim Start einmalig und merkt ihn sich in
+  `localStorage` (offline-fähig). `VITE_VAPID_PUBLIC_KEY` in der Build-Env ist
+  nur noch optionaler Fallback – ein Kundenbuild braucht damit keinen
+  Push-Key mehr zur Build-Zeit (Schritt Richtung „ohne Build-Maschine").
+  Doku (`docs/PUSH*.md`, READMEs, `.env.example`) entsprechend angepasst.
+
 ### Added
 
 - **Kunden-Branding im CMS (Tab „Branding").** Farben (Akzente + komplette
