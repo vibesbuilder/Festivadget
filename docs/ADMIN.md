@@ -66,6 +66,10 @@ entfernte Werte fallen automatisch auf den Build-Stand zurück.
   hochladen – der Server erzeugt daraus per GD 192/512 px + maskable-Icon
   (dunkle Hintergrundfarbe, 80 % Safe-Zone). Voraussetzung: PHP-Erweiterung
   **GD** am Server.
+- **Intro-Video (Home)**: wird in voller Breite oberhalb des Newsfeeds
+  angezeigt. Quelle „Link/Datei" (direkte Videodatei per FTP/https;
+  YouTube/Vimeo automatisch als Player) oder „Microsoft-Cloud"
+  (OneDrive/SharePoint-„Einbetten"-URL); per Checkbox aktivierbar.
 - **Manifest**: sobald Titel, Kurzname oder Icons gesetzt sind, tauscht die
   App den Manifest-Link zur Laufzeit auf `/push/manifest.php` (dynamisch:
   Name, Farben, Icons aus dem CMS). Ohne PHP-Backend gilt weiter das
@@ -191,6 +195,7 @@ Der Token wird **in Joomla erzeugt** (pro Benutzer), nicht irgendwo „gefunden"
 | `background`       | `boolean?`          | Hintergrundgrafik an/aus (Default: an).             |
 | `backgroundImage`  | `string?`           | Eigenes Hintergrundbild (`/data/uploads/…`, leer = Build-Grafik). |
 | `themeDefault`     | `"dark"\|"light"?`  | Standard-Theme, solange der Gast nicht selbst wählt.|
+| `homeVideo`        | `object?`           | Intro-Video auf Home (`{url, source, enabled}`), gepflegt im CMS-Tab „Branding". |
 | `branding`         | `object?`           | Kunden-Branding (Farben, Schrift, Logo, Titel, Icons) – gepflegt über den CMS-Tab „Branding". |
 
 MEHR-Schlüssel: `news`, `map`, `info`, `sponsors`, `tickets`, `contact`,

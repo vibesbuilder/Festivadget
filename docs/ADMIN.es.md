@@ -73,6 +73,11 @@ build.
   el servidor genera con GD los iconos de 192/512 px + maskable (fondo
   oscuro, zona segura del 80 %). Requisito: extensión PHP **GD** en el
   servidor.
+- **Vídeo de intro (inicio)**: se muestra a ancho completo encima del feed
+  de noticias. Fuente «Enlace/archivo» (archivo de vídeo directo por
+  FTP/https; YouTube/Vimeo se incrustan automáticamente) o «Nube de
+  Microsoft» (URL de inserción de OneDrive/SharePoint); se activa con una
+  casilla.
 - **Manifiesto**: en cuanto haya título, nombre corto o iconos, la app
   cambia el enlace del manifiesto en tiempo de ejecución a
   `/push/manifest.php` (dinámico: nombre, colores, iconos del CMS). Sin
@@ -221,6 +226,7 @@ inválido/ausente.
 | `background`       | `boolean?`          | Gráfico de fondo on/off (por defecto: on).                  |
 | `backgroundImage`  | `string?`           | Imagen de fondo propia (`/data/uploads/…`, vacío = gráfico incluido). |
 | `themeDefault`     | `"dark"\|"light"?`  | Tema por defecto mientras el visitante no elija él mismo.   |
+| `homeVideo`        | `object?`           | Vídeo de intro en inicio (`{url, source, enabled}`), gestionado en la pestaña CMS «Branding». |
 | `branding`         | `object?`           | Imagen de marca (colores, fuente, logo, título, iconos), gestionada en la pestaña CMS «Branding». |
 
 Claves del menú Más: `news`, `map`, `info`, `sponsors`, `tickets`, `contact`,

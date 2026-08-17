@@ -7,6 +7,14 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.0.0/), Versionier
 
 ### Added
 
+- **Intro-Video auf Home (CMS-Tab „Branding").** Volle Breite oberhalb des
+  Newsfeeds, per Checkbox aktivierbar. Quellen wie bei CrewCare: „Link/Datei"
+  (direkte Videodatei per FTP/https als `<video>`, YouTube/Vimeo automatisch
+  als Player-iframe) oder „Microsoft-Cloud" (OneDrive/SharePoint-„Einbetten"-
+  URL als iframe). Gespeichert in `app-config.json` → `homeVideo`
+  (`{url, source, enabled}`); ohne Eintrag ändert sich nichts.
+  Neue Komponente `src/components/HomeVideo.tsx`.
+
 - **App-Updates ohne Build-Maschine (Minimal + Komfort).**
   `tools/build-release.ps1` erzeugt zusätzlich das Update-Paket
   `release/festivadget-update-v<version>.zip` (wie das Release, aber ohne

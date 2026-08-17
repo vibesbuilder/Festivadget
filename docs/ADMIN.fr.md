@@ -71,6 +71,10 @@ les valeurs supprimées reviennent automatiquement aux réglages du build.
 - **Icônes PWA** : téléverser un PNG carré (192 px min., 512 px recommandé) –
   le serveur génère via GD les icônes 192/512 px + maskable (fond sombre,
   zone de sécurité 80 %). Prérequis : extension PHP **GD** sur le serveur.
+- **Vidéo d'intro (accueil)** : affichée en pleine largeur au-dessus du fil
+  d'actualités. Source « Lien/fichier » (fichier vidéo direct par FTP/https ;
+  YouTube/Vimeo intégrés automatiquement) ou « Cloud Microsoft » (URL
+  d'intégration OneDrive/SharePoint) ; activable par case à cocher.
 - **Manifeste** : dès qu'un titre, un nom court ou des icônes sont définis,
   l'app bascule le lien du manifeste à l'exécution vers `/push/manifest.php`
   (dynamique : nom, couleurs, icônes du CMS). Sans backend PHP, le
@@ -218,6 +222,7 @@ jeton invalide/manquant.
 | `background`       | `boolean?`          | Fond graphique on/off (défaut : on).                       |
 | `backgroundImage`  | `string?`           | Image de fond personnalisée (`/data/uploads/…`, vide = visuel fourni). |
 | `themeDefault`     | `"dark"\|"light"?`  | Thème par défaut tant que le visiteur n'a pas choisi.      |
+| `homeVideo`        | `object?`           | Vidéo d'intro sur l'accueil (`{url, source, enabled}`), gérée dans l'onglet CMS « Branding ». |
 | `branding`         | `object?`           | Identité client (couleurs, police, logo, titre, icônes) – gérée via l'onglet CMS « Branding ». |
 
 Clés du menu Plus : `news`, `map`, `info`, `sponsors`, `tickets`, `contact`,
