@@ -15,7 +15,8 @@ return [
     ],
 
     // VAPID-Schlüssel: einmal mit `php push/vapid-keys.php` erzeugen.
-    // publicKey kommt zusätzlich als VITE_VAPID_PUBLIC_KEY in den Client-Build.
+    // publicKey liefert push/vapid.php zur Laufzeit an die App
+    // (VITE_VAPID_PUBLIC_KEY in der Build-Env ist nur noch optionaler Fallback).
     'vapid' => [
         'subject'    => 'mailto:info@rockimdorf.at',
         'publicKey'  => '',

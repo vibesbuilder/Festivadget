@@ -1,6 +1,7 @@
 <?php
 // Erzeugt einmalig ein VAPID-Schlüsselpaar. Aufruf: php push/vapid-keys.php
-// - publicKey  → in den Client-Build (VITE_VAPID_PUBLIC_KEY) UND in config.php
+// - publicKey  → in config.php (die App holt ihn zur Laufzeit via push/vapid.php;
+//                VITE_VAPID_PUBLIC_KEY in der Build-Env ist optionaler Fallback)
 // - privateKey → NUR in push/config.php auf dem Server (niemals committen!)
 
 declare(strict_types=1);

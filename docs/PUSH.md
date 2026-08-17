@@ -51,7 +51,7 @@ Im Projektordner:
 npx web-push generate-vapid-keys
 ```
 Gibt **Public Key** und **Private Key** aus.
-- **Public Key** → später in die App-`.env` (`VITE_VAPID_PUBLIC_KEY`) **und** in `config.php`.
+- **Public Key** → in `config.php` (die App holt ihn zur Laufzeit von `push/vapid.php`).
 - **Private Key** → nur in `config.php`. **Niemals committen.**
 
 *(Alternative ohne Node: `push/vapid-keys.php` – braucht aber PHP am Server/SSH. Falls genutzt,
@@ -76,13 +76,13 @@ Eintragen: DB-Zugang (aus Schritt 3), `vapid.publicKey`/`privateKey` (Schritt 1)
 `adminPasswordHash` (am PC erzeugen: `php -r "echo password_hash('DEIN_PASSWORT', PASSWORD_DEFAULT);"`),
 ein `cronSecret` (zufällige Zeichenkette). `config.php` ist gitignored.
 
-### 5. 💻 App mit Public-Key bauen & deployen
-In die App-`.env` (PC):
-```ini
-VITE_VAPID_PUBLIC_KEY=<Public Key aus Schritt 1>
-```
-Dann **`deploy-data.bat full`**. Der „Benachrichtigungen"-Schalter unter **Mehr** erscheint nur,
-wenn dieser Key gesetzt ist.
+### 5. 💻 App deployen
+Der Public-Key muss **nicht** mehr in den Build: Die App holt ihn zur Laufzeit von
+`push/vapid.php` (liest `config.php`) und merkt ihn sich in `localStorage`. Einfach
+**`deploy-data.bat full`** ausführen – der „Benachrichtigungen"-Schalter unter **Mehr**
+erscheint, sobald der Key erreichbar ist.
+*(Optionaler Fallback: `VITE_VAPID_PUBLIC_KEY` in der App-`.env` setzen – dann ist der
+Schalter schon beim allerersten Seitenaufruf ohne Backend-Anfrage da.)*
 
 ### 6. 🌐 Cronjob einrichten (nur für den Konzertstart-Digest)
 Im **World4You-Kundenbereich** → Cronjobs, stündlich:

@@ -54,7 +54,7 @@ En la carpeta del proyecto:
 npx web-push generate-vapid-keys
 ```
 Muestra la **clave pública** y la **clave privada**.
-- **Clave pública** → luego en el `.env` de la app (`VITE_VAPID_PUBLIC_KEY`) **y** en `config.php`.
+- **Clave pública** → en `config.php` (la app la obtiene en tiempo de ejecución vía `push/vapid.php`).
 - **Clave privada** → solo en `config.php`. **Nunca commitear.**
 
 *(Alternativa sin Node: `push/vapid-keys.php`, pero requiere PHP en el
@@ -81,13 +81,15 @@ Introducir: acceso a la BD (paso 3), `vapid.publicKey`/`privateKey` (paso 1),
 `adminPasswordHash` (generar en el PC: `php -r "echo password_hash('TU_CONTRASENA', PASSWORD_DEFAULT);"`),
 un `cronSecret` (cadena aleatoria). `config.php` está en `.gitignore`.
 
-### 5. 💻 Construir y desplegar la app con la clave pública
-En el `.env` de la app (PC):
-```ini
-VITE_VAPID_PUBLIC_KEY=<clave pública del paso 1>
-```
-Después **`deploy-data.bat full`**. El interruptor «Notificaciones» bajo
-**Más** solo aparece si esta clave está definida.
+### 5. 💻 Desplegar la app
+La clave pública ya no necesita entrar en el build: la app la obtiene en
+tiempo de ejecución vía `push/vapid.php` (que lee `config.php`) y la recuerda
+en `localStorage`. Basta con ejecutar **`deploy-data.bat full`**: el
+interruptor «Notificaciones» bajo **Más** aparece en cuanto la clave es
+accesible.
+*(Alternativa opcional: definir `VITE_VAPID_PUBLIC_KEY` en el `.env` de la
+app; entonces el interruptor está desde la primera carga, sin petición al
+backend.)*
 
 ### 6. 🌐 Configurar el cron (solo para el resumen de inicio de conciertos)
 En el **panel del cliente** del hosting → tareas cron, cada hora:

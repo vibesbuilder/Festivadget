@@ -53,7 +53,7 @@ In the project folder:
 npx web-push generate-vapid-keys
 ```
 Outputs **public key** and **private key**.
-- **Public key** → later into the app `.env` (`VITE_VAPID_PUBLIC_KEY`) **and** into `config.php`.
+- **Public key** → into `config.php` (the app fetches it at runtime from `push/vapid.php`).
 - **Private key** → only into `config.php`. **Never commit.**
 
 *(Alternative without Node: `push/vapid-keys.php` – but needs PHP on the
@@ -80,13 +80,13 @@ Enter: DB access (from step 3), `vapid.publicKey`/`privateKey` (step 1),
 `adminPasswordHash` (generate on the PC: `php -r "echo password_hash('YOUR_PASSWORD', PASSWORD_DEFAULT);"`),
 a `cronSecret` (random string). `config.php` is gitignored.
 
-### 5. 💻 Build & deploy the app with the public key
-Into the app `.env` (PC):
-```ini
-VITE_VAPID_PUBLIC_KEY=<public key from step 1>
-```
-Then **`deploy-data.bat full`**. The "Notifications" toggle under **More** only
-appears if this key is set.
+### 5. 💻 Deploy the app
+The public key no longer needs to go into the build: the app fetches it at
+runtime from `push/vapid.php` (which reads `config.php`) and remembers it in
+`localStorage`. Just run **`deploy-data.bat full`** – the "Notifications"
+toggle under **More** appears as soon as the key is reachable.
+*(Optional fallback: set `VITE_VAPID_PUBLIC_KEY` in the app `.env` – then the
+toggle is there on the very first page load without a backend request.)*
 
 ### 6. 🌐 Set up the cron job (only for the concert-start digest)
 In the hosting **customer panel** → cron jobs, hourly:

@@ -131,7 +131,7 @@ Vorlage kopieren: `cp .env.example .env`
 |---|---|---|
 | `JOOMLA_API_TOKEN` | Joomla-API-Token (Build-Import) | **geheim** – nur Node-Skript |
 | `WP_USER`, `WP_APP_PW` | WordPress Application Password (Build-Import) | **geheim** |
-| `VITE_VAPID_PUBLIC_KEY` | öffentlicher VAPID-Key für Web-Push | öffentlich (Client-Build) |
+| `VITE_VAPID_PUBLIC_KEY` | öffentlicher VAPID-Key für Web-Push (optionaler Fallback – Laufzeitbezug via `/push/vapid.php`) | öffentlich (Client-Build) |
 
 **Sicherheitsregel:** Nur Variablen mit Präfix `VITE_` landen im Browser-Code.
 Geheimnisse (privater VAPID-Key, CMS-Tokens) niemals mit `VITE_` benennen.
@@ -159,8 +159,9 @@ nur Inhaltsdaten, mit `full` die komplette App, mit `push` das PHP-Backend.
 ## Web-Push & CMS (optional)
 
 Einrichtung von VAPID, MySQL und Cron auf Shared Hosting: [`docs/PUSH.md`](docs/PUSH.md).
-Der Push-Schalter erscheint in der App unter **Mehr**, sobald `VITE_VAPID_PUBLIC_KEY`
-gesetzt ist. Telegram-Live-News: [`docs/TELEGRAM.md`](docs/TELEGRAM.md).
+Der Push-Schalter erscheint in der App unter **Mehr**, sobald ein VAPID-Key
+verfügbar ist (zur Laufzeit von `/push/vapid.php` geholt; `VITE_VAPID_PUBLIC_KEY`
+ist optionaler Build-Fallback). Telegram-Live-News: [`docs/TELEGRAM.md`](docs/TELEGRAM.md).
 
 ## Lizenz
 
