@@ -7,6 +7,19 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.0.0/), Versionier
 
 ### Added
 
+- **App-Updates ohne Build-Maschine (Minimal + Komfort).**
+  `tools/build-release.ps1` erzeugt zusätzlich das Update-Paket
+  `release/festivadget-update-v<version>.zip` (wie das Release, aber ohne
+  `data/` und `install/`) sowie eine `VERSION`-Datei im Paket. **Minimal:**
+  Update-Paket per FTP über die Installation kopieren – Kundeninhalte sind
+  gar nicht erst enthalten. **Komfort:** neuer CMS-Tab „Update"
+  (`push/cms/update.php`, viersprachig) spielt das hochgeladene Paket per
+  1-Klick ein: ZipArchive mit PharData-Fallback, Plausibilitäts- und
+  Pfad-Härtung (Traversal/absolute Pfade), volle Release-Pakete (mit `data/`)
+  werden abgelehnt, Schutzliste (`data/`, `install/`, `push/config.php`,
+  CMS-/Wetter-Einstellungen) wird nie überschrieben; zeigt installierte
+  Version und PHP-Upload-Limit. Doku: `docs/INSTALL*.md` (Updates-Abschnitt).
+
 - **Release-Paket + Web-Installer (Joomla-Prinzip).** `tools/build-release.ps1`
   schnürt `release/festivadget-v<version>.zip`: neutraler App-Build (ohne
   Instanz-Werte), `push/` inkl. `cms/` und `vendor/` (ohne `config.php`!) und

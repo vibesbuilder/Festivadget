@@ -844,6 +844,86 @@ const CMS_I18N = [
         'fr' => "Tous les manuels en fichiers Markdown, chacun en allemand, anglais, français et espagnol. Ils sont livrés avec l'app (dossier /docs).",
         'es' => 'Todos los manuales como archivos Markdown, cada uno en alemán, inglés, francés y español. Se entregan con la app (carpeta /docs).',
     ],
+    // --- Update-Tab (Task #92.4, 1-Klick-Updater) ---
+    'Update' => ['en' => 'Update', 'fr' => 'Mise à jour', 'es' => 'Actualización'],
+    'App-Update einspielen' => ['en' => 'Apply app update', 'fr' => 'Appliquer la mise à jour', 'es' => 'Aplicar actualización'],
+    'Installierte Version: %s' => ['en' => 'Installed version: %s', 'fr' => 'Version installée : %s', 'es' => 'Versión instalada: %s'],
+    'unbekannt (keine VERSION-Datei – Installation stammt nicht aus einem Release-Paket)' => [
+        'en' => 'unknown (no VERSION file – this installation does not come from a release package)',
+        'fr' => "inconnue (pas de fichier VERSION – l'installation ne provient pas d'un paquet de release)",
+        'es' => 'desconocida (sin archivo VERSION; la instalación no procede de un paquete de release)',
+    ],
+    'Hier das Update-Paket (festivadget-update-v*.zip) hochladen. Deine Inhalte bleiben unangetastet: data/ (Inhalte, Uploads, Branding), push/config.php sowie CMS-/Wetter-Einstellungen werden nie überschrieben.' => [
+        'en' => 'Upload the update package (festivadget-update-v*.zip) here. Your content stays untouched: data/ (content, uploads, branding), push/config.php and the CMS/weather settings are never overwritten.',
+        'fr' => 'Téléverser ici le paquet de mise à jour (festivadget-update-v*.zip). Vos contenus restent intacts : data/ (contenus, uploads, branding), push/config.php et les réglages CMS/météo ne sont jamais écrasés.',
+        'es' => 'Subir aquí el paquete de actualización (festivadget-update-v*.zip). Tu contenido queda intacto: data/ (contenidos, subidas, branding), push/config.php y los ajustes de CMS/meteo nunca se sobrescriben.',
+    ],
+    'Update jetzt einspielen? Die App ist währenddessen kurz inkonsistent.' => [
+        'en' => 'Apply the update now? The app is briefly inconsistent while it runs.',
+        'fr' => "Appliquer la mise à jour maintenant ? L'app est brièvement incohérente pendant l'opération.",
+        'es' => 'Aplicar la actualización ahora? La app queda brevemente inconsistente durante el proceso.',
+    ],
+    'Update einspielen' => ['en' => 'Apply update', 'fr' => 'Appliquer la mise à jour', 'es' => 'Aplicar actualización'],
+    'Alternative ohne CMS (Minimal): Update-Paket entpacken und per FTP über die Installation kopieren – data/ und push/config.php sind im Update-Paket nicht enthalten. Details: Hilfe → Installation.' => [
+        'en' => 'Alternative without the CMS (minimal): extract the update package and copy it over the installation via FTP – data/ and push/config.php are not part of the update package. Details: Help → Installation.',
+        'fr' => "Alternative sans CMS (minimale) : décompresser le paquet et le copier par FTP par-dessus l'installation – data/ et push/config.php ne font pas partie du paquet. Détails : Aide → Installation.",
+        'es' => 'Alternativa sin CMS (mínima): descomprimir el paquete y copiarlo por FTP sobre la instalación; data/ y push/config.php no forman parte del paquete. Detalles: Ayuda → Instalación.',
+    ],
+    'Maximale Upload-Größe (PHP): %s' => [
+        'en' => 'Maximum upload size (PHP): %s',
+        'fr' => 'Taille maximale de téléversement (PHP) : %s',
+        'es' => 'Tamaño máximo de subida (PHP): %s',
+    ],
+    'Nur ZIP-Dateien (festivadget-update-v*.zip) erlaubt.' => [
+        'en' => 'Only ZIP files (festivadget-update-v*.zip) are allowed.',
+        'fr' => 'Seuls les fichiers ZIP (festivadget-update-v*.zip) sont autorisés.',
+        'es' => 'Solo se permiten archivos ZIP (festivadget-update-v*.zip).',
+    ],
+    'Upload konnte nicht gespeichert werden.' => [
+        'en' => 'Could not store the upload.',
+        'fr' => "Impossible d'enregistrer le téléversement.",
+        'es' => 'No se pudo guardar la subida.',
+    ],
+    'Update eingespielt: %1$d Dateien aktualisiert, %2$d geschützte übersprungen. Installierte Version: %3$s.' => [
+        'en' => 'Update applied: %1$d files updated, %2$d protected files skipped. Installed version: %3$s.',
+        'fr' => 'Mise à jour appliquée : %1$d fichiers mis à jour, %2$d fichiers protégés ignorés. Version installée : %3$s.',
+        'es' => 'Actualización aplicada: %1$d archivos actualizados, %2$d protegidos omitidos. Versión instalada: %3$s.',
+    ],
+    'ZIP-Datei konnte nicht gelesen werden.' => [
+        'en' => 'Could not read the ZIP file.',
+        'fr' => 'Impossible de lire le fichier ZIP.',
+        'es' => 'No se pudo leer el archivo ZIP.',
+    ],
+    'Am Server fehlt die PHP-Erweiterung zip (und phar).' => [
+        'en' => 'The server is missing the PHP zip extension (and phar).',
+        'fr' => "L'extension PHP zip (et phar) manque sur le serveur.",
+        'es' => 'Al servidor le falta la extensión PHP zip (y phar).',
+    ],
+    'Das ist kein Festivadget-Update-Paket.' => [
+        'en' => 'This is not a Festivadget update package.',
+        'fr' => "Ce n'est pas un paquet de mise à jour Festivadget.",
+        'es' => 'Esto no es un paquete de actualización de Festivadget.',
+    ],
+    'Das ist das VOLLE Release-Paket (enthält data/) – zum Updaten bitte das Update-Paket (festivadget-update-v*.zip) verwenden.' => [
+        'en' => 'This is the FULL release package (contains data/) – please use the update package (festivadget-update-v*.zip) for updates.',
+        'fr' => "C'est le paquet de release COMPLET (contient data/) – pour les mises à jour, utiliser le paquet de mise à jour (festivadget-update-v*.zip).",
+        'es' => 'Este es el paquete de release COMPLETO (contiene data/); para actualizar usa el paquete de actualización (festivadget-update-v*.zip).',
+    ],
+    'Unsicherer Pfad im Paket – Update abgebrochen.' => [
+        'en' => 'Unsafe path in the package – update aborted.',
+        'fr' => 'Chemin non sûr dans le paquet – mise à jour interrompue.',
+        'es' => 'Ruta insegura en el paquete; actualización cancelada.',
+    ],
+    'Paket unvollständig lesbar – Update abgebrochen.' => [
+        'en' => 'Package not fully readable – update aborted.',
+        'fr' => 'Paquet partiellement illisible – mise à jour interrompue.',
+        'es' => 'Paquete no legible por completo; actualización cancelada.',
+    ],
+    'Schreiben fehlgeschlagen (Datei-Rechte prüfen) – Update unvollständig!' => [
+        'en' => 'Write failed (check file permissions) – update incomplete!',
+        'fr' => "Échec d'écriture (vérifier les droits) – mise à jour incomplète !",
+        'es' => 'Fallo de escritura (revisar permisos); ¡actualización incompleta!',
+    ],
     'Installation (Web-Installer)' => ['en' => 'Installation (web installer)', 'fr' => 'Installation (installeur web)', 'es' => 'Instalación (instalador web)'],
     'Release-Paket hochladen und im Browser einrichten – ohne Build-Maschine.' => [
         'en' => 'Upload the release package and set it up in the browser – no build machine.',
