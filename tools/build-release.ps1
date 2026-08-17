@@ -65,7 +65,7 @@ if ($LASTEXITCODE -ge 8) { throw "robocopy sample-assets fehlgeschlagen." }
 # aus dem Build (index.html/<title>, apple-Label, statisches PWA-Manifest).
 foreach ($f in @("$staging\index.html", "$staging\manifest.webmanifest")) {
     $c = Get-Content $f -Raw
-    $c = $c.Replace("ROCK IM DORF Festival", "Sommerklang Festival").Replace("ROCK IM DORF", "SOMMERKLANG")
+    $c = $c.Replace("ROCK IM DORF Festival", "Gadget Festival").Replace("ROCK IM DORF", "GADGET")
     Set-Content -Path $f -Value $c -Encoding utf8 -NoNewline
 }
 
@@ -76,9 +76,9 @@ Copy-Item "$app\LICENSE" "$staging\LICENSE"
 
 # --- 3. Sicherheits-Checks --------------------------------------------------------
 if (Test-Path "$staging\push\config.php") { throw "SICHERHEIT: config.php im Paket!" }
-# Keine Echtdaten im Paket: der Beispiel-Datensatz heisst "Sommerklang".
+# Keine Echtdaten im Paket: der Beispiel-Datensatz heisst "Gadget Festival".
 $festivalName = (Get-Content "$staging\data\festival.json" -Raw | ConvertFrom-Json).name
-if ($festivalName -notmatch 'Sommerklang') { throw "SICHERHEIT: data/ enthaelt nicht die Beispieldaten ($festivalName)." }
+if ($festivalName -notmatch 'Gadget') { throw "SICHERHEIT: data/ enthaelt nicht die Beispieldaten ($festivalName)." }
 if (Test-Path "$staging\data\uploads") { throw "SICHERHEIT: data/uploads im Paket." }
 if (-not (Test-Path "$staging\push\vendor\autoload.php")) {
     throw "push/vendor fehlt - einmalig 'composer install' in push/ ausfuehren."
@@ -136,4 +136,4 @@ $mb = [math]::Round((Get-Item $zip).Length / 1MB, 1)
 $umb = [math]::Round((Get-Item $updateZip).Length / 1MB, 1)
 Write-Host ""
 Write-Host "Fertig: $zip ($mb MB) + Update-Paket ($umb MB)"
-Write-Host "data/ im Paket = Beispieldaten (sample-data/, Sommerklang Festival)."
+Write-Host "data/ im Paket = Beispieldaten (sample-data/, Gadget Festival)."
