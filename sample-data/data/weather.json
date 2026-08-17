@@ -1,0 +1,24 @@
+{
+  "generatedAt": "2027-07-01T18:00:00+02:00",
+  "source": "open-meteo",
+  "days": [
+    {
+      "dayId": "fr",
+      "date": "02.07.",
+      "tempMin": 16,
+      "tempMax": 27,
+      "symbolCode": "clear",
+      "precipitationProb": 10,
+      "summary": "Sonnig"
+    },
+    {
+      "dayId": "sa",
+      "date": "03.07.",
+      "tempMin": 17,
+      "tempMax": 25,
+      "symbolCode": "partly",
+      "precipitationProb": 30,
+      "summary": "Wolkig"
+    }
+  ]
+}

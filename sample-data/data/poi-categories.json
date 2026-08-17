@@ -1,0 +1,37 @@
+[
+  {
+    "id": "stage",
+    "label": "Bühne",
+    "color": "#ffb300",
+    "icon": "🎤",
+    "order": 1
+  },
+  {
+    "id": "food",
+    "label": "Essen & Trinken",
+    "color": "#2e7d5b",
+    "icon": "🍴",
+    "order": 2
+  },
+  {
+    "id": "wc",
+    "label": "WC",
+    "color": "#5b6ee1",
+    "icon": "🚻",
+    "order": 3
+  },
+  {
+    "id": "info",
+    "label": "Info-Punkt",
+    "color": "#e4572e",
+    "icon": "ℹ️",
+    "order": 4
+  },
+  {
+    "id": "camp",
+    "label": "Camping",
+    "color": "#8d6e63",
+    "icon": "⛺",
+    "order": 5
+  }
+]

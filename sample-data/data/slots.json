@@ -1,0 +1,74 @@
+[
+  {
+    "id": "fr-wiese-nordlicht",
+    "artistId": "nordlicht",
+    "stageId": "wiese",
+    "dayId": "fr",
+    "start": "2027-07-02T16:00:00+02:00",
+    "end": "2027-07-02T17:00:00+02:00"
+  },
+  {
+    "id": "fr-wald-salzwasser",
+    "artistId": "salzwasser",
+    "stageId": "wald",
+    "dayId": "fr",
+    "start": "2027-07-02T17:30:00+02:00",
+    "end": "2027-07-02T18:30:00+02:00"
+  },
+  {
+    "id": "fr-wiese-betonblumen",
+    "artistId": "betonblumen",
+    "stageId": "wiese",
+    "dayId": "fr",
+    "start": "2027-07-02T19:00:00+02:00",
+    "end": "2027-07-02T20:15:00+02:00"
+  },
+  {
+    "id": "fr-wald-kometenkinder",
+    "artistId": "kometenkinder",
+    "stageId": "wald",
+    "dayId": "fr",
+    "start": "2027-07-02T20:45:00+02:00",
+    "end": "2027-07-02T21:45:00+02:00"
+  },
+  {
+    "id": "fr-wiese-mondmaschine",
+    "artistId": "mondmaschine",
+    "stageId": "wiese",
+    "dayId": "fr",
+    "start": "2027-07-02T22:30:00+02:00",
+    "end": "2027-07-03T00:00:00+02:00"
+  },
+  {
+    "id": "sa-wald-fluss",
+    "artistId": "fluss",
+    "stageId": "wald",
+    "dayId": "sa",
+    "start": "2027-07-03T15:00:00+02:00",
+    "end": "2027-07-03T16:00:00+02:00"
+  },
+  {
+    "id": "sa-wiese-tante-groove",
+    "artistId": "tante-groove",
+    "stageId": "wiese",
+    "dayId": "sa",
+    "start": "2027-07-03T17:00:00+02:00",
+    "end": "2027-07-03T18:30:00+02:00"
+  },
+  {
+    "id": "sa-wiese-nordlicht",
+    "artistId": "nordlicht",
+    "stageId": "wiese",
+    "dayId": "sa",
+    "start": "2027-07-03T20:00:00+02:00",
+    "end": "2027-07-03T21:30:00+02:00"
+  },
+  {
+    "id": "sa-wald-dj-abendrot",
+    "artistId": "dj-abendrot",
+    "stageId": "wald",
+    "dayId": "sa",
+    "start": "2027-07-03T22:00:00+02:00",
+    "end": "2027-07-04T01:00:00+02:00"
+  }
+]

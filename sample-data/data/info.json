@@ -1,0 +1,23 @@
+[
+  {
+    "id": "anreise",
+    "title": "Anreise",
+    "icon": "car",
+    "order": 1,
+    "body": "## Mit dem Auto\nParkplätze sind ab der Ortseinfahrt ausgeschildert.\n\n## Öffentlich\nShuttle-Bus ab Bahnhof, stündlich bis 02:00 Uhr."
+  },
+  {
+    "id": "camping",
+    "title": "Camping",
+    "icon": "tent",
+    "order": 2,
+    "body": "Die Campingwiese öffnet am Freitag um 12:00 Uhr. Bitte keine Glasflaschen – Feuerstellen nur an den markierten Plätzen."
+  },
+  {
+    "id": "faq",
+    "title": "FAQ",
+    "icon": "help",
+    "order": 3,
+    "body": "## Darf ich Getränke mitbringen?\nAufs Gelände nicht, am Campingplatz gerne (kein Glas).\n\n## Gibt es Trinkwasser?\nJa, kostenlos beim Info-Punkt und bei den WC-Anlagen."
+  }
+]

@@ -1,0 +1,7 @@
+{
+  "image": "/map/venue.jpg",
+  "width": 2000,
+  "height": 2500,
+  "minZoom": -2,
+  "maxZoom": 2
+}
