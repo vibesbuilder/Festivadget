@@ -1700,6 +1700,7 @@ $csrf = cms_csrf_token();
     // Später sollen hier PDF-Varianten verlinkt werden – die Liste bleibt datengetrieben.
     $docsDir = dirname(dirname(cms_data_path('version.json'))) . '/docs';
     $manuals = [
+        ['file' => 'INSTALL',        'title' => cms_t('Installation (Web-Installer)'), 'desc' => cms_t('Release-Paket hochladen und im Browser einrichten – ohne Build-Maschine.')],
         ['file' => 'ADMIN',          'title' => cms_t('Admin-UI (CMS)'),        'desc' => cms_t('Bedienung dieser Admin-Oberfläche (Tabs, Overrides, Importer).')],
         ['file' => 'DATEN',          'title' => cms_t('Daten pflegen & anbinden'), 'desc' => cms_t('Inhalte ersetzen, Joomla/WordPress-Anbindung, Felder & Icons.')],
         ['file' => 'PUSH',           'title' => cms_t('Web-Push einrichten'),   'desc' => cms_t('VAPID, MySQL, Cron, Push-Kategorien, „Mein Plan"-Erinnerungen.')],

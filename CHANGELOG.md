@@ -5,6 +5,21 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.0.0/), Versionier
 
 ## [Unreleased]
 
+### Added
+
+- **Release-Paket + Web-Installer (Joomla-Prinzip).** `tools/build-release.ps1`
+  schnürt `release/festivadget-v<version>.zip`: neutraler App-Build (ohne
+  Instanz-Werte), `push/` inkl. `cms/` und `vendor/` (ohne `config.php`!) und
+  der neue Web-Installer `install/index.php`. Kunden laden das Paket per FTP
+  in den Webroot und öffnen `/install/` (DE/EN): Voraussetzungs-Check
+  (PHP ≥ 8.1, Extensions, Schreibrechte), CMS-Admin-Passwort, optional
+  MySQL für Web-Push – die VAPID-Schlüssel werden dabei **serverseitig**
+  erzeugt (gebündeltes `push/vendor`). Der Installer schreibt
+  `push/config.php`, legt `data/uploads/` an, sperrt sich danach selbst
+  (config vorhanden) und kann sich per Knopf selbst löschen. **Keine
+  Build-Maschine beim Kunden nötig.** Doku: `docs/INSTALL*.md`
+  (4 Sprachen, auch im CMS-Hilfe-Tab verlinkt), READMEs.
+
 ### Changed
 
 - **VAPID-Public-Key kommt zur Laufzeit vom Server.** Neuer Endpoint
