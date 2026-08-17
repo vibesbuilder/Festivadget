@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Documentation
+    url: https://github.com/vibesbuilder/Festivadget/tree/main/docs
+    about: Installation, CMS, data, web push and Telegram manuals (DE/EN/FR/ES).

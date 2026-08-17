@@ -1,0 +1,51 @@
+name: Bug report
+description: Something is broken in the app, the CMS or the installer.
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: Clear description of the bug and what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open …
+        2. Tap …
+        3. See error …
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - App (PWA)
+        - CMS (push/cms)
+        - Web installer (install/)
+        - Web push / cron
+        - Build / release package
+        - Docs
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Festivadget version
+      description: See the VERSION file or the CMS Update tab.
+      placeholder: "1.1.0"
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      description: Browser + OS, and for server issues the PHP version.
+      placeholder: "Chrome 130 / Android 15, PHP 8.2"
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / screenshots
+      description: Console errors, CMS log entries or screenshots. Remove secrets!
