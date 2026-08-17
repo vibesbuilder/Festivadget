@@ -48,6 +48,31 @@ hochgeladen (erreichbar unter `/docs/<Name>.md`); fehlende Dateien blendet der
 Tab aus. Eigenes Hintergrundbild: unter **Einstellungen** → „Hintergrundbild"
 aus den Uploads wählbar (`backgroundImage` in `app-config.json`).
 
+## Branding-Tab (Kunden-Branding ohne Build)
+
+Der Tab **„Branding"** passt das Erscheinungsbild der App zur Laufzeit an –
+ohne neuen Build. Gespeichert wird alles in `app-config.json` → `branding`;
+entfernte Werte fallen automatisch auf den Build-Stand zurück.
+
+- **Titel & Kurzname**: Browser-Tab-Titel und Home-Bildschirm-Label
+  (Kurzname max. 12 Zeichen). Beide fließen auch ins PWA-Manifest.
+- **Schrift-Set**: 4 Sets aus reinen System-/Websafe-Stacks (Standard,
+  System, Serifen, Plakat) – keine Font-Dateien nötig, bleibt offline-fähig.
+- **Farben**: Akzentfarben + komplette Paletten getrennt für Dunkel- und
+  Hell-Theme (Hex-Werte, vorausgefüllt mit den Build-Standards). Checkbox
+  „Farben zurücksetzen" entfernt alle eigenen Farben wieder.
+- **Logo**: ersetzt das Logo in der Kopfzeile (`/data/uploads/branding-logo.*`).
+- **PWA-Icons**: ein quadratisches PNG (mind. 192 px, empfohlen 512 px)
+  hochladen – der Server erzeugt daraus per GD 192/512 px + maskable-Icon
+  (dunkle Hintergrundfarbe, 80 % Safe-Zone). Voraussetzung: PHP-Erweiterung
+  **GD** am Server.
+- **Manifest**: sobald Titel, Kurzname oder Icons gesetzt sind, tauscht die
+  App den Manifest-Link zur Laufzeit auf `/push/manifest.php` (dynamisch:
+  Name, Farben, Icons aus dem CMS). Ohne PHP-Backend gilt weiter das
+  statische `manifest.webmanifest` aus dem Build. Neue Icons/Namen greifen
+  bei der **nächsten Installation** der PWA (bestehende Installationen
+  aktualisiert das Betriebssystem verzögert).
+
 ## Deployment
 
 `push/cms/` per FTP in den `push/`-Ordner hochladen (wie der Rest von `push/`).
@@ -166,6 +191,7 @@ Der Token wird **in Joomla erzeugt** (pro Benutzer), nicht irgendwo „gefunden"
 | `background`       | `boolean?`          | Hintergrundgrafik an/aus (Default: an).             |
 | `backgroundImage`  | `string?`           | Eigenes Hintergrundbild (`/data/uploads/…`, leer = Build-Grafik). |
 | `themeDefault`     | `"dark"\|"light"?`  | Standard-Theme, solange der Gast nicht selbst wählt.|
+| `branding`         | `object?`           | Kunden-Branding (Farben, Schrift, Logo, Titel, Icons) – gepflegt über den CMS-Tab „Branding". |
 
 MEHR-Schlüssel: `news`, `map`, `info`, `sponsors`, `tickets`, `contact`,
 `impressum`, `theme`, `language` (müssen mit `src/routes/More.tsx`

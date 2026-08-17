@@ -51,6 +51,36 @@ los archivos que falten. Imagen de fondo propia: seleccionable entre las
 subidas en **Ajustes** → «Imagen de fondo» (`backgroundImage` en
 `app-config.json`).
 
+## Pestaña Branding (imagen de marca sin build)
+
+La pestaña **«Branding»** personaliza la apariencia de la app en tiempo de
+ejecución, sin un nuevo build. Todo se guarda en `app-config.json` →
+`branding`; los valores eliminados vuelven automáticamente a los valores del
+build.
+
+- **Título y nombre corto**: título de la pestaña del navegador y etiqueta
+  de la pantalla de inicio (nombre corto: máx. 12 caracteres). Ambos
+  alimentan también el manifiesto PWA.
+- **Juego de fuentes**: 4 juegos con pilas puras de sistema/web-safe
+  (Estándar, Sistema, Serif, Cartel): no se necesitan archivos de fuentes y
+  la app sigue funcionando sin conexión.
+- **Colores**: colores de acento + paletas completas separadas para los
+  temas oscuro y claro (valores hex, prerrellenados con los valores del
+  build). La casilla «Restablecer colores» elimina todos los colores
+  personalizados.
+- **Logo**: sustituye el logo de la cabecera (`/data/uploads/branding-logo.*`).
+- **Iconos PWA**: subir un PNG cuadrado (mín. 192 px, recomendado 512 px):
+  el servidor genera con GD los iconos de 192/512 px + maskable (fondo
+  oscuro, zona segura del 80 %). Requisito: extensión PHP **GD** en el
+  servidor.
+- **Manifiesto**: en cuanto haya título, nombre corto o iconos, la app
+  cambia el enlace del manifiesto en tiempo de ejecución a
+  `/push/manifest.php` (dinámico: nombre, colores, iconos del CMS). Sin
+  backend PHP sigue aplicándose el `manifest.webmanifest` estático del
+  build. Los iconos/nombres nuevos se aplican en la **próxima instalación**
+  de la PWA (las instalaciones existentes se actualizan por el SO con
+  retraso).
+
 ## Despliegue
 
 Subir `push/cms/` por FTP a la carpeta `push/` (como el resto de `push/`).
@@ -191,6 +221,7 @@ inválido/ausente.
 | `background`       | `boolean?`          | Gráfico de fondo on/off (por defecto: on).                  |
 | `backgroundImage`  | `string?`           | Imagen de fondo propia (`/data/uploads/…`, vacío = gráfico incluido). |
 | `themeDefault`     | `"dark"\|"light"?`  | Tema por defecto mientras el visitante no elija él mismo.   |
+| `branding`         | `object?`           | Imagen de marca (colores, fuente, logo, título, iconos), gestionada en la pestaña CMS «Branding». |
 
 Claves del menú Más: `news`, `map`, `info`, `sponsors`, `tickets`, `contact`,
 `impressum`, `theme`, `language` (deben coincidir con `src/routes/More.tsx`).

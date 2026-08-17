@@ -8,12 +8,10 @@ import { PresentedByFooter } from "./PresentedByFooter";
 import { LoadingState } from "./states";
 import { useVersionSync } from "@/data/useVersion";
 import { initTracking, trackPage } from "@/lib/track";
+import { applyBranding, themeColorFor } from "@/lib/branding";
 import { useUi } from "@/store/ui";
 import { useAppConfig } from "@/data/useAppConfig";
 import { useFestival } from "@/data/queries";
-
-// Theme-Farbe der Statusleiste passend zum Hintergrund (§2).
-const THEME_COLOR = { dark: "#121212", light: "#f4f4f5" } as const;
 
 // App-Shell: TopBar, OfflineBadge, scrollbarer Inhalt (<Outlet/>), untere Nav (§10).
 export function AppShell() {
@@ -28,12 +26,13 @@ export function AppShell() {
   // zur Laufzeit. index.html hält den statischen Fallback ("ROCK IM DORF").
   const { data: festival } = useFestival();
   useEffect(() => {
-    const shortName = festival?.shortName;
+    // Branding-Kurzname (CMS) gewinnt über festival.shortName.
+    const shortName = config.branding?.shortName || festival?.shortName;
     if (!shortName) return;
     document
       .querySelector('meta[name="apple-mobile-web-app-title"]')
       ?.setAttribute("content", shortName);
-  }, [festival?.shortName]);
+  }, [festival?.shortName, config.branding?.shortName]);
 
   // Admin-Standard-Theme anwenden – nur solange der User nicht selbst gewählt hat.
   const themeExplicit = useUi((s) => s.themeExplicit);
@@ -50,8 +49,14 @@ export function AppShell() {
     document.documentElement.dataset.theme = theme;
     document
       .querySelector('meta[name="theme-color"]')
-      ?.setAttribute("content", THEME_COLOR[theme]);
-  }, [theme]);
+      ?.setAttribute("content", themeColorFor(config.branding, theme));
+  }, [theme, config.branding]);
+
+  // Kunden-Branding (Farben/Schrift/Titel/Manifest) anwenden – muss bei
+  // Theme-Wechsel erneut laufen (Inline-Vars gelten je aktivem Theme).
+  useEffect(() => {
+    applyBranding(config.branding, theme);
+  }, [config.branding, theme]);
 
   // Hintergrundgrafik an/aus (data-bg="off" → --rid-bg-image: none, siehe index.css).
   useEffect(() => {

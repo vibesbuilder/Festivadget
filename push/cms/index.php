@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/lib.php';
 require_once __DIR__ . '/importer.php';
+require_once __DIR__ . '/branding.php';
 
 $error    = cms_handle_auth();
 $notice   = null;
@@ -137,6 +138,118 @@ if (cms_logged_in() && ($_POST['do'] ?? '') !== '' && $_POST['do'] !== 'logout')
                 } catch (Throwable $e) {
                     $error = cms_t('Leeren fehlgeschlagen: %s', $e->getMessage());
                 }
+                break;
+
+            case 'save_branding':
+                // Titel/Kurzname/Schrift/Farben (Logo + Icons haben eigene Aktionen).
+                $b = cms_branding();
+                $title = trim((string) ($_POST['btitle'] ?? ''));
+                if ($title === '') {
+                    unset($b['title']);
+                } else {
+                    $b['title'] = $title;
+                }
+                $short = trim((string) ($_POST['bshort'] ?? ''));
+                if ($short === '') {
+                    unset($b['shortName']);
+                } else {
+                    $b['shortName'] = function_exists('mb_substr') ? mb_substr($short, 0, 12) : substr($short, 0, 12);
+                }
+                $font = (string) ($_POST['bfont'] ?? 'standard');
+                if (!isset(BRANDING_FONTS[$font]) || $font === 'standard') {
+                    unset($b['font']);
+                } else {
+                    $b['font'] = $font;
+                }
+                if (!empty($_POST['resetColors'])) {
+                    unset($b['colors']);
+                } else {
+                    $b['colors'] = cms_branding_colors_from_post($_POST);
+                }
+                $notice = cms_branding_write($b)
+                    ? cms_t('Branding gespeichert. Übernahme in der App binnen ~2 Minuten.')
+                    : cms_t('Speichern fehlgeschlagen – Schreibrechte des data-Ordners prüfen.');
+                break;
+
+            case 'upload_branding_logo':
+                $file = $_FILES['file'] ?? null;
+                if (!$file || ($file['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
+                    $error = cms_t('Keine Datei gewählt.');
+                    break;
+                }
+                if (($file['error'] ?? 1) !== UPLOAD_ERR_OK) {
+                    $error = cms_t('Upload-Fehler (Code %d).', (int) $file['error']);
+                    break;
+                }
+                if (($file['size'] ?? 0) > CMS_UPLOAD_MAXSIZE) {
+                    $error = cms_t('Datei zu groß (max. 5 MB).');
+                    break;
+                }
+                $ext = strtolower((string) pathinfo((string) $file['name'], PATHINFO_EXTENSION));
+                if (!in_array($ext, CMS_UPLOAD_EXT, true)) {
+                    $error = cms_t('Nur %s erlaubt.', implode(' / ', CMS_UPLOAD_EXT));
+                    break;
+                }
+                cms_branding_delete_logo_files();
+                if (!move_uploaded_file((string) $file['tmp_name'], cms_uploads_dir() . "/branding-logo.$ext")) {
+                    $error = cms_t('Konnte Datei nicht speichern.');
+                    break;
+                }
+                $b = cms_branding();
+                $b['logo'] = "/data/uploads/branding-logo.$ext?v=" . bin2hex(random_bytes(4));
+                cms_branding_write($b);
+                $notice = cms_t('Logo hochgeladen. Übernahme in der App binnen ~2 Minuten.');
+                break;
+
+            case 'delete_branding_logo':
+                cms_branding_delete_logo_files();
+                $b = cms_branding();
+                unset($b['logo']);
+                cms_branding_write($b);
+                $notice = cms_t('Logo entfernt – die App zeigt wieder das mitgelieferte Logo.');
+                break;
+
+            case 'upload_branding_icon':
+                $file = $_FILES['file'] ?? null;
+                if (!$file || ($file['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
+                    $error = cms_t('Keine Datei gewählt.');
+                    break;
+                }
+                if (($file['error'] ?? 1) !== UPLOAD_ERR_OK) {
+                    $error = cms_t('Upload-Fehler (Code %d).', (int) $file['error']);
+                    break;
+                }
+                if (($file['size'] ?? 0) > CMS_UPLOAD_MAXSIZE) {
+                    $error = cms_t('Datei zu groß (max. 5 MB).');
+                    break;
+                }
+                if (strtolower((string) pathinfo((string) $file['name'], PATHINFO_EXTENSION)) !== 'png') {
+                    $error = cms_t('Nur PNG erlaubt.');
+                    break;
+                }
+                $b = cms_branding();
+                $maskBg = (string) ($b['colors']['dark']['bg'] ?? BRANDING_DEFAULT_COLORS['dark']['bg']);
+                $err = cms_branding_make_icons((string) $file['tmp_name'], $maskBg);
+                if ($err !== null) {
+                    $error = match ($err) {
+                        'gd-missing'    => cms_t('Die PHP-Erweiterung GD fehlt auf dem Server – Icons können nicht erzeugt werden.'),
+                        'png-invalid'   => cms_t('PNG konnte nicht gelesen werden.'),
+                        'png-too-small' => cms_t('Bild zu klein – mindestens 192×192 Pixel.'),
+                        default         => cms_t('Speichern fehlgeschlagen – Schreibrechte des data-Ordners prüfen.'),
+                    };
+                    break;
+                }
+                $b['icons'] = bin2hex(random_bytes(4));
+                cms_branding_write($b);
+                $notice = cms_t('App-Icons erzeugt (192, 512, maskable). Übernahme in der App binnen ~2 Minuten.');
+                break;
+
+            case 'delete_branding_icon':
+                cms_branding_delete_icon_files();
+                $b = cms_branding();
+                unset($b['icons']);
+                cms_branding_write($b);
+                $notice = cms_t('Icons entfernt – es gelten wieder die mitgelieferten App-Icons.');
                 break;
 
             case 'save_more':
@@ -633,7 +746,7 @@ $csrf = cms_csrf_token();
 
   <nav class="tabs">
     <?php
-    $tabs = ['settings' => 'Einstellungen', 'more' => 'MEHR-Menü', 'info' => 'Infos', 'content' => 'Inhalte', 'upload' => 'Bilder', 'sources' => 'Quellen', 'news' => 'News', 'push' => 'Push', 'weather' => 'Wetter', 'stats' => 'Statistik', 'log' => 'Protokoll', 'help' => 'Hilfe'];
+    $tabs = ['settings' => 'Einstellungen', 'branding' => 'Branding', 'more' => 'MEHR-Menü', 'info' => 'Infos', 'content' => 'Inhalte', 'upload' => 'Bilder', 'sources' => 'Quellen', 'news' => 'News', 'push' => 'Push', 'weather' => 'Wetter', 'stats' => 'Statistik', 'log' => 'Protokoll', 'help' => 'Hilfe'];
     foreach ($tabs as $k => $label):
     ?>
       <a class="<?= $tab === $k ? 'active' : '' ?>" href="?tab=<?= cms_h($k) ?>"><?= cms_h(cms_t($label)) ?></a>
@@ -1460,6 +1573,125 @@ $csrf = cms_csrf_token();
             onclick="return confirm('<?= cms_j(cms_t('Protokoll wirklich komplett leeren?')) ?>')"><?= cms_h(cms_t('Protokoll leeren')) ?></button>
         </form>
       </div>
+    </div>
+
+  <?php elseif ($tab === 'branding'):
+    // Kunden-Branding (Paket Y): Farben/Logo/Titel/Schrift/PWA-Icons, alles
+    // vorausgefüllt mit den Build-Standardwerten; wirkt ohne Neu-Build.
+    $b = cms_branding();
+    $bTitle = (string) ($b['title'] ?? '');
+    $bShort = (string) ($b['shortName'] ?? '');
+    $bFont  = isset(BRANDING_FONTS[(string) ($b['font'] ?? '')]) ? (string) $b['font'] : 'standard';
+    $bLogo  = (string) ($b['logo'] ?? '');
+    $bIcons = (string) ($b['icons'] ?? '');
+    $bc = is_array($b['colors'] ?? null) ? $b['colors'] : [];
+    $cAccent  = cms_branding_hex($bc['accent'] ?? '') ?? BRANDING_DEFAULT_COLORS['accent'];
+    $cAccent2 = cms_branding_hex($bc['accent2'] ?? '') ?? BRANDING_DEFAULT_COLORS['accent2'];
+    $cVal = static function (string $group, string $key) use ($bc): string {
+        return cms_branding_hex($bc[$group][$key] ?? '') ?? BRANDING_DEFAULT_COLORS[$group][$key];
+    };
+    $colorField = static function (string $name, string $label, string $value): string {
+        return '<label class="fld"><span>' . cms_h($label) . '</span>'
+            . '<input type="color" name="' . cms_h($name) . '" value="' . cms_h($value) . '" style="height:2.4rem;padding:.2rem">'
+            . '</label>';
+    };
+    $tokenLabels = [
+        'bg'       => cms_t('Hintergrund'),
+        'surface'  => cms_t('Fläche'),
+        'surface2' => cms_t('Fläche 2'),
+        'text'     => cms_t('Text'),
+        'muted'    => cms_t('Gedämpfter Text'),
+        'border'   => cms_t('Rahmen'),
+    ]; ?>
+    <form method="post" class="card">
+      <input type="hidden" name="do" value="save_branding">
+      <input type="hidden" name="csrf" value="<?= cms_h($csrf) ?>">
+      <h2 style="margin-top:0"><?= cms_h(cms_t('Branding')) ?></h2>
+      <p class="muted"><?= cms_h(cms_t('Farben, Logo, Titel, Schrift und App-Icons der Besucher-App – vorausgefüllt mit den Standardwerten. Änderungen wirken ohne Neu-Build binnen ~2 Minuten.')) ?></p>
+
+      <h2><?= cms_h(cms_t('Titel & App-Name')) ?></h2>
+      <label class="fld"><span><?= cms_h(cms_t('Browser-Titel / App-Name (leer = Festivalname)')) ?></span>
+        <input type="text" name="btitle" value="<?= cms_h($bTitle) ?>"></label>
+      <label class="fld"><span><?= cms_h(cms_t('Kurzname (Home-Bildschirm, max. 12 Zeichen; leer = Festival-Kurzname)')) ?></span>
+        <input type="text" name="bshort" maxlength="12" value="<?= cms_h($bShort) ?>"></label>
+
+      <h2><?= cms_h(cms_t('Schrift')) ?></h2>
+      <label class="fld"><span><?= cms_h(cms_t('Schrift-Set (systemweite Schriften, keine Downloads nötig)')) ?></span>
+        <select name="bfont">
+          <?php foreach (BRANDING_FONTS as $fk => $fl): ?>
+            <option value="<?= cms_h($fk) ?>" <?= $bFont === $fk ? 'selected' : '' ?>><?= cms_h(cms_t($fl)) ?></option>
+          <?php endforeach; ?>
+        </select></label>
+
+      <h2><?= cms_h(cms_t('Farben')) ?></h2>
+      <div class="grid2">
+        <?= $colorField('c_accent', cms_t('Akzentfarbe'), $cAccent) ?>
+        <?= $colorField('c_accent2', cms_t('Sekundärfarbe'), $cAccent2) ?>
+      </div>
+      <h2 style="font-size:.95rem"><?= cms_h(cms_t('Dunkles Theme')) ?></h2>
+      <div class="grid2">
+        <?php foreach ($tokenLabels as $tk => $tl): ?>
+          <?= $colorField("c_d_$tk", $tl, $cVal('dark', $tk)) ?>
+        <?php endforeach; ?>
+      </div>
+      <h2 style="font-size:.95rem"><?= cms_h(cms_t('Helles Theme')) ?></h2>
+      <div class="grid2">
+        <?php foreach ($tokenLabels as $tk => $tl): ?>
+          <?= $colorField("c_l_$tk", $tl, $cVal('light', $tk)) ?>
+        <?php endforeach; ?>
+      </div>
+      <label class="row" style="margin-top:.4rem">
+        <input type="checkbox" name="resetColors" value="1">
+        <span><?= cms_h(cms_t('Beim Speichern alle Farben auf die Standardwerte zurücksetzen')) ?></span>
+      </label>
+
+      <div style="margin-top:1rem"><button type="submit"><?= cms_h(cms_t('Speichern')) ?></button></div>
+    </form>
+
+    <div class="card">
+      <h2 style="margin-top:0"><?= cms_h(cms_t('Logo')) ?></h2>
+      <p class="muted"><?= cms_h(cms_t('Ersetzt das Kopfzeilen-Logo der App (Querformat empfohlen, wird 36 px hoch angezeigt). Leer = mitgeliefertes Logo.')) ?></p>
+      <?php if ($bLogo !== ''): ?>
+        <p><img src="<?= cms_h($bLogo) ?>" alt="" style="height:36px;width:auto;max-width:300px;object-fit:contain;background:#000;padding:.2rem;border-radius:6px"></p>
+      <?php endif; ?>
+      <form method="post" enctype="multipart/form-data" style="display:flex;gap:.6rem;flex-wrap:wrap;align-items:center">
+        <input type="hidden" name="do" value="upload_branding_logo">
+        <input type="hidden" name="csrf" value="<?= cms_h($csrf) ?>">
+        <input type="file" name="file" accept=".webp,.png,.jpg,.jpeg,.svg" required>
+        <button type="submit"><?= cms_h(cms_t('Hochladen')) ?></button>
+      </form>
+      <?php if ($bLogo !== ''): ?>
+        <form method="post" style="margin-top:.6rem">
+          <input type="hidden" name="do" value="delete_branding_logo">
+          <input type="hidden" name="csrf" value="<?= cms_h($csrf) ?>">
+          <button type="submit" class="ghost"><?= cms_h(cms_t('Logo entfernen')) ?></button>
+        </form>
+      <?php endif; ?>
+    </div>
+
+    <div class="card">
+      <h2 style="margin-top:0"><?= cms_h(cms_t('App-Icon (PWA)')) ?></h2>
+      <p class="muted"><?= cms_h(cms_t('Quadratisches PNG hochladen (mindestens 192×192, empfohlen 512×512; transparenter Hintergrund möglich). Daraus werden die Install-Icons erzeugt (192, 512 und „maskable" mit der dunklen Hintergrundfarbe). Bereits installierte Apps übernehmen neue Icons erst verzögert.')) ?></p>
+      <?php if ($bIcons !== ''): ?>
+        <p style="display:flex;gap:.8rem;align-items:center">
+          <img src="/data/uploads/pwa-icon-192.png?v=<?= cms_h($bIcons) ?>" alt="" style="height:48px;width:48px;border-radius:10px">
+          <img src="/data/uploads/pwa-icon-maskable.png?v=<?= cms_h($bIcons) ?>" alt="" style="height:48px;width:48px;border-radius:24px">
+          <span class="muted"><?= cms_h(cms_t('Vorschau')) ?> (192 / maskable)</span>
+        </p>
+      <?php endif; ?>
+      <form method="post" enctype="multipart/form-data" style="display:flex;gap:.6rem;flex-wrap:wrap;align-items:center">
+        <input type="hidden" name="do" value="upload_branding_icon">
+        <input type="hidden" name="csrf" value="<?= cms_h($csrf) ?>">
+        <input type="file" name="file" accept=".png" required>
+        <button type="submit"><?= cms_h(cms_t('Hochladen')) ?></button>
+      </form>
+      <?php if ($bIcons !== ''): ?>
+        <form method="post" style="margin-top:.6rem">
+          <input type="hidden" name="do" value="delete_branding_icon">
+          <input type="hidden" name="csrf" value="<?= cms_h($csrf) ?>">
+          <button type="submit" class="ghost"><?= cms_h(cms_t('Icons entfernen')) ?></button>
+        </form>
+      <?php endif; ?>
     </div>
 
   <?php elseif ($tab === 'help'):
