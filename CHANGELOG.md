@@ -5,6 +5,8 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.0.0/), Versionier
 
 ## [Unreleased]
 
+## [1.2.0] – 2026-08-18
+
 ### Added
 
 - **Intro-Video auf Home (CMS-Tab „Branding").** Volle Breite oberhalb des
