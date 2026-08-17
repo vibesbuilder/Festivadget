@@ -18,7 +18,7 @@ return [
     // publicKey liefert push/vapid.php zur Laufzeit an die App
     // (VITE_VAPID_PUBLIC_KEY in der Build-Env ist nur noch optionaler Fallback).
     'vapid' => [
-        'subject'    => 'mailto:info@rockimdorf.at',
+        'subject'    => 'mailto:webmaster@example.org',
         'publicKey'  => '',
         'privateKey' => '',
     ],
@@ -27,7 +27,7 @@ return [
     'adminPasswordHash' => '',
 
     // Geheimnis für den HTTP-Aufruf von cron-send.php (externer Pinger).
-    // Aufruf: https://app.rockimdorf.at/push/cron-send.php?key=DIESES_GEHEIMNIS
+    // Aufruf: https://deine-domain.example/push/cron-send.php?key=DIESES_GEHEIMNIS
     'cronSecret' => '',
 
     // Wetter (weather.php): FALLBACK-Werte – im Normalfall pflegst du alles im
@@ -73,7 +73,7 @@ return [
     'sources' => [
         // 'token' = NUR der Joomla-API-Token (einfache Quotes), OHNE
         // "Authorization: Bearer " davor – das setzt der Importer selbst.
-        'joomla'    => ['baseUrl' => 'https://rockimdorf.at', 'token' => ''],
+        'joomla'    => ['baseUrl' => '', 'token' => ''],
         'wordpress' => ['baseUrl' => '', 'user' => '', 'appPassword' => ''],
     ],
 ];
