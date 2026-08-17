@@ -36,6 +36,10 @@ $STRINGS = [
     'ok'             => ['de' => 'OK', 'en' => 'OK'],
     'missing'        => ['de' => 'fehlt', 'en' => 'missing'],
     'php_version'    => ['de' => 'PHP 8.1 oder neuer', 'en' => 'PHP 8.1 or newer'],
+    'webroot'        => [
+        'de' => 'Installation liegt im Webroot einer (Sub-)Domain – Unterordner (z. B. /testapp/) werden nicht unterstützt; ggf. eine Subdomain auf dieses Verzeichnis zeigen lassen',
+        'en' => 'Installed in the webroot of a (sub)domain – subfolders (e.g. /testapp/) are not supported; point a subdomain at this directory instead',
+    ],
     'ext_openssl'    => ['de' => 'PHP-Erweiterung openssl (Web-Push-Schlüssel)', 'en' => 'PHP extension openssl (web push keys)'],
     'ext_pdo'        => ['de' => 'PHP-Erweiterung pdo_mysql (Web-Push & Statistik)', 'en' => 'PHP extension pdo_mysql (web push & statistics)'],
     'ext_gd'         => ['de' => 'PHP-Erweiterung gd (PWA-Icons im CMS)', 'en' => 'PHP extension gd (PWA icons in the CMS)'],
@@ -137,9 +141,14 @@ if (($_POST['do'] ?? '') === 'selfdelete' && $csrfOk) {
 @mkdir($dataDir, 0775, true); // best effort – Prüfung unten
 
 $pdoMysql = extension_loaded('pdo') && in_array('mysql', PDO::getAvailableDrivers(), true);
+// Der App-Build verwendet absolute Pfade (/assets, /data, Service Worker):
+// eine Unterordner-Installation liefert nur eine weiße Seite. SCRIPT_NAME
+// muss daher direkt /install/... sein.
+$inWebroot = str_starts_with((string) ($_SERVER['SCRIPT_NAME'] ?? ''), '/install/');
 $checks = [
     // [Label-Key, erfüllt?, erforderlich?]
     ['php_version', PHP_VERSION_ID >= 80100, true],
+    ['webroot', $inWebroot, true],
     ['writable_data', is_dir($dataDir) && is_writable($dataDir), true],
     ['writable_push', is_dir($pushDir) && is_writable($pushDir), true],
     ['ext_openssl', extension_loaded('openssl'), false],

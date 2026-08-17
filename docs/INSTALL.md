@@ -17,7 +17,7 @@ Der Installer prüft alle Voraussetzungen selbst und zeigt an, was fehlt.
 ## Installation
 
 1. Release-Paket (`festivadget-vX.Y.Z.zip`) entpacken und den Inhalt per FTP
-   in den **Webroot** der (Sub-)Domain hochladen. Wichtig: Das Paket **sofort
+   in den **Webroot** der (Sub-)Domain hochladen. **Unterordner (z. B. `/testapp/`) werden nicht unterstützt** – der Installer prüft das (der App-Build nutzt absolute Pfade); notfalls eine Subdomain auf das Verzeichnis zeigen lassen. Wichtig: Das Paket **sofort
    installieren** – solange keine `push/config.php` existiert, ist der
    Installer für jeden erreichbar.
 2. Im Browser `https://deine-domain/install/` öffnen (DE/EN).

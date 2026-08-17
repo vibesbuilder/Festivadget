@@ -17,7 +17,7 @@ El instalador comprueba todos los requisitos y muestra lo que falta.
 ## Instalación
 
 1. Descomprimir el paquete (`festivadget-vX.Y.Z.zip`) y subir su contenido
-   por FTP a la **raíz web** del (sub)dominio. Importante: **instalar de
+   por FTP a la **raíz web** del (sub)dominio. **Las subcarpetas (p. ej. `/testapp/`) no están soportadas** – el instalador lo comprueba (el build usa rutas absolutas); si hace falta, apunta un subdominio al directorio. Importante: **instalar de
    inmediato** – mientras no exista `push/config.php`, el instalador es
    accesible para cualquiera.
 2. Abrir `https://tu-dominio/install/` en el navegador (DE/EN).

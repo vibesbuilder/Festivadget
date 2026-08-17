@@ -37,7 +37,7 @@ if (cms_logged_in() && ($_GET['export'] ?? '') === 'push-stats') {
 }
 
 // --- POST-Aktionen ---------------------------------------------------------
-if (cms_logged_in() && ($_POST['do'] ?? '') !== '' && $_POST['do'] !== 'logout') {
+if (cms_logged_in() && ($_POST['do'] ?? '') !== '' && $_POST['do'] !== 'logout' && $_POST['do'] !== 'login') {
     if (!cms_check_csrf()) {
         $error = cms_t('Sicherheits-Token ungültig – bitte erneut speichern.');
     } else {
@@ -747,12 +747,18 @@ $tab  = $_GET['tab'] ?? 'settings';
 $csrf = cms_csrf_token();
 ?>
 <!doctype html>
+<?php
+// CMS-Titel datengetrieben: Festivalname aus den Daten (Override vor Build-Stand),
+// damit auch Kunden-Installationen ihren eigenen Namen sehen.
+$cmsFest  = cms_read_json('app-festival.json') ?: cms_read_json('festival.json');
+$cmsTitle = trim((string) ($cmsFest['name'] ?? '')) ?: 'Festivadget';
+?>
 <html lang="<?= cms_h(cms_lang()) ?>">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>ROCK IM DORF · Admin</title>
+<title><?= cms_h($cmsTitle) ?> · Admin</title>
 <style>
   :root { --bg:#121212; --surface:#1c1c1c; --surface2:#262626; --text:#fff; --muted:#b3b3b3; --accent:#ffb300; --border:#2e2e2e; }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -796,7 +802,7 @@ $csrf = cms_csrf_token();
 
 <?php if (!cms_logged_in()): ?>
 
-  <h1>ROCK IM DORF · Admin</h1>
+  <h1><?= cms_h($cmsTitle) ?> · Admin</h1>
   <form method="post" class="card" autocomplete="off">
     <input type="hidden" name="do" value="login">
     <h2 style="margin-top:0"><?= cms_h(cms_t('Anmelden')) ?></h2>
@@ -808,7 +814,7 @@ $csrf = cms_csrf_token();
 <?php else: ?>
 
   <div class="bar">
-    <h1 style="margin:0">ROCK IM DORF · Admin</h1>
+    <h1 style="margin:0"><?= cms_h($cmsTitle) ?> · Admin</h1>
     <form method="post"><input type="hidden" name="do" value="logout"><button class="ghost" type="submit"><?= cms_h(cms_t('Abmelden')) ?></button></form>
   </div>
 
