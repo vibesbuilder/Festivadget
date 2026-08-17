@@ -1,0 +1,11 @@
+{
+  "providers": [
+    {
+      "id": "beispiel-shop",
+      "name": "Beispiel-Ticketshop",
+      "embedType": "link",
+      "url": "https://example.org/tickets",
+      "note": "Tickets gibt es im Online-Shop – oder an der Abendkasse."
+    }
+  ]
+}

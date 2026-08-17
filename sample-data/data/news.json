@@ -1,0 +1,17 @@
+[
+  {
+    "id": "news-willkommen",
+    "title": "Willkommen beim Sommerklang Festival!",
+    "body": "Schön, dass du da bist! Zwei Tage, zwei Bühnen und ganz viel Musik. Alle Infos findest du hier in der App – auch offline.",
+    "category": "general",
+    "publishAt": "2026-01-10T10:00:00+01:00",
+    "pinned": true
+  },
+  {
+    "id": "news-timetable",
+    "title": "Der Timetable ist da",
+    "body": "Alle Spielzeiten sind online. Markiere deine Favoriten mit dem Herz – die App erinnert dich auf Wunsch vor Konzertbeginn.",
+    "category": "lineup",
+    "publishAt": "2026-01-15T12:00:00+01:00"
+  }
+]

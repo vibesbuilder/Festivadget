@@ -1,0 +1,91 @@
+[
+  {
+    "id": "nordlicht",
+    "slug": "nordlicht",
+    "name": "Nordlicht",
+    "genres": [
+      "Indie-Pop"
+    ],
+    "country": "AT",
+    "order": 1,
+    "bio": "Vier Freundinnen und Freunde aus dem Alpenvorland, die luftigen Indie-Pop mit deutschen Texten spielen. Ihr zweites Album entstand in einer alten Scheune – genau so klingt es auch: warm, ehrlich und ein bisschen staubig."
+  },
+  {
+    "id": "fluss",
+    "slug": "fluss",
+    "name": "Flussaufwärts",
+    "genres": [
+      "Folk"
+    ],
+    "country": "DE",
+    "order": 2,
+    "bio": "Ein Duo mit Gitarre, Geige und zweistimmigem Gesang. Zwischen ruhigen Balladen und tanzbaren Sets erzählen die beiden Geschichten vom Unterwegssein."
+  },
+  {
+    "id": "betonblumen",
+    "slug": "betonblumen",
+    "name": "Betonblumen",
+    "genres": [
+      "Punkrock"
+    ],
+    "country": "AT",
+    "order": 3,
+    "bio": "Schnell, laut, herzlich: Betonblumen bringen Drei-Minuten-Hymnen über kleine Städte und große Träume auf die Bühne."
+  },
+  {
+    "id": "mondmaschine",
+    "slug": "mondmaschine",
+    "name": "Mondmaschine",
+    "genres": [
+      "Electro"
+    ],
+    "country": "CH",
+    "order": 4,
+    "bio": "Analoge Synthesizer, treibende Beats und eine Lichtshow, die den Namen verdient. Mondmaschine spielen ihr Set traditionell nach Einbruch der Dunkelheit."
+  },
+  {
+    "id": "tante-groove",
+    "slug": "tante-groove",
+    "name": "Tante Groove",
+    "genres": [
+      "Funk",
+      "Soul"
+    ],
+    "country": "AT",
+    "order": 5,
+    "bio": "Neunköpfige Band mit Bläsersatz. Wenn Tante Groove aufspielt, bleibt keine Wiese unbetanzt."
+  },
+  {
+    "id": "salzwasser",
+    "slug": "salzwasser",
+    "name": "Salzwasser",
+    "genres": [
+      "Singer-Songwriter"
+    ],
+    "country": "DE",
+    "order": 6,
+    "bio": "Eine Stimme, eine Gitarre und Lieder übers Meer, obwohl der Künstler aus dem Binnenland kommt. Vielleicht gerade deshalb."
+  },
+  {
+    "id": "kometenkinder",
+    "slug": "kometenkinder",
+    "name": "Kometenkinder",
+    "genres": [
+      "Alternative"
+    ],
+    "country": "AT",
+    "order": 7,
+    "bio": "Die jüngste Band im Line-Up hat ihre erste EP im Proberaum der Musikschule aufgenommen – und klingt schon jetzt nach großer Bühne."
+  },
+  {
+    "id": "dj-abendrot",
+    "slug": "dj-abendrot",
+    "name": "DJ Abendrot",
+    "genres": [
+      "DJ-Set"
+    ],
+    "country": "AT",
+    "order": 8,
+    "bio": "Schließt das Festival mit einem Set aus Disco, House und Lieblingsliedern, bis die Lichter angehen."
+  }
+]

@@ -44,6 +44,31 @@ robocopy "$app\push" "$staging\push" /S /NFL /NDL /NJH /NJS `
     /XF config.php cms-settings.json weather-settings.json | Out-Null
 if ($LASTEXITCODE -ge 8) { throw "robocopy push fehlgeschlagen." }
 
+Write-Host "== Staging: Beispieldaten statt Echtdaten (sample-data/)"
+# Das oeffentliche Paket enthaelt NIE die echten Festivaldaten des Maintainers:
+# data/ wird komplett durch sample-data/data ersetzt, sample-data/assets
+# ueberlagert Bild-Assets (Gelaendeplan, Sponsor-Logo). public/data und die
+# Live-Instanz bleiben unberuehrt - der Tausch passiert nur im Staging.
+if (-not (Test-Path "$app\sample-data\data\festival.json")) {
+    throw "sample-data/data fehlt - Paket wuerde Echtdaten enthalten."
+}
+Remove-Item "$staging\data" -Recurse -Force -ErrorAction SilentlyContinue
+robocopy "$app\sample-data\data" "$staging\data" /S /NFL /NDL /NJH /NJS | Out-Null
+if ($LASTEXITCODE -ge 8) { throw "robocopy sample-data fehlgeschlagen." }
+# RID-spezifische Bild-Assets raus (Artist-Fotos, Sponsor-Logos, Logo-SVG);
+# neutraler Hintergrund = mitgeliefertes background.example.webp.
+Remove-Item "$staging\img\artists", "$staging\img\sponsors", "$staging\img\logo.svg" -Recurse -Force -ErrorAction SilentlyContinue
+Copy-Item "$staging\img\background.example.webp" "$staging\img\background.webp" -Force
+robocopy "$app\sample-data\assets" $staging /S /NFL /NDL /NJH /NJS | Out-Null
+if ($LASTEXITCODE -ge 8) { throw "robocopy sample-assets fehlgeschlagen." }
+# Build-Strings neutralisieren: Titel/Manifest tragen sonst den Instanz-Namen
+# aus dem Build (index.html/<title>, apple-Label, statisches PWA-Manifest).
+foreach ($f in @("$staging\index.html", "$staging\manifest.webmanifest")) {
+    $c = Get-Content $f -Raw
+    $c = $c.Replace("ROCK IM DORF Festival", "Sommerklang Festival").Replace("ROCK IM DORF", "SOMMERKLANG")
+    Set-Content -Path $f -Value $c -Encoding utf8 -NoNewline
+}
+
 Write-Host "== Staging: install/ + LICENSE"
 robocopy "$app\install" "$staging\install" /S /NFL /NDL /NJH /NJS | Out-Null
 if ($LASTEXITCODE -ge 8) { throw "robocopy install fehlgeschlagen." }
@@ -51,6 +76,10 @@ Copy-Item "$app\LICENSE" "$staging\LICENSE"
 
 # --- 3. Sicherheits-Checks --------------------------------------------------------
 if (Test-Path "$staging\push\config.php") { throw "SICHERHEIT: config.php im Paket!" }
+# Keine Echtdaten im Paket: der Beispiel-Datensatz heisst "Sommerklang".
+$festivalName = (Get-Content "$staging\data\festival.json" -Raw | ConvertFrom-Json).name
+if ($festivalName -notmatch 'Sommerklang') { throw "SICHERHEIT: data/ enthaelt nicht die Beispieldaten ($festivalName)." }
+if (Test-Path "$staging\data\uploads") { throw "SICHERHEIT: data/uploads im Paket." }
 if (-not (Test-Path "$staging\push\vendor\autoload.php")) {
     throw "push/vendor fehlt - einmalig 'composer install' in push/ ausfuehren."
 }
@@ -107,5 +136,4 @@ $mb = [math]::Round((Get-Item $zip).Length / 1MB, 1)
 $umb = [math]::Round((Get-Item $updateZip).Length / 1MB, 1)
 Write-Host ""
 Write-Host "Fertig: $zip ($mb MB) + Update-Paket ($umb MB)"
-Write-Host "Hinweis: data/ im Paket = aktueller Build-Stand (public/data) -"
-Write-Host "vor einem oeffentlichen Release Beispieldaten statt Echtdaten verwenden."
+Write-Host "data/ im Paket = Beispieldaten (sample-data/, Sommerklang Festival)."
