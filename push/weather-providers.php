@@ -88,7 +88,7 @@ function http_get_json(string $url): ?array
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_CONNECTTIMEOUT => 5,
             CURLOPT_TIMEOUT        => 15,
-            CURLOPT_USERAGENT      => 'Festivadget/1.0 app.rockimdorf.at',
+            CURLOPT_USERAGENT      => 'Festivadget/1.0 (+https://github.com/vibesbuilder/Festivadget)',
         ]);
         $res  = curl_exec($ch);
         $code = (int) curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
@@ -97,7 +97,7 @@ function http_get_json(string $url): ?array
     } else {
         $ctx = stream_context_create(['http' => [
             'timeout'       => 15,
-            'user_agent'    => 'Festivadget/1.0 app.rockimdorf.at',
+            'user_agent'    => 'Festivadget/1.0 (+https://github.com/vibesbuilder/Festivadget)',
             'ignore_errors' => true,
         ]]);
         $res    = @file_get_contents($url, false, $ctx);
