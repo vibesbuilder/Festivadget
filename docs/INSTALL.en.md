@@ -17,7 +17,7 @@ The installer checks all requirements itself and shows what is missing.
 ## Installation
 
 1. Extract the release package (`festivadget-vX.Y.Z.zip`) and upload its
-   contents via FTP into the **webroot** of your (sub)domain. Important:
+   contents via FTP into the **webroot** of your (sub)domain. **Subfolders (e.g. `/testapp/`) are not supported** – the installer checks this (the app build uses absolute paths); if needed, point a subdomain at the directory. Important:
    **install immediately** – as long as no `push/config.php` exists, the
    installer is reachable by anyone.
 2. Open `https://your-domain/install/` in the browser (DE/EN).

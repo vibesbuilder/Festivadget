@@ -5,6 +5,21 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.0.0/), Versionier
 
 ## [Unreleased]
 
+## [1.2.1] – 2026-08-18
+
+### Fixed
+
+- **CMS: „Sicherheits-Token ungültig" direkt nach dem Login** – der
+  POST-Dispatcher lief fälschlich auch für `do=login` durch (MySQL-Test des
+  Release-Pakets). Login ist jetzt ausgenommen.
+- **CMS-Kopfzeile/Titel datengetrieben** – statt hart kodiertem
+  „ROCK IM DORF · Admin" zeigt das CMS den Festivalnamen aus
+  `app-festival.json`/`festival.json` (Fallback „Festivadget").
+- **Installer: Pflicht-Check „Webroot"** – Unterordner-Installationen
+  (z. B. `/testapp/`) führen zu einer weißen Seite, weil der App-Build
+  absolute Pfade nutzt. Der Installer blockiert das jetzt mit klarem
+  Hinweis (Subdomain verwenden); Doku entsprechend geschärft.
+
 ## [1.2.0] – 2026-08-18
 
 ### Added
