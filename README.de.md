@@ -79,6 +79,17 @@ Vertiefung: [`IMPLEMENTATION.md`](IMPLEMENTATION.md) (Konzept),
 [`docs/DATEN.md`](docs/DATEN.md) (Datenanbindung),
 [`docs/TELEGRAM.md`](docs/TELEGRAM.md) (Live-News).
 
+## Installation ohne Build-Maschine (Release-Paket)
+
+Der einfachste Weg zur eigenen Instanz: ein Release-Paket
+(`festivadget-vX.Y.Z.zip`) auf einen beliebigen PHP-Webspace hochladen und
+`/install/` im Browser öffnen – ein Web-Installer nach dem Joomla-Prinzip
+richtet alles ein (CMS-Passwort, optional MySQL für Web-Push, VAPID-Schlüssel
+werden serverseitig erzeugt). Siehe [docs/INSTALL.md](docs/INSTALL.md).
+Maintainer bauen das Paket mit `tools/build-release.ps1`.
+
+Das folgende Setup braucht man nur für die **Entwicklung** oder eigene Builds.
+
 ## Setup
 
 Voraussetzungen: **Node.js ≥ 20** und **pnpm** (`corepack enable` genügt).

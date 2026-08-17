@@ -844,6 +844,12 @@ const CMS_I18N = [
         'fr' => "Tous les manuels en fichiers Markdown, chacun en allemand, anglais, français et espagnol. Ils sont livrés avec l'app (dossier /docs).",
         'es' => 'Todos los manuales como archivos Markdown, cada uno en alemán, inglés, francés y español. Se entregan con la app (carpeta /docs).',
     ],
+    'Installation (Web-Installer)' => ['en' => 'Installation (web installer)', 'fr' => 'Installation (installeur web)', 'es' => 'Instalación (instalador web)'],
+    'Release-Paket hochladen und im Browser einrichten – ohne Build-Maschine.' => [
+        'en' => 'Upload the release package and set it up in the browser – no build machine.',
+        'fr' => 'Téléverser le paquet de release et configurer dans le navigateur – sans machine de build.',
+        'es' => 'Subir el paquete de release y configurarlo en el navegador, sin máquina de build.',
+    ],
     'Admin-UI (CMS)' => ['en' => 'Admin UI (CMS)', 'fr' => "Interface d'administration (CMS)", 'es' => 'Interfaz de administración (CMS)'],
     'Bedienung dieser Admin-Oberfläche (Tabs, Overrides, Importer).' => [
         'en' => 'How to use this admin interface (tabs, overrides, importer).',

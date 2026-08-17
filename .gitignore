@@ -3,6 +3,7 @@ node_modules
 
 # Build-Artefakte
 dist
+release
 *.local
 
 # Umgebungs-/Credentials – NIE committen (§6.6)

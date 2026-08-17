@@ -82,6 +82,17 @@ Deep dives: [`IMPLEMENTATION.en.md`](IMPLEMENTATION.en.md) (concept),
 [`docs/TELEGRAM.en.md`](docs/TELEGRAM.en.md) (live news). All docs are also
 available in German, French and Spanish (language links at the top of each file).
 
+## Installation without a build machine (release package)
+
+The easiest way to run your own instance: take a release package
+(`festivadget-vX.Y.Z.zip`), upload it to any PHP webspace and open
+`/install/` in the browser – a Joomla-style web installer sets everything up
+(CMS password, optional MySQL for web push, VAPID keys are generated
+server-side). See [docs/INSTALL.en.md](docs/INSTALL.en.md). Maintainers build
+the package with `tools/build-release.ps1`.
+
+The setup below is only needed for **development** or custom builds.
+
 ## Setup
 
 Requirements: **Node.js ≥ 20** and **pnpm** (`corepack enable` is enough).
