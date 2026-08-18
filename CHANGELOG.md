@@ -5,6 +5,16 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.0.0/), Versionier
 
 ## [Unreleased]
 
+## [1.4.0] – 2026-08-18
+
+### Security / Changed
+
+- **Toolchain-Major-Upgrade:** Vite 5 → 7 (inkl. esbuild ≥ 0.25,
+  @vitejs/plugin-react 5, vite-plugin-pwa 1) und react-router-dom 6 → 7.
+  Damit sind **alle** offenen Dependabot-Advisories behoben (auch die
+  Dev-Server-Meldungen und der Router-v7-only-Patch); `pnpm audit` = 0.
+  Keine funktionalen Änderungen an der App.
+
 ## [1.3.2] – 2026-08-18
 
 ### Security
