@@ -12,6 +12,11 @@ genügt); alle Inhalte kommen aus versionierten JSON-Dateien. Die Daten werden
 und auf ein einheitliches Schema normalisiert. Referenzprojekt: ROCK IM DORF Festival
 ([app.rockimdorf.at](https://app.rockimdorf.at)).
 
+> **Passende Crew-App gesucht?** [**CrewCare**](https://crew.rockimdorf.at) ist
+> unser Schwesterprodukt für Festival-Crews (Dienstplan, Check-In, Invites,
+> Push u. v. m.). Es wird als **gehostete SaaS-Lösung auf Anfrage** angeboten
+> und beinhaltet eine gehostete Festivadget-Instanz.
+
 ## Screenshots
 
 | Home | Timetable | Line-Up |

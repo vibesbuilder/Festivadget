@@ -5,6 +5,22 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.0.0/), Versionier
 
 ## [Unreleased]
 
+## [1.3.2] – 2026-08-18
+
+### Security
+
+- **Abhängigkeits-Updates nach Dependabot-Meldungen:** react-router-dom auf
+  6.30.4 (behebt Open-Redirect/XSS- und SSR-Advisories in der ausgelieferten
+  App); transitive Pakete nanoid, postcss, brace-expansion und fast-uri auf
+  gepatchte Versionen. Verbleibende Meldungen betreffen nur den lokalen
+  Dev-Server (vite/esbuild, Fix erfordert Vite-Major-Upgrade – geplant) bzw.
+  eine Router-Advisory, deren Patch erst in react-router v7 existiert.
+
+### Changed
+
+- README: Installations-Sektion prominent („unter 5 Minuten"), Hinweis auf
+  die Schwester-App CrewCare (SaaS auf Anfrage, inkl. Festivadget).
+
 ## [1.3.1] – 2026-08-18
 
 ### Fixed

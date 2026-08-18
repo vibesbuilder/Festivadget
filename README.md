@@ -12,6 +12,11 @@ time** from selectable sources (manual / Joomla / WordPress) and normalized to a
 single schema. Reference project: ROCK IM DORF Festival
 ([app.rockimdorf.at](https://app.rockimdorf.at)).
 
+> **Looking for a crew/staff app to go with it?** [**CrewCare**](https://crew.rockimdorf.at)
+> is our companion product for festival crews (shift plans, check-in, invites,
+> push, and more). It is offered as a **hosted SaaS solution on request** and
+> includes a hosted Festivadget instance.
+
 ## Screenshots
 
 | Home | Timetable | Line-up |
