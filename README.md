@@ -10,9 +10,9 @@ Core principle: **fully static**. At runtime the app is purely static (any web s
 will do); all content comes from versioned JSON files. Data is fetched **at build
 time** from selectable sources (manual / Joomla / WordPress) and normalized to a
 single schema. Reference project: ROCK IM DORF Festival
-([app.rockimdorf.at](https://app.rockimdorf.at)).
+([demo.festivadget.com](https://demo.festivadget.com)).
 
-> **Looking for a crew/staff app to go with it?** [**CrewCare**](https://crew.rockimdorf.at)
+> **Looking for a crew/staff app to go with it?** [**CrewCare**](https://festivadget.com)
 > is our companion product for festival crews (shift plans, check-in, invites,
 > push, and more). It is offered as a **hosted SaaS solution on request** and
 > includes a hosted Festivadget instance.
