@@ -10,9 +10,9 @@ Kernprinzip: **fully static**. Im Betrieb ist die App rein statisch (jeder Websp
 genügt); alle Inhalte kommen aus versionierten JSON-Dateien. Die Daten werden
 **zum Build-Zeitpunkt** aus wählbaren Quellen (manuell / Joomla / WordPress) bezogen
 und auf ein einheitliches Schema normalisiert. Referenzprojekt: ROCK IM DORF Festival
-([app.rockimdorf.at](https://app.rockimdorf.at)).
+([demo.festivadget.com](https://demo.festivadget.com)).
 
-> **Passende Crew-App gesucht?** [**CrewCare**](https://crew.rockimdorf.at) ist
+> **Passende Crew-App gesucht?** [**CrewCare**](https://festivadget.com) ist
 > unser Schwesterprodukt für Festival-Crews (Dienstplan, Check-In, Invites,
 > Push u. v. m.). Es wird als **gehostete SaaS-Lösung auf Anfrage** angeboten
 > und beinhaltet eine gehostete Festivadget-Instanz.

@@ -5,6 +5,25 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.0.0/), Versionier
 
 ## [Unreleased]
 
+## [1.4.2] - 2026-08-18
+
+### Added
+
+- **Beispieldaten mit Artist-Bildern:** Die acht Acts des Gadget Festivals haben
+  eigene Bilder (1080x1350 WebP) sowie je einen Spotify- und YouTube-Link, der
+  auf der Artist-Seite eingebettet wird. Das Release-Paket waechst dadurch von
+  1,6 auf rund 2 MB.
+
+### Changed
+
+- READMEs verweisen auf die neuen Domains (demo.festivadget.com, festivadget.com).
+- Ungenutztes Alt-Favicon aus dem Build entfernt.
+
+### Fixed
+
+- `build-release.ps1` bricht ab, wenn ein in `artists.json` referenziertes Bild
+  im Paket fehlt - vorher waeren stumm kaputte Platzhalter ausgeliefert worden.
+
 ## [1.4.1] – 2026-08-18
 
 ### Changed
