@@ -27,7 +27,7 @@ export function TopBar() {
           <PushBellButton />
           <Link
             to="/search"
-            aria-label="Suche"
+            aria-label="Search"
             className="rounded-full p-2 text-rid-muted hover:text-rid-accent"
           >
             <Search size={20} />

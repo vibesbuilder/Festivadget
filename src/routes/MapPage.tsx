@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useMemo, useState } from "react";
 import { useMapConfig, usePois, usePoiCategories, useStages } from "@/data/queries";
 import { LoadingState, ErrorState, EmptyState } from "@/components/states";
@@ -8,6 +9,7 @@ import { resolvePoiMeta } from "@/features/map/poiMeta";
 import type { Poi } from "@/types";
 
 export default function MapPage() {
+  const { t } = useTranslation();
   const { data: config, isLoading: l1, isError, refetch } = useMapConfig();
   const { data: pois, isLoading: l2 } = usePois();
   const { data: categories } = usePoiCategories();
@@ -68,7 +70,7 @@ export default function MapPage() {
 
   return (
     <section className="space-y-3">
-      <h1 className="text-2xl font-bold">Karte</h1>
+      <h1 className="text-2xl font-bold">{t("map.title")}</h1>
       <PoiFilterBar
         available={available}
         active={active}

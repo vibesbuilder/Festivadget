@@ -90,5 +90,12 @@
       "evening": "Abends",
       "night": "Nachts"
     }
+  },
+  "map": {
+    "title": "Karte",
+    "all": "Alle"
+  },
+  "search": {
+    "title": "Suche"
   }
 }

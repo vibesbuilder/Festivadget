@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { Search as SearchIcon, Music2, CalendarClock, Info, MapPin } from "lucide-react";
 import { useSearchIndex, runSearch, type SearchKind } from "@/features/search/useSearchIndex";
@@ -12,6 +13,7 @@ const KIND_ICON: Record<SearchKind, typeof Info> = {
 };
 
 export default function Search() {
+  const { t } = useTranslation();
   const [query, setQuery] = useState("");
   const index = useSearchIndex();
   const results = useMemo(() => runSearch(index, query), [index, query]);
@@ -19,7 +21,7 @@ export default function Search() {
   return (
     <section className="space-y-4">
       <BackLink to="/more" label="Mehr" />
-      <h1 className="text-2xl font-bold">Suche</h1>
+      <h1 className="text-2xl font-bold">{t("search.title")}</h1>
 
       <div className="flex items-center gap-2 rounded-xl border border-rid-border bg-rid-surface px-3 py-2">
         <SearchIcon size={18} className="text-rid-muted" />

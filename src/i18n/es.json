@@ -90,5 +90,12 @@
       "evening": "Por la tarde",
       "night": "Por la noche"
     }
+  },
+  "map": {
+    "title": "Mapa",
+    "all": "Todos"
+  },
+  "search": {
+    "title": "Búsqueda"
   }
 }
