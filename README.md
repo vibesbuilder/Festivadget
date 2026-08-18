@@ -22,6 +22,28 @@ single schema. Reference project: ROCK IM DORF Festival
 |---|---|---|
 | ![Map](docs/screenshots/map.png) | ![News feed](docs/screenshots/news.png) | ![More](docs/screenshots/more.png) |
 
+## Installation – takes less than 5 minutes
+
+No build machine, no command line, no technical knowledge required. If you can
+upload files to a web space, you can run Festivadget:
+
+1. **Download** the latest release package (`festivadget-vX.Y.Z.zip`) from the
+   [releases page](../../releases/latest).
+2. **Upload** its contents via FTP into the webroot of a (sub)domain on any
+   PHP web space (shared hosting is fine).
+3. **Open** `https://your-domain/install/` in the browser. The wizard checks
+   every requirement, asks for a CMS admin password (plus optional MySQL for
+   web push – the VAPID keys are generated automatically) and sets everything
+   up. It is deliberately foolproof: unsupported setups are caught with a
+   clear message before anything is written.
+4. **Delete** the `install/` folder (one click on the final page) – done.
+   App at `/`, CMS at `/push/cms/`.
+
+The package ships with a fictional sample festival ("Gadget Festival") –
+replace the content right in the CMS. Updates are one click in the CMS
+"Update" tab; your content is never touched. Details:
+[docs/INSTALL.md](docs/INSTALL.md).
+
 ## Features
 
 - **Home dashboard**: "Now / up next" programme block, news feed preview, sponsor
@@ -82,18 +104,12 @@ Deep dives: [`IMPLEMENTATION.md`](IMPLEMENTATION.md) (concept),
 [`docs/TELEGRAM.md`](docs/TELEGRAM.md) (live news). All docs are also
 available in German, French and Spanish (language links at the top of each file).
 
-## Installation without a build machine (release package)
+## Setup (development)
 
-The easiest way to run your own instance: take a release package
-(`festivadget-vX.Y.Z.zip`), upload it to any PHP webspace and open
-`/install/` in the browser – a Joomla-style web installer sets everything up
-(CMS password, optional MySQL for web push, VAPID keys are generated
-server-side). See [docs/INSTALL.md](docs/INSTALL.md). Maintainers build
-the package with `tools/build-release.ps1`.
+Only needed for **development** or custom builds – to simply run Festivadget,
+use the [installation package](#installation--takes-less-than-5-minutes)
+above. Maintainers build release packages with `tools/build-release.ps1`.
 
-The setup below is only needed for **development** or custom builds.
-
-## Setup
 
 Requirements: **Node.js ≥ 20** and **pnpm** (`corepack enable` is enough).
 

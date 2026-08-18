@@ -22,6 +22,29 @@ und auf ein einheitliches Schema normalisiert. Referenzprojekt: ROCK IM DORF Fes
 |---|---|---|
 | ![Karte](docs/screenshots/map.png) | ![Newsfeed](docs/screenshots/news.png) | ![Mehr](docs/screenshots/more.png) |
 
+## Installation – in unter 5 Minuten
+
+Keine Build-Maschine, keine Kommandozeile, kein technisches Vorwissen nötig.
+Wer Dateien auf einen Webspace hochladen kann, kann Festivadget betreiben:
+
+1. **Herunterladen**: das aktuelle Release-Paket (`festivadget-vX.Y.Z.zip`)
+   von der [Releases-Seite](../../releases/latest).
+2. **Hochladen**: den Inhalt per FTP in den Webroot einer (Sub-)Domain auf
+   einem beliebigen PHP-Webspace (Shared Hosting genügt).
+3. **Öffnen**: `https://deine-domain/install/` im Browser. Der Assistent
+   prüft alle Voraussetzungen, fragt ein CMS-Admin-Passwort ab (plus optional
+   MySQL für Web-Push – die VAPID-Schlüssel werden automatisch erzeugt) und
+   richtet alles ein. Bewusst dummy-sicher: nicht unterstützte
+   Konstellationen werden mit klarer Meldung abgefangen, bevor irgendetwas
+   geschrieben wird.
+4. **Löschen**: den Ordner `install/` (ein Klick auf der Abschlussseite) –
+   fertig. App unter `/`, CMS unter `/push/cms/`.
+
+Das Paket enthält ein fiktives Beispiel-Festival („Gadget Festival") –
+Inhalte ersetzt du direkt im CMS. Updates sind ein Klick im CMS-Tab
+„Update"; deine Inhalte bleiben unangetastet. Details:
+[docs/INSTALL.de.md](docs/INSTALL.de.md).
+
 ## Features
 
 - **Home-Dashboard**: „Jetzt/Als Nächstes"-Programmblock, Newsfeed-Vorschau,
@@ -79,18 +102,12 @@ Vertiefung: [`IMPLEMENTATION.de.md`](IMPLEMENTATION.de.md) (Konzept),
 [`docs/DATEN.de.md`](docs/DATEN.de.md) (Datenanbindung),
 [`docs/TELEGRAM.de.md`](docs/TELEGRAM.de.md) (Live-News).
 
-## Installation ohne Build-Maschine (Release-Paket)
+## Setup (Entwicklung)
 
-Der einfachste Weg zur eigenen Instanz: ein Release-Paket
-(`festivadget-vX.Y.Z.zip`) auf einen beliebigen PHP-Webspace hochladen und
-`/install/` im Browser öffnen – ein Web-Installer nach dem Joomla-Prinzip
-richtet alles ein (CMS-Passwort, optional MySQL für Web-Push, VAPID-Schlüssel
-werden serverseitig erzeugt). Siehe [docs/INSTALL.de.md](docs/INSTALL.de.md).
-Maintainer bauen das Paket mit `tools/build-release.ps1`.
+Nur für **Entwicklung** oder eigene Builds nötig – zum bloßen Betreiben von
+Festivadget das [Installationspaket](#installation--in-unter-5-minuten) oben
+verwenden. Maintainer bauen Release-Pakete mit `tools/build-release.ps1`.
 
-Das folgende Setup braucht man nur für die **Entwicklung** oder eigene Builds.
-
-## Setup
 
 Voraussetzungen: **Node.js ≥ 20** und **pnpm** (`corepack enable` genügt).
 
