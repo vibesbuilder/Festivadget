@@ -91,6 +91,18 @@ if (-not (Test-Path "$staging\push\vendor\autoload.php")) {
 }
 if (-not (Test-Path "$staging\push\cms\index.php")) { throw "push/cms fehlt im Paket." }
 if (-not (Test-Path "$staging\docs")) { Write-Warning "docs/ fehlt im Build (Manuals)." }
+# Jedes in artists.json referenzierte Bild muss auch im Paket liegen - sonst
+# zeigt die Demo kaputte Platzhalter (Bilder kommen aus sample-data/assets).
+$missingArt = @()
+foreach ($a in (Get-Content "$staging\data\artists.json" -Raw | ConvertFrom-Json)) {
+    if ($a.image) {
+        $rel = ($a.image -replace '^/', '') -replace '/', '\'
+        if (-not (Test-Path (Join-Path $staging $rel))) { $missingArt += "$($a.id): $($a.image)" }
+    }
+}
+if ($missingArt.Count -gt 0) {
+    throw "Artist-Bilder fehlen im Paket (in sample-data/assets ablegen): " + ($missingArt -join ", ")
+}
 
 # --- 4. ZIP -----------------------------------------------------------------------
 $version = (Get-Content "$app\package.json" -Raw | ConvertFrom-Json).version

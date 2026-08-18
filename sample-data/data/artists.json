@@ -8,7 +8,10 @@
     ],
     "country": "AT",
     "order": 1,
-    "bio": "Four friends from the foothills of the Alps playing airy indie pop. Their second album was recorded in an old barn - and that is exactly how it sounds: warm, honest and a little dusty."
+    "bio": "Four friends from the foothills of the Alps playing airy indie pop. Their second album was recorded in an old barn - and that is exactly how it sounds: warm, honest and a little dusty.",
+    "image": "/img/artists/nordlicht.webp",
+    "spotify": "https://open.spotify.com/intl-de/artist/4ru3sGd6GmiEs2m8ohA7XM?si=0_Wj00gJS5e_kkjbmL7ZCw",
+    "youtube": "https://www.youtube.com/embed/HsxupKH9JCw?si=XOEwvQY2OCT9NRBw"
   },
   {
     "id": "fluss",
@@ -19,7 +22,10 @@
     ],
     "country": "DE",
     "order": 2,
-    "bio": "A duo with guitar, fiddle and two-part harmonies. Between quiet ballads and danceable sets, the two tell stories about life on the road."
+    "bio": "A duo with guitar, fiddle and two-part harmonies. Between quiet ballads and danceable sets, the two tell stories about life on the road.",
+    "image": "/img/artists/fluss.webp",
+    "spotify": "https://open.spotify.com/intl-de/artist/6C76VZM8D2g2kyxCOB3vxq?si=UzzvqS-FR4CBnFglGJXMDQ",
+    "youtube": "https://www.youtube.com/embed/06MqtQCpmNw?si=TdKGekF31qkf-RcS"
   },
   {
     "id": "betonblumen",
@@ -30,7 +36,10 @@
     ],
     "country": "AT",
     "order": 3,
-    "bio": "Fast, loud, warm-hearted: Betonblumen bring three-minute anthems about small towns and big dreams to the stage."
+    "bio": "Fast, loud, warm-hearted: Betonblumen bring three-minute anthems about small towns and big dreams to the stage.",
+    "image": "/img/artists/betonblumen.webp",
+    "spotify": "https://open.spotify.com/artist/3gStA4vc9i3rzCeLuaFjNU",
+    "youtube": "https://www.youtube.com/watch?v=C64GwVLvQ1U"
   },
   {
     "id": "mondmaschine",
@@ -41,7 +50,10 @@
     ],
     "country": "CH",
     "order": 4,
-    "bio": "Analogue synthesizers, driving beats and a light show that lives up to its name. Mondmaschine traditionally play their set after dark."
+    "bio": "Analogue synthesizers, driving beats and a light show that lives up to its name. Mondmaschine traditionally play their set after dark.",
+    "image": "/img/artists/mondmaschine.webp",
+    "spotify": "https://open.spotify.com/artist/0nXKl8VFkWNLDwAFv7btrC",
+    "youtube": "https://www.youtube.com/watch?v=r1WefHLCzpk"
   },
   {
     "id": "tante-groove",
@@ -53,7 +65,10 @@
     ],
     "country": "AT",
     "order": 5,
-    "bio": "A nine-piece band with a full horn section. When Tante Groove start playing, no meadow stays undanced."
+    "bio": "A nine-piece band with a full horn section. When Tante Groove start playing, no meadow stays undanced.",
+    "image": "/img/artists/tante-groove.webp",
+    "spotify": "https://open.spotify.com/artist/2a3KP0q52DwCvITLzTRlBf",
+    "youtube": "https://www.youtube.com/watch?v=jRrWVMmNYEI"
   },
   {
     "id": "salzwasser",
@@ -64,7 +79,10 @@
     ],
     "country": "DE",
     "order": 6,
-    "bio": "One voice, one guitar and songs about the sea - even though the artist grew up far from the coast. Maybe that is exactly why."
+    "bio": "One voice, one guitar and songs about the sea - even though the artist grew up far from the coast. Maybe that is exactly why.",
+    "image": "/img/artists/salzwasser.webp",
+    "spotify": "https://open.spotify.com/artist/5XwdMWkTyAFT7WUwadVJJ4",
+    "youtube": "https://www.youtube.com/watch?v=u11-be3HqkI"
   },
   {
     "id": "kometenkinder",
@@ -75,7 +93,10 @@
     ],
     "country": "AT",
     "order": 7,
-    "bio": "The youngest band on the bill recorded their first EP in the music school rehearsal room - and already sound like a big stage."
+    "bio": "The youngest band on the bill recorded their first EP in the music school rehearsal room - and already sound like a big stage.",
+    "image": "/img/artists/kometenkinder.webp",
+    "spotify": "https://open.spotify.com/artist/2ESBtuNHbnfEqXZVGVJZTG",
+    "youtube": "https://www.youtube.com/watch?v=HY-QEEwrO9c"
   },
   {
     "id": "dj-abendrot",
@@ -86,6 +107,9 @@
     ],
     "country": "AT",
     "order": 8,
-    "bio": "Closes the festival with a set of disco, house and favourite songs until the lights come on."
+    "bio": "Closes the festival with a set of disco, house and favourite songs until the lights come on.",
+    "image": "/img/artists/dj-abendrot.webp",
+    "spotify": "https://open.spotify.com/artist/24HuqypuIHSDgs33lciMbo",
+    "youtube": "https://www.youtube.com/watch?v=Pc-ncEi9qJg"
   }
 ]
