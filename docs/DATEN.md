@@ -1,76 +1,79 @@
-# Daten pflegen & anbinden
+# Maintaining & connecting data
 
-**🇬🇧 [English](DATEN.en.md) · 🇫🇷 [Français](DATEN.fr.md) · 🇪🇸 [Español](DATEN.es.md)**
+**🇩🇪 [Deutsch](DATEN.de.md) · 🇫🇷 [Français](DATEN.fr.md) · 🇪🇸 [Español](DATEN.es.md)**
 
-Diese Anleitung erklärt zwei Dinge:
+This guide explains two things:
 
-1. **Joomla-Anbindung aktivieren** – einzelne Bereiche automatisch von einer Joomla-Website holen.
-2. **Beispieldaten durch echte Daten ersetzen** – z. B. Timetable, Line-Up, Infos.
+1. **Enabling the Joomla connection** – fetch individual sections automatically from a Joomla website.
+2. **Replacing the sample data with real data** – e.g. timetable, line-up, info pages.
 
-> Grundprinzip (IMPLEMENTATION.md §6): Im Betrieb ist die App **rein statisch**. Daten werden
-> **zur Build-Zeit** aus den konfigurierten Quellen geholt, auf das Schema (§7) normalisiert und
-> als `public/data/*.json` abgelegt. Die laufende App liest nur noch diese JSON-Dateien.
+> Core principle (IMPLEMENTATION.de.md §6): at runtime the app is **purely
+> static**. Data is fetched **at build time** from the configured sources,
+> normalized to the schema (§7) and stored as `public/data/*.json`. The running
+> app only reads these JSON files.
 
-Der Ablauf ist immer:
+The workflow is always:
 
 ```bash
-npm run import      # holt Daten laut content-sources.config.ts -> public/data/*.json
-npm run build:data  # validiert + erzeugt version.json (Hashes)
-npm run build       # Produktions-Build nach dist/  (nur fürs Deployment)
+npm run import      # fetches data per content-sources.config.ts -> public/data/*.json
+npm run build:data  # validates + generates version.json (hashes)
+npm run build       # production build into dist/  (only for deployment)
 ```
 
 ---
 
-## 1. Joomla-Anbindung aktivieren
+## 1. Enabling the Joomla connection
 
-### 1.1 Voraussetzung in Joomla
+### 1.1 Prerequisites in Joomla
 
-In Joomla 5 die **Web Services / API** aktivieren und einen **API-Token** anlegen:
+In Joomla 5, enable the **Web Services / API** and create an **API token**:
 
-- *System → Globale Konfiguration → API* aktivieren.
-- Beim Benutzer (möglichst **read-only**-Account) unter *Bearbeiten → API-Token* einen Token erzeugen.
-- Die benötigten Inhalte (Artikel) liegen in **Kategorien** – notiere dir die **Kategorie-IDs**
-  (z. B. Line-Up = 12, News = 20). Die ID steht in der URL der Kategorie im Backend (`&id=…`).
+- Enable *System → Global Configuration → API*.
+- On the user (preferably a **read-only** account) under *Edit → API Token* generate a token.
+- The required content (articles) lives in **categories** – note the
+  **category IDs** (e.g. line-up = 12, news = 20). The ID is in the category's
+  URL in the backend (`&id=…`).
 
-### 1.2 Token in `.env` eintragen (niemals committen!)
+### 1.2 Put the token into `.env` (never commit!)
 
-Die `.env` ist eine einfache Textdatei im **Projektwurzel-Ordner** (`C:\Festivadget\.env`).
-Vorlage kopieren:
+The `.env` is a plain text file in the **project root folder**. Copy the template:
 
 ```bash
-cp .env.example .env          # macOS/Linux/Git-Bash
+cp .env.example .env          # macOS/Linux/Git Bash
 ```
 ```bat
 copy .env.example .env        :: Windows (cmd / PowerShell)
 ```
 
-Dann in `.env` den echten Joomla-Token eintragen (eine Zeile, **kein** Leerzeichen ums `=`,
-keine Anführungszeichen):
+Then enter the real Joomla token in `.env` (one line, **no** spaces around the
+`=`, no quotes):
 
 ```ini
-JOOMLA_API_TOKEN=dein-echter-token
+JOOMLA_API_TOKEN=your-real-token
 ```
 
-- Der **Name** `JOOMLA_API_TOKEN` muss zum `tokenEnv` in `content-sources.config.ts` passen
-  (Standard: `tokenEnv: "JOOMLA_API_TOKEN"`).
-- Der **Wert** ist der in 1.1 in Joomla erzeugte API-Token.
-- `npm run import` lädt die `.env` **automatisch** (Node `process.loadEnvFile`) und reicht den
-  Token an den Joomla-Adapter weiter (als HTTP-Header `Authorization: Bearer …`).
+- The **name** `JOOMLA_API_TOKEN` must match `tokenEnv` in
+  `content-sources.config.ts` (default: `tokenEnv: "JOOMLA_API_TOKEN"`).
+- The **value** is the API token generated in Joomla in 1.1.
+- `npm run import` loads the `.env` **automatically** (Node
+  `process.loadEnvFile`) and passes the token to the Joomla adapter (as HTTP
+  header `Authorization: Bearer …`).
 
-`.env` ist in `.gitignore` – Tokens gelangen nie ins Repo und nie in den Browser
-(der Import läuft nur lokal/beim Build, der Token bleibt auf deiner Maschine).
+`.env` is in `.gitignore` – tokens never end up in the repo nor in the browser
+(the import only runs locally/at build time, the token stays on your machine).
 
-### 1.3 Quelle pro Bereich umstellen (`content-sources.config.ts`)
+### 1.3 Switching the source per section (`content-sources.config.ts`)
 
-Hier wird **pro Inhaltsdomäne** gewählt, woher die Daten kommen (`manual` | `joomla` | `wordpress`).
-Beispiel: Line-Up und News aus Joomla, Rest weiter manuell:
+Here you choose **per content domain** where the data comes from
+(`manual` | `joomla` | `wordpress`). Example: line-up and news from Joomla,
+the rest still manual:
 
 ```ts
-joomla: { baseUrl: "https://rockimdorf.at", tokenEnv: "JOOMLA_API_TOKEN" },
+joomla: { baseUrl: "https://example.com", tokenEnv: "JOOMLA_API_TOKEN" },
 bindings: {
   artists: { provider: "joomla", joomla: { categoryId: 12 } },
   news:    { provider: "joomla", joomla: { categoryId: 20 } },
-  // alles andere bleibt "manual":
+  // everything else stays "manual":
   festival: { provider: "manual" },
   stages:   { provider: "manual" },
   slots:    { provider: "manual", format: "csv" },
@@ -78,46 +81,48 @@ bindings: {
 }
 ```
 
-> `content-sources.config.ts` ist laut CLAUDE.md ein **bestätigungspflichtiger** Bereich –
-> Änderungen also bewusst vornehmen.
+> According to CLAUDE.md, `content-sources.config.ts` is an area that
+> **requires confirmation** – make changes deliberately.
 
-#### Infos: Quelle **je Untermenüpunkt**
+#### Info pages: source **per sub-item**
 
-Die Info-Seiten lassen sich pro Eintrag an eine eigene Quelle binden. `info.default`
-liefert die **Struktur + Texte** (`content/info.json`: `id`, `icon`, `order`, `hidden`,
-Fallback-Titel/-Text). In `info.overrides` kann pro **Eintrag-ID** eine andere Quelle
-gewählt werden – diese liefert dann nur **Titel/Text**, die Struktur bleibt aus `default`:
+The info pages can be bound to their own source per entry. `info.default`
+provides the **structure + texts** (`content/info.json`: `id`, `icon`,
+`order`, `hidden`, fallback title/text). In `info.overrides` a different source
+can be chosen per **entry ID** – it then only provides **title/text**, the
+structure stays from `default`:
 
 ```ts
 info: {
   default: { provider: "manual" }, // content/info.json
   overrides: {
-    // Text der Seite "parken" aus Joomla-Artikel 42, Reihenfolge/Icon/hidden bleiben aus content/info.json:
+    // text of the "parken" page from Joomla article 42, order/icon/hidden stay from content/info.json:
     parken: { provider: "joomla", joomla: { ids: [42] } },
-    // "platzordnung" aus WordPress:
+    // "platzordnung" from WordPress:
     platzordnung: { provider: "wordpress", wordpress: { postType: "page", acf: { body: "inhalt" } } },
   },
 },
 ```
 
-**Sichtbarkeit:** Jeder Info-Eintrag kann mit `"hidden": true` (in `content/info.json`)
-aus Menü **und** Suche ausgeblendet werden – die Seite bleibt per Direkt-Link
-(`/info/<id>`) erreichbar (praktisch zum Vorbereiten/Vorschauen).
+**Visibility:** every info entry can be hidden from menu **and** search with
+`"hidden": true` (in `content/info.json`) – the page remains reachable via
+direct link (`/info/<id>`) (handy for preparing/previewing).
 
-### 1.4 Importieren
+### 1.4 Importing
 
 ```bash
 npm run import && npm run build:data
 ```
 
-Der Joomla-Adapter (`scripts/adapters/joomla.ts`) ruft
-`{baseUrl}/api/index.php/v1/content/articles?filter[category]={id}` mit `Bearer`-Token,
-bereinigt das HTML (`scripts/lib/normalize.ts`) und mappt auf das Schema.
+The Joomla adapter (`scripts/adapters/joomla.ts`) calls
+`{baseUrl}/api/index.php/v1/content/articles?filter[category]={id}` with the
+`Bearer` token, cleans the HTML (`scripts/lib/normalize.ts`) and maps it onto
+the schema.
 
-### 1.5 Felder zuordnen (Custom Fields)
+### 1.5 Mapping fields (custom fields)
 
-Joomla-**Custom-Fields** (z. B. Spielzeiten am Artist-Artikel) werden über `customFields`
-auf Schema-Felder gemappt:
+Joomla **custom fields** (e.g. stage times on the artist article) are mapped to
+schema fields via `customFields`:
 
 ```ts
 artists: {
@@ -129,112 +134,123 @@ artists: {
 },
 ```
 
-Sollen die **Timetable-Slots** direkt aus Artist-Artikeln kommen (statt CSV), siehe §6.5 im
-IMPLEMENTATION.md – `slots.format` auf `"joomla-customfields"` stellen (dieser Pfad wird im
-Adapter noch verfeinert; aktuell ist der robusteste Weg für die Timetable die CSV, siehe unten).
+If the **timetable slots** should come directly from artist articles (instead
+of CSV), see §6.5 in IMPLEMENTATION.de.md – set `slots.format` to
+`"joomla-customfields"` (this path is still being refined in the adapter;
+currently the most robust way for the timetable is the CSV, see below).
 
-> **Hinweis zum aktuellen Stand:** Der Joomla-/WordPress-Adapter liefert bereits ein
-> generisches Mapping (id, slug, name, body, Bild, Custom Fields). Die *domänenspezifische*
-> Feinabbildung (welches Joomla-Feld wird genau welches Artist-/News-Feld) ist bewusst schlank
-> gehalten und kann pro Projekt in `scripts/adapters/joomla.ts` angepasst werden.
+> **Note on the current state:** the Joomla/WordPress adapter already provides
+> a generic mapping (id, slug, name, body, image, custom fields). The
+> *domain-specific* fine mapping (which Joomla field becomes exactly which
+> artist/news field) is deliberately kept lean and can be adapted per project
+> in `scripts/adapters/joomla.ts`.
 
 ---
 
-## 2. Beispieldaten durch echte Daten ersetzen
+## 2. Replacing the sample data with real data
 
-Solange ein Bereich auf `provider: "manual"` steht, kommen die Daten aus dem Ordner
-[`content/`](../content/). Dort die Beispieldateien einfach mit echten Inhalten füllen und
-`npm run import && npm run build:data` ausführen.
+As long as a section is set to `provider: "manual"`, the data comes from the
+[`content/`](../content/) folder. Simply fill the sample files there with real
+content and run `npm run import && npm run build:data`.
 
-| Bereich | Datei | Format |
+| Section | File | Format |
 |---|---|---|
-| Festival/Tage | `content/festival.json` | Objekt |
-| Bühnen | `content/stages.json` | Array |
-| Acts/Line-Up | `content/artists.json` | Array |
+| Festival/days | `content/festival.json` | object |
+| Stages | `content/stages.json` | array |
+| Acts/line-up | `content/artists.json` | array |
 | **Timetable** | `content/slots.csv` | CSV |
-| Karten-POIs | `content/pois.json` | Array |
-| POI-Kategorien | `content/poi-categories.json` | Array |
-| Geländeplan | `content/map.json` (+ `public/map/…`) | Objekt + Bild |
-| News | `content/news.json` | Array |
-| Sponsoren | `content/sponsors.json` (+ `public/img/sponsors/…`) | Array |
-| Infos | `content/info.json` | Array (Markdown im `body`) |
-| Tickets | `content/tickets.json` | Objekt |
-| Wetter | `content/weather.json` | Objekt (von RastaWeather) |
+| Map POIs | `content/pois.json` | array |
+| POI categories | `content/poi-categories.json` | array |
+| Site map | `content/map.json` (+ `public/map/…`) | object + image |
+| News | `content/news.json` | array |
+| Sponsors | `content/sponsors.json` (+ `public/img/sponsors/…`) | array |
+| Info pages | `content/info.json` | array (Markdown in `body`) |
+| Tickets | `content/tickets.json` | object |
+| Weather | `content/weather.json` | object |
 
-Die genauen Feldbeschreibungen stehen in `src/types/index.ts` bzw. IMPLEMENTATION.md §7.
+The exact field descriptions are in `src/types/index.ts` or IMPLEMENTATION.de.md §7.
 
 ### 2.0 Acts (`content/artists.json`)
 
-- **`spotify`** (optional): bettet einen Spotify-Player auf der Artist-Seite ein. Du kannst
-  flexibel eintragen, was du aus Spotify kopierst:
-  - den **Teilen-Link** (`Teilen → Link kopieren`), z. B. `https://open.spotify.com/artist/XXXX?si=…`
-  - den kompletten **Embed-Code** (`Teilen → Einbetten → Code kopieren`, das ganze `<iframe …>`)
-  - oder kurz `artist/XXXX` bzw. `track/XXXX`, `album/XXXX`, `playlist/XXXX`
+- **`spotify`** (optional): embeds a Spotify player on the artist page. You can
+  flexibly enter whatever you copy from Spotify:
+  - the **share link** (`Share → Copy link`), e.g. `https://open.spotify.com/artist/XXXX?si=…`
+  - the complete **embed code** (`Share → Embed → Copy code`, the whole `<iframe …>`)
+  - or short `artist/XXXX` resp. `track/XXXX`, `album/XXXX`, `playlist/XXXX`
 
   ```json
   { "slug": "greeen", "name": "GReeeN",
     "spotify": "https://open.spotify.com/artist/4LM5wjVbpvUS6kU5dejdMS" }
   ```
-- **`youtube`** (optional): bettet unterhalb des Spotify-Players ein YouTube-Video ein. Erlaubt
-  ist der Watch-Link (`https://www.youtube.com/watch?v=…`), der Kurz-Link (`https://youtu.be/…`),
-  die Embed-URL, der komplette `<iframe>`-Embed-Code **oder** die nackte 11-stellige Video-ID.
+- **`youtube`** (optional): embeds a YouTube video below the Spotify player.
+  Allowed: the watch link (`https://www.youtube.com/watch?v=…`), the short
+  link (`https://youtu.be/…`), the embed URL, the complete `<iframe>` embed
+  code **or** the bare 11-character video ID.
 
   ```json
   { "slug": "greeen", "name": "GReeeN", "youtube": "https://youtu.be/dQw4w9WgXcQ" }
   ```
-- **`genres`** (optional): darf leer (`[]`) sein **oder ganz weggelassen** werden – dann wird
-  einfach keine Genre-Zeile angezeigt.
-- **`lineup`** (optional): steuert, ob der Act im **Line-Up** erscheint. Standard ist sichtbar;
-  mit `"lineup": false` blendet man ihn dort aus (z. B. Programmpunkte wie Yoga oder Pub-Quiz,
-  die nur im Timetable stehen sollen). Timetable/Spielzeiten sind davon unberührt.
+- **`genres`** (optional): may be empty (`[]`) **or omitted entirely** – then
+  simply no genre line is shown.
+- **`lineup`** (optional): controls whether the act appears in the **line-up**.
+  Default is visible; `"lineup": false` hides it there (e.g. programme items
+  like yoga or a pub quiz that should only appear in the timetable).
+  Timetable/stage times are unaffected.
 
   ```json
   { "id": "yoga", "slug": "yoga", "name": "Yoga", "lineup": false }
   ```
-- **`order`** (optional, Zahl): legt die **Sortierreihenfolge im Line-Up** fest – kleinere Zahl
-  steht weiter vorn. Acts **mit** `order` kommen zuerst (aufsteigend), danach alle **ohne** `order`
-  automatisch (Headliner zuerst, dann alphabetisch). Du musst also nicht alle nummerieren –
-  es reicht, die zu setzen, die du gezielt platzieren willst.
+- **`order`** (optional, number): defines the **sort order in the line-up** –
+  smaller number = further to the front. Acts **with** `order` come first
+  (ascending), then all **without** `order` automatically (headliners first,
+  then alphabetically). So you don't have to number everything – setting the
+  ones you want to place deliberately is enough.
 
   ```json
   { "id": "bibiza", "slug": "bibiza", "name": "Bibiza", "order": 1 }
   ```
-- **`isHeadliner`** (optional, true): zeigt ein **„Headliner"-Badge** auf der Karte **und** sortiert
-  den Act im Line-Up nach vorn (vor die Acts ohne `order`).
-- **`isDj`** (optional, true): zeigt ein **„DJ"-Badge** (Sekundärfarbe) auf der Karte – **ohne**
-  Auswirkung auf die Reihenfolge. Kombinierbar mit `isHeadliner` (dann beide Badges).
+- **`isHeadliner`** (optional, true): shows a **"Headliner" badge** on the card
+  **and** sorts the act towards the front of the line-up (before the acts
+  without `order`).
+- **`isDj`** (optional, true): shows a **"DJ" badge** (secondary color) on the
+  card – **without** effect on the order. Combinable with `isHeadliner` (then
+  both badges).
 
 ### 2.05 News (`content/news.json`)
 
-Pflicht: `id`, `title`, `body`, `category` (`info`/`safety`/`lineup`/`general`), `publishAt`.
+Required: `id`, `title`, `body`, `category` (`info`/`safety`/`lineup`/`general`), `publishAt`.
 Optional:
-- **`expiresAt`** (ISO mit Offset): News verschwindet ab diesem **absoluten** Zeitpunkt (für alle gleich).
-- **`hideAfterFirstOpenMin`** (Zahl): blendet die News **X Minuten nach dem ersten App-Öffnen
-  dieses Geräts** aus (pro Gerät individuell – ideal für die Willkommen-News).
-- **`pinned`** (true) → oben im Feed. **`link`** → Button: `{ "label": "…", "url": "…" }`.
-- Links **im Text** via Markdown: `[Text](https://…)` oder intern `[Mein Plan](/favorites)`.
+- **`expiresAt`** (ISO with offset): the news disappears at this **absolute** time (same for everyone).
+- **`hideAfterFirstOpenMin`** (number): hides the news **X minutes after this
+  device first opened the app** (individual per device – ideal for the welcome
+  news).
+- **`pinned`** (true) → top of the feed. **`link`** → button: `{ "label": "…", "url": "…" }`.
+- Links **in the text** via Markdown: `[text](https://…)` or internal `[My plan](/favorites)`.
 
 ```json
 {
-  "id": "news-welcome", "title": "Willkommen!", "body": "Schön, dass du da bist.",
+  "id": "news-welcome", "title": "Welcome!", "body": "Great to have you here.",
   "category": "general", "publishAt": "2026-05-31T10:00:00+02:00",
   "pinned": true, "hideAfterFirstOpenMin": 10
 }
 ```
 
-### 2.06 POI-Kategorien (`content/poi-categories.json`)
+### 2.06 POI categories (`content/poi-categories.json`)
 
-Kategorien der Karten-Punkte – Farbe, Icon und Sichtbarkeit. Ein POI verweist über
-`type` auf die `id` einer Kategorie.
+Categories of the map points – color, icon and visibility. A POI references a
+category's `id` via `type`.
 
-- **`id`** (Pflicht): Schlüssel, auf den `Poi.type` zeigt (z. B. `parking`). **Nicht nachträglich
-  ändern** – sonst zeigen bestehende POIs ins Leere (Fallback-Darstellung).
-- **`label`** (Pflicht): Anzeigename in Filter/Detail. **`color`** (Pflicht): Hex-Farbe des Markers.
-- **`icon`** (Pflicht): drei Formen möglich –
-  1. **Emoji** (z. B. `🅿️`).
-  2. **Bildpfad/URL** (z. B. `/data/uploads/zelt.svg`, via Tab „Bilder" hochladen). Werte, die mit
-     `/`, `http(s):`, `data:` beginnen oder auf `.svg/.png/.webp/.jpg/.gif` enden, werden als Bild gerendert.
-  3. **Lucide-Icon-Name** (einfarbig, Farbe automatisch kontrastreich zum Marker). Verfügbare Namen:
+- **`id`** (required): key that `Poi.type` points to (e.g. `parking`). **Do not
+  change afterwards** – otherwise existing POIs point into the void (fallback
+  rendering).
+- **`label`** (required): display name in filter/detail. **`color`** (required): hex color of the marker.
+- **`icon`** (required): three forms possible –
+  1. **Emoji** (e.g. `🅿️`).
+  2. **Image path/URL** (e.g. `/data/uploads/zelt.svg`, upload via the
+     "Images" tab). Values starting with `/`, `http(s):`, `data:` or ending in
+     `.svg/.png/.webp/.jpg/.gif` are rendered as an image.
+  3. **Lucide icon name** (monochrome, color automatically contrasts with the
+     marker). Available names:
      `ambulance`, `first-aid`, `cross`, `plus`, `utensils` (`food`), `beer`, `coffee`, `pizza`, `wine`,
      `cooking-pot`, `car`, `bus`, `train-front` (`train`), `bike`, `square-parking` (`parking`),
      `circle-parking`, `tent`, `caravan`, `music`, `mic`, `guitar`, `disc-3` (`dj`), `info`,
@@ -244,23 +260,24 @@ Kategorien der Karten-Punkte – Farbe, Icon und Sichtbarkeit. Ein POI verweist 
      `door-open`, `log-out` (`exit`), `square-arrow-right` (`square-arrow-right-exit`),
      `square-arrow-out-up-right`, `shield`, `droplet`, `zap`, `anchor`, `cigarette`.
 
-  > **Font Awesome:** FA-Klassen (`<i class="fa-…">`) werden **nicht** direkt unterstützt (die App
-  > bündelt Font Awesome nicht). Wer ein FA-Icon will: auf fontawesome.com „Download SVG", im Tab
-  > „Bilder" hochladen und als Bildpfad (Form 2) eintragen – oder ein passendes Lucide-Icon (Form 3) nutzen.
-- **`order`** (Zahl): Reihenfolge in der Filterleiste.
-- **`hidden`** (true): blendet die Kategorie **komplett** aus – von der Karte UND aus dem Filter,
-  für **alle** Besucher (Master-Schalter).
+  > **Font Awesome:** FA classes (`<i class="fa-…">`) are **not** supported
+  > directly (the app does not bundle Font Awesome). If you want an FA icon:
+  > "Download SVG" on fontawesome.com, upload it in the "Images" tab and enter
+  > it as an image path (form 2) – or use a matching Lucide icon (form 3).
+- **`order`** (number): order in the filter bar.
+- **`hidden`** (true): hides the category **completely** – from the map AND the
+  filter, for **all** visitors (master switch).
 
-Einzelne POIs können mit **`icon`** (Emoji **oder** Bildpfad) ein **eigenes** Marker-Icon setzen;
-leer = Kategorie-Icon.
+Individual POIs can set their **own** marker icon with **`icon`** (emoji
+**or** image path); empty = category icon.
 
 ```json
-{ "id": "parking", "label": "Parken", "color": "#9aa0a6", "icon": "🅿️", "order": 15 }
+{ "id": "parking", "label": "Parking", "color": "#9aa0a6", "icon": "🅿️", "order": 15 }
 ```
 
 ### 2.1 Timetable (`content/slots.csv`)
 
-Spalten: `artistSlug,stageId,dayId,start,end,note`
+Columns: `artistSlug,stageId,dayId,start,end,note`
 
 ```csv
 artistSlug,stageId,dayId,start,end,note
@@ -268,24 +285,27 @@ greeen,main,fr,2026-07-31T21:30:00+02:00,2026-07-31T23:00:00+02:00,
 bibiza,main,sa,2026-08-01T22:00:00+02:00,2026-08-01T23:30:00+02:00,
 ```
 
-Wichtig:
+Important:
 
-- `artistSlug` muss zu einem `slug` in `artists.json` passen (sonst Fehler beim Import).
-- `stageId` muss einer `id` in `stages.json` entsprechen.
-- `dayId` ist die `id` eines Tages aus `festival.json` (`fr`/`sa`/`so`).
-  Auftritte **nach Mitternacht** (z. B. 00:30) bekommen den `dayId` des **Vortags** – dadurch
-  zählen sie korrekt zum richtigen Festivaltag (Mitternachtsüberlauf).
-- Zeitstempel **immer ISO 8601 mit Offset** (`+02:00` = Sommerzeit Wien).
+- `artistSlug` must match a `slug` in `artists.json` (otherwise the import fails).
+- `stageId` must correspond to an `id` in `stages.json`.
+- `dayId` is the `id` of a day from `festival.json` (`fr`/`sa`/`so`).
+  Performances **after midnight** (e.g. 00:30) get the `dayId` of the
+  **previous day** – this way they correctly count towards the right festival
+  day (midnight overflow).
+- Timestamps **always ISO 8601 with offset** (`+02:00` = Vienna summer time).
 
-### 2.2 Bilder
+### 2.2 Images
 
-Bilder lokal unter `public/img/...` bzw. den Geländeplan unter `public/map/gelaendeplan.webp`
-ablegen und in den JSON-Dateien per Pfad referenzieren (z. B. `"image": "/img/artists/bibiza.webp"`).
-Lokal statt Hotlink wegen Offline-Cache und CORS (§6.6). Das Header-Logo liegt in
+Place images locally under `public/img/...` and the site map under
+`public/map/gelaendeplan.webp` and reference them in the JSON files by path
+(e.g. `"image": "/img/artists/bibiza.webp"`). Local instead of hotlinking
+because of the offline cache and CORS (§6.6). The header logo lives in
 `public/img/logo.svg`.
 
-### 2.3 Daten-Update im laufenden Betrieb
+### 2.3 Data updates during operation
 
-Nach `import` + `build:data` nur die geänderten `dist/data/*.json` **und** `version.json` auf den
-Server laden. Die App pollt `version.json` alle 2 Minuten und lädt nur geänderte Datensätze nach –
-**kein** kompletter Neu-Build/Upload der App nötig (IMPLEMENTATION.md §15).
+After `import` + `build:data`, upload only the changed `dist/data/*.json`
+**and** `version.json` to the server. The app polls `version.json` every 2
+minutes and only re-fetches changed datasets – **no** complete rebuild/upload
+of the app needed (IMPLEMENTATION.de.md §15).

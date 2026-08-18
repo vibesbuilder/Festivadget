@@ -1,6 +1,6 @@
 # Configurar noticias en vivo por Telegram
 
-**🇩🇪 [Deutsch](TELEGRAM.md) · 🇬🇧 [English](TELEGRAM.en.md) · 🇫🇷 [Français](TELEGRAM.fr.md)**
+**🇩🇪 [Deutsch](TELEGRAM.de.md) · 🇬🇧 [English](TELEGRAM.md) · 🇫🇷 [Français](TELEGRAM.fr.md)**
 
 Envía un mensaje a tu bot de Telegram → aparece **en ~2 minutos** en la app,
 **sin desplegar**. Sin moderación, solo para **remitentes permitidos** (tú).

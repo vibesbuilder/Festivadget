@@ -14,6 +14,7 @@ export interface AppConfig {
   backgroundImage?: string; // eigenes Hintergrundbild (/data/uploads/…, leer = Build-Grafik)
   homeHeader?: boolean; // Home-Kopf: Festivalname + Datum (Default: an)
   themeDefault?: "dark" | "light"; // Standard-Theme, solange der User nicht selbst wählt
+  languageDefault?: string; // Standard-Sprache (de/en/fr/es), solange der User nicht selbst wählt
   branding?: Branding; // Kunden-Branding (CMS-Tab „Branding", Paket Y)
   // Intro-Video auf Home (CMS-Tab „Branding"): Link/FTP oder Microsoft-Cloud.
   homeVideo?: { url: string; source?: "link" | "mscloud"; enabled?: boolean };

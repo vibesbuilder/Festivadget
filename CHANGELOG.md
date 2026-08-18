@@ -5,6 +5,38 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.0.0/), Versionier
 
 ## [Unreleased]
 
+## [1.3.0] – 2026-08-18
+
+### Fixed
+
+- **Release-Build: Instanz-Werte wurden nicht zuverlässig geleert.**
+  PowerShells `$env:X = ""` löscht die Variable statt sie zu leeren – dadurch
+  gewann die lokale `.env` und der (öffentliche) RID-VAPID-Key steckte in den
+  v1.2.x-Paketen (Kunden-Push-Abos wären mit falschem Key erstellt worden und
+  hätten nie zugestellt). Jetzt baut `build-release.ps1` mit
+  `vite build --mode release` und der neuen Datei `.env.release` (leere
+  Overrides); zusätzlich UTF-8-sauberes Ersetzen der Build-Strings.
+  Außerdem: CMS-Titel-Ermittlung bricht vor der Installation (ohne
+  `push/config.php`) nicht mehr die Seite; Home-Datum lokalisiert
+  (`formatDateRange` mit optionalem Locale-Parameter in `@rid/core`,
+  Default unverändert `de`); „Alle"-Link auf Home übersetzt; neutraler
+  Home-Titel-Fallback.
+
+### Changed
+
+- **Standard-Sprache des Projekts ist jetzt Englisch.** App: neue
+  Default-Kette `app-config.json → languageDefault` (CMS → Einstellungen,
+  neues Dropdown) → Instanz-Env `VITE_DEFAULT_LANGUAGE` (RID: `de`) →
+  Englisch; greift nur, solange der Gast nicht selbst gewählt hat
+  (`languageExplicit` im UI-Store). CMS: ohne gespeicherte Sprachwahl
+  startet die Oberfläche auf Englisch. Manuals: Englisch ist die
+  Basis-Datei (`ADMIN.md`, `PUSH.md`, …), Deutsch trägt jetzt das Suffix
+  `.de.md` – alle Querverweise, READMEs, der CMS-Hilfe-Tab und der
+  Installer sind umgestellt. Beispieldaten („Gadget Festival") komplett
+  auf Englisch übersetzt. Release-Paket: `lang`-Attribut und
+  Beschreibung in `index.html`/`manifest.webmanifest` auf Englisch;
+  der Installer war bereits EN-first (Deutsch nur bei deutschem Browser).
+
 ## [1.2.1] – 2026-08-18
 
 ### Fixed

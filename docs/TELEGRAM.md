@@ -1,95 +1,99 @@
-# Telegram-Live-News einrichten
+# Setting up Telegram live news
 
-**🇬🇧 [English](TELEGRAM.en.md) · 🇫🇷 [Français](TELEGRAM.fr.md) · 🇪🇸 [Español](TELEGRAM.es.md)**
+**🇩🇪 [Deutsch](TELEGRAM.de.md) · 🇫🇷 [Français](TELEGRAM.fr.md) · 🇪🇸 [Español](TELEGRAM.es.md)**
 
-Sende eine Nachricht an deinen Telegram-Bot → sie erscheint **innerhalb von ~2 Minuten**
-in der App, **ohne Deploy**. Unmoderiert, nur für **erlaubte Absender** (du).
+Send a message to your Telegram bot → it appears **within ~2 minutes** in the
+app, **without a deploy**. Unmoderated, only for **allowed senders** (you).
 
-## Architektur (kurz)
-- Live-News landen in **`data/live-news.json`** auf dem Server – getrennt von der
-  redaktionellen `news.json`.
-- Die App liest **beide** Dateien und mischt sie im Newsfeed.
-- Der lokale Build/Deploy (`deploy-data.bat`) fasst `live-news.json` **nie** an
-  (sie ist in `.gitignore` und wird lokal nicht gebaut). → kein Überschreiben.
+## Architecture (short)
+- Live news end up in **`data/live-news.json`** on the server – separate from
+  the editorial `news.json`.
+- The app reads **both** files and mixes them in the news feed.
+- The local build/deploy (`deploy-data.bat`) **never** touches `live-news.json`
+  (it is in `.gitignore` and is not built locally). → no overwriting.
 
-## Einrichtung
+## Setup
 
-### 1. Bot anlegen
-In Telegram **@BotFather** → `/newbot` → **Bot-Token** notieren.
+### 1. Create a bot
+In Telegram **@BotFather** → `/newbot` → note the **bot token**.
 
-### 2. Eigene User-ID herausfinden
-Schreib **@userinfobot** an → er nennt deine numerische `id` (z. B. `123456789`).
+### 2. Find your own user ID
+Message **@userinfobot** → it tells you your numeric `id` (e.g. `123456789`).
 
-### 3. `push/config.php` ausfüllen
+### 3. Fill in `push/config.php`
 ```php
 'telegram' => [
-    'botToken'       => '123456:ABC...',          // von BotFather
-    'webhookSecret'  => 'ein-langes-zufallswort', // frei wählbar
-    'allowedUserIds' => [123456789, 987654321],   // mehrere durch Komma getrennt
-    'allowedChatIds' => [-1001234567890],         // optional: erlaubte Gruppe(n)
+    'botToken'       => '123456:ABC...',          // from BotFather
+    'webhookSecret'  => 'a-long-random-word',     // your choice
+    'allowedUserIds' => [123456789, 987654321],   // multiple, comma-separated
+    'allowedChatIds' => [-1001234567890],         // optional: allowed group(s)
     'liveNewsFile'   => __DIR__ . '/../data/live-news.json',
     'tz'             => 'Europe/Vienna',
     'maxItems'       => 200,
 ],
 ```
-- **Mehrere Personen erlauben:** weitere User-IDs einfach komma-getrennt in `allowedUserIds`.
-- **Eine Gruppe erlauben** (jede Nachricht der Gruppe wird zur News): die **Gruppen-ID** in `allowedChatIds`.
+- **Allow multiple people:** simply add more user IDs, comma-separated, to `allowedUserIds`.
+- **Allow a group** (every message of the group becomes a news item): put the **group ID** into `allowedChatIds`.
 
-### 4. `push/telegram-hook.php` hochladen
-Liegt schon im Repo unter `push/`. Per FTP auf den Server (zusammen mit `push/`).
+### 4. Upload `push/telegram-hook.php`
+Already in the repo under `push/`. Upload via FTP to the server (together with `push/`).
 
-### 5. Webhook bei Telegram registrieren (einmalig)
-Im Browser aufrufen (Token + Secret einsetzen):
+### 5. Register the webhook with Telegram (once)
+Open in the browser (insert token + secret):
 ```
 https://api.telegram.org/bot<BOTTOKEN>/setWebhook?url=https://app.rockimdorf.at/push/telegram-hook.php&secret_token=<WEBHOOKSECRET>
 ```
-Antwort `{"ok":true,...}` = passt. Telegram schickt ab jetzt jede Nachricht sofort an den Hook.
+Response `{"ok":true,...}` = fine. From now on Telegram forwards every message to the hook immediately.
 
-## Nutzung
-Nachricht an den Bot senden:
-- **Erste Zeile = Titel**, restliche Zeilen = Text.
-- **Tags** (werden aus dem Text entfernt) steuern Optionen:
-  - `#safety` / `#info` / `#lineup` / `#general` → Kategorie (Standard: general)
-  - `#pin` → angepinnt (oben im Feed)
-  - `#2h` / `#30m` → läuft 2 Stunden / 30 Minuten **nach Veröffentlichung** automatisch ab
-  - `@HH:mm` → **geplante Veröffentlichung** heute um HH:mm (ist die Zeit schon vorbei → morgen). Ohne `@` wird sofort veröffentlicht.
-  - `#push` → zusätzlich als **Web-Push** auf den Sperrbildschirm senden. **`#safety`** pusht **automatisch** (auch ohne `#push`). Push nur bei **sofortiger** Veröffentlichung (nicht bei `@HH:mm`-geplanten) und nur, wenn Web-Push eingerichtet ist (`docs/PUSH.md`). Steuerbar über `pushAutoCategories` in `config.php`.
-- **Befehle:**
-  - `/list` → zeigt die aktiven Live-News nummeriert (mit Ablaufzeit, falls gesetzt).
-  - `/del <Nr>` → **widerruft** eine einzelne Live-News (Nummer aus `/list`).
-  - `/clear` → löscht **alle** Live-News.
+## Usage
+Send a message to the bot:
+- **First line = title**, remaining lines = text.
+- **Tags** (removed from the text) control options:
+  - `#safety` / `#info` / `#lineup` / `#general` → category (default: general)
+  - `#pin` → pinned (top of the feed)
+  - `#2h` / `#30m` → expires automatically 2 hours / 30 minutes **after publication**
+  - `@HH:mm` → **scheduled publication** today at HH:mm (if the time has already passed → tomorrow). Without `@` it is published immediately.
+  - `#push` → additionally send as **web push** to the lock screen. **`#safety`** pushes **automatically** (even without `#push`). Push only for **immediate** publication (not for `@HH:mm`-scheduled ones) and only if web push is set up (`docs/PUSH.md`). Controllable via `pushAutoCategories` in `config.php`.
+- **Commands:**
+  - `/list` → shows the active live news numbered (with expiry time if set).
+  - `/del <no>` → **revokes** a single live news item (number from `/list`).
+  - `/clear` → deletes **all** live news.
 
-**Beispiel (sofort)**
+**Example (immediate)**
 ```
-Achtung Gewitter
-Bitte die Zelte sichern und Schutz suchen. #safety #pin #3h
+Warning: thunderstorm
+Please secure your tents and seek shelter. #safety #pin #3h
 ```
-→ angepinnte Safety-News, verschwindet nach 3 Stunden. Bot bestätigt „✅ Veröffentlicht: …".
+→ pinned safety news, disappears after 3 hours. The bot confirms "✅ Published: …".
 
-**Beispiel (geplant)**
+**Example (scheduled)**
 ```
-Soundcheck-Pause
-Kurze Unterbrechung auf der Main Stage. @18:00 #info #1h
+Soundcheck break
+Short interruption on the main stage. @18:00 #info #1h
 ```
-→ erscheint **um 18:00** und verschwindet **um 19:00** (Ablauf zählt ab 18:00). Bot bestätigt „⏰ Geplant für 01.08. 18:00: …". Die Nachricht landet sofort in `live-news.json`; die App zeigt sie wegen `publishAt` erst ab 18:00.
+→ appears **at 18:00** and disappears **at 19:00** (expiry counts from 18:00).
+The bot confirms "⏰ Scheduled for 01.08. 18:00: …". The message lands in
+`live-news.json` immediately; the app only shows it from 18:00 because of
+`publishAt`.
 
-## IDs herausfinden
-- **Eigene User-ID:** Schreib **@userinfobot** an (oder send `/chatid` an deinen eigenen Bot – er antwortet mit User-ID und Chat-ID).
-- **Gruppen-ID:** Bot **in die Gruppe holen**, dann in der Gruppe **`/chatid`** senden – der Bot antwortet mit der `Chat-ID` (negative Zahl, z. B. `-1001234567890`). Diese in `allowedChatIds` eintragen.
-- **Wichtig für Gruppen:** Damit der Bot **alle** Gruppen-Nachrichten liest (nicht nur Befehle), bei **@BotFather** → `/setprivacy` → **Disable** wählen. Sonst kommen nur `/befehle` an.
-- ⚠️ Eine erlaubte Gruppe heißt: **jedes Mitglied** kann News an alle Besucher senden.
+## Finding IDs
+- **Your own user ID:** message **@userinfobot** (or send `/chatid` to your own bot – it replies with user ID and chat ID).
+- **Group ID:** add the bot **to the group**, then send **`/chatid`** in the group – the bot replies with the `chat ID` (negative number, e.g. `-1001234567890`). Put it into `allowedChatIds`.
+- **Important for groups:** so the bot reads **all** group messages (not only commands), go to **@BotFather** → `/setprivacy` → choose **Disable**. Otherwise only `/commands` arrive.
+- ⚠️ An allowed group means: **every member** can send news to all visitors.
 
-## Schreibrechte (kein FTP nötig)
-Live-News brauchen **kein FTP** – der PHP-Hook schreibt direkt in `data/live-news.json` auf
-demselben Server. Voraussetzung: der **Ordner `data/` ist für PHP beschreibbar** (auf Shared
-Hosting i. d. R. der Fall). Falls nicht: Schreibrechte für `data/` setzen.
+## Write permissions (no FTP needed)
+Live news need **no FTP** – the PHP hook writes directly to `data/live-news.json`
+on the same server. Prerequisite: the **`data/` folder is writable for PHP**
+(usually the case on shared hosting). If not: set write permissions for `data/`.
 
-## Hinweise
-- `live-news.json` wird vom Server beim ersten Eintrag angelegt; vorher liefert die App
-  einfach keine Live-News (kein Fehler).
-- Auslieferung mit kurzem Cache (`max-age=120`), die App pollt alle 2 Minuten → Updates
-  in ≤ 2 min sichtbar.
-- **Sicherheit:** Ohne gültiges `webhookSecret` (Header von Telegram) und ohne erlaubte
-  `allowedUserIds` wird **nichts** verarbeitet. Halte `botToken`/`webhookSecret` geheim.
-- Erweiterung möglich: freigegebene Live-News zusätzlich als **Push** verschicken
-  (Infrastruktur ist da, siehe `push/sender.php`).
+## Notes
+- `live-news.json` is created by the server on the first entry; before that the
+  app simply serves no live news (no error).
+- Delivered with a short cache (`max-age=120`), the app polls every 2 minutes →
+  updates visible in ≤ 2 min.
+- **Security:** without a valid `webhookSecret` (header from Telegram) and
+  without allowed `allowedUserIds`, **nothing** is processed. Keep
+  `botToken`/`webhookSecret` secret.
+- Possible extension: additionally send approved live news as **push**
+  (infrastructure is there, see `push/sender.php`).

@@ -403,6 +403,13 @@ if (cms_logged_in() && ($_POST['do'] ?? '') !== '' && $_POST['do'] !== 'logout' 
                 } else {
                     unset($cfg['themeDefault']);
                 }
+                // Standard-App-Sprache (solange der Gast nicht selbst wählt).
+                $ld = (string) ($_POST['languageDefault'] ?? '');
+                if (in_array($ld, ['de', 'en', 'fr', 'es'], true)) {
+                    $cfg['languageDefault'] = $ld;
+                } else {
+                    unset($cfg['languageDefault']);
+                }
                 // Auto-Push-Schalter (überschreiben config.php; vom Cron gelesen).
                 $cfg['autoPushUpcoming'] = !empty($_POST['autoPushUpcoming']);
                 $cfg['autoPushNews']     = !empty($_POST['autoPushNews']);
@@ -750,7 +757,11 @@ $csrf = cms_csrf_token();
 <?php
 // CMS-Titel datengetrieben: Festivalname aus den Daten (Override vor Build-Stand),
 // damit auch Kunden-Installationen ihren eigenen Namen sehen.
-$cmsFest  = cms_read_json('app-festival.json') ?: cms_read_json('festival.json');
+// Guard: ohne push/config.php (vor der Installation) würde cms_read_json über
+// push_config() mitten in der Seite abbrechen.
+$cmsFest  = is_file(__DIR__ . '/../config.php')
+    ? (cms_read_json('app-festival.json') ?: cms_read_json('festival.json'))
+    : [];
 $cmsTitle = trim((string) ($cmsFest['name'] ?? '')) ?: 'Festivadget';
 ?>
 <html lang="<?= cms_h(cms_lang()) ?>">
@@ -1166,6 +1177,17 @@ $cmsTitle = trim((string) ($cmsFest['name'] ?? '')) ?: 'Festivadget';
           <option value="" <?= $td === '' ? 'selected' : '' ?>><?= cms_h(cms_t('App-Standard (Dark)')) ?></option>
           <option value="dark" <?= $td === 'dark' ? 'selected' : '' ?>><?= cms_h(cms_t('Dark')) ?></option>
           <option value="light" <?= $td === 'light' ? 'selected' : '' ?>><?= cms_h(cms_t('Light')) ?></option>
+        </select>
+      </label>
+
+      <label class="fld"><span><?= cms_h(cms_t('Standard-Sprache der App (solange der Gast nicht selbst wählt)')) ?></span>
+        <?php $ld = (string) ($cfg['languageDefault'] ?? ''); ?>
+        <select name="languageDefault">
+          <option value="" <?= $ld === '' ? 'selected' : '' ?>><?= cms_h(cms_t('Build-Standard')) ?></option>
+          <option value="de" <?= $ld === 'de' ? 'selected' : '' ?>>Deutsch</option>
+          <option value="en" <?= $ld === 'en' ? 'selected' : '' ?>>English</option>
+          <option value="fr" <?= $ld === 'fr' ? 'selected' : '' ?>>Français</option>
+          <option value="es" <?= $ld === 'es' ? 'selected' : '' ?>>Español</option>
         </select>
       </label>
 
@@ -1832,7 +1854,8 @@ $cmsTitle = trim((string) ($cmsFest['name'] ?? '')) ?: 'Festivadget';
         ['file' => 'TELEGRAM',       'title' => cms_t('Telegram-Live-News'),    'desc' => cms_t('Bot einrichten, Tags, Befehle, Gruppen.')],
         ['file' => 'IMPLEMENTATION', 'title' => cms_t('Technisches Konzept'),   'desc' => cms_t('Architektur, Datenmodell, Caching, Roadmap.')],
     ];
-    $docLangs = ['de' => '', 'en' => '.en', 'fr' => '.fr', 'es' => '.es'];
+    // Englisch ist die Basis-Datei (GitHub-Standard), Deutsch traegt .de.
+    $docLangs = ['de' => '.de', 'en' => '', 'fr' => '.fr', 'es' => '.es'];
     $anyDoc = false; ?>
     <div class="card">
       <h2 style="margin-top:0"><?= cms_h(cms_t('Handbücher')) ?></h2>

@@ -1,6 +1,6 @@
 # Configurar el web push (fase 5)
 
-**🇩🇪 [Deutsch](PUSH.md) · 🇬🇧 [English](PUSH.en.md) · 🇫🇷 [Français](PUSH.fr.md)**
+**🇩🇪 [Deutsch](PUSH.de.md) · 🇬🇧 [English](PUSH.md) · 🇫🇷 [Français](PUSH.fr.md)**
 
 El web push permite notificaciones en la pantalla de bloqueo, **incluso con la
 app cerrada**: para avisos de seguridad, cambios de última hora y alertas de

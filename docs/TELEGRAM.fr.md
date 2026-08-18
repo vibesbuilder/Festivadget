@@ -1,6 +1,6 @@
 # Configurer les actus live via Telegram
 
-**🇩🇪 [Deutsch](TELEGRAM.md) · 🇬🇧 [English](TELEGRAM.en.md) · 🇪🇸 [Español](TELEGRAM.es.md)**
+**🇩🇪 [Deutsch](TELEGRAM.de.md) · 🇬🇧 [English](TELEGRAM.md) · 🇪🇸 [Español](TELEGRAM.es.md)**
 
 Envoie un message à ton bot Telegram → il apparaît **en ~2 minutes** dans
 l'app, **sans déploiement**. Non modéré, uniquement pour les **expéditeurs

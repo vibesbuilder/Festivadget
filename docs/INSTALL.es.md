@@ -1,6 +1,6 @@
 # Instalar Festivadget (sin máquina de build)
 
-*Idiomas: [Deutsch](INSTALL.md) · [English](INSTALL.en.md) · [Français](INSTALL.fr.md)*
+*Idiomas: [Deutsch](INSTALL.de.md) · [English](INSTALL.md) · [Français](INSTALL.fr.md)*
 
 Festivadget se instala como Joomla/WordPress: **subir el paquete de release,
 abrir el instalador en el navegador, listo.** No se necesita ninguna máquina

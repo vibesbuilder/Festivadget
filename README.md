@@ -73,13 +73,13 @@ React (TanStack Query) ◄── fetch /data/*.json ◄── version.json (2-mi
   poll `version.json` every 2 minutes and re-fetch only changed files.
 - **Web push backend** (optional): PHP endpoints + MySQL + cron under
   [`push/`](push/) on the same shared-hosting web space; VAPID key pair, the public
-  key is embedded into the client build. Details: [`docs/PUSH.en.md`](docs/PUSH.en.md).
+  key is embedded into the client build. Details: [`docs/PUSH.md`](docs/PUSH.md).
 - **CMS** (optional): PHP interface under `push/cms/` (news, POIs, statistics,
-  weather; UI in de/en/fr/es). Details: [`docs/ADMIN.en.md`](docs/ADMIN.en.md).
+  weather; UI in de/en/fr/es). Details: [`docs/ADMIN.md`](docs/ADMIN.md).
 
-Deep dives: [`IMPLEMENTATION.en.md`](IMPLEMENTATION.en.md) (concept),
-[`docs/DATEN.en.md`](docs/DATEN.en.md) (content sources),
-[`docs/TELEGRAM.en.md`](docs/TELEGRAM.en.md) (live news). All docs are also
+Deep dives: [`IMPLEMENTATION.md`](IMPLEMENTATION.md) (concept),
+[`docs/DATEN.md`](docs/DATEN.md) (content sources),
+[`docs/TELEGRAM.md`](docs/TELEGRAM.md) (live news). All docs are also
 available in German, French and Spanish (language links at the top of each file).
 
 ## Installation without a build machine (release package)
@@ -88,7 +88,7 @@ The easiest way to run your own instance: take a release package
 (`festivadget-vX.Y.Z.zip`), upload it to any PHP webspace and open
 `/install/` in the browser – a Joomla-style web installer sets everything up
 (CMS password, optional MySQL for web push, VAPID keys are generated
-server-side). See [docs/INSTALL.en.md](docs/INSTALL.en.md). Maintainers build
+server-side). See [docs/INSTALL.md](docs/INSTALL.md). Maintainers build
 the package with `tools/build-release.ps1`.
 
 The setup below is only needed for **development** or custom builds.
@@ -135,7 +135,7 @@ All content is data, not code. Which domain comes from which source is controlle
 | `sponsors.json` | sponsor grid |
 
 Guide including CMS integration and replacing the sample data:
-[`docs/DATEN.en.md`](docs/DATEN.en.md).
+[`docs/DATEN.md`](docs/DATEN.md).
 
 ### Environment variables (`.env`)
 
@@ -174,11 +174,11 @@ backend.
 
 ## Web push & CMS (optional)
 
-Setting up VAPID, MySQL and cron on shared hosting: [`docs/PUSH.en.md`](docs/PUSH.en.md).
+Setting up VAPID, MySQL and cron on shared hosting: [`docs/PUSH.md`](docs/PUSH.md).
 The push toggle appears in the app under **More** as soon as a VAPID key is
 available (fetched at runtime from `/push/vapid.php`; `VITE_VAPID_PUBLIC_KEY`
 is an optional build-time fallback). Telegram live news:
-[`docs/TELEGRAM.en.md`](docs/TELEGRAM.en.md).
+[`docs/TELEGRAM.md`](docs/TELEGRAM.md).
 
 ## License
 

@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import type { AppLanguage } from "@/i18n/config";
+import { DEFAULT_LANGUAGE, type AppLanguage } from "@/i18n/config";
 
 export type TimetableView = "grid" | "list";
 export type Theme = "dark" | "light";
@@ -13,6 +13,7 @@ interface UiState {
   lineupDayId: string | null; // Line-Up-Filter nach Tag (null = alle)
   hiddenStageIds: string[]; // im Timetable ausgeblendete Bühnen
   language: AppLanguage;
+  languageExplicit: boolean; // true = User hat selbst gewählt (Admin-Default greift dann nicht mehr)
   theme: Theme; // Hell-/Dunkel-Modus
   themeExplicit: boolean; // true = User hat selbst gewählt (Admin-Default greift dann nicht mehr)
   setSelectedDay: (dayId: string | null) => void;
@@ -24,6 +25,7 @@ interface UiState {
   setTheme: (theme: Theme) => void;
   toggleTheme: () => void;
   applyServerThemeDefault: (theme: Theme) => void; // nur wirksam, solange !themeExplicit
+  applyServerLanguageDefault: (lang: AppLanguage) => void; // nur wirksam, solange !languageExplicit
 }
 
 export const useUi = create<UiState>()(
@@ -34,7 +36,8 @@ export const useUi = create<UiState>()(
       favoritesOnly: false,
       lineupDayId: null,
       hiddenStageIds: [],
-      language: "de",
+      language: DEFAULT_LANGUAGE,
+      languageExplicit: false,
       theme: "dark",
       themeExplicit: false,
       setSelectedDay: (selectedDayId) => set({ selectedDayId }),
@@ -47,13 +50,16 @@ export const useUi = create<UiState>()(
             ? state.hiddenStageIds.filter((id) => id !== stageId)
             : [...state.hiddenStageIds, stageId],
         })),
-      setLanguage: (language) => set({ language }),
+      setLanguage: (language) => set({ language, languageExplicit: true }),
       setTheme: (theme) => set({ theme, themeExplicit: true }),
       toggleTheme: () =>
         set((state) => ({ theme: state.theme === "dark" ? "light" : "dark", themeExplicit: true })),
       // Admin-Standard-Theme anwenden – aber nur, solange der User nicht selbst gewählt hat.
       applyServerThemeDefault: (theme) =>
         set((state) => (state.themeExplicit ? {} : { theme })),
+      // Admin-Standard-Sprache anwenden – aber nur, solange der User nicht selbst gewählt hat.
+      applyServerLanguageDefault: (language) =>
+        set((state) => (state.languageExplicit ? {} : { language })),
     }),
     {
       name: "festivadget:ui",

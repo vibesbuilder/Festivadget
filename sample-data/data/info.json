@@ -1,23 +1,23 @@
 [
   {
-    "id": "anreise",
-    "title": "Anreise",
+    "id": "getting-here",
+    "title": "Getting here",
     "icon": "car",
     "order": 1,
-    "body": "## Mit dem Auto\nParkplätze sind ab der Ortseinfahrt ausgeschildert.\n\n## Öffentlich\nShuttle-Bus ab Bahnhof, stündlich bis 02:00 Uhr."
+    "body": "## By car\nParking is signposted from the edge of the village.\n\n## Public transport\nShuttle bus from the train station, hourly until 2 am."
   },
   {
     "id": "camping",
     "title": "Camping",
     "icon": "tent",
     "order": 2,
-    "body": "Die Campingwiese öffnet am Freitag um 12:00 Uhr. Bitte keine Glasflaschen – Feuerstellen nur an den markierten Plätzen."
+    "body": "The camping meadow opens on Friday at noon. Please no glass bottles - campfires only at the marked spots."
   },
   {
     "id": "faq",
     "title": "FAQ",
     "icon": "help",
     "order": 3,
-    "body": "## Darf ich Getränke mitbringen?\nAufs Gelände nicht, am Campingplatz gerne (kein Glas).\n\n## Gibt es Trinkwasser?\nJa, kostenlos beim Info-Punkt und bei den WC-Anlagen."
+    "body": "## Can I bring my own drinks?\nNot onto the festival grounds; on the campsite yes (no glass).\n\n## Is there drinking water?\nYes, free of charge at the info point and the restrooms."
   }
 ]

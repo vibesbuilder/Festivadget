@@ -1,16 +1,16 @@
 [
   {
     "id": "wiese",
-    "name": "Wiesenbühne",
-    "shortName": "Wiese",
+    "name": "Meadow Stage",
+    "shortName": "Meadow",
     "color": "#2e7d5b",
     "order": 1,
     "poiId": "poi-wiese"
   },
   {
     "id": "wald",
-    "name": "Waldbühne",
-    "shortName": "Wald",
+    "name": "Forest Stage",
+    "shortName": "Forest",
     "color": "#5b6ee1",
     "order": 2,
     "poiId": "poi-wald"

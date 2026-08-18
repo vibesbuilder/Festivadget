@@ -1,6 +1,6 @@
 # Interface d'administration (CMS)
 
-**🇩🇪 [Deutsch](ADMIN.md) · 🇬🇧 [English](ADMIN.en.md) · 🇪🇸 [Español](ADMIN.es.md)**
+**🇩🇪 [Deutsch](ADMIN.de.md) · 🇬🇧 [English](ADMIN.md) · 🇪🇸 [Español](ADMIN.es.md)**
 
 Interface web protégée par mot de passe, hébergée sur le même espace web, pour
 piloter l'app **sans redéploiement**. Située sous `push/cms/`, elle réutilise

@@ -1,16 +1,16 @@
 [
   {
-    "id": "news-willkommen",
-    "title": "Willkommen beim Gadget Festival!",
-    "body": "Schön, dass du da bist! Zwei Tage, zwei Bühnen und ganz viel Musik. Alle Infos findest du hier in der App – auch offline.",
+    "id": "news-welcome",
+    "title": "Welcome to the Gadget Festival!",
+    "body": "Great to have you here! Two days, two stages and lots of music. You will find everything in this app - it even works offline.",
     "category": "general",
     "publishAt": "2026-01-10T10:00:00+01:00",
     "pinned": true
   },
   {
     "id": "news-timetable",
-    "title": "Der Timetable ist da",
-    "body": "Alle Spielzeiten sind online. Markiere deine Favoriten mit dem Herz – die App erinnert dich auf Wunsch vor Konzertbeginn.",
+    "title": "The timetable is out",
+    "body": "All set times are online. Mark your favourites with the heart - the app can remind you before a show starts.",
     "category": "lineup",
     "publishAt": "2026-01-15T12:00:00+01:00"
   }

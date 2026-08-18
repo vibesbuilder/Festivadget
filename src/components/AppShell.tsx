@@ -9,6 +9,7 @@ import { LoadingState } from "./states";
 import { useVersionSync } from "@/data/useVersion";
 import { initTracking, trackPage } from "@/lib/track";
 import { applyBranding, themeColorFor } from "@/lib/branding";
+import i18n, { LANGUAGES, type AppLanguage } from "@/i18n/config";
 import { useUi } from "@/store/ui";
 import { useAppConfig } from "@/data/useAppConfig";
 import { useFestival } from "@/data/queries";
@@ -42,6 +43,17 @@ export function AppShell() {
       applyServerThemeDefault(config.themeDefault);
     }
   }, [config.themeDefault, themeExplicit, applyServerThemeDefault]);
+
+  // Admin-Standard-Sprache anwenden – nur solange der User nicht selbst gewählt hat.
+  const languageExplicit = useUi((s) => s.languageExplicit);
+  const applyServerLanguageDefault = useUi((s) => s.applyServerLanguageDefault);
+  useEffect(() => {
+    const lang = config.languageDefault;
+    if (!languageExplicit && lang && lang in LANGUAGES) {
+      applyServerLanguageDefault(lang as AppLanguage);
+      void i18n.changeLanguage(lang);
+    }
+  }, [config.languageDefault, languageExplicit, applyServerLanguageDefault]);
 
   // Hell-/Dunkel-Modus auf <html> spiegeln (Inline-Skript in index.html setzt den Startwert).
   const theme = useUi((s) => s.theme);

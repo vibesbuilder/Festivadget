@@ -1,7 +1,7 @@
 [
   {
     "id": "sp-beispiel",
-    "name": "Beispiel GmbH",
+    "name": "Example Corp",
     "logo": "/img/sponsors/logo-beispiel.svg",
     "tier": "main",
     "url": "https://example.org",
@@ -9,7 +9,7 @@
   },
   {
     "id": "sp-muster",
-    "name": "Musterbräu",
+    "name": "Sample Brewing Co.",
     "logo": "/img/sponsors/logo-beispiel.svg",
     "tier": "partner",
     "url": "https://example.org",

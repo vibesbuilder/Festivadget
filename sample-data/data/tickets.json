@@ -1,11 +1,11 @@
 {
   "providers": [
     {
-      "id": "beispiel-shop",
-      "name": "Beispiel-Ticketshop",
+      "id": "sample-shop",
+      "name": "Sample ticket shop",
       "embedType": "link",
       "url": "https://example.org/tickets",
-      "note": "Tickets gibt es im Online-Shop – oder an der Abendkasse."
+      "note": "Get your tickets in the online shop - or at the box office."
     }
   ]
 }

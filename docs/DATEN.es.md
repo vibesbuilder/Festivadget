@@ -1,13 +1,13 @@
 # Mantener y conectar datos
 
-**🇩🇪 [Deutsch](DATEN.md) · 🇬🇧 [English](DATEN.en.md) · 🇫🇷 [Français](DATEN.fr.md)**
+**🇩🇪 [Deutsch](DATEN.de.md) · 🇬🇧 [English](DATEN.md) · 🇫🇷 [Français](DATEN.fr.md)**
 
 Esta guía explica dos cosas:
 
 1. **Activar la conexión con Joomla**: traer secciones concretas automáticamente desde un sitio Joomla.
 2. **Sustituir los datos de ejemplo por datos reales**: p. ej. horarios, cartel, información.
 
-> Principio básico (IMPLEMENTATION.md §6): en funcionamiento, la app es
+> Principio básico (IMPLEMENTATION.de.md §6): en funcionamiento, la app es
 > **puramente estática**. Los datos se obtienen **en tiempo de build** desde
 > las fuentes configuradas, se normalizan al esquema (§7) y se guardan como
 > `public/data/*.json`. La app en ejecución solo lee esos archivos JSON.
@@ -138,7 +138,7 @@ artists: {
 ```
 
 Si las **actuaciones del horario** deben venir directamente de los artículos de
-artistas (en vez del CSV), ver §6.5 de IMPLEMENTATION.md: poner `slots.format`
+artistas (en vez del CSV), ver §6.5 de IMPLEMENTATION.de.md: poner `slots.format`
 en `"joomla-customfields"` (esta vía aún se está refinando en el adaptador;
 actualmente el camino más robusto para los horarios es el CSV, ver abajo).
 
@@ -173,7 +173,7 @@ ejemplo con contenidos reales y ejecutar
 | Tiempo | `content/weather.json` | objeto |
 
 Las descripciones exactas de los campos están en `src/types/index.ts` o en
-IMPLEMENTATION.md §7.
+IMPLEMENTATION.de.md §7.
 
 ### 2.0 Artistas (`content/artists.json`)
 
@@ -315,4 +315,4 @@ la caché offline y el CORS (§6.6). El logo de la cabecera está en
 Tras `import` + `build:data`, subir al servidor solo los `dist/data/*.json`
 modificados **y** `version.json`. La app consulta `version.json` cada 2 minutos
 y solo recarga los conjuntos de datos modificados: **no** hace falta
-reconstruir/subir la app completa (IMPLEMENTATION.md §15).
+reconstruir/subir la app completa (IMPLEMENTATION.de.md §15).

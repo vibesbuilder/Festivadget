@@ -1,28 +1,28 @@
 [
   {
     "id": "stage",
-    "label": "Bühne",
+    "label": "Stage",
     "color": "#ffb300",
     "icon": "🎤",
     "order": 1
   },
   {
     "id": "food",
-    "label": "Essen & Trinken",
+    "label": "Food & drinks",
     "color": "#2e7d5b",
     "icon": "🍴",
     "order": 2
   },
   {
     "id": "wc",
-    "label": "WC",
+    "label": "Restrooms",
     "color": "#5b6ee1",
     "icon": "🚻",
     "order": 3
   },
   {
     "id": "info",
-    "label": "Info-Punkt",
+    "label": "Info point",
     "color": "#e4572e",
     "icon": "ℹ️",
     "order": 4

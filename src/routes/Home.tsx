@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import i18n from "@/i18n/config";
 import { ChevronRight } from "lucide-react";
 import { NowNextWidget } from "@/components/NowNextWidget";
 import { NewsfeedPreview } from "@/features/news/NewsfeedPreview";
@@ -17,10 +18,10 @@ export default function Home() {
   const { homeHeader } = useAppConfig();
 
   // Titel/Datum aus festival.json (im Admin unter „Inhalte" → „Festival" pflegbar).
-  const title = festival?.name ?? "ROCK IM DORF Festival";
+  const title = festival?.name ?? "Festivadget";
   const dateRange =
     festival?.start && festival?.end
-      ? formatDateRange(festival.start, festival.end, festival.timezone)
+      ? formatDateRange(festival.start, festival.end, festival.timezone, i18n.language)
       : "";
 
   return (
@@ -47,7 +48,7 @@ export default function Home() {
             to="/news"
             className="inline-flex items-center text-sm text-rid-accent hover:underline"
           >
-            Alle <ChevronRight size={16} />
+            {t("home.all")} <ChevronRight size={16} />
           </Link>
         </div>
         <NewsfeedPreview />
