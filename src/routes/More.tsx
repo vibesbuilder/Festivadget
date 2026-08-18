@@ -130,7 +130,7 @@ export default function More() {
       {/* Install-Hinweis nur hier unter „Mehr" (§13). */}
       <InstallHint />
 
-      <p className="pt-4 text-center text-xs text-rid-muted">Festivadget by hoerich</p>
+      <p className="pt-4 text-center text-xs text-rid-muted">Festivadget by vibesbuilder</p>
     </section>
   );
 }
