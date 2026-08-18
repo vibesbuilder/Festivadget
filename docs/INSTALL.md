@@ -1,63 +1,63 @@
-# Festivadget installieren (ohne Build-Maschine)
+# Installing Festivadget (no build machine)
 
-*Sprachen: [English](INSTALL.en.md) · [Français](INSTALL.fr.md) · [Español](INSTALL.es.md)*
+*Languages: [Deutsch](INSTALL.de.md) · [Français](INSTALL.fr.md) · [Español](INSTALL.es.md)*
 
-Festivadget wird wie Joomla/WordPress installiert: **Release-Paket hochladen,
-Installer im Browser öffnen, fertig.** Es ist keine lokale Build-Maschine
-(Node/pnpm) nötig – nur ein Webspace.
+Festivadget installs like Joomla/WordPress: **upload the release package,
+open the installer in the browser, done.** No local build machine
+(Node/pnpm) is required – just a webspace.
 
-## Voraussetzungen
+## Requirements
 
-- Webspace mit **PHP 8.1+** und FTP-Zugang (Shared Hosting reicht).
-- Optional für **Web-Push**: eine MySQL-Datenbank und ein Cronjob.
-- Optional fürs **CMS-Branding** (PWA-Icons): PHP-Erweiterung `gd`.
+- Webspace with **PHP 8.1+** and FTP access (shared hosting is fine).
+- Optional for **web push**: a MySQL database and a cron job.
+- Optional for **CMS branding** (PWA icons): PHP extension `gd`.
 
-Der Installer prüft alle Voraussetzungen selbst und zeigt an, was fehlt.
+The installer checks all requirements itself and shows what is missing.
 
 ## Installation
 
-1. Release-Paket (`festivadget-vX.Y.Z.zip`) entpacken und den Inhalt per FTP
-   in den **Webroot** der (Sub-)Domain hochladen. **Unterordner (z. B. `/testapp/`) werden nicht unterstützt** – der Installer prüft das (der App-Build nutzt absolute Pfade); notfalls eine Subdomain auf das Verzeichnis zeigen lassen. Wichtig: Das Paket **sofort
-   installieren** – solange keine `push/config.php` existiert, ist der
-   Installer für jeden erreichbar.
-2. Im Browser `https://deine-domain/install/` öffnen (DE/EN).
-3. Assistent ausfüllen:
-   - **CMS-Admin-Passwort** (Pflicht) – damit meldest du dich unter
-     `/push/cms/` an.
-   - **MySQL-Zugang** (optional) – aktiviert Web-Push; die VAPID-Schlüssel
-     werden dabei automatisch erzeugt. Leer lassen = ohne Push installieren
-     (später in `push/config.php` nachtragbar, siehe [PUSH.md](PUSH.md)).
-4. Nach der Erfolgsmeldung den **Ordner `install/` löschen** (Knopf auf der
-   Abschlussseite oder per FTP).
-5. Fertig: App unter `/`, CMS unter `/push/cms/`. Inhalte, Branding und
-   Hintergrundbild pflegst du komplett im CMS (siehe [ADMIN.md](ADMIN.md)).
-   Mit Web-Push noch den Cronjob anlegen ([PUSH.md](PUSH.md), Schritt 6).
+1. Extract the release package (`festivadget-vX.Y.Z.zip`) and upload its
+   contents via FTP into the **webroot** of your (sub)domain. **Subfolders (e.g. `/testapp/`) are not supported** – the installer checks this (the app build uses absolute paths); if needed, point a subdomain at the directory. Important:
+   **install immediately** – as long as no `push/config.php` exists, the
+   installer is reachable by anyone.
+2. Open `https://your-domain/install/` in the browser (DE/EN).
+3. Fill in the wizard:
+   - **CMS admin password** (required) – used to sign in at `/push/cms/`.
+   - **MySQL credentials** (optional) – enables web push; the VAPID keys are
+     generated automatically. Leave empty to install without push (can be
+     added later in `push/config.php`, see [PUSH.md](PUSH.md)).
+4. After the success message, **delete the `install/` folder** (button on the
+   final page or via FTP).
+5. Done: app at `/`, CMS at `/push/cms/`. Content, branding and the
+   background image are all managed in the CMS (see [ADMIN.md](ADMIN.md)).
+   With web push, also add the cron job ([PUSH.md](PUSH.md), step 6).
 
 ## Updates
 
-Für Updates gibt es das eigene **Update-Paket** `festivadget-update-vX.Y.Z.zip`
-(wie das Release, aber **ohne `data/` und ohne `install/`**). Kundeninhalte
-bleiben in beiden Varianten unangetastet – `data/` (Inhalte, Uploads,
-Branding), `push/config.php` und die CMS-/Wetter-Einstellungen werden nie
-überschrieben.
+Updates use the dedicated **update package** `festivadget-update-vX.Y.Z.zip`
+(like the release, but **without `data/` and without `install/`**). Customer
+content stays untouched in both variants – `data/` (content, uploads,
+branding), `push/config.php` and the CMS/weather settings are never
+overwritten.
 
-- **Komfort (1-Klick):** Im CMS unter **Update** das Update-Paket hochladen –
-  fertig. Das CMS prüft das Paket (volle Release-Pakete werden abgelehnt),
-  spielt nur ungeschützte Dateien ein und zeigt die installierte Version
-  (Datei `VERSION`). Braucht die PHP-Erweiterung `zip` (oder `phar`).
-- **Minimal (FTP):** Update-Paket entpacken und per FTP über die Installation
-  kopieren (überschreiben). Da `data/` und `install/` nicht im Paket sind,
-  ist nichts weiter zu beachten.
+- **Convenient (one click):** In the CMS, open **Update** and upload the
+  update package – done. The CMS validates the package (full release
+  packages are rejected), applies only unprotected files and shows the
+  installed version (file `VERSION`). Requires the PHP `zip` (or `phar`)
+  extension.
+- **Minimal (FTP):** Extract the update package and copy it over the
+  installation via FTP (overwrite). Since `data/` and `install/` are not in
+  the package, nothing else needs attention.
 
-## Release-Paket selbst bauen (Maintainer)
+## Building the release package yourself (maintainer)
 
-Einmalig `composer install` in `push/` (für `push/vendor/`), dann:
+Run `composer install` in `push/` once (for `push/vendor/`), then:
 
 ```bash
 powershell -File tools/build-release.ps1
 ```
 
-Baut die App **neutral** (ohne eingebaute Instanz-Werte) und erzeugt
-`release/festivadget-v<version>.zip` mit App-Build, `push/` (ohne Secrets)
-und `install/`. Hinweis: `data/` im Paket entspricht dem Build-Stand von
-`public/data/` – für öffentliche Releases Beispieldaten verwenden.
+Builds the app **neutrally** (without baked-in instance values) and creates
+`release/festivadget-v<version>.zip` with the app build, `push/` (without
+secrets) and `install/`. Note: `data/` in the package equals the build state
+of `public/data/` – use sample data for public releases.

@@ -1,6 +1,6 @@
-# IMPLEMENTATION.md — ROCK IM DORF Festival App (PWA)
+# IMPLEMENTATION.de.md — ROCK IM DORF Festival App (PWA)
 
-**🇩🇪 [Deutsch](IMPLEMENTATION.md) · 🇬🇧 [English](IMPLEMENTATION.en.md) · 🇪🇸 [Español](IMPLEMENTATION.es.md)**
+**🇩🇪 [Deutsch](IMPLEMENTATION.de.md) · 🇬🇧 [English](IMPLEMENTATION.md) · 🇪🇸 [Español](IMPLEMENTATION.es.md)**
 
 > Document de travail pour le développement avec Claude Code.
 > Nom de projet (proposition) : `rid-festival-app`

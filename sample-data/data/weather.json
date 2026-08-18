@@ -9,7 +9,7 @@
       "tempMax": 27,
       "symbolCode": "clear",
       "precipitationProb": 10,
-      "summary": "Sonnig"
+      "summary": "Sunny"
     },
     {
       "dayId": "sa",
@@ -18,7 +18,7 @@
       "tempMax": 25,
       "symbolCode": "partly",
       "precipitationProb": 30,
-      "summary": "Wolkig"
+      "summary": "Cloudy"
     }
   ]
 }

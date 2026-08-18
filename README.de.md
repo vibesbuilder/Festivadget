@@ -71,13 +71,13 @@ React (TanStack Query) ◄── fetch /data/*.json ◄── version.json (2-mi
   pollen `version.json` alle 2 Minuten und laden nur geänderte Dateien nach.
 - **Web-Push-Backend** (optional): PHP-Endpoints + MySQL + Cron unter [`push/`](push/)
   auf demselben Shared-Hosting-Webspace; VAPID-Schlüsselpaar, der öffentliche Schlüssel
-  wird in den Client-Build eingebettet. Details: [`docs/PUSH.md`](docs/PUSH.md).
+  wird in den Client-Build eingebettet. Details: [`docs/PUSH.de.md`](docs/PUSH.de.md).
 - **CMS** (optional): PHP-Oberfläche unter `push/cms/` (News, POIs, Statistik, Wetter).
-  Details: [`docs/ADMIN.md`](docs/ADMIN.md).
+  Details: [`docs/ADMIN.de.md`](docs/ADMIN.de.md).
 
-Vertiefung: [`IMPLEMENTATION.md`](IMPLEMENTATION.md) (Konzept),
-[`docs/DATEN.md`](docs/DATEN.md) (Datenanbindung),
-[`docs/TELEGRAM.md`](docs/TELEGRAM.md) (Live-News).
+Vertiefung: [`IMPLEMENTATION.de.md`](IMPLEMENTATION.de.md) (Konzept),
+[`docs/DATEN.de.md`](docs/DATEN.de.md) (Datenanbindung),
+[`docs/TELEGRAM.de.md`](docs/TELEGRAM.de.md) (Live-News).
 
 ## Installation ohne Build-Maschine (Release-Paket)
 
@@ -85,7 +85,7 @@ Der einfachste Weg zur eigenen Instanz: ein Release-Paket
 (`festivadget-vX.Y.Z.zip`) auf einen beliebigen PHP-Webspace hochladen und
 `/install/` im Browser öffnen – ein Web-Installer nach dem Joomla-Prinzip
 richtet alles ein (CMS-Passwort, optional MySQL für Web-Push, VAPID-Schlüssel
-werden serverseitig erzeugt). Siehe [docs/INSTALL.md](docs/INSTALL.md).
+werden serverseitig erzeugt). Siehe [docs/INSTALL.de.md](docs/INSTALL.de.md).
 Maintainer bauen das Paket mit `tools/build-release.ps1`.
 
 Das folgende Setup braucht man nur für die **Entwicklung** oder eigene Builds.
@@ -132,7 +132,7 @@ Alle Inhalte sind Daten, kein Code. Welche Domäne aus welcher Quelle kommt, ste
 | `sponsors.json` | Sponsoren-Grid |
 
 Anleitung inkl. CMS-Anbindung und Ersetzen der Beispieldaten:
-[`docs/DATEN.md`](docs/DATEN.md).
+[`docs/DATEN.de.md`](docs/DATEN.de.md).
 
 ### Umgebungsvariablen (`.env`)
 
@@ -159,7 +159,7 @@ Geheimnisse (privater VAPID-Key, CMS-Tokens) niemals mit `VITE_` benennen.
 
 1. `pnpm run import && pnpm run build:data && pnpm run build`
 2. `dist/` auf den Webspace laden (HTTPS Pflicht, SPA-Fallback + Cache-Header per
-   `.htaccess` – siehe `IMPLEMENTATION.md` §15).
+   `.htaccess` – siehe `IMPLEMENTATION.de.md` §15).
 3. **Daten-Update im Betrieb:** nur geänderte `data/*.json` + `version.json`
    hochladen – Clients ziehen in ~2 Minuten nach, ohne App-Rebuild.
 
@@ -169,10 +169,10 @@ nur Inhaltsdaten, mit `full` die komplette App, mit `push` das PHP-Backend.
 
 ## Web-Push & CMS (optional)
 
-Einrichtung von VAPID, MySQL und Cron auf Shared Hosting: [`docs/PUSH.md`](docs/PUSH.md).
+Einrichtung von VAPID, MySQL und Cron auf Shared Hosting: [`docs/PUSH.de.md`](docs/PUSH.de.md).
 Der Push-Schalter erscheint in der App unter **Mehr**, sobald ein VAPID-Key
 verfügbar ist (zur Laufzeit von `/push/vapid.php` geholt; `VITE_VAPID_PUBLIC_KEY`
-ist optionaler Build-Fallback). Telegram-Live-News: [`docs/TELEGRAM.md`](docs/TELEGRAM.md).
+ist optionaler Build-Fallback). Telegram-Live-News: [`docs/TELEGRAM.de.md`](docs/TELEGRAM.de.md).
 
 ## Lizenz
 

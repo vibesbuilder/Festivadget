@@ -1,13 +1,13 @@
 # Gérer & connecter les données
 
-**🇩🇪 [Deutsch](DATEN.md) · 🇬🇧 [English](DATEN.en.md) · 🇪🇸 [Español](DATEN.es.md)**
+**🇩🇪 [Deutsch](DATEN.de.md) · 🇬🇧 [English](DATEN.md) · 🇪🇸 [Español](DATEN.es.md)**
 
 Ce guide explique deux choses :
 
 1. **Activer la connexion Joomla** – récupérer automatiquement certaines sections depuis un site Joomla.
 2. **Remplacer les données d'exemple par de vraies données** – p. ex. programme, line-up, infos.
 
-> Principe de base (IMPLEMENTATION.md §6) : en fonctionnement, l'app est
+> Principe de base (IMPLEMENTATION.de.md §6) : en fonctionnement, l'app est
 > **purement statique**. Les données sont récupérées **au moment du build**
 > depuis les sources configurées, normalisées vers le schéma (§7) et déposées
 > en `public/data/*.json`. L'app en cours d'exécution ne lit plus que ces
@@ -139,7 +139,7 @@ artists: {
 ```
 
 Si les **créneaux du programme** doivent venir directement des articles
-artistes (au lieu du CSV), voir §6.5 dans IMPLEMENTATION.md – mettre
+artistes (au lieu du CSV), voir §6.5 dans IMPLEMENTATION.de.md – mettre
 `slots.format` sur `"joomla-customfields"` (ce chemin est encore affiné dans
 l'adaptateur ; actuellement, la voie la plus robuste pour le programme est le
 CSV, voir plus bas).
@@ -175,7 +175,7 @@ d'exemple avec de vrais contenus et d'exécuter
 | Météo | `content/weather.json` | objet |
 
 Les descriptions exactes des champs sont dans `src/types/index.ts` ou
-IMPLEMENTATION.md §7.
+IMPLEMENTATION.de.md §7.
 
 ### 2.0 Artistes (`content/artists.json`)
 
@@ -317,4 +317,4 @@ se trouve dans `public/img/logo.svg`.
 Après `import` + `build:data`, ne téléverser que les `dist/data/*.json`
 modifiés **et** `version.json` sur le serveur. L'app interroge `version.json`
 toutes les 2 minutes et ne recharge que les jeux de données modifiés –
-**aucun** rebuild/upload complet de l'app nécessaire (IMPLEMENTATION.md §15).
+**aucun** rebuild/upload complet de l'app nécessaire (IMPLEMENTATION.de.md §15).

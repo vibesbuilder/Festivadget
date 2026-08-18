@@ -1,4 +1,4 @@
-# Festivadget-Release-Paket schnüren (Task #92.3, Joomla-Prinzip).
+﻿# Festivadget-Release-Paket schnüren (Task #92.3, Joomla-Prinzip).
 #
 # Ergebnis: release/festivadget-v<version>.zip – ein Paket, das ein Kunde nur
 # noch per FTP in seinen Webroot entpackt/hochlädt und dann /install/ im
@@ -20,13 +20,14 @@ $app = Split-Path -Parent $PSScriptRoot   # .../Festivadget (App-Ordner)
 
 # --- 1. Neutraler App-Build (ohne Instanz-Werte aus der lokalen .env) -----------
 if (-not $SkipBuild) {
-    Write-Host "== Build (neutral, ohne VAPID-Build-Key)"
-    # Prozess-Env übersteuert die .env-Datei: Kundenpaket ohne eingebauten Key
-    # (der Installer/Server liefert ihn zur Laufzeit über push/vapid.php).
-    $env:VITE_VAPID_PUBLIC_KEY = ""
-    pnpm -C $app build
-    if ($LASTEXITCODE -ne 0) { throw "pnpm build fehlgeschlagen." }
-    Remove-Item Env:\VITE_VAPID_PUBLIC_KEY -ErrorAction SilentlyContinue
+    Write-Host "== Build (neutral: vite --mode release leert Instanz-Env via .env.release)"
+    # ACHTUNG: $env:X = "" LOESCHT die Variable unter PowerShell -> die lokale
+    # .env wuerde gewinnen (so landete der RID-VAPID-Key in v1.2.x-Paketen).
+    # Daher .env.release (leere Overrides) + vite --mode release.
+    pnpm -C $app exec tsc -b
+    if ($LASTEXITCODE -ne 0) { throw "tsc fehlgeschlagen." }
+    pnpm -C $app exec vite build --mode release
+    if ($LASTEXITCODE -ne 0) { throw "vite build fehlgeschlagen." }
 }
 if (-not (Test-Path "$app\dist\index.html")) { throw "dist/ fehlt - zuerst bauen." }
 
@@ -64,9 +65,14 @@ if ($LASTEXITCODE -ge 8) { throw "robocopy sample-assets fehlgeschlagen." }
 # Build-Strings neutralisieren: Titel/Manifest tragen sonst den Instanz-Namen
 # aus dem Build (index.html/<title>, apple-Label, statisches PWA-Manifest).
 foreach ($f in @("$staging\index.html", "$staging\manifest.webmanifest")) {
-    $c = Get-Content $f -Raw
+    # UTF-8 ohne BOM korrekt lesen/schreiben (Get-Content wuerde ANSI raten).
+    $c = [System.IO.File]::ReadAllText($f)
     $c = $c.Replace("ROCK IM DORF Festival", "Gadget Festival").Replace("ROCK IM DORF", "GADGET")
-    Set-Content -Path $f -Value $c -Encoding utf8 -NoNewline
+    $c = $c.Replace('lang="de"', 'lang="en"').Replace('"lang":"de"', '"lang":"en"')
+    # Beschreibung (Umlaute!) per ASCII-Regex ersetzen - PS 5.1 liest ps1 sonst als ANSI.
+    $c = $c -replace 'Festivadget[^"<]*Begleiter[^"<]*', 'Festivadget - Festival companion for multi-day events - works offline.'
+    $c = $c -replace 'Festival-Begleiter[^"<]*', 'Festival companion for multi-day events - works offline.'
+    [System.IO.File]::WriteAllText($f, $c, (New-Object System.Text.UTF8Encoding($false)))
 }
 
 Write-Host "== Staging: install/ + LICENSE"

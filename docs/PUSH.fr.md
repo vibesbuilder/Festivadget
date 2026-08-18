@@ -1,6 +1,6 @@
 # Configurer le web push (phase 5)
 
-**🇩🇪 [Deutsch](PUSH.md) · 🇬🇧 [English](PUSH.en.md) · 🇪🇸 [Español](PUSH.es.md)**
+**🇩🇪 [Deutsch](PUSH.de.md) · 🇬🇧 [English](PUSH.md) · 🇪🇸 [Español](PUSH.es.md)**
 
 Le web push permet des notifications sur l'écran de verrouillage, **même quand
 l'app est fermée** – pour les annonces de sécurité, les changements de dernière

@@ -28,9 +28,10 @@ export function formatDateRange(
   startIso: string,
   endIso: string,
   tz: string = DEFAULT_TZ,
+  locale: string = "de",
 ): string {
-  const s = parse(startIso, tz).setLocale("de");
-  const e = parse(endIso, tz).setLocale("de");
+  const s = parse(startIso, tz).setLocale(locale);
+  const e = parse(endIso, tz).setLocale(locale);
   if (!s.isValid || !e.isValid) return "";
   if (s.hasSame(e, "day")) return e.toFormat("d. LLLL yyyy");
   if (s.hasSame(e, "month") && s.hasSame(e, "year")) {

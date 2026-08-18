@@ -1,174 +1,176 @@
-# IMPLEMENTATION.md — ROCK IM DORF Festival App (PWA)
+# IMPLEMENTATION.de.md — ROCK IM DORF Festival App (PWA)
 
-**🇬🇧 [English](IMPLEMENTATION.en.md) · 🇫🇷 [Français](IMPLEMENTATION.fr.md) · 🇪🇸 [Español](IMPLEMENTATION.es.md)**
+**🇩🇪 [Deutsch](IMPLEMENTATION.de.md) · 🇫🇷 [Français](IMPLEMENTATION.fr.md) · 🇪🇸 [Español](IMPLEMENTATION.es.md)**
 
-> Arbeitsdokument für die Entwicklung mit Claude Code.
-> Projektname (Vorschlag): `rid-festival-app`
-> Ziel: installierbare, offline-fähige Progressive Web App für Festivalbesucher,
-> gehostet als statische Files auf einer Subdomain (z. B. `app.rockimdorf.at`).
+> Working document for development with Claude Code.
+> Project name (proposal): `rid-festival-app`
+> Goal: installable, offline-capable progressive web app for festival visitors,
+> hosted as static files on a subdomain (e.g. `app.rockimdorf.at`).
 
-**Version dieses Dokuments:** 1.1.0 · **Stand:** 2026-06-23
+**Version of this document:** 1.1.0 · **As of:** 2026-06-23
 
 ---
 
-## 0. Inhaltsverzeichnis
+## 0. Table of contents
 
-1. Projektziel & Scope
-2. Design-Richtung
-3. Tech-Stack
-4. Architektur-Überblick
-5. Datenaktualität & Caching-Strategie
-6. Datenquellen-Konfiguration (pro Menüpunkt wählbar)
-7. Datenmodell / JSON-Schema (normalisiertes Ziel)
-8. Projekt-/Verzeichnisstruktur
+1. Project goal & scope
+2. Design direction
+3. Tech stack
+4. Architecture overview
+5. Data freshness & caching strategy
+6. Data source configuration (selectable per menu item)
+7. Data model / JSON schema (normalized target)
+8. Project/directory structure
 9. Routing
-10. Komponenten-Struktur
-11. State & lokale Persistenz
-12. Feature-Spezifikationen
-13. PWA / Offline / Installation
-14. Internationalisierung (i18n)
-15. Build & Deployment (World4You)
-16. GitHub-Projekt-Setup & Changelog
-17. Entwicklungs-Roadmap (Phasen & Aufwand)
-18. CHANGELOG-Vorlage
+10. Component structure
+11. State & local persistence
+12. Feature specifications
+13. PWA / offline / installation
+14. Internationalization (i18n)
+15. Build & deployment (World4You)
+16. GitHub project setup & changelog
+17. Development roadmap (phases & effort)
+18. CHANGELOG template
 
 ---
 
-## 1. Projektziel & Scope
+## 1. Project goal & scope
 
-Eine **PWA** (kein Native, kein App-Store) als zentrale Besucher-App für das Festival.
-Kernprinzip: **fully static**. Alle Inhalte kommen aus versionierten JSON-Dateien,
-die vom Webserver ausgeliefert werden. Es gibt **keinen Pflicht-Backend** mehr.
+A **PWA** (no native app, no app store) as the central visitor app for the
+festival. Core principle: **fully static**. All content comes from versioned
+JSON files served by the web server. There is **no mandatory backend** anymore.
 
-Die Inhaltsdaten werden **zum Build-Zeitpunkt** aus wählbaren Quellen bezogen
-(manuell / Joomla / WordPress, siehe §6) und auf ein einheitliches JSON-Schema
-normalisiert. Im Betrieb ist die App rein statisch.
+The content data is fetched **at build time** from selectable sources
+(manual / Joomla / WordPress, see §6) and normalized to a single JSON schema.
+At runtime the app is purely static.
 
-### In Scope (MVP + Ausbau)
+### In scope (MVP + expansion)
 
-| Feature | Backend im Betrieb nötig? |
+| Feature | Backend needed at runtime? |
 |---|---|
-| Line-Up + Artist-Pages | nein |
-| Timetable (mehrere Ansichten) | nein |
-| Favoriten / Mein Plan + `.ics`-Reminder | nein |
-| Interaktive Offline-Karte mit POIs | nein |
-| News-/Info-Feed mit getimter Veröffentlichung + Auto-Konzertstart | nein |
-| Now / Up Next | nein |
-| Suche | nein |
-| Sponsoren-Bereich | nein |
-| Info-Seiten (Anreise, Gelände, Camping, Caravan, Cashless, BringMichHeim, Kulinarik, Getränke, FAQ) | nein |
-| Wetter (RastaWeather) | nein (liest fertiges JSON) |
-| Ticketshops (iframe/Link) | nein |
-| Web-Push (optionaler Ausbau) | ja (separat) |
+| Line-up + artist pages | no |
+| Timetable (multiple views) | no |
+| Favorites / my plan + `.ics` reminder | no |
+| Interactive offline map with POIs | no |
+| News/info feed with scheduled publication + auto concert start | no |
+| Now / up next | no |
+| Search | no |
+| Sponsors section | no |
+| Info pages (arrival, site, camping, caravan, cashless, ride-home, food, drinks, FAQ) | no |
+| Weather | no (reads a prepared JSON) |
+| Ticket shops (iframe/link) | no |
+| Web push (optional expansion) | yes (separate) |
 
-### Out of Scope (bewusst)
-- **Spotted** — entfernt (UGC + Moderation + DSGVO-Aufwand nicht gewünscht).
-- Friends / Live-Standortteilen.
-- Lockscreen-Widget (nur nativ möglich).
-- Eigenes Cashless-/Ticketing-System (kommt von KUPF/Öticket).
+### Out of scope (deliberately)
+- **Spotted** — removed (UGC + moderation + GDPR effort not wanted).
+- Friends / live location sharing.
+- Lock screen widget (native only).
+- Own cashless/ticketing system (comes from external providers).
 
 ---
 
-## 2. Design-Richtung
+## 2. Design direction
 
-Orientierung an rockimdorf.at (Joomla 5, T4-Template):
+Oriented towards rockimdorf.at (Joomla 5, T4 template):
 
-- **Dunkles Theme**: dunkler Grund, weiße Typografie, **gelber Akzent** (Green-Event-Gelb)
-  für CTAs und aktive Zustände (favorisiert, „läuft jetzt").
-- **Artist-Bilder im Hochformat 4:5** (1080×1350), großflächig/full-bleed.
-- Kräftige **Display-Schrift** für Headlines, klare Sans für Fließtext.
-- Tonalität: rockig, „abseits des Mainstreams", bewusst familiär/„klein & fein".
+- **Dark theme**: dark ground, white typography, **yellow accent**
+  (green-event yellow) for CTAs and active states (favorited, "playing now").
+- **Artist images in portrait 4:5** (1080×1350), large-area/full-bleed.
+- Bold **display face** for headlines, clear sans for body text.
+- Tone: rock, "off the mainstream", deliberately familiar/"small & fine".
 
-Tokens als Tailwind-Theme (Platzhalter — **exakte Hex/Fonts aus T4-CSS verifizieren**):
+Tokens as a Tailwind theme (placeholders — **verify exact hex/fonts from the
+T4 CSS**):
 
 ```css
 :root {
-  --rid-bg:        #121212; /* TODO: aus T4-CSS verifizieren */
+  --rid-bg:        #121212; /* TODO: verify from T4 CSS */
   --rid-surface:   #1c1c1c;
   --rid-text:      #ffffff;
   --rid-muted:     #b3b3b3;
-  --rid-accent:    #f2c200; /* Green-Event-Gelb, TODO verifizieren */
-  --rid-accent-2:  #e4572e; /* sekundär (z. B. NowLine), optional */
+  --rid-accent:    #f2c200; /* green-event yellow, TODO verify */
+  --rid-accent-2:  #e4572e; /* secondary (e.g. NowLine), optional */
 }
 ```
 
-> Vor Phase 4: exakte Farbwerte, Schriftfamilien und Logo-Assets aus dem
-> Live-Template ziehen und hier eintragen.
+> Before phase 4: pull exact color values, font families and logo assets from
+> the live template and enter them here.
 
 ---
 
-## 3. Tech-Stack
+## 3. Tech stack
 
 - **Build:** Vite + React 18 + TypeScript
-- **Styling:** TailwindCSS (Theme-Tokens aus §2)
-- **Routing:** `react-router-dom` v6 (Alternative: TanStack Router)
-- **Server-State / Datenabruf:** TanStack Query (`@tanstack/react-query`)
-- **Client-State:** Zustand (Favoriten, UI-State)
-- **Lokale Persistenz:** IndexedDB via `idb-keyval`
-- **Datum/Zeit/Zeitzone:** Luxon (zwingend wegen `Europe/Vienna` + Mitternachtsüberlauf)
-- **Karte:** Leaflet (`CRS.Simple`, ImageOverlay)
-- **PWA / Service Worker:** `vite-plugin-pwa` (Workbox darunter)
-- **i18n:** `react-i18next` (de Standard, en optional)
+- **Styling:** TailwindCSS (theme tokens from §2)
+- **Routing:** `react-router-dom` v6 (alternative: TanStack Router)
+- **Server state / data fetching:** TanStack Query (`@tanstack/react-query`)
+- **Client state:** Zustand (favorites, UI state)
+- **Local persistence:** IndexedDB via `idb-keyval`
+- **Date/time/timezone:** Luxon (mandatory because of `Europe/Vienna` + midnight overflow)
+- **Map:** Leaflet (`CRS.Simple`, ImageOverlay)
+- **PWA / service worker:** `vite-plugin-pwa` (Workbox underneath)
+- **i18n:** `react-i18next` (de default, en optional)
 - **Icons:** `lucide-react`
-- **Markdown-Rendering (Info/News/Bio):** `react-markdown` + `remark-gfm`
-- **`.ics`-Erzeugung:** eigene Mini-Funktion (kein Paket nötig)
-- **Build-Time-Import:** Node-Skripte + `papaparse` (CSV), `node-fetch`/`undici` (REST)
+- **Markdown rendering (info/news/bio):** `react-markdown` + `remark-gfm`
+- **`.ics` generation:** own mini function (no package needed)
+- **Build-time import:** Node scripts + `papaparse` (CSV), `node-fetch`/`undici` (REST)
 
-> Hinweis: **FullCalendar bewusst NICHT** für die Timetable. Der Stage×Zeit-Raster lässt sich
-> mit CSS Grid sauberer und mobil-tauglicher abbilden.
+> Note: **deliberately NOT FullCalendar** for the timetable. The stage×time
+> grid maps more cleanly and mobile-friendly with CSS Grid.
 
 ---
 
-## 4. Architektur-Überblick
+## 4. Architecture overview
 
 ```
                     Browser (PWA)
    ┌──────────────────────────────────────────────┐
-   │  React-App (App-Shell, cache-first)           │
-   │   - TanStack Query (Daten)                    │
-   │   - Zustand (Favoriten) -> IndexedDB          │
-   │   - Service Worker (Workbox)                  │
+   │  React app (app shell, cache-first)           │
+   │   - TanStack Query (data)                     │
+   │   - Zustand (favorites) -> IndexedDB          │
+   │   - Service worker (Workbox)                  │
    └───────────────┬──────────────────────────────┘
-                   │  HTTPS GET (statisch)
+                   │  HTTPS GET (static)
                    ▼
    ┌──────────────────────────────────────────────┐
-   │  Statischer Webserver (World4You)             │
-   │   /            -> App-Shell (Build-Artefakte) │
-   │   /data/*.json -> Inhaltsdaten (versioniert)  │
-   │   /data/version.json -> Hashes (no-cache)     │
-   │   /map/*.webp  -> Geländeplan-Bild            │
+   │  Static web server (World4You)                │
+   │   /            -> app shell (build artifacts) │
+   │   /data/*.json -> content data (versioned)    │
+   │   /data/version.json -> hashes (no-cache)     │
+   │   /map/*.webp  -> site map image              │
    └──────────────────────────────────────────────┘
 
-   ── Build-Time (nicht im Betrieb) ──────────────────
-   scripts/import-from-source.ts liest content-sources.config.ts
-   und holt je Menüpunkt aus: manual | Joomla-API | WordPress-API
-   -> normalisiert -> public/data/*.json + version.json
+   ── build time (not at runtime) ──────────────────
+   scripts/import-from-source.ts reads content-sources.config.ts
+   and fetches per menu item from: manual | Joomla API | WordPress API
+   -> normalizes -> public/data/*.json + version.json
 
-   ── optional (eigener VPS) ──────────────────────────
-   Web-Push (VAPID) — nur falls echte Push-Reminder gewünscht.
+   ── optional (own VPS) ──────────────────────────
+   Web push (VAPID) — only if real push reminders are wanted.
 ```
 
-Der Betrieb ist **rein statisch**. Quellenanbindung passiert ausschließlich beim Build.
+Operation is **purely static**. Source connection happens exclusively at build
+time.
 
 ---
 
-## 5. Datenaktualität & Caching-Strategie
+## 5. Data freshness & caching strategy
 
-Ziel: online ~live (**≤ 2 min**), offline letzter bekannter Stand.
+Goal: online ~live (**≤ 2 min**), offline the last known state.
 
-### 5.1 Dateiklassen & HTTP-Header
+### 5.1 File classes & HTTP headers
 
-| Pfad | Cache-Control | SW-Strategie |
+| Path | Cache-Control | SW strategy |
 |---|---|---|
-| App-Shell (`/assets/*` mit Hash) | `max-age=31536000, immutable` | CacheFirst (precache) |
+| App shell (`/assets/*` with hash) | `max-age=31536000, immutable` | CacheFirst (precache) |
 | `index.html` | `no-cache` | NetworkFirst |
-| `/data/*.json` (Inhalte) | `max-age=120` | NetworkFirst, Timeout 3 s, Fallback Cache |
-| `/data/version.json` | `no-cache` | NetworkOnly (mit Cache-Fallback offline) |
+| `/data/*.json` (content) | `max-age=120` | NetworkFirst, timeout 3 s, fallback cache |
+| `/data/version.json` | `no-cache` | NetworkOnly (with cache fallback offline) |
 | `/map/*.webp` | `max-age=86400` | StaleWhileRevalidate |
 
-### 5.2 Versions-Polling (near-live, 2-Minuten-Takt)
+### 5.2 Version polling (near-live, 2-minute cycle)
 
-`version.json` enthält pro Datensatz einen Content-Hash:
+`version.json` contains a content hash per dataset:
 
 ```json
 {
@@ -182,58 +184,60 @@ Ziel: online ~live (**≤ 2 min**), offline letzter bekannter Stand.
 }
 ```
 
-- TanStack Query lädt `version.json` mit `refetchInterval: 120_000` (**2 min**), nur wenn
-  `document.visibilityState === 'visible'` und online.
-- Bei Hash-Änderung eines Datensatzes wird **nur dessen Query invalidiert** → gezielter Refetch.
-- `version.json` wird beim Daten-Build (§15) automatisch neu erzeugt.
+- TanStack Query loads `version.json` with `refetchInterval: 120_000`
+  (**2 min**), only when `document.visibilityState === 'visible'` and online.
+- When a dataset's hash changes, **only its query is invalidated** → targeted refetch.
+- `version.json` is regenerated automatically by the data build (§15).
 
-> Inhaltsänderung auf dem Server → sichtbar bei allen Online-Clients innerhalb von ~2 min.
+> Content change on the server → visible for all online clients within ~2 min.
 
-### 5.3 Offline-Verhalten
-- Erstabruf cacht alle `/data/*.json` und das Karten-Bild vor.
-- Bei Netzausfall liefert NetworkFirst aus dem Cache; UI zeigt „Offline / Stand: HH:MM"
-  (aus `generatedAt` des letzten erfolgreichen Abrufs, in IndexedDB gehalten).
+### 5.3 Offline behaviour
+- The first fetch pre-caches all `/data/*.json` and the map image.
+- On network failure, NetworkFirst serves from the cache; the UI shows
+  "Offline / as of: HH:MM" (from `generatedAt` of the last successful fetch,
+  kept in IndexedDB).
 
 ---
 
-## 6. Datenquellen-Konfiguration (pro Menüpunkt wählbar)
+## 6. Data source configuration (selectable per menu item)
 
-**Kernanforderung:** Für **jeden Menüpunkt / jede Inhaltsdomäne** ist einzeln wählbar,
-ob die Daten **manuell** gepflegt oder per **Joomla**- bzw. **WordPress-API** bezogen werden.
-Die Auflösung passiert beim Build über eine zentrale Konfiguration und austauschbare Adapter.
-Das Laufzeit-Schema (§7) ist quellenunabhängig — egal woher die Daten kommen, sie landen
-im selben normalisierten JSON.
+**Core requirement:** for **every menu item / content domain** it is
+individually selectable whether the data is maintained **manually** or fetched
+via the **Joomla** or **WordPress API**. Resolution happens at build time via a
+central configuration and exchangeable adapters. The runtime schema (§7) is
+source-independent — no matter where the data comes from, it ends up in the
+same normalized JSON.
 
-### 6.1 Konfigurationsdatei `content-sources.config.ts`
+### 6.1 Configuration file `content-sources.config.ts`
 
 ```ts
 type Provider = "manual" | "joomla" | "wordpress";
 
 interface JoomlaLocator {
-  categoryId?: number;        // Artikel-Kategorie (z. B. Line-Up Freitag)
-  ids?: number[];             // explizite Artikel-IDs
-  customFields?: Record<string, string>; // Schema-Feld -> Joomla-Custom-Field-Name
+  categoryId?: number;        // article category (e.g. line-up Friday)
+  ids?: number[];             // explicit article IDs
+  customFields?: Record<string, string>; // schema field -> Joomla custom field name
 }
 
 interface WordPressLocator {
-  categorySlug?: string;      // Kategorie-Slug
-  postType?: string;          // "post" oder Custom Post Type
-  acf?: Record<string, string>; // Schema-Feld -> ACF-Feldname
+  categorySlug?: string;      // category slug
+  postType?: string;          // "post" or custom post type
+  acf?: Record<string, string>; // schema field -> ACF field name
 }
 
 interface SourceBinding {
   provider: Provider;
   joomla?: JoomlaLocator;
   wordpress?: WordPressLocator;
-  // provider === "manual" -> Daten kommen aus content/<domain>.json (im Repo gepflegt)
+  // provider === "manual" -> data comes from content/<domain>.json (maintained in the repo)
 }
 
 interface ContentSourcesConfig {
-  // Verbindungs-Defaults (Tokens NUR aus ENV, nie committen):
-  joomla?:    { baseUrl: string; tokenEnv: string };          // z. B. "JOOMLA_API_TOKEN"
+  // connection defaults (tokens ONLY from ENV, never commit):
+  joomla?:    { baseUrl: string; tokenEnv: string };          // e.g. "JOOMLA_API_TOKEN"
   wordpress?: { baseUrl: string; userEnv?: string; appPwEnv?: string };
 
-  // Pro Domäne / Menüpunkt eine Bindung:
+  // one binding per domain / menu item:
   bindings: {
     festival: SourceBinding;
     stages:   SourceBinding;
@@ -243,8 +247,8 @@ interface ContentSourcesConfig {
     news:     SourceBinding;
     sponsors: SourceBinding;
     tickets:  SourceBinding;
-    weather:  SourceBinding;     // i. d. R. "manual" (von RastaWeather befüllt)
-    // Info-Seiten einzeln überschreibbar (jede Seite eigene Quelle):
+    weather:  SourceBinding;     // usually "manual"
+    // info pages individually overridable (each page its own source):
     info: {
       default: SourceBinding;
       overrides?: Record<string, SourceBinding>; // key = InfoPage.id ("faq", "anreise", ...)
@@ -253,7 +257,7 @@ interface ContentSourcesConfig {
 }
 ```
 
-**Beispiel** (Artists aus Joomla, FAQ manuell, Rest gemischt):
+**Example** (artists from Joomla, FAQ manual, rest mixed):
 
 ```ts
 export const config: ContentSourcesConfig = {
@@ -267,7 +271,7 @@ export const config: ContentSourcesConfig = {
                 joomla: { customFields: { stage: "buehne", start: "start", end: "ende" } } },
     pois:     { provider: "manual" },
     news:     { provider: "joomla", joomla: { categoryId: 20 } },
-    sponsors: { provider: "joomla" }, // Weblinks-Komponente, siehe 6.3
+    sponsors: { provider: "joomla" }, // weblinks component, see 6.3
     tickets:  { provider: "manual" },
     weather:  { provider: "manual" },
     info: {
@@ -278,25 +282,25 @@ export const config: ContentSourcesConfig = {
 };
 ```
 
-### 6.2 Importer-Architektur (Adapter-Pattern)
+### 6.2 Importer architecture (adapter pattern)
 
-`scripts/import-from-source.ts` iteriert über `bindings`, ruft je `provider` den passenden
-Adapter, normalisiert auf das Schema (§7), lädt referenzierte Bilder lokal herunter
-(`public/img/...`, wegen Offline + Same-Origin) und schreibt `public/data/<domain>.json`.
-Danach werden `version.json`-Hashes neu berechnet.
+`scripts/import-from-source.ts` iterates over `bindings`, calls the matching
+adapter per `provider`, normalizes to the schema (§7), downloads referenced
+images locally (`public/img/...`, because of offline + same-origin) and writes
+`public/data/<domain>.json`. Then the `version.json` hashes are recalculated.
 
 ```
 scripts/
-├─ import-from-source.ts        # Orchestrierung, liest config + ENV
-├─ build-data.ts                # Validierung (Schema) + version.json (Hashes)
+├─ import-from-source.ts        # orchestration, reads config + ENV
+├─ build-data.ts                # validation (schema) + version.json (hashes)
 └─ adapters/
-   ├─ manual.ts                 # liest content/<domain>.json, validiert
-   ├─ joomla.ts                 # Joomla Web-Services REST API
+   ├─ manual.ts                 # reads content/<domain>.json, validates
+   ├─ joomla.ts                 # Joomla web services REST API
    ├─ wordpress.ts              # WordPress REST API (+ ACF)
-   └─ csv.ts                    # parst content/slots.csv (papaparse)
+   └─ csv.ts                    # parses content/slots.csv (papaparse)
 ```
 
-Jeder Adapter implementiert dasselbe Interface:
+Every adapter implements the same interface:
 
 ```ts
 interface SourceAdapter {
@@ -304,38 +308,42 @@ interface SourceAdapter {
 }
 ```
 
-### 6.3 Joomla-Adapter
+### 6.3 Joomla adapter
 
-- **Artikel** (Artists, News, Info): `GET {baseUrl}/api/index.php/v1/content/articles?filter[category]={id}`
-  mit Header `Authorization: Bearer {JOOMLA_API_TOKEN}`. Einzelartikel über `/articles/{id}`.
-- **Custom Fields**: in der API-Antwort enthalten (com_fields) bzw. per Feldparameter anfordern;
-  Mapping über `joomla.customFields`.
-- **Sponsoren (Weblinks)**: Web-Services-Endpunkt der Weblinks-Komponente, falls Plugin aktiv;
-  Fallback = RSS-Feed der jeweiligen Weblinks-Kategorie (presented by / powered by / Partner).
-- HTML-Body der Artikel **sanitizen** und nach Markdown konvertieren (oder bereinigtes HTML).
+- **Articles** (artists, news, info): `GET {baseUrl}/api/index.php/v1/content/articles?filter[category]={id}`
+  with header `Authorization: Bearer {JOOMLA_API_TOKEN}`. Single articles via `/articles/{id}`.
+- **Custom fields**: contained in the API response (com_fields) or requested
+  via field parameters; mapping via `joomla.customFields`.
+- **Sponsors (weblinks)**: web-services endpoint of the weblinks component if
+  the plugin is active; fallback = RSS feed of the respective weblinks category
+  (presented by / powered by / partner).
+- **Sanitize** the HTML body of the articles and convert to Markdown (or
+  cleaned HTML).
 
-### 6.4 WordPress-Adapter
+### 6.4 WordPress adapter
 
-- **Posts/CPT**: `GET {baseUrl}/wp-json/wp/v2/{postType}?categories={id}` (Auth via
-  Application Password, Basic-Auth über `WP_USER`/`WP_APP_PW`).
-- **ACF** (Pendant zu Joomla Custom Fields): Felder im REST-Response, wenn „Show in REST"
-  aktiv ist bzw. via ACF-to-REST; Mapping über `wordpress.acf`.
-- Bilder via `_embed`/Media-Endpoint auflösen, lokal herunterladen.
+- **Posts/CPT**: `GET {baseUrl}/wp-json/wp/v2/{postType}?categories={id}` (auth
+  via application password, basic auth via `WP_USER`/`WP_APP_PW`).
+- **ACF** (counterpart to Joomla custom fields): fields in the REST response
+  when "Show in REST" is active or via ACF-to-REST; mapping via
+  `wordpress.acf`.
+- Resolve images via `_embed`/media endpoint, download locally.
 
-### 6.5 Timetable-Quelle (umschaltbar)
+### 6.5 Timetable source (switchable)
 
-`slots.format` bestimmt, woher Bühne + Start/Ende kommen:
+`slots.format` determines where stage + start/end come from:
 
-| `format` | Quelle | Felder |
+| `format` | Source | Fields |
 |---|---|---|
 | `csv` | `content/slots.csv` | `artistSlug,stageId,dayId,start,end,note` |
-| `joomla-customfields` | Custom Fields der Artist-Artikel | gemäß `joomla.customFields` |
-| `wordpress-acf` | ACF-Felder der Artist-Posts | gemäß `wordpress.acf` |
+| `joomla-customfields` | custom fields of the artist articles | per `joomla.customFields` |
+| `wordpress-acf` | ACF fields of the artist posts | per `wordpress.acf` |
 
-Bei `csv` werden Slots über den `artistSlug` mit den (ggf. anderswoher bezogenen) Artists
-gejoint. Bei den Custom-Field-Varianten werden Slots direkt aus den Artist-Datensätzen abgeleitet.
+With `csv`, slots are joined to the artists (possibly fetched from elsewhere)
+via `artistSlug`. With the custom-field variants, slots are derived directly
+from the artist records.
 
-`content/slots.csv` (Beispiel):
+`content/slots.csv` (example):
 
 ```csv
 artistSlug,stageId,dayId,start,end,note
@@ -344,21 +352,23 @@ greeen,main,fr,2026-07-31T21:30:00+02:00,2026-07-31T23:00:00+02:00,
 paula-carolina,second,fr,2026-07-31T19:30:00+02:00,2026-07-31T20:30:00+02:00,
 ```
 
-### 6.6 Sicherheit der Anbindung
+### 6.6 Security of the connection
 
-- API-Tokens / App-Passwörter **ausschließlich in `.env`** (in `.gitignore`), nie committen.
-- Joomla-Token **read-only**, gescoped; Build-Maschine möglichst per IP freischalten.
-- Da der Import **server-seitig** zur Build-Zeit läuft, gelangen Credentials **nie in den Browser**.
-- HTML aus CMS-Quellen vor dem Speichern sanitizen.
-- Bilder lokal kopieren statt hotlinken (Offline-Cache + keine CORS-Probleme).
+- API tokens / app passwords **exclusively in `.env`** (in `.gitignore`), never commit.
+- Joomla token **read-only**, scoped; whitelist the build machine by IP if possible.
+- Since the import runs **server-side** at build time, credentials **never
+  reach the browser**.
+- Sanitize HTML from CMS sources before saving.
+- Copy images locally instead of hotlinking (offline cache + no CORS issues).
 
 ---
 
-## 7. Datenmodell / JSON-Schema (normalisiertes Ziel)
+## 7. Data model / JSON schema (normalized target)
 
-Alle Dateien liegen unter `/data/`. TypeScript-Typen unter `src/types/`.
-IDs sind kurze, stabile Strings (slug-artig). Zeitstempel **immer ISO 8601 mit Offset** (`+02:00`).
-Dies ist das **quellenunabhängige Ziel** — Adapter (§6) müssen hierauf mappen.
+All files live under `/data/`. TypeScript types under `src/types/`.
+IDs are short, stable strings (slug-like). Timestamps **always ISO 8601 with
+offset** (`+02:00`). This is the **source-independent target** — adapters (§6)
+must map onto it.
 
 ### 7.1 `festival.json`
 ```ts
@@ -370,9 +380,9 @@ interface Festival {
 }
 interface FestivalDay {
   id: string;        // "fr" | "sa" | "so"
-  label: string;     // "Freitag 31.07."
-  dayStart: string;  // logischer Tagesbeginn
-  dayEnd: string;    // logisches Tagesende (Mitternachtsüberlauf!)
+  label: string;     // "Friday 31.07."
+  dayStart: string;  // logical start of the day
+  dayEnd: string;    // logical end of the day (midnight overflow!)
 }
 ```
 
@@ -414,7 +424,7 @@ type PoiType =
   | "cashless" | "shuttle" | "merch" | "parking";
 interface Poi {
   id: string; type: PoiType; name: string; description?: string;
-  x: number; y: number;   // Pixelkoordinaten im CRS.Simple-System
+  x: number; y: number;   // pixel coordinates in the CRS.Simple system
   stageId?: string; icon?: string;
 }
 ```
@@ -432,13 +442,13 @@ interface MapConfig {
 type NewsCategory = "info" | "safety" | "lineup" | "general";
 interface NewsItem {
   id: string; title: string; body: string; category: NewsCategory;
-  publishAt: string;      // Client zeigt erst ab diesem Zeitpunkt
+  publishAt: string;      // client shows it only from this point in time
   expiresAt?: string; pinned?: boolean;
   image?: string; link?: { label: string; url: string };
 }
 ```
-> **Auto-Konzertstart-Einträge** werden zur Laufzeit aus `slots.json` erzeugt (siehe §12.5)
-> und mit den redaktionellen News gemerged.
+> **Auto concert-start entries** are generated at runtime from `slots.json`
+> (see §12.5) and merged with the editorial news.
 
 ### 7.8 `sponsors.json`
 ```ts
@@ -461,7 +471,7 @@ interface TicketProvider { id: string; name: string; embedType: "iframe" | "link
 interface TicketsConfig { providers: TicketProvider[]; }
 ```
 
-### 7.11 `weather.json` (von RastaWeather befüllt)
+### 7.11 `weather.json`
 ```ts
 interface WeatherDay {
   dayId: string; date: string; tempMin: number; tempMax: number;
@@ -472,81 +482,81 @@ interface Weather { generatedAt: string; source: "open-meteo" | "geosphere"; day
 
 ---
 
-## 8. Projekt-/Verzeichnisstruktur
+## 8. Project/directory structure
 
 ```
 rid-festival-app/
 ├─ public/
-│  ├─ data/                 # erzeugt durch import + build-data
+│  ├─ data/                 # generated by import + build-data
 │  │  ├─ festival.json stages.json artists.json slots.json
 │  │  ├─ pois.json map.json news.json sponsors.json
 │  │  ├─ info.json tickets.json weather.json
-│  │  └─ version.json       # generiert (Hashes)
+│  │  └─ version.json       # generated (hashes)
 │  ├─ map/gelaendeplan.webp
-│  ├─ img/{artists,sponsors}/...   # vom Importer lokal abgelegt
-│  ├─ icons/                # PWA-Icons (192,512,maskable)
+│  ├─ img/{artists,sponsors}/...   # placed locally by the importer
+│  ├─ icons/                # PWA icons (192,512,maskable)
 │  └─ manifest.webmanifest
-├─ content/                 # manuell gepflegte Quellen (provider:"manual")
+├─ content/                 # manually maintained sources (provider:"manual")
 │  ├─ festival.json stages.json pois.json tickets.json weather.json ...
-│  └─ slots.csv             # falls slots.format === "csv"
-├─ content-sources.config.ts  # §6: Quelle pro Menüpunkt
-├─ .env.example             # JOOMLA_API_TOKEN, WP_USER, WP_APP_PW (Beispielwerte)
+│  └─ slots.csv             # if slots.format === "csv"
+├─ content-sources.config.ts  # §6: source per menu item
+├─ .env.example             # JOOMLA_API_TOKEN, WP_USER, WP_APP_PW (sample values)
 ├─ scripts/
 │  ├─ import-from-source.ts
 │  ├─ build-data.ts
 │  └─ adapters/{manual,joomla,wordpress,csv}.ts
 ├─ src/
 │  ├─ main.tsx App.tsx
-│  ├─ routes/               # Seiten (§9)
+│  ├─ routes/               # pages (§9)
 │  ├─ components/           # (§10)
 │  ├─ features/{timetable,favorites,map,news}/
-│  ├─ data/                 # Query-Hooks (useArtists, useSlots, useVersion, ...)
+│  ├─ data/                 # query hooks (useArtists, useSlots, useVersion, ...)
 │  ├─ lib/                  # ics.ts time.ts search.ts sw-register.ts
-│  ├─ store/                # Zustand-Stores
-│  ├─ types/                # Schema-Typen aus §7
+│  ├─ store/                # Zustand stores
+│  ├─ types/                # schema types from §7
 │  ├─ i18n/                 # de.json en.json config
 │  └─ styles/
 ├─ CLAUDE.md CHANGELOG.md README.md LICENSE .gitignore
 ├─ vite.config.ts tailwind.config.ts package.json
 ```
 
-> Optionales `backend/` (FastAPI) nur, falls Web-Push (§13) tatsächlich gebaut wird.
+> An optional `backend/` (FastAPI) only if web push (§13) is actually built.
 
 ---
 
 ## 9. Routing
 
-Mobile-first, untere Tab-Bar für die Hauptbereiche.
+Mobile-first, bottom tab bar for the main sections.
 
-| Pfad | Seite | Inhalt |
+| Path | Page | Content |
 |---|---|---|
-| `/` | Home | Now/Up Next, gepinnte News, nächster Favorit, Wetter-Teaser |
-| `/lineup` | Line-Up | Artist-Grid, Genre-Filter, Headliner zuerst |
-| `/artist/:slug` | Artist-Page | Bio, Spotify-Embed, Spielzeiten, Favorisieren |
-| `/timetable` | Timetable | Grid-/Listen-Ansicht, Tag-Tabs, Clash-Marker, Now-Linie |
-| `/favorites` | Mein Plan | favorisierte Slots, `.ics`-Export, Clash-Hinweis |
-| `/map` | Karte | Leaflet, POI-Filter, Detail-Sheet |
-| `/news` | News & Infos | gemergter Feed (redaktionell + Auto-Konzertstart), Safety oben |
-| `/info` + `/info/:id` | Infos | Übersicht + Markdown-Detail |
-| `/sponsors` | Sponsoren | nach Tier gruppiert |
-| `/tickets` | Tickets | iframe/Link je Provider |
-| `/search` | Suche | global (Artists/Slots/Info/POIs) |
+| `/` | Home | now/up next, pinned news, next favorite, weather teaser |
+| `/lineup` | Line-up | artist grid, genre filter, headliners first |
+| `/artist/:slug` | Artist page | bio, Spotify embed, stage times, favorite |
+| `/timetable` | Timetable | grid/list view, day tabs, clash markers, now line |
+| `/favorites` | My plan | favorited slots, `.ics` export, clash hint |
+| `/map` | Map | Leaflet, POI filter, detail sheet |
+| `/news` | News & info | merged feed (editorial + auto concert start), safety on top |
+| `/info` + `/info/:id` | Info | overview + Markdown detail |
+| `/sponsors` | Sponsors | grouped by tier |
+| `/tickets` | Tickets | iframe/link per provider |
+| `/search` | Search | global (artists/slots/info/POIs) |
 
-Tab-Bar (5 Slots): **Home · Line-Up · Timetable · Karte · Mehr**.
-„Mehr" öffnet ein Sheet: Mein Plan, News, Infos, Sponsoren, Tickets, Suche, Sprache.
+Tab bar (5 slots): **Home · Line-up · Timetable · Map · More**.
+"More" opens a sheet: my plan, news, info, sponsors, tickets, search, language.
 
 ---
 
-## 10. Komponenten-Struktur
+## 10. Component structure
 
 ```
 App
 ├─ AppShell (TopBar, <Outlet/>, BottomNav, OfflineBadge)
-├─ data/  useVersion() (2-min-Poll) · useFestival/useStages/useArtists/useSlots/usePois/...
+├─ data/  useVersion() (2-min poll) · useFestival/useStages/useArtists/useSlots/usePois/...
 ├─ features/timetable/  TimetableGrid · TimetableList · DayTabs · SlotCard · NowLine · useClashes()
 ├─ features/favorites/  FavoriteButton · useFavorites() · IcsButton
 ├─ features/map/        FestivalMap (CRS.Simple) · PoiMarker · PoiFilterBar · PoiSheet
-├─ features/news/       NewsFeed (merge redaktionell+auto, publishAt-Filter) · NewsItemCard · SafetyBanner
+├─ features/news/       NewsFeed (merge editorial+auto, publishAt filter) · NewsItemCard · SafetyBanner
 └─ components/  ArtistCard ArtistGrid GenreFilter SpotifyEmbed SponsorGrid
                 InfoList InfoPage NowNextWidget SearchOverlay WeatherStrip
                 TicketEmbed InstallHint
@@ -554,96 +564,104 @@ App
 
 ---
 
-## 11. State & lokale Persistenz
+## 11. State & local persistence
 
-- **Server-State** (alle JSON): TanStack Query, `staleTime` 2 min, durch Versions-Polling invalidiert.
-- **Favoriten**: Zustand-Store, persistiert in IndexedDB (`idb-keyval`, Key `favorites`) als `Set<slotId>`.
-- **UI-State** (Tag, Filter, Sprache): Zustand + `localStorage`.
-- **Letzter Datenstand** (`generatedAt`): IndexedDB, für Offline-Anzeige.
+- **Server state** (all JSON): TanStack Query, `staleTime` 2 min, invalidated by version polling.
+- **Favorites**: Zustand store, persisted in IndexedDB (`idb-keyval`, key `favorites`) as `Set<slotId>`.
+- **UI state** (day, filter, language): Zustand + `localStorage`.
+- **Last data state** (`generatedAt`): IndexedDB, for the offline display.
 
-`.ics`-Erzeugung (`src/lib/ics.ts`): VEVENT mit VALARM (`-PT15M`); funktioniert iOS + Android.
-Reminder-UX: Stern = Favorit; Button „Erinnerung (.ics)" lädt Termin mit 15-Min-Vorlauf.
-
----
-
-## 12. Feature-Spezifikationen
-
-### 12.1 Line-Up + Artist-Pages
-Grid aus `ArtistCard` (Headliner zuerst, sonst alphabetisch), Genre-Filter (Chips).
-Artist-Page: Header (Bild 4:5, Name, Genre, Land), Bio (Markdown), `SpotifyEmbed`,
-Spielzeiten aus `slots`, `FavoriteButton`.
-
-### 12.2 Timetable (mehrere Ansichten)
-- **Grid**: CSS Grid, Spalten = Stages (nach `order`, Farbe `stage.color`), Reihen = Zeitachse.
-- **Liste**: chronologisch je Tag, Filter „nur Favoriten".
-- **DayTabs** nach `FestivalDay`; Mitternachtsüberlauf über `dayStart/dayEnd` (Luxon).
-- **NowLine**: aktuelle Zeit; **Clash-Indikator** via `useClashes()` über favorisierte Slots.
-- Datenquelle der Slots gemäß §6.5 (csv / joomla-customfields / wordpress-acf).
-
-### 12.3 Favoriten / Mein Plan + `.ics`
-Stern an Slot/Artist; „Mein Plan" zeigt Favoriten chronologisch mit Clash-Warnung; `.ics` einzeln oder „alle".
-
-### 12.4 Interaktive Offline-Karte
-Leaflet `L.CRS.Simple` + `L.imageOverlay` (bounds aus `map.json`). POI-Marker je `type`,
-Filterleiste, `PoiSheet` mit Detail. Bild als `.webp` vorgecacht → vollständig offline.
-GPS-Eigenposition vorerst weglassen.
-
-### 12.5 News-Feed (getimt) + Auto-Konzertstart
-Redaktionelle Items nur sichtbar wenn `publishAt <= now` (und `expiresAt > now`).
-Auto-Konzertstart: pro Slot virtuelles Item `{category:"lineup", title:"Jetzt: <Artist> @ <Stage>", time:slot.start}`,
-sichtbar ab `start <= now`. Beide mergen, absteigend nach Zeit, `pinned`/`safety` oben.
-Safety prominent (Banner). Getimte Vorab-Pflege über zukünftiges `publishAt`.
-
-### 12.6 Now / Up Next
-`NowNextWidget` auf Home: pro Stage „läuft gerade" + „als nächstes" aus `slots` + `now`.
-
-### 12.7 Suche
-Clientseitiger Index über Artists/Slots/Info/POIs; Substring-/Token-Match (optional `match-sorter`).
-
-### 12.8 Sponsoren
-`SponsorGrid` gruppiert nach `tier`; Logo verlinkt auf `url`.
-
-### 12.9 Info-Seiten
-Markdown-Render; FAQ als `## Frage` + Antwort (optional Accordion).
-Quelle je Seite einzeln konfigurierbar (§6.1, `info.overrides`).
-
-### 12.10 Wetter
-`WeatherStrip` liest `weather.json` (RastaWeather). Pro Tag Symbol + Min/Max.
-
-### 12.11 Ticketshops
-`tickets.json` steuert `embedType`. **iframe** mit `sandbox` + `allow`-Liste; **Fallback „link"**,
-falls Shop Framing per `X-Frame-Options`/CSP verbietet (KUPF/Öticket prüfen).
+`.ics` generation (`src/lib/ics.ts`): VEVENT with VALARM (`-PT15M`); works on
+iOS + Android. Reminder UX: star = favorite; the "Reminder (.ics)" button
+downloads the event with a 15-min lead.
 
 ---
 
-## 13. PWA / Offline / Installation
+## 12. Feature specifications
 
-- `vite-plugin-pwa`. Precache App-Shell; Runtime-Caching gemäß §5.1.
-- `manifest.webmanifest`: Name, Short-Name, Theme-/Background-Color (dunkel/gelb), Icons (192/512 + maskable),
-  `display:"standalone"`, `start_url:"/"`, `scope:"/"`.
-- Installations-Hinweise: Android/Chrome `beforeinstallprompt`-Button; iOS `InstallHint`
-  („Teilen → Zum Home-Bildschirm").
-- **Web-Push** bleibt optionaler Ausbau (VAPID, separater Backend, iOS nur nach Home-Bildschirm-Install).
-  Für MVP nicht nötig — Reminder laufen über `.ics`.
+### 12.1 Line-up + artist pages
+Grid of `ArtistCard` (headliners first, otherwise alphabetical), genre filter
+(chips). Artist page: header (image 4:5, name, genre, country), bio (Markdown),
+`SpotifyEmbed`, stage times from `slots`, `FavoriteButton`.
+
+### 12.2 Timetable (multiple views)
+- **Grid**: CSS Grid, columns = stages (by `order`, color `stage.color`), rows = time axis.
+- **List**: chronological per day, filter "favorites only".
+- **DayTabs** by `FestivalDay`; midnight overflow via `dayStart/dayEnd` (Luxon).
+- **NowLine**: current time; **clash indicator** via `useClashes()` over favorited slots.
+- Slot data source per §6.5 (csv / joomla-customfields / wordpress-acf).
+
+### 12.3 Favorites / my plan + `.ics`
+Star on slot/artist; "My plan" shows favorites chronologically with clash
+warning; `.ics` individually or "all".
+
+### 12.4 Interactive offline map
+Leaflet `L.CRS.Simple` + `L.imageOverlay` (bounds from `map.json`). POI markers
+per `type`, filter bar, `PoiSheet` with detail. Image pre-cached as `.webp` →
+fully offline. Skip GPS own-position for now.
+
+### 12.5 News feed (scheduled) + auto concert start
+Editorial items only visible when `publishAt <= now` (and `expiresAt > now`).
+Auto concert start: per slot a virtual item
+`{category:"lineup", title:"Now: <artist> @ <stage>", time:slot.start}`,
+visible from `start <= now`. Merge both, descending by time, `pinned`/`safety`
+on top. Safety prominent (banner). Scheduled preparation via a future
+`publishAt`.
+
+### 12.6 Now / up next
+`NowNextWidget` on home: per stage "playing now" + "up next" from `slots` + `now`.
+
+### 12.7 Search
+Client-side index over artists/slots/info/POIs; substring/token match
+(optionally `match-sorter`).
+
+### 12.8 Sponsors
+`SponsorGrid` grouped by `tier`; logo links to `url`.
+
+### 12.9 Info pages
+Markdown render; FAQ as `## question` + answer (optionally accordion).
+Source per page individually configurable (§6.1, `info.overrides`).
+
+### 12.10 Weather
+`WeatherStrip` reads `weather.json`. Per day symbol + min/max.
+
+### 12.11 Ticket shops
+`tickets.json` controls `embedType`. **iframe** with `sandbox` + `allow` list;
+**fallback "link"** if the shop forbids framing via `X-Frame-Options`/CSP.
 
 ---
 
-## 14. Internationalisierung (i18n)
+## 13. PWA / offline / installation
 
-`react-i18next`, Standard **de**, optional **en**. UI-Strings in `src/i18n/{de,en}.json`.
-Inhaltsdaten einsprachig (de); optionale `*_en`-Felder später möglich, nicht im MVP.
+- `vite-plugin-pwa`. Precache app shell; runtime caching per §5.1.
+- `manifest.webmanifest`: name, short name, theme/background color
+  (dark/yellow), icons (192/512 + maskable), `display:"standalone"`,
+  `start_url:"/"`, `scope:"/"`.
+- Install hints: Android/Chrome `beforeinstallprompt` button; iOS `InstallHint`
+  ("Share → Add to Home Screen").
+- **Web push** remains an optional expansion (VAPID, separate backend, iOS only
+  after home-screen install). Not needed for the MVP — reminders run via `.ics`.
 
 ---
 
-## 15. Build & Deployment (World4You)
+## 14. Internationalization (i18n)
 
-1. `.env` mit Credentials anlegen (aus `.env.example`).
-2. `npm run import` → `import-from-source.ts` liest `content-sources.config.ts`, holt je Menüpunkt
-   aus manual/Joomla/WordPress, lädt Bilder lokal, schreibt `public/data/*`.
-3. `npm run build:data` → validiert Schema, erzeugt `version.json` (Hashes).
-4. `npm run build` → Vite-Build nach `dist/`.
-5. Upload `dist/` per SFTP auf Subdomain-Docroot (`app.rockimdorf.at`). **HTTPS Pflicht.**
-6. `.htaccess` (Apache): SPA-Fallback + Header.
+`react-i18next`, default **de**, optionally **en/fr/es**. UI strings in
+`src/i18n/{de,en,fr,es}.json`. Content data monolingual (de); optional `*_en`
+fields possible later, not in the MVP.
+
+---
+
+## 15. Build & deployment (World4You)
+
+1. Create `.env` with credentials (from `.env.example`).
+2. `npm run import` → `import-from-source.ts` reads
+   `content-sources.config.ts`, fetches per menu item from
+   manual/Joomla/WordPress, downloads images locally, writes `public/data/*`.
+3. `npm run build:data` → validates the schema, generates `version.json` (hashes).
+4. `npm run build` → Vite build into `dist/`.
+5. Upload `dist/` via SFTP to the subdomain docroot (`app.rockimdorf.at`). **HTTPS mandatory.**
+6. `.htaccess` (Apache): SPA fallback + headers.
 
 ```apache
 RewriteEngine On
@@ -665,65 +683,70 @@ RewriteRule . /index.html [L]
 </FilesMatch>
 ```
 
-**Daten-Update im Betrieb:** `import` + `build:data` laufen lassen, nur geänderte `data/*.json`
-+ `version.json` hochladen. Clients ziehen nach (≤ 2 min). Kein App-Shell-Rebuild nötig.
+**Data update during operation:** run `import` + `build:data`, upload only the
+changed `data/*.json` + `version.json`. Clients catch up (≤ 2 min). No
+app-shell rebuild needed.
 
 ---
 
-## 16. GitHub-Projekt-Setup & Changelog
+## 16. GitHub project setup & changelog
 
-- **Repo**: privat starten, später public. **Keine** Credentials, keine echten Tokens committen.
-- **`.gitignore`**: `node_modules`, `dist`, `.env*`, (optional) generierte `public/data/*` (Beispiel-Files tracken).
-- **Branching**: Feature-Branch-Workflow (wie RASTAMAN).
-- **CLAUDE.md**: deutsche Kommentare; Bestätigung erforderlich bei Änderungen an
-  Datenschema, Dependencies, Kernlogik (Caching/Timetable/Favoriten) und an `content-sources.config.ts`.
-- **README.md**: Setup, `import`/`build:data`/`build`, Deployment, Quellen-Konfiguration.
-- **LICENSE**: **GNU AGPLv3** für den Code (Inhalte/Logos/Karten ausgenommen).
+- **Repo**: start private, later public. Commit **no** credentials, no real tokens.
+- **`.gitignore`**: `node_modules`, `dist`, `.env*`, (optionally) generated
+  `public/data/*` (track sample files).
+- **Branching**: feature-branch workflow.
+- **CLAUDE.md**: German comments; confirmation required for changes to the data
+  schema, dependencies, core logic (caching/timetable/favorites) and to
+  `content-sources.config.ts`.
+- **README.md**: setup, `import`/`build:data`/`build`, deployment, source configuration.
+- **LICENSE**: **GNU AGPLv3** for the code (content/logos/maps excluded).
 - **CI (optional)**: GitHub Action `build` (lint + typecheck + build).
-- **Versionierung**: **SemVer**; **Changelog im „Keep a Changelog"-Format** (§18); Tag pro Release.
+- **Versioning**: **SemVer**; **changelog in "Keep a Changelog" format** (§18); tag per release.
 
 ---
 
-## 17. Entwicklungs-Roadmap (Phasen & Aufwand)
+## 17. Development roadmap (phases & effort)
 
-> Aufwand = konzentrierte Entwicklungszeit mit Claude Code.
+> Effort = focused development time with Claude Code.
 
-**Phase 0 — Gerüst (~1 Tag)**
-Vite+TS+Tailwind (Design-Tokens §2), Routing, AppShell+BottomNav, TanStack Query,
-`vite-plugin-pwa`, Manifest/Icons, `version.json`-2-min-Polling. → `v0.1.0`.
+**Phase 0 — scaffold (~1 day)**
+Vite+TS+Tailwind (design tokens §2), routing, AppShell+BottomNav, TanStack
+Query, `vite-plugin-pwa`, manifest/icons, `version.json` 2-min polling. → `v0.1.0`.
 
-**Phase 1 — Datenpipeline + Inhalte read-only (~4–5 Tage)**
-`content-sources.config.ts`, Adapter (manual/Joomla/WordPress/csv), `import` + `build:data`,
-Schema/Typen; Line-Up, Artist-Pages (+Spotify-Embed), Info-Seiten, Sponsoren, Wetter-Strip, Tickets. → `v0.2.0`.
+**Phase 1 — data pipeline + content read-only (~4–5 days)**
+`content-sources.config.ts`, adapters (manual/Joomla/WordPress/csv),
+`import` + `build:data`, schema/types; line-up, artist pages (+Spotify embed),
+info pages, sponsors, weather strip, tickets. → `v0.2.0`.
 
-**Phase 2 — Timetable & Favoriten (~3 Tage)**
-Grid + Liste, DayTabs, NowLine, Favoriten (IndexedDB), Clash-Finder, `.ics`-Reminder,
-Mein Plan, Now/Up Next; Timetable-Quelle umschaltbar (§6.5). → `v0.3.0`.
+**Phase 2 — timetable & favorites (~3 days)**
+Grid + list, day tabs, now line, favorites (IndexedDB), clash finder, `.ics`
+reminder, my plan, now/up next; switchable timetable source (§6.5). → `v0.3.0`.
 
-**Phase 3 — Karte & News & Suche (~2–3 Tage)**
-Leaflet-Karte + POIs + Filter, News-Feed (publishAt + Auto-Konzertstart + Safety), globale Suche. → `v0.4.0`.
+**Phase 3 — map & news & search (~2–3 days)**
+Leaflet map + POIs + filter, news feed (publishAt + auto concert start +
+safety), global search. → `v0.4.0`.
 
-**Phase 4 — Offline-Härtung & Polish (~1–2 Tage)**
-Caching feinjustieren, Offline-Indikator, Install-Hints, exakte Design-Tokens aus T4-CSS,
-Icons/Splash, Lighthouse-PWA-Check. → `v1.0.0`.
+**Phase 4 — offline hardening & polish (~1–2 days)**
+Fine-tune caching, offline indicator, install hints, exact design tokens from
+the T4 CSS, icons/splash, Lighthouse PWA check. → `v1.0.0`.
 
-**Phase 5 — Web-Push (optional, ~2–3 Tage)**
-VAPID, Subscription-Backend, Admin zum Senden. → `v1.1.0`.
+**Phase 5 — web push (optional, ~2–3 days)**
+VAPID, subscription backend, admin for sending. → `v1.1.0`.
 
-**Summe MVP (Phase 0–4): ~11–14 Tage.** Größter Nicht-Code-Posten: **Content-Pflege**
-(Bios, Fotos, Timetable, Karte zeichnen) — früh einplanen.
+**Total MVP (phases 0–4): ~11–14 days.** Biggest non-code item: **content
+maintenance** (bios, photos, timetable, drawing the map) — plan early.
 
 ---
 
-## 18. CHANGELOG-Vorlage
+## 18. CHANGELOG template
 
-Datei `CHANGELOG.md` (Keep a Changelog + SemVer):
+File `CHANGELOG.md` (Keep a Changelog + SemVer):
 
 ```markdown
 # Changelog
 
-Alle nennenswerten Änderungen an diesem Projekt werden hier dokumentiert.
-Format nach Keep a Changelog, Versionierung nach SemVer.
+All notable changes to this project are documented here.
+Format per Keep a Changelog, versioning per SemVer.
 
 ## [Unreleased]
 ### Added
@@ -732,32 +755,34 @@ Format nach Keep a Changelog, Versionierung nach SemVer.
 
 ## [0.1.0] - 2026-06-XX
 ### Added
-- Projektgerüst (Vite, React, TS, Tailwind, Routing, PWA-Setup)
-- Versions-Polling (version.json, 2-Minuten-Takt) und Caching-Strategie
+- Project scaffold (Vite, React, TS, Tailwind, routing, PWA setup)
+- Version polling (version.json, 2-minute cycle) and caching strategy
 ```
 
 ---
 
-## Änderungshistorie dieses Dokuments
+## Change history of this document
 
 ### [1.1.0] - 2026-06-23
 **Removed**
-- Feature **Spotted** vollständig entfernt (Schema, Route, Komponenten, Backend-Schreibpfad, Phase).
-- Pflicht-Micro-Backend entfernt — Betrieb ist nun rein statisch; Web-Push nur noch optionaler Ausbau.
+- Feature **Spotted** entirely removed (schema, route, components, backend write path, phase).
+- Mandatory micro-backend removed — operation is now purely static; web push
+  only as an optional expansion.
 
 **Added**
-- §6 **Datenquellen-Konfiguration**: pro Menüpunkt wählbar zwischen `manual` / `joomla` / `wordpress`
-  (inkl. `content-sources.config.ts`, Adapter-Architektur, Joomla- und WordPress-Mapping, Sicherheit).
-- §6.5 **Timetable-Quelle umschaltbar**: `csv` | `joomla-customfields` | `wordpress-acf`.
-- §2 **Design-Richtung** (dunkel/weiß/gelb, 4:5-Artist-Bilder, Tokens aus T4-CSS zu verifizieren).
+- §6 **data source configuration**: selectable per menu item between
+  `manual` / `joomla` / `wordpress` (incl. `content-sources.config.ts`, adapter
+  architecture, Joomla and WordPress mapping, security).
+- §6.5 **switchable timetable source**: `csv` | `joomla-customfields` | `wordpress-acf`.
+- §2 **design direction** (dark/white/yellow, 4:5 artist images, tokens to be
+  verified from the T4 CSS).
 
 **Changed**
-- Cache/Polling von 60 s/5 min auf **2 Minuten** vereinheitlicht (`max-age=120`, `refetchInterval 120_000`).
-- Roadmap angepasst (Datenpipeline in Phase 1, Spotted-Phase entfernt).
+- Cache/polling unified from 60 s/5 min to **2 minutes** (`max-age=120`,
+  `refetchInterval 120_000`).
+- Roadmap adjusted (data pipeline in phase 1, Spotted phase removed).
 
 ### [1.0.0] - 2026-06-22
-- Erstfassung.
+- First version.
 
 ---
-
-*Ende IMPLEMENTATION.md*

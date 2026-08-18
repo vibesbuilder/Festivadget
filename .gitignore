@@ -10,6 +10,8 @@ release
 .env
 .env.*
 !.env.example
+!.env.release
+!.env.example
 
 # Web-Push-Backend: echte Config + Composer-Vendor nicht committen (Phase 5)
 push/config.php

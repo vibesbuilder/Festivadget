@@ -1,193 +1,207 @@
-# Web-Push einrichten (Phase 5)
+# Setting up web push (phase 5)
 
-**🇬🇧 [English](PUSH.en.md) · 🇫🇷 [Français](PUSH.fr.md) · 🇪🇸 [Español](PUSH.es.md)**
+**🇩🇪 [Deutsch](PUSH.de.md) · 🇫🇷 [Français](PUSH.fr.md) · 🇪🇸 [Español](PUSH.es.md)**
 
-Web-Push erlaubt Benachrichtigungen auf den Sperrbildschirm, **auch wenn die App
-geschlossen ist** – für Safety-Durchsagen, kurzfristige Änderungen und „läuft gleich"-Hinweise.
+Web push enables notifications on the lock screen, **even when the app is
+closed** – for safety announcements, short-notice changes and "on soon" hints.
 
-Das Backend ist bewusst minimal: ein paar **PHP-Dateien** im Ordner [`push/`](../push/) auf
-demselben **Webspace** (kein VPS nötig). Voraussetzung: **PHP 8.1+** mit `openssl`, `mbstring`
-und `gmp` **oder** `bcmath`, dazu **MySQL** und **Cron**.
+The backend is deliberately minimal: a few **PHP files** in the
+[`push/`](../push/) folder on the same **web space** (no VPS needed).
+Prerequisites: **PHP 8.1+** with `openssl`, `mbstring` and `gmp` **or**
+`bcmath`, plus **MySQL** and **cron**.
 
-## Überblick
+## Overview
 
-| Datei | Zweck |
+| File | Purpose |
 |---|---|
-| `push/subscribe.php` | nimmt Abos vom Browser entgegen, speichert sie in MySQL |
-| `push/admin.php` | passwortgeschützte Seite zum **sofortigen** Senden (+ Statistik-Button) |
-| `push/cron-send.php` | per Cron: Digest „läuft in der nächsten Stunde" |
-| `push/vapid-keys.php` | erzeugt einmalig das VAPID-Schlüsselpaar |
-| `push/sender.php`, `db.php` | gemeinsame Logik (Versand, DB, Schema) |
-| `push/weather.php`, `weather-providers.php` | Wetter-Endpoint (GeoSphere/OpenWeather/WeatherAPI.com/MET Norway, Datei-Cache; Einstellungen im CMS-Tab „Wetter") |
-| `push/track.php`, `stats-db.php` | anonymer Nutzungs-Zähler (App → MySQL) |
-| `push/stats.php` | Statistik-Seite (gleiches Passwort wie admin.php) |
+| `push/subscribe.php` | receives subscriptions from the browser, stores them in MySQL |
+| `push/admin.php` | password-protected page for **immediate** sending (+ statistics button) |
+| `push/cron-send.php` | via cron: digest "playing within the next hour" |
+| `push/vapid-keys.php` | generates the VAPID key pair once |
+| `push/sender.php`, `db.php` | shared logic (sending, DB, schema) |
+| `push/weather.php`, `weather-providers.php` | weather endpoint (GeoSphere/OpenWeather/WeatherAPI.com/MET Norway, file cache; settings in the CMS "Weather" tab) |
+| `push/track.php`, `stats-db.php` | anonymous usage counter (app → MySQL) |
+| `push/stats.php` | statistics page (same password as admin.php) |
 
-> **Upload-Kurzweg:** `deploy-data.bat push` lädt alle `push\*.php` hoch –
-> außer `config.php`/`config.example.php`/`vapid-keys.php` (und ohne `vendor\`).
+> **Upload shortcut:** `deploy-data.bat push` uploads all `push\*.php` –
+> except `config.php`/`config.example.php`/`vapid-keys.php` (and without `vendor\`).
 
-Die Client-Seite (Service Worker + „Benachrichtigungen aktivieren"-Schalter unter **Mehr**)
-ist bereits in der App enthalten.
+The client side (service worker + "Enable notifications" toggle under **More**)
+is already included in the app.
 
-## Zwei Maschinen – wer macht was?
+## Two machines – who does what?
 
-Es sind **zwei** Orte beteiligt. Jeder Schritt unten ist mit dem Ort markiert:
+**Two** places are involved. Every step below is marked with the place:
 
-- 💻 **Lokaler PC** (dein Windows-Rechner mit Node/npm + dem Projekt): App bauen, Keys
-  erzeugen, `config.php` vorbereiten, alles per `deploy-data.bat`/FTP hochladen.
-- 🌐 **Webspace** (World4You): hier laufen die **PHP-Dateien** + **MySQL** + **Cron**.
-  Befehle dort gibst du **per SSH** ein (falls dein Tarif SSH hat) **oder** im
-  **Kundenbereich** (Cron, Datenbank) bzw. gar nicht direkt – dann erledigst du alles am
-  PC und lädst nur Dateien hoch.
+- 💻 **Local PC** (your Windows machine with Node/npm + the project): build the
+  app, generate keys, prepare `config.php`, upload everything via
+  `deploy-data.bat`/FTP.
+- 🌐 **Web space** (e.g. World4You): this is where the **PHP files** + **MySQL**
+  + **cron** run. You enter commands there **via SSH** (if your plan has SSH)
+  **or** in the **customer panel** (cron, database) or not directly at all –
+  then you do everything on the PC and only upload files.
 
-> Faustregel: **Alle `npm …`-Befehle = 💻 PC.** **PHP/Cron/DB = 🌐 Webspace.**
-> Hat dein Webspace **kein SSH**, brauchst du dort **keine Kommandozeile** – du machst alles
-> am PC und lädst per FTP hoch (siehe Hinweise je Schritt).
+> Rule of thumb: **all `npm …` commands = 💻 PC.** **PHP/cron/DB = 🌐 web space.**
+> If your web space has **no SSH**, you need **no command line** there – you do
+> everything on the PC and upload via FTP (see the notes per step).
 
-## Schritt für Schritt
+## Step by step
 
-### 1. 💻 VAPID-Schlüssel erzeugen (am PC, am einfachsten via Node)
-Im Projektordner:
+### 1. 💻 Generate VAPID keys (on the PC, easiest via Node)
+In the project folder:
 ```bash
 npx web-push generate-vapid-keys
 ```
-Gibt **Public Key** und **Private Key** aus.
-- **Public Key** → in `config.php` (die App holt ihn zur Laufzeit von `push/vapid.php`).
-- **Private Key** → nur in `config.php`. **Niemals committen.**
+Outputs **public key** and **private key**.
+- **Public key** → into `config.php` (the app fetches it at runtime from `push/vapid.php`).
+- **Private key** → only into `config.php`. **Never commit.**
 
-*(Alternative ohne Node: `push/vapid-keys.php` – braucht aber PHP am Server/SSH. Falls genutzt,
-die Datei danach vom Server löschen.)*
+*(Alternative without Node: `push/vapid-keys.php` – but needs PHP on the
+server/SSH. If used, delete the file from the server afterwards.)*
 
-### 2. 💻/🌐 Composer-Abhängigkeit (`push/vendor/`)
-Das Versenden nutzt `minishlink/web-push` → der Ordner `push/vendor/` muss auf den Server.
-- **Mit SSH am Webspace:** dort `cd push && composer install`.
-- **Ohne SSH (Normalfall):** am **PC** `composer install` in `push/` ausführen und den Ordner
-  **`push/vendor/` per FTP hochladen**. (Composer am PC nötig: `getcomposer.org`.)
+### 2. 💻/🌐 Composer dependency (`push/vendor/`)
+Sending uses `minishlink/web-push` → the folder `push/vendor/` must get onto the server.
+- **With SSH on the web space:** there `cd push && composer install`.
+- **Without SSH (the normal case):** run `composer install` in `push/` on the
+  **PC** and upload the folder **`push/vendor/` via FTP**. (Composer on the PC
+  required: `getcomposer.org`.)
 
-### 3. 🌐 MySQL-Datenbank anlegen
-Im **World4You-Kundenbereich** eine Datenbank anlegen (Name/User/Passwort notieren). Tabellen
-werden beim ersten Zugriff **automatisch** erstellt (`push_subscriptions`, `push_log`).
+### 3. 🌐 Create the MySQL database
+Create a database in your hosting **customer panel** (note name/user/password).
+Tables are created **automatically** on first access (`push_subscriptions`,
+`push_log`).
 
-### 4. 💻→🌐 `push/config.php` erstellen
-Am **PC** kopieren und ausfüllen, dann **per FTP** als `push/config.php` hochladen:
+### 4. 💻→🌐 Create `push/config.php`
+Copy and fill in on the **PC**, then upload **via FTP** as `push/config.php`:
 ```bash
 copy push\config.example.php push\config.php   :: Windows
 ```
-Eintragen: DB-Zugang (aus Schritt 3), `vapid.publicKey`/`privateKey` (Schritt 1),
-`adminPasswordHash` (am PC erzeugen: `php -r "echo password_hash('DEIN_PASSWORT', PASSWORD_DEFAULT);"`),
-ein `cronSecret` (zufällige Zeichenkette). `config.php` ist gitignored.
+Enter: DB access (from step 3), `vapid.publicKey`/`privateKey` (step 1),
+`adminPasswordHash` (generate on the PC: `php -r "echo password_hash('YOUR_PASSWORD', PASSWORD_DEFAULT);"`),
+a `cronSecret` (random string). `config.php` is gitignored.
 
-### 5. 💻 App deployen
-Der Public-Key muss **nicht** mehr in den Build: Die App holt ihn zur Laufzeit von
-`push/vapid.php` (liest `config.php`) und merkt ihn sich in `localStorage`. Einfach
-**`deploy-data.bat full`** ausführen – der „Benachrichtigungen"-Schalter unter **Mehr**
-erscheint, sobald der Key erreichbar ist.
-*(Optionaler Fallback: `VITE_VAPID_PUBLIC_KEY` in der App-`.env` setzen – dann ist der
-Schalter schon beim allerersten Seitenaufruf ohne Backend-Anfrage da.)*
+### 5. 💻 Deploy the app
+The public key no longer needs to go into the build: the app fetches it at
+runtime from `push/vapid.php` (which reads `config.php`) and remembers it in
+`localStorage`. Just run **`deploy-data.bat full`** – the "Notifications"
+toggle under **More** appears as soon as the key is reachable.
+*(Optional fallback: set `VITE_VAPID_PUBLIC_KEY` in the app `.env` – then the
+toggle is there on the very first page load without a backend request.)*
 
-### 6. 🌐 Cronjob einrichten (nur für den Konzertstart-Digest)
-Im **World4You-Kundenbereich** → Cronjobs, stündlich:
+### 6. 🌐 Set up the cron job (only for the concert-start digest)
+In the hosting **customer panel** → cron jobs, hourly:
 ```
-0 * * * *  php /pfad/zu/push/cron-send.php
+0 * * * *  php /path/to/push/cron-send.php
 ```
-Nur HTTP-Cron möglich? Externen Pinger (z. B. cron-job.org) auf
-`https://app.rockimdorf.at/push/cron-send.php?key=<cronSecret>` zeigen lassen.
-*(Für die Telegram-`#push`-Benachrichtigungen ist KEIN Cron nötig – die gehen sofort raus.)*
+Only HTTP cron possible? Point an external pinger (e.g. cron-job.org) at
+`https://app.rockimdorf.at/push/cron-send.php?key=<cronSecret>`.
+*(NO cron is needed for the Telegram `#push` notifications – they go out immediately.)*
 
-**Cron-Frequenz, News-Latenz & „Gleich live"-Vorlauf:** Automatische News-Pushes gehen
-erst beim nächsten Cron-Lauf raus – das Intervall bestimmt also die **Latenz** (2-Min-Cron
-= News nach spätestens 2 Min). Die **Digest-Vorlaufzeit** (CMS → Einstellungen →
-`upcomingWindowMin`) ist dagegen **kein** Cron-Takt, sondern legt fest, **wie früh vor
-Konzertbeginn** die „Gleich live"-Meldung ankommt: Jeder Act wird genau **einmal** gepusht
-(idempotent über `push_log`) – beim ersten Cron-Lauf, bei dem sein Beginn innerhalb der
-Vorlaufzeit liegt. Daraus folgen zwei Regeln:
+**Cron frequency, news latency & "on soon" lead time:** automatic news pushes
+only go out on the next cron run – the interval therefore determines the
+**latency** (a 2-min cron = news within 2 minutes). The **digest lead time**
+(CMS → Settings → `upcomingWindowMin`) is **not** a cron interval: it defines
+**how early before the concert starts** the "on soon" notification arrives.
+Each act is pushed exactly **once** (idempotent via `push_log`) – on the first
+cron run where its start time falls within the lead time. Two rules follow:
 
-- **Vorlaufzeit ≥ Cron-Intervall.** Ist sie kleiner, können Acts zwischen zwei Läufen
-  „durchrutschen" und werden nie gemeldet (Stunden-Cron ⇒ mindestens 60 Min).
-- Bei **schnellem Cron** (z. B. alle 2 Min) die Vorlaufzeit nach dem **gewünschten
-  Vorlauf** wählen, nicht nach dem Cron-Takt: 15 Min ⇒ Meldung ~15 Min vor Beginn
-  (auf ± Cron-Intervall genau). Beim Stunden-Cron schwankt der Vorlauf zwangsläufig
-  zwischen 0 und 60 Min.
+- **Lead time ≥ cron interval.** If it is smaller, acts can slip through
+  between two runs and are never announced (hourly cron ⇒ at least 60 min).
+- With a **fast cron** (e.g. every 2 min), pick the lead time by the
+  **desired advance notice**, not by the cron interval: 15 min ⇒ notification
+  ~15 min before the start (accurate to ± the cron interval). With an hourly
+  cron the advance notice inevitably varies between 0 and 60 min.
 
-Mehrere Crons **nicht auf dieselbe Minute** legen (sonst theoretisch doppelter Versand,
-bevor `push_log` greift) – ein paar Minuten versetzen.
+Do **not** put several crons on the same minute (otherwise theoretically
+double sending before `push_log` kicks in) – offset by a few minutes.
 
-**Mehrere Cron-Einträge beim selben Hoster:** Erlaubt dein Hoster denselben Dateipfad nicht
-mehrfach als Cron, nutze die mitgelieferten Wrapper `push/cron-send-1.php` … `cron-send-5.php`
-(jeder bindet nur `cron-send.php` ein – der Inhalt bleibt an einer Stelle). So legst du z. B.
-6 Cron-Einträge an, gestaffelt auf `:00, :10, :20, :30, :40, :50` → Push alle ~10 Min.
+**Several cron entries with the same hoster:** if your hoster does not allow
+the same file path multiple times as cron, use the bundled wrappers
+`push/cron-send-1.php` … `cron-send-5.php` (each only includes
+`cron-send.php` – the logic stays in one place). This way you create e.g. 6
+cron entries staggered at `:00, :10, :20, :30, :40, :50` → push every ~10 min.
 
-> **Nicht** per `sleep()` verzögern: lang laufende PHP-Prozesse sind auf Shared Hosting
-> unzuverlässig (HTTP-Cron-Timeouts ~30 s, `max_execution_time`, blockierte Worker). Staffle
-> stattdessen über die **Cron-Zeiten** (Minutenfeld) oder einen externen Pinger (z. B.
-> cron-job.org), der `cron-send.php?key=…` alle N Minuten aufruft – dann genügt **eine** Datei.
+> Do **not** delay via `sleep()`: long-running PHP processes are unreliable on
+> shared hosting (HTTP cron timeouts ~30 s, `max_execution_time`, blocked
+> workers). Stagger via the **cron times** (minute field) instead, or use an
+> external pinger (e.g. cron-job.org) that calls `cron-send.php?key=…` every N
+> minutes – then **one** file is enough.
 
-**Sofortiger Push (ohne Cron-Wartezeit):** Im CMS-Tab „News" gibt es je Eintrag das Häkchen
-**„Sofort pushen"** – beim Speichern geht der (bereits veröffentlichte) Eintrag sofort raus
-(kategoriebewusst, einmalig via `push_log`).
+**Immediate push (without cron delay):** in the CMS "News" tab there is a
+checkbox **"Push immediately"** per entry – on save, the (already published)
+entry goes out immediately (category-aware, once via `push_log`).
 
-## „Mein Plan"-Erinnerungen
+## "My plan" reminders
 
-Gäste können im Benachrichtigungs-Popover (Glocke im Header) **„Mein Plan"** aktivieren und
-bekommen dann **vor Konzertbeginn** eine Erinnerung zu ihren **favorisierten** Acts. Technisch:
-- Die favorisierten Slot-IDs werden (nur IDs, anonym) im Abo gespeichert (`push_subscriptions.plan`)
-  und bei jeder Favoriten-Änderung automatisch ans Backend nachgezogen.
-- Der Cron (`cron-send.php`, Block a2) sendet **eine Push pro favorisiertem Act** innerhalb der
-  Vorlaufzeit (`upcomingWindowMin`), jeden Slot pro Gerät **nur einmal** (Dedup über `push_log`,
-  ref `plan:<hash>:<slotId>`).
-- „Mein Plan"-Abonnenten bekommen den allgemeinen „Gleich live"-Digest (= Line-Up) **weiterhin**,
-  aber **ohne ihre favorisierten Acts** – die kommen als persönliche Einzel-Erinnerung. So
-  erscheint kein Act doppelt. (Block a1 = Digest an Nicht-Plan-Abos mit Line-Up; Block a2 =
-  Plan-Abonnenten: Einzel-Pushes für Favoriten + personalisierter Digest der übrigen Acts,
-  letzteres nur wenn „Line-Up" abonniert. Dedup pro Gerät+Slot via `push_log`.)
+Visitors can enable **"My plan"** in the notification popover (bell in the
+header) and then get a reminder **before the start** of their **favourited**
+acts. Technically:
+- The favourited slot IDs are stored (IDs only, anonymously) in the
+  subscription (`push_subscriptions.plan`) and synced to the backend
+  automatically on every favourites change.
+- The cron (`cron-send.php`, block a2) sends **one push per favourited act**
+  within the lead time (`upcomingWindowMin`), each slot per device **only
+  once** (dedup via `push_log`, ref `plan:<hash>:<slotId>`).
+- "My plan" subscribers **still** get the general "On soon" digest (= line-up),
+  but **without their favourited acts** – those come as a personal individual
+  reminder. So no act appears twice. (Block a1 = digest to non-plan subs with
+  line-up; block a2 = plan subscribers: individual pushes for favourites +
+  personalized digest of the remaining acts, the latter only if "Line-up" is
+  subscribed. Dedup per device+slot via `push_log`.)
 
-Damit „Mein Plan" greift, muss `autoPushUpcoming` aktiv sein und der Cron laufen (s. o.).
+For "My plan" to work, `autoPushUpcoming` must be active and the cron must run
+(see above).
 
-## Abo-Statistik (anonym)
+## Subscription statistics (anonymous)
 
-Der Cron schreibt bei jedem Lauf (höchstens ~stündlich) einen Snapshot der **Abo-Zahlen** in
-die Tabelle `push_stats` – **ausschließlich Zähler**, keine personenbezogenen Daten: Abos
-gesamt sowie je Kategorie (Infos/Line-Up/Allgemein; Sicherheit = alle Abos). Anzeige (aktuell +
-Verlauf) im **CMS-Tab „Push"**. Ohne Cron entsteht kein Verlauf; die aktuellen Zahlen sind
-trotzdem live sichtbar.
+On every run (at most ~hourly) the cron writes a snapshot of the
+**subscription numbers** into the `push_stats` table – **counters only**, no
+personal data: total subscriptions and per category (info/line-up/general;
+safety = all subscriptions). Display (current + history) in the **CMS "Push"
+tab**. Without cron no history accumulates; the current numbers are still
+visible live.
 
-## Testen
+## Testing
 
-1. App über **HTTPS** öffnen (Push braucht HTTPS; iOS nur als installierte PWA, iOS 16.4+).
-2. Unter **Mehr → Benachrichtigungen → Aktivieren** das Abo anlegen (Browser fragt um Erlaubnis).
-3. `push/admin.php` öffnen, anmelden, Testnachricht senden → Notification erscheint.
-4. Cron testen: `php push/cron-send.php` (CLI) bzw. die URL mit `?key=` aufrufen – JSON-Report zeigt `candidates`/`sent`.
+1. Open the app via **HTTPS** (push needs HTTPS; iOS only as an installed PWA, iOS 16.4+).
+2. Under **More → Notifications → Enable** create the subscription (the browser asks for permission).
+3. Open `push/admin.php`, log in, send a test message → notification appears.
+4. Test the cron: `php push/cron-send.php` (CLI) or call the URL with `?key=` – the JSON report shows `candidates`/`sent`.
 
-## Push-Kategorien (wer bekommt was)
+## Push categories (who gets what)
 
-Automatische News-Pushes (Cron) sind **zweifach gefiltert**:
+Automatic news pushes (cron) are filtered **twice**:
 
-1. **Admin** legt fest, welche Kategorien überhaupt automatisch pushen – im CMS unter
-   **Einstellungen → „Auto-Push: Kategorien"** (Infos / Line-Up / Allgemein). Gespeichert in
-   `data/app-config.json` (`pushNewsCategories`), vom Cron live gelesen; Fallback ist
-   `pushNewsCategories` aus `config.php`. **Sicherheit ist immer dabei.**
-2. **Jeder Gast** wählt in der App unter **Benachrichtigungen**, welche dieser Kategorien er
-   erhalten will. Die Auswahl wird im Abo gespeichert (Spalte `categories` in
-   `push_subscriptions`; leer = nur Sicherheit, NULL = alle für Altbestand). **Sicherheit
-   kommt immer an** und ist nicht abwählbar.
+1. The **admin** defines which categories push automatically at all – in the
+   CMS under **Settings → "Auto-push: categories"** (info / line-up / general).
+   Stored in `data/app-config.json` (`pushNewsCategories`), read live by the
+   cron; fallback is `pushNewsCategories` from `config.php`. **Safety is always
+   included.**
+2. **Each visitor** chooses in the app under **Notifications** which of these
+   categories they want to receive. The choice is stored in the subscription
+   (column `categories` in `push_subscriptions`; empty = safety only, NULL =
+   all for legacy rows). **Safety always arrives** and cannot be deselected.
 
-Effektiv gepusht wird ein News-Item also nur, wenn die Kategorie **admin-seitig aktiv** (oder
-das Item `pinned`) ist **und** der Gast diese Kategorie gewählt hat (Sicherheit ausgenommen –
-immer). Manuelle Pushes aus `push/admin.php` gehen weiterhin an **alle** Abos.
+A news item is therefore effectively pushed only if the category is
+**admin-side active** (or the item is `pinned`) **and** the visitor has chosen
+this category (except safety – always). Manual pushes from `push/admin.php`
+still go to **all** subscriptions.
 
-> Quelle der News für den Auto-Push ist `data/admin-news.json` (der „News"-Tab im CMS), sonst
-> der Build-Stand `news.json`.
+> The news source for the auto-push is `data/admin-news.json` (the "News" tab
+> in the CMS), otherwise the build state `news.json`.
 
-## Sicherheit
+## Security
 
-- `push/config.php` und `push/vendor/` sind in `.gitignore` und werden per `.htaccess`
-  zusätzlich vor direktem Zugriff geschützt.
-- Der private VAPID-Key und das Admin-Passwort bleiben ausschließlich auf dem Server.
-- `cron-send.php` ist per `cronSecret` gegen fremde Aufrufe abgesichert.
+- `push/config.php` and `push/vendor/` are in `.gitignore` and additionally
+  protected from direct access via `.htaccess`.
+- The private VAPID key and the admin password stay exclusively on the server.
+- `cron-send.php` is protected against foreign calls via `cronSecret`.
 
-## Erweiterungen (optional)
+## Extensions (optional)
 
-- **Getimte News pushen:** In `cron-send.php` zusätzlich `news.json` lesen und Items mit
-  `category="safety"`/`pinned`, deren `publishAt` seit dem letzten Lauf erreicht wurde,
-  als Push verschicken (Idempotenz wie bei Slots über `push_log`, ref = `news:<id>`).
-- **Punktgenaue Erinnerungen:** externen 1-Minuten-Cron nutzen und das Zeitfenster in
-  `cron-send.php` von 60 min auf z. B. 15 min verengen.
+- **Push scheduled news:** in `cron-send.php` additionally read `news.json` and
+  send items with `category="safety"`/`pinned` whose `publishAt` was reached
+  since the last run as push (idempotency like slots via `push_log`, ref =
+  `news:<id>`).
+- **Minute-precise reminders:** use an external 1-minute cron and narrow the
+  window in `cron-send.php` from 60 min to e.g. 15 min.

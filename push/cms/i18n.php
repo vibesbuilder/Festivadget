@@ -22,8 +22,9 @@ function cms_lang(?string $set = null): string
     }
     if ($lang === null) {
         $data = json_decode((string) @file_get_contents(cms_settings_file()), true);
-        $l    = is_array($data) ? (string) ($data['lang'] ?? 'de') : 'de';
-        $lang = isset(CMS_LANGS[$l]) ? $l : 'de';
+        // Ohne gespeicherte Wahl: Englisch (GitHub-/Release-Standard).
+        $l    = is_array($data) ? (string) ($data['lang'] ?? 'en') : 'en';
+        $lang = isset(CMS_LANGS[$l]) ? $l : 'en';
     }
     return $lang;
 }
@@ -844,6 +845,12 @@ const CMS_I18N = [
         'fr' => "Tous les manuels en fichiers Markdown, chacun en allemand, anglais, français et espagnol. Ils sont livrés avec l'app (dossier /docs).",
         'es' => 'Todos los manuales como archivos Markdown, cada uno en alemán, inglés, francés y español. Se entregan con la app (carpeta /docs).',
     ],
+    'Standard-Sprache der App (solange der Gast nicht selbst wählt)' => [
+        'en' => 'Default app language (until the visitor picks one themselves)',
+        'fr' => "Langue par défaut de l'app (tant que le visiteur n'a pas choisi)",
+        'es' => 'Idioma predeterminado de la app (mientras el visitante no elija)',
+    ],
+    'Build-Standard' => ['en' => 'Build default', 'fr' => 'Standard du build', 'es' => 'Estándar del build'],
     // --- Intro-Video auf Home (Branding-Tab) ---
     'Intro-Video (Home)' => ['en' => 'Intro video (home)', 'fr' => 'Vidéo d’intro (accueil)', 'es' => 'Vídeo de intro (inicio)'],
     'Wird in voller Breite oberhalb des Newsfeeds angezeigt. Quelle „Link/Datei": direkte Videodatei (per FTP hochgeladen oder https-Link; YouTube/Vimeo werden automatisch als Player eingebettet). Quelle „Microsoft-Cloud": in OneDrive/SharePoint „Einbetten" wählen und die iframe-URL eintragen.' => [

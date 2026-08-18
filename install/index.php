@@ -27,8 +27,8 @@ $_SESSION['lang'] = $lang;
 $STRINGS = [
     'title'          => ['de' => 'Festivadget einrichten', 'en' => 'Set up Festivadget'],
     'intro'          => [
-        'de' => 'Dieser Assistent richtet Festivadget auf diesem Webspace ein – ohne Build-Maschine. Die App selbst ist danach sofort nutzbar; Web-Push braucht zusätzlich MySQL und einen Cronjob (siehe docs/PUSH.md).',
-        'en' => 'This wizard sets up Festivadget on this webspace – no build machine required. The app itself is ready right after; web push additionally needs MySQL and a cron job (see docs/PUSH.en.md).',
+        'de' => 'Dieser Assistent richtet Festivadget auf diesem Webspace ein – ohne Build-Maschine. Die App selbst ist danach sofort nutzbar; Web-Push braucht zusätzlich MySQL und einen Cronjob (siehe docs/PUSH.de.md).',
+        'en' => 'This wizard sets up Festivadget on this webspace – no build machine required. The app itself is ready right after; web push additionally needs MySQL and a cron job (see docs/PUSH.md).',
     ],
     'requirements'   => ['de' => 'Voraussetzungen', 'en' => 'Requirements'],
     'required'       => ['de' => 'erforderlich', 'en' => 'required'],
@@ -80,8 +80,8 @@ $STRINGS = [
     'done_app'       => ['de' => 'Zur App', 'en' => 'Open the app'],
     'done_cms'       => ['de' => 'Zum CMS (Admin)', 'en' => 'Open the CMS (admin)'],
     'done_cron'      => [
-        'de' => 'Web-Push ist eingerichtet. Für automatische Pushes noch einen Cronjob anlegen (stündlich oder öfter): push/cron-send.php?key=%s – Details in docs/PUSH.md.',
-        'en' => 'Web push is configured. For automatic pushes add a cron job (hourly or more often): push/cron-send.php?key=%s – details in docs/PUSH.en.md.',
+        'de' => 'Web-Push ist eingerichtet. Für automatische Pushes noch einen Cronjob anlegen (stündlich oder öfter): push/cron-send.php?key=%s – Details in docs/PUSH.de.md.',
+        'en' => 'Web push is configured. For automatic pushes add a cron job (hourly or more often): push/cron-send.php?key=%s – details in docs/PUSH.md.',
     ],
     'done_nopush'    => ['de' => 'Web-Push wurde nicht eingerichtet (kein MySQL angegeben).', 'en' => 'Web push was not configured (no MySQL given).'],
     'delete_now'     => ['de' => 'Installationsordner jetzt löschen', 'en' => 'Delete installer folder now'],
