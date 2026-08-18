@@ -5,6 +5,14 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.0.0/), Versionier
 
 ## [Unreleased]
 
+## [1.4.1] – 2026-08-18
+
+### Changed
+
+- **Fußzeile unter „Mehr":** Standard-Credit lautet jetzt
+  „Festivadget by vibesbuilder" und ist pro Instanz per Build-Variable
+  `VITE_FOOTER_CREDIT` übersteuerbar (leer = Standard).
+
 ## [1.4.0] – 2026-08-18
 
 ### Security / Changed

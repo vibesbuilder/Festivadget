@@ -130,7 +130,10 @@ export default function More() {
       {/* Install-Hinweis nur hier unter „Mehr" (§13). */}
       <InstallHint />
 
-      <p className="pt-4 text-center text-xs text-rid-muted">Festivadget by vibesbuilder</p>
+      {/* Instanz-Override via VITE_FOOTER_CREDIT (RID-.env); Release baut neutral. */}
+      <p className="pt-4 text-center text-xs text-rid-muted">
+        {import.meta.env.VITE_FOOTER_CREDIT || "Festivadget by vibesbuilder"}
+      </p>
     </section>
   );
 }
