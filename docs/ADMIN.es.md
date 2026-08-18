@@ -27,7 +27,7 @@ push/cms/index.php  ──(escribe)──►  data/app-config.json   ──(la a
 
 ## Acceso
 
-`https://app.rockimdorf.at/push/cms/` → iniciar sesión con la contraseña de
+`https://demo.festivadget.com/push/cms/` → iniciar sesión con la contraseña de
 administrador. Tras el login se abre la pestaña **«Ajustes»** (pestaña
 inicial).
 

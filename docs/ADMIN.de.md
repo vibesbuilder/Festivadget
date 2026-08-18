@@ -26,7 +26,7 @@ push/cms/index.php  ──(schreibt)──►  data/app-config.json   ──(App
 
 ## Aufruf
 
-`https://app.rockimdorf.at/push/cms/` → mit dem Admin-Passwort anmelden.
+`https://demo.festivadget.com/push/cms/` → mit dem Admin-Passwort anmelden.
 Nach dem Login öffnet sich der Tab **„Einstellungen"** (Start-Tab).
 
 ## Sprache der Oberfläche

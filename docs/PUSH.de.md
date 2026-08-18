@@ -90,7 +90,7 @@ Im **World4You-Kundenbereich** → Cronjobs, stündlich:
 0 * * * *  php /pfad/zu/push/cron-send.php
 ```
 Nur HTTP-Cron möglich? Externen Pinger (z. B. cron-job.org) auf
-`https://app.rockimdorf.at/push/cron-send.php?key=<cronSecret>` zeigen lassen.
+`https://demo.festivadget.com/push/cron-send.php?key=<cronSecret>` zeigen lassen.
 *(Für die Telegram-`#push`-Benachrichtigungen ist KEIN Cron nötig – die gehen sofort raus.)*
 
 **Cron-Frequenz, News-Latenz & „Gleich live"-Vorlauf:** Automatische News-Pushes gehen

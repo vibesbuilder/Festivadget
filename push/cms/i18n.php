@@ -372,6 +372,21 @@ const CMS_I18N = [
     'Light' => ['en' => 'Light', 'fr' => 'Clair', 'es' => 'Claro'],
     'Hintergrundgrafik anzeigen' => ['en' => 'Show background artwork', 'fr' => 'Afficher le fond graphique', 'es' => 'Mostrar gráfico de fondo'],
     'Hintergrundbild' => ['en' => 'Background image', 'fr' => 'Image de fond', 'es' => 'Imagen de fondo'],
+    'Kontakt-Link (MEHR-Menü)' => [
+        'en' => 'Contact link (MORE menu)',
+        'fr' => 'Lien Contact (menu PLUS)',
+        'es' => 'Enlace de contacto (menú MÁS)',
+    ],
+    'Impressum-Link (MEHR-Menü)' => [
+        'en' => 'Legal notice link (MORE menu)',
+        'fr' => 'Lien Mentions légales (menu PLUS)',
+        'es' => 'Enlace de aviso legal (menú MÁS)',
+    ],
+    'Beide Punkte erscheinen im MEHR-Menü nur, wenn hier eine Adresse steht – jede Instanz verlinkt ihr eigenes Impressum.' => [
+        'en' => 'Both entries only appear in the MORE menu when an address is set here – every instance links its own legal notice.',
+        'fr' => 'Les deux entrées n’apparaissent dans le menu PLUS que si une adresse est indiquée ici – chaque instance renvoie à ses propres mentions légales.',
+        'es' => 'Ambas entradas solo aparecen en el menú MÁS si aquí hay una dirección: cada instancia enlaza su propio aviso legal.',
+    ],
     'Standard (mitgelieferte Grafik)' => [
         'en' => 'Default (bundled artwork)',
         'fr' => 'Standard (visuel fourni)',

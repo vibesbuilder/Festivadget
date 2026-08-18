@@ -36,7 +36,7 @@ export default function More() {
   const toggleTheme = useUi((s) => s.toggleTheme);
 
   // Per Admin (data/app-config.json) ausgeblendete MEHR-Punkte.
-  const { moreHidden } = useAppConfig();
+  const { moreHidden, contactUrl, impressumUrl } = useAppConfig();
   const hidden = (key: string) => moreHidden.includes(key);
 
   const selectLang = (next: AppLanguage) => {
@@ -61,10 +61,10 @@ export default function More() {
               </Link>
             </li>
           ))}
-        {!hidden("contact") && (
+        {!hidden("contact") && contactUrl && (
         <li>
           <a
-            href="https://rockimdorf.at/kontakt"
+            href={contactUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="rid-card flex items-center gap-3 p-4 hover:border-rid-accent"
@@ -75,10 +75,10 @@ export default function More() {
           </a>
         </li>
         )}
-        {!hidden("impressum") && (
+        {!hidden("impressum") && impressumUrl && (
         <li>
           <a
-            href="https://rockimdorf.at/impressum"
+            href={impressumUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="rid-card flex items-center gap-3 p-4 hover:border-rid-accent"

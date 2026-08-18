@@ -5,7 +5,7 @@
 > Arbeitsdokument für die Entwicklung mit Claude Code.
 > Projektname (Vorschlag): `rid-festival-app`
 > Ziel: installierbare, offline-fähige Progressive Web App für Festivalbesucher,
-> gehostet als statische Files auf einer Subdomain (z. B. `app.rockimdorf.at`).
+> gehostet als statische Files auf einer Subdomain (z. B. `demo.festivadget.com`).
 
 **Version dieses Dokuments:** 1.1.0 · **Stand:** 2026-06-23
 
@@ -642,7 +642,7 @@ Inhaltsdaten einsprachig (de); optionale `*_en`-Felder später möglich, nicht i
    aus manual/Joomla/WordPress, lädt Bilder lokal, schreibt `public/data/*`.
 3. `npm run build:data` → validiert Schema, erzeugt `version.json` (Hashes).
 4. `npm run build` → Vite-Build nach `dist/`.
-5. Upload `dist/` per SFTP auf Subdomain-Docroot (`app.rockimdorf.at`). **HTTPS Pflicht.**
+5. Upload `dist/` per SFTP auf Subdomain-Docroot (`demo.festivadget.com`). **HTTPS Pflicht.**
 6. `.htaccess` (Apache): SPA-Fallback + Header.
 
 ```apache

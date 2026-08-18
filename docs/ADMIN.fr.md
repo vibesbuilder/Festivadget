@@ -27,7 +27,7 @@ push/cms/index.php  ──(écrit)──►  data/app-config.json   ──(l'app
 
 ## Accès
 
-`https://app.rockimdorf.at/push/cms/` → se connecter avec le mot de passe admin.
+`https://demo.festivadget.com/push/cms/` → se connecter avec le mot de passe admin.
 Après la connexion, l'onglet **« Réglages »** s'ouvre (onglet de départ).
 
 ## Langue de l'interface

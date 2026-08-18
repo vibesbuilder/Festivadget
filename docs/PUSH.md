@@ -94,7 +94,7 @@ In the hosting **customer panel** → cron jobs, hourly:
 0 * * * *  php /path/to/push/cron-send.php
 ```
 Only HTTP cron possible? Point an external pinger (e.g. cron-job.org) at
-`https://app.rockimdorf.at/push/cron-send.php?key=<cronSecret>`.
+`https://demo.festivadget.com/push/cron-send.php?key=<cronSecret>`.
 *(NO cron is needed for the Telegram `#push` notifications – they go out immediately.)*
 
 **Cron frequency, news latency & "on soon" lead time:** automatic news pushes

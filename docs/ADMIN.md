@@ -26,7 +26,7 @@ push/cms/index.php  ──(writes)──►  data/app-config.json   ──(app r
 
 ## Access
 
-`https://app.rockimdorf.at/push/cms/` → log in with the admin password.
+`https://demo.festivadget.com/push/cms/` → log in with the admin password.
 After logging in, the **"Settings"** tab opens (start tab).
 
 ## Interface language

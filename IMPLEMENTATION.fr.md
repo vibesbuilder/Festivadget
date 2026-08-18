@@ -6,7 +6,7 @@
 > Nom de projet (proposition) : `rid-festival-app`
 > Objectif : progressive web app installable et utilisable hors-ligne pour les
 > visiteurs du festival, hébergée en fichiers statiques sur un sous-domaine
-> (p. ex. `app.rockimdorf.at`).
+> (p. ex. `demo.festivadget.com`).
 
 **Version de ce document :** 1.1.0 · **État :** 2026-06-23
 
@@ -674,7 +674,7 @@ Source configurable individuellement par page (§6.1, `info.overrides`).
 3. `npm run build:data` → valide le schéma, génère `version.json` (hashes).
 4. `npm run build` → build Vite vers `dist/`.
 5. Téléverser `dist/` par SFTP dans le docroot du sous-domaine
-   (`app.rockimdorf.at`). **HTTPS obligatoire.**
+   (`demo.festivadget.com`). **HTTPS obligatoire.**
 6. `.htaccess` (Apache) : repli SPA + en-têtes.
 
 ```apache

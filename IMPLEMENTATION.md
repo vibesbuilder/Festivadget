@@ -5,7 +5,7 @@
 > Working document for development with Claude Code.
 > Project name (proposal): `rid-festival-app`
 > Goal: installable, offline-capable progressive web app for festival visitors,
-> hosted as static files on a subdomain (e.g. `app.rockimdorf.at`).
+> hosted as static files on a subdomain (e.g. `demo.festivadget.com`).
 
 **Version of this document:** 1.1.0 · **As of:** 2026-06-23
 
@@ -660,7 +660,7 @@ fields possible later, not in the MVP.
    manual/Joomla/WordPress, downloads images locally, writes `public/data/*`.
 3. `npm run build:data` → validates the schema, generates `version.json` (hashes).
 4. `npm run build` → Vite build into `dist/`.
-5. Upload `dist/` via SFTP to the subdomain docroot (`app.rockimdorf.at`). **HTTPS mandatory.**
+5. Upload `dist/` via SFTP to the subdomain docroot (`demo.festivadget.com`). **HTTPS mandatory.**
 6. `.htaccess` (Apache): SPA fallback + headers.
 
 ```apache

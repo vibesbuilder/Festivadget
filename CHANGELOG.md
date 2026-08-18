@@ -5,6 +5,16 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.0.0/), Versionier
 
 ## [Unreleased]
 
+### Changed
+
+- **Kontakt- und Impressum-Link im MEHR-Menue sind jetzt Einstellungen**
+  (CMS -> Einstellungen) statt fest verdrahtet. Ohne Adresse bleibt der jeweilige
+  Punkt ausgeblendet - ein fest hinterlegter Link waere in fremden Instanzen
+  schlicht falsch, gerade beim Impressum. Neue Felder `contactUrl` und
+  `impressumUrl` in `data/app-config.json`.
+- Doku verweist auf die neue Demo-Domain (demo.festivadget.com); die
+  Joomla-Beispiele bleiben unveraendert, sie zeigen eine Inhaltsquelle.
+
 ## [1.4.2] - 2026-08-18
 
 ### Added

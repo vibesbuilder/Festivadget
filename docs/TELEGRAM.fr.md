@@ -43,7 +43,7 @@ Déjà dans le dépôt sous `push/`. Par FTP vers le serveur (avec `push/`).
 ### 5. Enregistrer le webhook auprès de Telegram (une fois)
 Ouvrir dans le navigateur (insérer token + secret) :
 ```
-https://api.telegram.org/bot<BOTTOKEN>/setWebhook?url=https://app.rockimdorf.at/push/telegram-hook.php&secret_token=<WEBHOOKSECRET>
+https://api.telegram.org/bot<BOTTOKEN>/setWebhook?url=https://demo.festivadget.com/push/telegram-hook.php&secret_token=<WEBHOOKSECRET>
 ```
 Réponse `{"ok":true,...}` = c'est bon. Telegram transmet désormais chaque message immédiatement au hook.
 

@@ -397,6 +397,15 @@ if (cms_logged_in() && ($_POST['do'] ?? '') !== '' && $_POST['do'] !== 'logout' 
                 }
                 // Home-Kopf (Festivalname + Datum) ein-/ausblenden.
                 $cfg['homeHeader'] = !empty($_POST['homeHeader']);
+                // Ziele der MEHR-Eintraege Kontakt/Impressum (leer = ausgeblendet).
+                foreach (['contactUrl', 'impressumUrl'] as $urlKey) {
+                    $u = trim((string) ($_POST[$urlKey] ?? ''));
+                    if ($u !== '' && preg_match('#^https?://#i', $u)) {
+                        $cfg[$urlKey] = $u;
+                    } else {
+                        unset($cfg[$urlKey]);
+                    }
+                }
                 $td = (string) ($_POST['themeDefault'] ?? '');
                 if (in_array($td, ['dark', 'light'], true)) {
                     $cfg['themeDefault'] = $td;
@@ -1146,6 +1155,8 @@ $cmsTitle = trim((string) ($cmsFest['name'] ?? '')) ?: 'Festivadget';
     $lim = $cfg['lineupImageLimit'] ?? '';
     $bg  = ($cfg['background'] ?? true) !== false;
     $hh  = ($cfg['homeHeader'] ?? true) !== false;
+    $cUrl = (string) ($cfg['contactUrl'] ?? '');
+    $iUrl = (string) ($cfg['impressumUrl'] ?? '');
     $td  = (string) ($cfg['themeDefault'] ?? '');
     $pushCats = (array) ($cfg['pushNewsCategories'] ?? []);
     $auUpcoming = ($cfg['autoPushUpcoming'] ?? true) !== false;
@@ -1210,6 +1221,14 @@ $cmsTitle = trim((string) ($cmsFest['name'] ?? '')) ?: 'Festivadget';
         <input type="checkbox" name="homeHeader" value="1" <?= $hh ? 'checked' : '' ?>>
         <span><?= cms_h(cms_t('Home: Festivalname und Datum anzeigen')) ?></span>
       </label>
+
+      <label class="fld"><span><?= cms_h(cms_t('Kontakt-Link (MEHR-Menü)')) ?></span>
+        <input type="url" name="contactUrl" value="<?= cms_h($cUrl) ?>" placeholder="https://example.com/kontakt">
+      </label>
+      <label class="fld"><span><?= cms_h(cms_t('Impressum-Link (MEHR-Menü)')) ?></span>
+        <input type="url" name="impressumUrl" value="<?= cms_h($iUrl) ?>" placeholder="https://example.com/impressum">
+      </label>
+      <p class="muted" style="margin-top:0"><?= cms_h(cms_t('Beide Punkte erscheinen im MEHR-Menü nur, wenn hier eine Adresse steht – jede Instanz verlinkt ihr eigenes Impressum.')) ?></p>
 
       <h2><?= cms_h(cms_t('Push-Automatik')) ?></h2>
       <p class="muted" style="margin-top:0"><?= cms_t('Steuert die automatischen Pushes des Cron-Jobs (läuft je nach Server z. B. stündlich). Greift nur, wenn der Cron eingerichtet ist (siehe <code>docs/PUSH.md</code>).') ?></p>

@@ -101,7 +101,7 @@ Dans l'**espace client** de l'hébergeur → tâches cron, toutes les heures :
 ```
 Seul un cron HTTP est possible ? Pointer un pinger externe (p. ex.
 cron-job.org) sur
-`https://app.rockimdorf.at/push/cron-send.php?key=<cronSecret>`.
+`https://demo.festivadget.com/push/cron-send.php?key=<cronSecret>`.
 *(AUCUN cron n'est nécessaire pour les notifications Telegram `#push` – elles
 partent immédiatement.)*
 

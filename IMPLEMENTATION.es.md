@@ -6,7 +6,7 @@
 > Nombre del proyecto (propuesta): `rid-festival-app`
 > Objetivo: progressive web app instalable y utilizable sin conexión para los
 > visitantes del festival, alojada como archivos estáticos en un subdominio
-> (p. ej. `app.rockimdorf.at`).
+> (p. ej. `demo.festivadget.com`).
 
 **Versión de este documento:** 1.1.0 · **Fecha:** 2026-06-23
 
@@ -675,7 +675,7 @@ en `src/i18n/{de,en,fr,es}.json`. Datos de contenido monolingües (de); campos
    `public/data/*`.
 3. `npm run build:data` → valida el esquema, genera `version.json` (hashes).
 4. `npm run build` → build de Vite hacia `dist/`.
-5. Subir `dist/` por SFTP al docroot del subdominio (`app.rockimdorf.at`).
+5. Subir `dist/` por SFTP al docroot del subdominio (`demo.festivadget.com`).
    **HTTPS obligatorio.**
 6. `.htaccess` (Apache): respaldo SPA + encabezados.
 

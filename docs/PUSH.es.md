@@ -97,7 +97,7 @@ En el **panel del cliente** del hosting → tareas cron, cada hora:
 0 * * * *  php /ruta/a/push/cron-send.php
 ```
 ¿Solo es posible cron por HTTP? Apuntar un pinger externo (p. ej. cron-job.org)
-a `https://app.rockimdorf.at/push/cron-send.php?key=<cronSecret>`.
+a `https://demo.festivadget.com/push/cron-send.php?key=<cronSecret>`.
 *(Para las notificaciones `#push` de Telegram NO hace falta cron: salen al
 instante.)*
 

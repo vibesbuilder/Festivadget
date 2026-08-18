@@ -18,6 +18,11 @@ export interface AppConfig {
   branding?: Branding; // Kunden-Branding (CMS-Tab „Branding", Paket Y)
   // Intro-Video auf Home (CMS-Tab „Branding"): Link/FTP oder Microsoft-Cloud.
   homeVideo?: { url: string; source?: "link" | "mscloud"; enabled?: boolean };
+  // Ziel der MEHR-Eintraege Kontakt und Impressum (CMS -> Einstellungen).
+  // Ohne Wert bleibt der Eintrag ausgeblendet: Jede Instanz hat ein eigenes
+  // Impressum, ein fest verdrahteter Link waere dort schlicht falsch.
+  contactUrl?: string;
+  impressumUrl?: string;
 }
 
 const DEFAULT_CONFIG: AppConfig = { moreHidden: [] };
