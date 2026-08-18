@@ -90,5 +90,12 @@
       "evening": "Soir",
       "night": "Nuit"
     }
+  },
+  "map": {
+    "title": "Carte",
+    "all": "Tous"
+  },
+  "search": {
+    "title": "Recherche"
   }
 }

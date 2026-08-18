@@ -90,5 +90,12 @@
       "evening": "Evening",
       "night": "Night"
     }
+  },
+  "map": {
+    "title": "Map",
+    "all": "All"
+  },
+  "search": {
+    "title": "Search"
   }
 }

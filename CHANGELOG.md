@@ -5,6 +5,15 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.0.0/), Versionier
 
 ## [Unreleased]
 
+## [1.3.1] – 2026-08-18
+
+### Fixed
+
+- **Letzte hart kodierte deutsche UI-Texte übersetzt:** Karten-Titel,
+  „Alle"-Filter-Chip auf der Karte, Suche-Titel und das Such-aria-Label
+  laufen jetzt über i18n (de/en/fr/es) – aufgefallen beim Erstellen der
+  englischen Screenshots.
+
 ## [1.3.0] – 2026-08-18
 
 ### Fixed
