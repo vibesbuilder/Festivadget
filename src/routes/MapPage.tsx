@@ -78,8 +78,10 @@ export default function MapPage() {
         onReset={() => setActive(new Set())}
       />
       {/* Flexible Höhe: dynamischer Viewport (dvh) minus Kopf/Filter/Bottom-Nav –
-          70vh überlappte auf Smartphones mit dem unteren Menü. min-h als Netz. */}
-      <div className="relative h-[calc(100dvh_-_248px)] min-h-[320px] overflow-hidden rounded-xl border border-rid-border bg-rid-surface">
+          70vh überlappte auf Smartphones mit dem unteren Menü. min-h als Netz.
+          isolate: Leaflet nutzt intern z-Index bis 1000 und würde sonst über
+          Sticky-Header/Bottom-Nav (z-30) malen. */}
+      <div className="relative isolate z-0 h-[calc(100dvh_-_248px)] min-h-[320px] overflow-hidden rounded-xl border border-rid-border bg-rid-surface">
         <FestivalMap config={config} pois={filtered} categories={catMap} onSelect={setSelected} />
         {selected && (
           <PoiSheet

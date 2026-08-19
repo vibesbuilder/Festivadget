@@ -97,7 +97,10 @@
   }
 
   .rid-chip {
-    @apply inline-flex items-center rounded-full px-[0.65rem] py-1 text-sm bg-rid-surface-2 text-rid-muted border border-rid-border;
+    /* shrink-0 + nowrap: Chips stehen in Flex-Zeilen (Scroll-Leisten). Ein
+       umbrechendes Label ("Food & drinks") machte sonst ALLE Chips der Zeile
+       hoch (align-items: stretch) - sichtbar auf der Karte vs. Timetable. */
+    @apply inline-flex shrink-0 items-center whitespace-nowrap rounded-full px-[0.65rem] py-1 text-sm bg-rid-surface-2 text-rid-muted border border-rid-border;
   }
 
   .rid-chip-active {
