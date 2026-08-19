@@ -5,6 +5,20 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.0.0/), Versionier
 
 ## [Unreleased]
 
+## [1.4.3] - 2026-08-19
+
+### Fixed
+
+- **Fest verdrahtete deutsche UI-Texte uebersetzt:** das Abzeichen "Angepinnt"
+  im Newsfeed, der Zurueck-Link "Mehr" auf sechs Unterseiten, die Ueberschriften
+  von Newsfeed/Infos/Sponsoren/Tickets, die Sponsor-Tier-Beschriftungen sowie
+  "Oeffnen"/"Zum Ticketshop" laufen jetzt ueber react-i18next (neue Schluessel
+  in allen vier Sprachdateien) - sie erschienen bisher auch in der englischen,
+  franzoesischen und spanischen Ansicht auf Deutsch.
+- Datumszeilen (Newsfeed, Suche, Artist-Seite) verwenden die App-Sprache statt
+  fest deutscher Wochentagskuerzel: `formatDateTime` in `@rid/core` nimmt jetzt
+  eine Locale entgegen (Standard weiterhin "de", CrewCare unveraendert).
+
 ### Changed
 
 - **Kontakt- und Impressum-Link im MEHR-Menue sind jetzt Einstellungen**

@@ -61,6 +61,27 @@
     "reminder": "Reminder (.ics)",
     "clashWarning": "At least one item overlaps with another favorite."
   },
+  "news": {
+    "title": "Newsfeed",
+    "pinned": "Pinned"
+  },
+  "info": {
+    "title": "Info"
+  },
+  "sponsors": {
+    "title": "Sponsors",
+    "tier": {
+      "main": "Presented by",
+      "premium": "Premium partner",
+      "partner": "Partner",
+      "supporter": "Supporter"
+    }
+  },
+  "tickets": {
+    "title": "Tickets",
+    "open": "Open",
+    "shop": "To the ticket shop"
+  },
   "artist": {
     "playtimes": "Stage Time",
     "favorite": "Add to favorites",

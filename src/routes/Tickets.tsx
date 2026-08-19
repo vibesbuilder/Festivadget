@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { ExternalLink } from "lucide-react";
 import { useTickets } from "@/data/queries";
 import { BackLink } from "@/components/BackLink";
@@ -5,6 +6,8 @@ import { LoadingState, ErrorState, EmptyState } from "@/components/states";
 import type { TicketProvider } from "@/types";
 
 function TicketEmbed({ provider }: { provider: TicketProvider }) {
+  const { t } = useTranslation();
+
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
@@ -15,7 +18,7 @@ function TicketEmbed({ provider }: { provider: TicketProvider }) {
           rel="noopener noreferrer"
           className="inline-flex items-center gap-1 text-sm text-rid-accent hover:underline"
         >
-          Öffnen <ExternalLink size={14} />
+          {t("tickets.open")} <ExternalLink size={14} />
         </a>
       </div>
       {provider.note && <p className="text-sm text-rid-muted">{provider.note}</p>}
@@ -37,7 +40,7 @@ function TicketEmbed({ provider }: { provider: TicketProvider }) {
           rel="noopener noreferrer"
           className="rid-card flex items-center justify-between p-4 hover:border-rid-accent"
         >
-          <span className="font-medium">Zum Ticketshop</span>
+          <span className="font-medium">{t("tickets.shop")}</span>
           <ExternalLink size={18} className="text-rid-accent" />
         </a>
       )}
@@ -46,6 +49,7 @@ function TicketEmbed({ provider }: { provider: TicketProvider }) {
 }
 
 export default function Tickets() {
+  const { t } = useTranslation();
   const { data, isLoading, isError, refetch } = useTickets();
 
   if (isLoading) return <LoadingState />;
@@ -54,8 +58,8 @@ export default function Tickets() {
 
   return (
     <section className="space-y-6">
-      <BackLink to="/more" label="Mehr" />
-      <h1 className="text-2xl font-bold">Tickets</h1>
+      <BackLink to="/more" label={t("nav.more")} />
+      <h1 className="text-2xl font-bold">{t("tickets.title")}</h1>
       {data.providers.map((provider) => (
         <TicketEmbed key={provider.id} provider={provider} />
       ))}

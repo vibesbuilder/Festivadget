@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { useArtists, usePois, usePoiCategories, useSlots, useStages } from "@/data/queries";
 import { useInfo } from "@/data/useInfo";
 import { formatDateTime } from "@/lib/time";
@@ -20,6 +21,7 @@ export interface SearchResult extends SearchEntry {
 
 // Baut einen clientseitigen Suchindex über Artists/Slots/Info/POIs (§12.7).
 export function useSearchIndex(): SearchEntry[] {
+  const { i18n } = useTranslation();
   const { data: artists } = useArtists();
   const { data: slots } = useSlots();
   const { data: stages } = useStages();
@@ -50,7 +52,7 @@ export function useSearchIndex(): SearchEntry[] {
       entries.push({
         kind: "slot",
         label: `${artist.name} – ${stage?.name ?? s.stageId}`,
-        sublabel: formatDateTime(s.start),
+        sublabel: formatDateTime(s.start, undefined, i18n.language),
         to: `/artist/${artist.slug}`,
         haystack: `${artist.name} ${stage?.name ?? ""}`.toLowerCase(),
       });
@@ -78,7 +80,7 @@ export function useSearchIndex(): SearchEntry[] {
     }
 
     return entries;
-  }, [artists, slots, stages, info, pois, categories]);
+  }, [artists, slots, stages, info, pois, categories, i18n.language]);
 }
 
 // Token-/Substring-Match mit einfachem Scoring.

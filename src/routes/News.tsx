@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useNewsFeed } from "@/features/news/useNewsFeed";
 import { SafetyBanner } from "@/features/news/SafetyBanner";
 import { NewsItemCard } from "@/features/news/NewsItemCard";
@@ -5,6 +6,7 @@ import { BackLink } from "@/components/BackLink";
 import { LoadingState, EmptyState } from "@/components/states";
 
 export default function News() {
+  const { t } = useTranslation();
   const { items, safety, isLoading } = useNewsFeed();
 
   if (isLoading) return <LoadingState />;
@@ -15,8 +17,8 @@ export default function News() {
 
   return (
     <section className="space-y-4">
-      <BackLink to="/more" label="Mehr" />
-      <h1 className="text-2xl font-bold">Newsfeed</h1>
+      <BackLink to="/more" label={t("nav.more")} />
+      <h1 className="text-2xl font-bold">{t("news.title")}</h1>
 
       <SafetyBanner items={safety} />
 

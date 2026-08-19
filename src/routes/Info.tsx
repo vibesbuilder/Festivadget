@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 import { useInfo } from "@/data/useInfo";
@@ -7,6 +8,7 @@ import { BackLink } from "@/components/BackLink";
 import { LoadingState, ErrorState, EmptyState } from "@/components/states";
 
 export default function Info() {
+  const { t } = useTranslation();
   const { data, isLoading, isError, refetch } = useInfo();
 
   const pages = useMemo(
@@ -25,8 +27,8 @@ export default function Info() {
 
   return (
     <section className="space-y-2">
-      <BackLink to="/more" label="Mehr" />
-      <h1 className="mb-4 text-2xl font-bold">Infos</h1>
+      <BackLink to="/more" label={t("nav.more")} />
+      <h1 className="mb-4 text-2xl font-bold">{t("info.title")}</h1>
       <ul className="space-y-2">
         {pages.map((page) => (
           <li key={page.id}>

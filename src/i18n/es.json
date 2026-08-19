@@ -61,6 +61,27 @@
     "reminder": "Recordatorio (.ics)",
     "clashWarning": "Al menos una actuación se solapa con otro favorito."
   },
+  "news": {
+    "title": "Noticias",
+    "pinned": "Fijado"
+  },
+  "info": {
+    "title": "Información"
+  },
+  "sponsors": {
+    "title": "Patrocinadores",
+    "tier": {
+      "main": "Presentado por",
+      "premium": "Socio premium",
+      "partner": "Socio",
+      "supporter": "Colaborador"
+    }
+  },
+  "tickets": {
+    "title": "Entradas",
+    "open": "Abrir",
+    "shop": "A la tienda de entradas"
+  },
   "artist": {
     "playtimes": "Stage Time",
     "favorite": "Añadir a favoritos",

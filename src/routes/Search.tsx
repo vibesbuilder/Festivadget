@@ -20,7 +20,7 @@ export default function Search() {
 
   return (
     <section className="space-y-4">
-      <BackLink to="/more" label="Mehr" />
+      <BackLink to="/more" label={t("nav.more")} />
       <h1 className="text-2xl font-bold">{t("search.title")}</h1>
 
       <div className="flex items-center gap-2 rounded-xl border border-rid-border bg-rid-surface px-3 py-2">

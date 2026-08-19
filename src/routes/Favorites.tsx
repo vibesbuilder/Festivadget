@@ -59,7 +59,7 @@ export default function Favorites() {
   if (favorites.size === 0 || allEntries.length === 0) {
     return (
       <section className="space-y-3">
-        <BackLink to="/more" label="Mehr" />
+        <BackLink to="/more" label={t("nav.more")} />
         <h1 className="text-2xl font-bold">{t("favorites.title")}</h1>
         <NotificationsToggle />
         {/* Erklärung der Funktion an der Stelle, wo sonst die Favoriten stehen. */}
@@ -75,7 +75,7 @@ export default function Favorites() {
   return (
     <section className="space-y-5">
       <div className="flex items-center justify-between gap-3">
-        <BackLink to="/more" label="Mehr" />
+        <BackLink to="/more" label={t("nav.more")} />
         <IcsButton
           entries={allEntries}
           label={t("favorites.exportAll")}

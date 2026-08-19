@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Megaphone, Info, Music2, ShieldAlert } from "lucide-react";
 import type { NewsCategory } from "@/types";
 import { Markdown } from "@/components/Markdown";
@@ -12,6 +13,7 @@ const CATEGORY_ICON: Record<NewsCategory, typeof Info> = {
 };
 
 export function NewsItemCard({ item }: { item: FeedItem }) {
+  const { t, i18n } = useTranslation();
   // Fallback, falls eine unbekannte Kategorie in den Daten steht (kein Crash).
   const Icon = CATEGORY_ICON[item.category] ?? Megaphone;
 
@@ -19,10 +21,10 @@ export function NewsItemCard({ item }: { item: FeedItem }) {
     <article className="rid-card p-4">
       <div className="mb-1 flex items-center gap-2 text-xs text-rid-muted">
         <Icon size={14} className="text-rid-accent" />
-        <span>{formatDateTime(item.publishAt)}</span>
+        <span>{formatDateTime(item.publishAt, undefined, i18n.language)}</span>
         {item.pinned && (
           <span className="rounded bg-rid-accent px-1.5 text-[10px] font-bold text-black">
-            Angepinnt
+            {t("news.pinned")}
           </span>
         )}
       </div>

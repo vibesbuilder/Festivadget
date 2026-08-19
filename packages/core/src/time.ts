@@ -18,9 +18,13 @@ export function formatTime(iso: string, tz: string = DEFAULT_TZ): string {
   return parse(iso, tz).toFormat("HH:mm");
 }
 
-/** "Fr 31.07. · 22:00" o. ä. */
-export function formatDateTime(iso: string, tz: string = DEFAULT_TZ): string {
-  return parse(iso, tz).setLocale("de").toFormat("ccc dd.LL. · HH:mm");
+/** "Fr 31.07. · 22:00" o. ä. – Wochentagskürzel in der übergebenen Sprache. */
+export function formatDateTime(
+  iso: string,
+  tz: string = DEFAULT_TZ,
+  locale: string = "de",
+): string {
+  return parse(iso, tz).setLocale(locale).toFormat("ccc dd.LL. · HH:mm");
 }
 
 /** Datums-Bereich für den Home-Kopf, z. B. "29. Juni – 1. Juli 2026" (de). */

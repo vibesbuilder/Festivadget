@@ -61,6 +61,27 @@
     "reminder": "Rappel (.ics)",
     "clashWarning": "Au moins un créneau chevauche un autre favori."
   },
+  "news": {
+    "title": "Actualités",
+    "pinned": "Épinglé"
+  },
+  "info": {
+    "title": "Infos"
+  },
+  "sponsors": {
+    "title": "Sponsors",
+    "tier": {
+      "main": "Présenté par",
+      "premium": "Partenaire premium",
+      "partner": "Partenaire",
+      "supporter": "Soutien"
+    }
+  },
+  "tickets": {
+    "title": "Billets",
+    "open": "Ouvrir",
+    "shop": "Vers la billetterie"
+  },
   "artist": {
     "playtimes": "Stage Time",
     "favorite": "Ajouter aux favoris",

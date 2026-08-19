@@ -1,10 +1,12 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { ChevronRight, ShieldAlert } from "lucide-react";
 import { useNewsFeed } from "./useNewsFeed";
 import { formatDateTime } from "@/lib/time";
 
 // Kompakte Newsfeed-Vorschau für die Home-Seite: nur die letzten 2 Einträge.
 export function NewsfeedPreview() {
+  const { i18n } = useTranslation();
   const { items, isLoading } = useNewsFeed();
   if (isLoading || items.length === 0) return null;
 
@@ -20,7 +22,7 @@ export function NewsfeedPreview() {
             )}
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-medium">{item.title}</p>
-              <p className="truncate text-xs text-rid-muted">{formatDateTime(item.publishAt)}</p>
+              <p className="truncate text-xs text-rid-muted">{formatDateTime(item.publishAt, undefined, i18n.language)}</p>
             </div>
             <ChevronRight size={16} className="shrink-0 text-rid-muted" />
           </Link>

@@ -61,6 +61,27 @@
     "reminder": "Erinnerung (.ics)",
     "clashWarning": "Mindestens ein Programmpunkt überschneidet sich mit einem anderen Favoriten."
   },
+  "news": {
+    "title": "Newsfeed",
+    "pinned": "Angepinnt"
+  },
+  "info": {
+    "title": "Infos"
+  },
+  "sponsors": {
+    "title": "Sponsoren",
+    "tier": {
+      "main": "Presented by",
+      "premium": "Premium-Partner",
+      "partner": "Partner",
+      "supporter": "Supporter"
+    }
+  },
+  "tickets": {
+    "title": "Tickets",
+    "open": "Öffnen",
+    "shop": "Zum Ticketshop"
+  },
   "artist": {
     "playtimes": "Stage Time",
     "favorite": "Favorisieren",

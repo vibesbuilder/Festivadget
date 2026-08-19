@@ -11,7 +11,7 @@ import { formatDateTime, formatTime, parse } from "@/lib/time";
 
 export default function Artist() {
   const { slug } = useParams<{ slug: string }>();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { data: artists, isLoading } = useArtists();
   const { data: slots } = useSlots();
   const { data: stages } = useStages();
@@ -65,7 +65,7 @@ export default function Artist() {
                     <div className="min-w-0">
                       <p className="truncate font-medium">{stage?.name ?? slot.stageId}</p>
                       <p className="text-sm text-rid-muted">
-                        {formatDateTime(slot.start)} – {formatTime(slot.end)}
+                        {formatDateTime(slot.start, undefined, i18n.language)} – {formatTime(slot.end)}
                       </p>
                     </div>
                     <FavoriteButton slotId={slot.id} />

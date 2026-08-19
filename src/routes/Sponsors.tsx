@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { useSponsors } from "@/data/queries";
 import { BackLink } from "@/components/BackLink";
 import { LoadingState, ErrorState, EmptyState } from "@/components/states";
@@ -6,11 +7,11 @@ import type { Sponsor, SponsorTier } from "@/types";
 
 // Reihenfolge + Beschriftung der Tiers (§7.8, §12.8).
 const TIER_ORDER: SponsorTier[] = ["main", "premium", "partner", "supporter"];
-const TIER_LABEL: Record<SponsorTier, string> = {
-  main: "Presented by",
-  premium: "Premium-Partner",
-  partner: "Partner",
-  supporter: "Supporter",
+const TIER_LABEL_KEY: Record<SponsorTier, string> = {
+  main: "sponsors.tier.main",
+  premium: "sponsors.tier.premium",
+  partner: "sponsors.tier.partner",
+  supporter: "sponsors.tier.supporter",
 };
 
 function SponsorLogo({ sponsor }: { sponsor: Sponsor }) {
@@ -40,6 +41,7 @@ function SponsorLogo({ sponsor }: { sponsor: Sponsor }) {
 }
 
 export default function Sponsors() {
+  const { t } = useTranslation();
   const { data, isLoading, isError, refetch } = useSponsors();
 
   const grouped = useMemo(() => {
@@ -59,15 +61,15 @@ export default function Sponsors() {
 
   return (
     <section className="space-y-6">
-      <BackLink to="/more" label="Mehr" />
-      <h1 className="text-2xl font-bold">Sponsoren</h1>
+      <BackLink to="/more" label={t("nav.more")} />
+      <h1 className="text-2xl font-bold">{t("sponsors.title")}</h1>
       {TIER_ORDER.map((tier) => {
         const list = grouped.get(tier);
         if (!list || list.length === 0) return null;
         return (
           <div key={tier}>
             <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-rid-muted">
-              {TIER_LABEL[tier]}
+              {t(TIER_LABEL_KEY[tier])}
             </h2>
             <div className={tier === "main" ? "grid grid-cols-1 gap-3" : "grid grid-cols-2 gap-3"}>
               {list.map((s) => (
