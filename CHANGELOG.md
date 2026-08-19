@@ -5,6 +5,23 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.0.0/), Versionier
 
 ## [Unreleased]
 
+## [1.4.4] - 2026-08-19
+
+### Fixed
+
+- **Karte lag ueber Sticky-Header und Bottom-Navigation:** Leaflet nutzt intern
+  z-Indizes bis 1000 und malte beim Scrollen ueber beide Leisten (z-30). Der
+  Karten-Container bildet jetzt einen eigenen Stacking-Context (isolate).
+- **POI-Kategorie-Chips wurden zu grossen Ovalen,** sobald ein Label umbrach
+  ("Food & drinks"): die Flex-Zeile streckte dann alle Chips der Reihe. Chips
+  brechen nicht mehr um und haben damit ueberall dieselbe Hoehe wie im
+  Timetable.
+
+### Changed
+
+- Karten-Screenshot in Doku und auf der Website neu erzeugt (zeigte den alten,
+  fehlerhaften Zustand).
+
 ## [1.4.3] - 2026-08-19
 
 ### Fixed
