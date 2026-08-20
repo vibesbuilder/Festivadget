@@ -8,7 +8,10 @@
     ],
     "country": "AT",
     "order": 1,
-    "bio": "Four friends from the foothills of the Alps playing airy indie pop. Their second album was recorded in an old barn - and that is exactly how it sounds: warm, honest and a little dusty.",
+    "bio": {
+      "en": "Four friends from the foothills of the Alps playing airy indie pop. Their second album was recorded in an old barn - and that is exactly how it sounds: warm, honest and a little dusty.",
+      "de": "Vier Freunde aus dem Alpenvorland mit luftigem Indie-Pop. Ihr zweites Album entstand in einer umgebauten Scheune – man hört es."
+    },
     "image": "/img/artists/nordlicht.webp",
     "spotify": "https://open.spotify.com/intl-de/artist/4ru3sGd6GmiEs2m8ohA7XM?si=0_Wj00gJS5e_kkjbmL7ZCw",
     "youtube": "https://www.youtube.com/embed/HsxupKH9JCw?si=XOEwvQY2OCT9NRBw"
@@ -22,7 +25,10 @@
     ],
     "country": "DE",
     "order": 2,
-    "bio": "A duo with guitar, fiddle and two-part harmonies. Between quiet ballads and danceable sets, the two tell stories about life on the road.",
+    "bio": {
+      "en": "A duo with guitar, fiddle and two-part harmonies. Between quiet ballads and danceable sets, the two tell stories about life on the road.",
+      "de": "Ein Duo mit Gitarre, Geige und zweistimmigem Gesang. Zwischen leisen Balladen und tanzbaren Momenten liegt oft nur ein Taktwechsel."
+    },
     "image": "/img/artists/fluss.webp",
     "spotify": "https://open.spotify.com/intl-de/artist/6C76VZM8D2g2kyxCOB3vxq?si=UzzvqS-FR4CBnFglGJXMDQ",
     "youtube": "https://www.youtube.com/embed/06MqtQCpmNw?si=TdKGekF31qkf-RcS"

@@ -598,8 +598,9 @@ if (cms_logged_in() && ($_POST['do'] ?? '') !== '' && $_POST['do'] !== 'logout' 
                     if (!empty($row['__delete'])) {
                         continue;
                     }
-                    // Identity field: usually "name", for categories "label" or the typed ID.
-                    $primary = trim((string) ($row['name'] ?? $row['label'] ?? $row['id'] ?? ''));
+                    // Identity field: usually "name", for categories "label" or the typed
+                    // ID. Localized fields arrive as arrays -> resolve their label.
+                    $primary = cms_loc_label($row['name'] ?? $row['label'] ?? $row['id'] ?? '');
                     if ($primary === '') {
                         continue; // empty/unused row
                     }
@@ -611,6 +612,13 @@ if (cms_logged_in() && ($_POST['do'] ?? '') !== '' && $_POST['do'] !== 'logout' 
                         $key = $f['key'];
                         $val = $row[$key] ?? null;
                         switch ($f['type']) {
+                            case 'loctext':
+                            case 'loctextarea':
+                                $loc = cms_loc_from_post($val ?? '');
+                                if (cms_loc_label($loc) !== '') {
+                                    $rec[$key] = $loc;
+                                }
+                                break;
                             case 'number':
                                 if (trim((string) $val) !== '') {
                                     $rec[$key] = cms_to_number((string) $val);

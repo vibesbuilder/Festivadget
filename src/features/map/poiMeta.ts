@@ -1,4 +1,5 @@
 import i18n from "@/i18n/config";
+import { lt } from "@/lib/localized";
 import type { PoiCategory, PoiType } from "@/types";
 
 export interface PoiMeta {
@@ -35,7 +36,7 @@ const GENERIC: PoiMeta = { label: "poi.generic", color: "#9aa0a6", icon: "📍" 
 // Resolve a category's presentation: category data > built-in fallback > generic.
 export function resolvePoiMeta(type: PoiType, categories?: Map<string, PoiCategory>): PoiMeta {
   const c = categories?.get(type);
-  if (c) return { label: c.label, color: c.color, icon: c.icon };
+  if (c) return { label: lt(c.label, i18n.language), color: c.color, icon: c.icon };
   const builtin = POI_META[type];
   if (builtin) return { ...builtin, label: i18n.t(builtin.label) };
   return { ...GENERIC, label: type || i18n.t(GENERIC.label) };

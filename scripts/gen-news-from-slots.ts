@@ -77,11 +77,11 @@ async function main(): Promise<void> {
 
   await writeFile(resolve(CONTENT, "news.json"), JSON.stringify(merged, null, 2) + "\n", "utf-8");
   console.log(
-    `✓ news.json: ${editorial.length} redaktionelle + ${generated.size} Slot-News = ${merged.length} (chronologisch sortiert).`,
+    `✓ news.json: ${editorial.length} editorial + ${generated.size} slot news = ${merged.length} (sorted chronologically).`,
   );
 }
 
 main().catch((err) => {
-  console.error("✗ gen-news fehlgeschlagen:", err instanceof Error ? err.message : err);
+  console.error("✗ gen-news failed:", err instanceof Error ? err.message : err);
   process.exit(1);
 });

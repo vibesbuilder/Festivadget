@@ -5,7 +5,12 @@
       "name": "Sample ticket shop",
       "embedType": "link",
       "url": "https://example.org/tickets",
-      "note": "Get your tickets in the online shop - or at the box office."
+      "note": {
+        "en": "Get your tickets in the online shop - or at the box office.",
+        "de": "Tickets gibt es im Online-Shop – oder an der Abendkassa.",
+        "fr": "Les billets sont disponibles dans la boutique en ligne – ou à la caisse du soir.",
+        "es": "Consigue tus entradas en la tienda online, o en la taquilla."
+      }
     }
   ]
 }

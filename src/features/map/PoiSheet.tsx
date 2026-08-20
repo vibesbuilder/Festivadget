@@ -1,5 +1,6 @@
 import { X } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { lt } from "@/lib/localized";
 import { Link } from "react-router-dom";
 import type { Poi, Stage } from "@/types";
 import { contrastColor, poiIcon, type PoiMeta } from "./poiMeta";
@@ -14,7 +15,7 @@ interface Props {
 
 // Detail sheet for a POI (§12.4), as a bottom sheet above the map.
 export function PoiSheet({ poi, meta, stage, onClose }: Props) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   return (
     <div className="absolute inset-x-0 bottom-0 z-[1000] p-3">
       <div className="mx-auto max-w-app rounded-2xl border border-rid-border bg-rid-surface p-4 shadow-2xl">
@@ -32,7 +33,7 @@ export function PoiSheet({ poi, meta, stage, onClose }: Props) {
               />
             </span>
             <div>
-              <h2 className="font-semibold leading-tight">{poi.name}</h2>
+              <h2 className="font-semibold leading-tight">{lt(poi.name, i18n.language)}</h2>
               <p className="text-xs text-rid-muted">{meta.label}</p>
             </div>
           </div>
@@ -41,7 +42,7 @@ export function PoiSheet({ poi, meta, stage, onClose }: Props) {
           </button>
         </div>
 
-        {poi.description && <p className="mt-3 text-sm text-rid-text/90">{poi.description}</p>}
+        {lt(poi.description, i18n.language) && <p className="mt-3 text-sm text-rid-text/90">{lt(poi.description, i18n.language)}</p>}
 
         {stage && (
           <Link

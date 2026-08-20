@@ -1,35 +1,60 @@
 [
   {
     "id": "stage",
-    "label": "Stage",
+    "label": {
+      "en": "Stage",
+      "de": "Bühne",
+      "fr": "Scène",
+      "es": "Escenario"
+    },
     "color": "#ffb300",
     "icon": "🎤",
     "order": 1
   },
   {
     "id": "food",
-    "label": "Food & drinks",
+    "label": {
+      "en": "Food & drinks",
+      "de": "Essen & Trinken",
+      "fr": "Restauration",
+      "es": "Comida y bebida"
+    },
     "color": "#2e7d5b",
     "icon": "🍴",
     "order": 2
   },
   {
     "id": "wc",
-    "label": "Restrooms",
+    "label": {
+      "en": "Restrooms",
+      "de": "WC",
+      "fr": "Sanitaires",
+      "es": "Aseos"
+    },
     "color": "#5b6ee1",
     "icon": "🚻",
     "order": 3
   },
   {
     "id": "info",
-    "label": "Info point",
+    "label": {
+      "en": "Info point",
+      "de": "Infopoint",
+      "fr": "Point info",
+      "es": "Punto de información"
+    },
     "color": "#e4572e",
     "icon": "ℹ️",
     "order": 4
   },
   {
     "id": "camp",
-    "label": "Camping",
+    "label": {
+      "en": "Camping",
+      "de": "Camping",
+      "fr": "Camping",
+      "es": "Acampada"
+    },
     "color": "#8d6e63",
     "icon": "⛺",
     "order": 5

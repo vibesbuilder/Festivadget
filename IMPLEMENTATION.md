@@ -380,7 +380,7 @@ interface Festival {
 }
 interface FestivalDay {
   id: string;        // "fr" | "sa" | "so"
-  label: string;     // "Friday 31.07."
+  label: LocalizedText; // "Friday 31.07." (LocalizedText: see §7.7)
   dayStart: string;  // logical start of the day
   dayEnd: string;    // logical end of the day (midnight overflow!)
 }
@@ -398,7 +398,7 @@ interface Stage {
 ```ts
 interface Artist {
   id: string; slug: string; name: string;
-  bio?: string; genres: string[]; country?: string;
+  bio?: LocalizedText; genres: string[]; country?: string;
   isHeadliner?: boolean; image?: string; gallery?: string[];
   links?: {
     spotify?: string; appleMusic?: string; bandcamp?: string;
@@ -423,7 +423,7 @@ type PoiType =
   | "info" | "entrance" | "exit" | "camping" | "caravan"
   | "cashless" | "shuttle" | "merch" | "parking";
 interface Poi {
-  id: string; type: PoiType; name: string; description?: string;
+  id: string; type: PoiType; name: LocalizedText; description?: LocalizedText;
   x: number; y: number;   // pixel coordinates in the CRS.Simple system
   stageId?: string; icon?: string;
 }
@@ -473,7 +473,7 @@ interface InfoPage {
 
 ### 7.10 `tickets.json`
 ```ts
-interface TicketProvider { id: string; name: string; embedType: "iframe" | "link"; url: string; note?: string; }
+interface TicketProvider { id: string; name: string; embedType: "iframe" | "link"; url: string; note?: LocalizedText; }
 interface TicketsConfig { providers: TicketProvider[]; }
 ```
 

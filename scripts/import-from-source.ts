@@ -53,7 +53,7 @@ async function buildSlotsFromCsv(artists: Array<{ id: string; slug: string }>): 
   return rows.map((r, i) => {
     const artistId = idBySlug.get(r.artistSlug);
     if (!artistId) {
-      throw new Error(`[slots] Kein Artist für slug "${r.artistSlug}" (Zeile ${i + 2}).`);
+      throw new Error(`[slots] No artist for slug "${r.artistSlug}" (row ${i + 2}).`);
     }
     return {
       id: `${r.dayId}-${r.stageId}-${slugify(r.artistSlug)}`,
@@ -101,7 +101,7 @@ async function importInfo(cfg: ContentSourcesConfig): Promise<void> {
     const recs = (await adapterFor(ov).fetchDomain("info", ov, cfg)) as InfoItem[];
     const src = recs[0];
     if (!src) {
-      throw new Error(`[info] Override-Quelle (${ov.provider}) für "${item.id}" lieferte keine Daten.`);
+      throw new Error(`[info] Override source (${ov.provider}) for "${item.id}" returned no data.`);
     }
     merged.push({
       ...item,
@@ -171,10 +171,10 @@ async function main(): Promise<void> {
   // info: source per entry (default + optional overrides per ID, §6.4).
   await importInfo(config);
 
-  console.log("\nImport abgeschlossen. Nächster Schritt: npm run build:data");
+  console.log("\nImport finished. Next step: npm run build:data");
 }
 
 main().catch((err) => {
-  console.error("\n✗ Import fehlgeschlagen:", err instanceof Error ? err.message : err);
+  console.error("\n✗ Import failed:", err instanceof Error ? err.message : err);
   process.exit(1);
 });

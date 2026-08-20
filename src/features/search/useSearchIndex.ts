@@ -74,10 +74,10 @@ export function useSearchIndex(): SearchEntry[] {
       const catLabel = resolvePoiMeta(poi.type, catMap).label;
       entries.push({
         kind: "poi",
-        label: poi.name,
+        label: lt(poi.name, i18n.language),
         sublabel: catLabel,
         to: "/map",
-        haystack: `${poi.name} ${catLabel} ${poi.description ?? ""}`.toLowerCase(),
+        haystack: `${lt(poi.name, i18n.language)} ${catLabel} ${lt(poi.description, i18n.language)}`.toLowerCase(),
       });
     }
 

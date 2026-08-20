@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { lt } from "@/lib/localized";
 import { useArtists, useFestival, useSlots } from "@/data/queries";
 import { useUi } from "@/store/ui";
 import { ArtistCard } from "@/components/ArtistCard";
@@ -19,7 +20,7 @@ function byLineupOrder(a: Artist, b: Artist): number {
 }
 
 export default function Lineup() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { data: artists, isLoading, isError, refetch } = useArtists();
   const { data: slots } = useSlots();
   const { data: festival } = useFestival();
@@ -88,7 +89,7 @@ export default function Lineup() {
             onClick={() => setLineupDay(day.id)}
             className={lineupDayId === day.id ? "rid-chip rid-chip-active" : "rid-chip"}
           >
-            {day.label}
+            {lt(day.label, i18n.language)}
           </button>
         ))}
       </div>

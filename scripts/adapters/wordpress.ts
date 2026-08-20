@@ -26,7 +26,7 @@ export const wordpressAdapter: SourceAdapter = {
     if (loc.categorySlug) url += `&categories_slug=${encodeURIComponent(loc.categorySlug)}`;
 
     const res = await fetch(url, { headers });
-    if (!res.ok) throw new Error(`[wp] HTTP ${res.status} für ${url}`);
+    if (!res.ok) throw new Error(`[wp] HTTP ${res.status} for ${url}`);
     const posts = (await res.json()) as Array<Record<string, unknown>>;
 
     return posts.map((p) => {

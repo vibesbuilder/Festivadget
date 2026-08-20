@@ -24,6 +24,6 @@ async function main(): Promise<void> {
 }
 
 main().catch((err) => {
-  console.error("\n✗ gen-icons fehlgeschlagen:", err instanceof Error ? err.message : err);
+  console.error("\n✗ gen-icons failed:", err instanceof Error ? err.message : err);
   process.exit(1);
 });

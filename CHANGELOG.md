@@ -5,6 +5,23 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.0.0/), Versionier
 
 ## [Unreleased]
 
+## [1.6.0] - 2026-08-20
+
+### Added
+- **Mehrsprachigkeit auf weitere Inhalte ausgedehnt**: Tages-Labels (Timetable/
+  Line-Up/Favoriten), POI-Namen und -Beschreibungen, POI-Kategorie-Labels
+  (Karten-Filter), Artist-Bios und Ticket-Hinweise akzeptieren jetzt ebenfalls
+  String ODER Sprach-Map `{ "de": …, "en": …, "fr": …, "es": … }` (Fallback
+  Sprache → Englisch → Deutsch). Die CMS-Formulare für POIs, POI-Kategorien und
+  Artists bieten dafür Übersetzungs-Blöcke; Festival-Eckdaten und Tickets über
+  den JSON-Editor. Beispieldaten demonstrieren das Modell.
+- CrewCare-Besucheransichten (Timetable-Tages-Tabs) lösen die neuen
+  Sprach-Maps ebenfalls auf.
+
+### Changed
+- **Konsolen-Ausgaben der Deploy-/Build-Werkzeuge auf Englisch**
+  (deploy-data.bat, build-release.ps1, Import-/Validierungs-Skripte).
+
 ## [1.5.0] - 2026-08-20
 
 ### Added

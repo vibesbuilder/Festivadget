@@ -37,7 +37,7 @@ export const joomlaAdapter: SourceAdapter = {
     const records: unknown[] = [];
     for (const url of urls) {
       const res = await fetch(url, { headers });
-      if (!res.ok) throw new Error(`[joomla] HTTP ${res.status} für ${url}`);
+      if (!res.ok) throw new Error(`[joomla] HTTP ${res.status} for ${url}`);
       const json = (await res.json()) as { data: unknown };
       const data = Array.isArray(json.data) ? json.data : [json.data];
       for (const entry of data as Array<{ id?: number; attributes?: Record<string, unknown> }>) {

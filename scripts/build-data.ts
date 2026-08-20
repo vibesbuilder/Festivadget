@@ -35,28 +35,28 @@ function validate(domain: string, parsed: unknown): void {
   if (!spec) return; // unknown file - hash only
 
   if (spec.kind === "array") {
-    if (!Array.isArray(parsed)) throw new Error(`${domain}.json muss ein Array sein.`);
+    if (!Array.isArray(parsed)) throw new Error(`${domain}.json must be an array.`);
     parsed.forEach((item, i) => {
       for (const field of spec.required) {
         if (!(item && typeof item === "object" && field in item)) {
-          throw new Error(`${domain}.json[${i}]: Pflichtfeld "${field}" fehlt.`);
+          throw new Error(`${domain}.json[${i}]: required field "${field}" missing.`);
         }
       }
     });
   } else {
     if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
-      throw new Error(`${domain}.json muss ein Objekt sein.`);
+      throw new Error(`${domain}.json must be an object.`);
     }
     for (const field of spec.required) {
       if (!(field in (parsed as Record<string, unknown>))) {
-        throw new Error(`${domain}.json: Pflichtfeld "${field}" fehlt.`);
+        throw new Error(`${domain}.json: required field "${field}" missing.`);
       }
     }
   }
 }
 
 async function main(): Promise<void> {
-  console.log("Festivadget · Validierung + version.json (§5.2)\n");
+  console.log("Festivadget · validation + version.json (§5.2)\n");
 
   const files = (await readdir(DATA_DIR)).filter(
     (f) => f.endsWith(".json") && f !== "version.json",
@@ -71,7 +71,7 @@ async function main(): Promise<void> {
     try {
       parsed = JSON.parse(content);
     } catch {
-      throw new Error(`${file}: ungültiges JSON.`);
+      throw new Error(`${file}: invalid JSON.`);
     }
     validate(domain, parsed);
     datasets[domain] = shortHash(content);
@@ -88,11 +88,11 @@ async function main(): Promise<void> {
     JSON.stringify(manifest, null, 2) + "\n",
     "utf-8",
   );
-  console.log("\n  ✓ version.json geschrieben.");
-  console.log("\nValidierung erfolgreich.");
+  console.log("\n  ✓ version.json written.");
+  console.log("\nValidation successful.");
 }
 
 main().catch((err) => {
-  console.error("\n✗ build:data fehlgeschlagen:", err instanceof Error ? err.message : err);
+  console.error("\n✗ build:data failed:", err instanceof Error ? err.message : err);
   process.exit(1);
 });

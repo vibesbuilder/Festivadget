@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+import { lt } from "@/lib/localized";
 import type { FestivalDay } from "@/types";
 
 interface Props {
@@ -8,6 +10,7 @@ interface Props {
 
 // Day selection as tabs (§12.2).
 export function DayTabs({ days, selectedId, onSelect }: Props) {
+  const { i18n } = useTranslation();
   return (
     <div className="flex gap-2 overflow-x-auto pb-1">
       {days.map((day) => (
@@ -16,7 +19,7 @@ export function DayTabs({ days, selectedId, onSelect }: Props) {
           onClick={() => onSelect(day.id)}
           className={day.id === selectedId ? "rid-chip rid-chip-active" : "rid-chip"}
         >
-          {day.label}
+          {lt(day.label, i18n.language)}
         </button>
       ))}
     </div>

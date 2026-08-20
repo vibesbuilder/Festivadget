@@ -7,13 +7,23 @@
   "days": [
     {
       "id": "fr",
-      "label": "Friday",
+      "label": {
+        "en": "Friday",
+        "de": "Freitag",
+        "fr": "Vendredi",
+        "es": "Viernes"
+      },
       "dayStart": "2027-07-02T15:00:00+02:00",
       "dayEnd": "2027-07-03T02:00:00+02:00"
     },
     {
       "id": "sa",
-      "label": "Saturday",
+      "label": {
+        "en": "Saturday",
+        "de": "Samstag",
+        "fr": "Samedi",
+        "es": "Sábado"
+      },
       "dayStart": "2027-07-03T13:00:00+02:00",
       "dayEnd": "2027-07-04T02:00:00+02:00"
     }

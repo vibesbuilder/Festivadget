@@ -323,14 +323,14 @@ const CMS_DOMAIN_FIELDS = [
     ],
     'pois' => [
         ['key' => 'type', 'label' => 'Kategorie', 'type' => 'select', 'options' => CMS_POI_TYPES],
-        ['key' => 'name', 'label' => 'Name', 'type' => 'text'],
+        ['key' => 'name', 'label' => 'Name', 'type' => 'loctext'],
         ['key' => 'icon', 'label' => 'Icon (Emoji ODER Bildpfad /data/uploads/…; leer = Kategorie-Icon)', 'type' => 'text'],
         ['key' => 'x', 'label' => 'X', 'type' => 'number'],
         ['key' => 'y', 'label' => 'Y', 'type' => 'number'],
     ],
     'poi-categories' => [
         ['key' => 'id', 'label' => 'ID (Schlüssel, z. B. parking)', 'type' => 'text'],
-        ['key' => 'label', 'label' => 'Bezeichnung', 'type' => 'text'],
+        ['key' => 'label', 'label' => 'Bezeichnung', 'type' => 'loctext'],
         ['key' => 'icon', 'label' => 'Icon (Emoji ODER Bildpfad /data/uploads/…)', 'type' => 'text'],
         ['key' => 'color', 'label' => 'Farbe (Hex, z. B. #9aa0a6)', 'type' => 'text'],
         ['key' => 'order', 'label' => 'Reihenfolge', 'type' => 'number'],
@@ -348,7 +348,7 @@ const CMS_DOMAIN_FIELDS = [
         ['key' => 'image', 'label' => 'Bild-Pfad', 'type' => 'image'],
         ['key' => 'spotify', 'label' => 'Spotify', 'type' => 'text'],
         ['key' => 'youtube', 'label' => 'YouTube', 'type' => 'text'],
-        ['key' => 'bio', 'label' => 'Bio (Markdown)', 'type' => 'textarea'],
+        ['key' => 'bio', 'label' => 'Bio (Markdown)', 'type' => 'loctextarea'],
     ],
 ];
 
@@ -357,6 +357,31 @@ function cms_field_input(string $iname, array $f, $value): string
 {
     $n = cms_h($iname);
     switch ($f['type']) {
+        case 'loctext':
+        case 'loctextarea':
+            // Localizable field: German prominent, en/fr/es in a collapsible block.
+            // Stored as a plain string (only de) or a language map (see cms_loc_from_post).
+            $area  = $f['type'] === 'loctextarea';
+            $mk    = static function (string $lang) use ($n, $area, $value): string {
+                $v = cms_h(cms_loc_get($value, $lang));
+                return $area
+                    ? '<textarea name="' . $n . '[' . $lang . ']">' . $v . '</textarea>'
+                    : '<input type="text" name="' . $n . '[' . $lang . ']" value="' . $v . '">';
+            };
+            $hasTr = false;
+            foreach (['en', 'fr', 'es'] as $tl) {
+                if (cms_loc_get($value, $tl) !== '') {
+                    $hasTr = true;
+                }
+            }
+            $h = $mk('de');
+            $h .= '<details' . ($hasTr ? ' open' : '') . '><summary class="muted">'
+                . cms_h(cms_t('Übersetzungen (en/fr/es) – leer = englischer bzw. deutscher Fallback'))
+                . '</summary>';
+            foreach (['en', 'fr', 'es'] as $tl) {
+                $h .= '<label class="fld" style="margin-top:.35rem"><span>' . $tl . '</span>' . $mk($tl) . '</label>';
+            }
+            return $h . '</details>';
         case 'number':
             $v = is_numeric($value) ? (string) $value : '';
             return '<input type="number" step="any" name="' . $n . '" value="' . cms_h($v) . '">';

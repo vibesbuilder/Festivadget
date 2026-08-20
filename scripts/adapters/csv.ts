@@ -18,7 +18,7 @@ interface CsvSlotRow {
 // The join with artists (via artistSlug) happens in the orchestrator.
 export async function readSlotsCsv(): Promise<CsvSlotRow[]> {
   if (!existsSync(SLOTS_CSV)) {
-    throw new Error("[csv] content/slots.csv fehlt (slots.format === 'csv').");
+    throw new Error("[csv] content/slots.csv missing (slots.format === 'csv').");
   }
   const raw = await readFile(SLOTS_CSV, "utf-8");
   const parsed = Papa.parse<CsvSlotRow>(raw, {

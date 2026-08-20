@@ -16,8 +16,8 @@ export type PoiType = string;
 export interface Poi {
   id: string;
   type: PoiType; // verweist auf PoiCategory.id
-  name: string;
-  description?: string;
+  name: LocalizedText;
+  description?: LocalizedText;
   x: number; // Pixelkoordinate (CRS.Simple)
   y: number;
   stageId?: string;
@@ -27,7 +27,7 @@ export interface Poi {
 // §7.5b poi-categories.json - categories of the map points (maintainable in the admin)
 export interface PoiCategory {
   id: string; // = Poi.type
-  label: string;
+  label: LocalizedText;
   color: string; // Hex-Farbe des Markers
   icon: string; // Emoji-Marker
   hidden?: boolean; // true = removed from map AND filter entirely (master toggle)
@@ -92,7 +92,7 @@ export interface TicketProvider {
   name: string;
   embedType: "iframe" | "link";
   url: string;
-  note?: string;
+  note?: LocalizedText;
 }
 
 export interface TicketsConfig {

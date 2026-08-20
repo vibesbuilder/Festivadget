@@ -2,9 +2,14 @@
 // Festivadget-spezifische Typen (Poi, News, Info, Tickets, Weather, …) bleiben in der App.
 // Alle Zeitstempel: ISO 8601 mit Offset (z. B. "2026-07-31T22:00:00+02:00").
 
+// Lokalisierbares Textfeld: einfacher String (einsprachig, kompatibel zum
+// Altbestand) ODER Sprach-Map. Auflösung in den Apps (Festivadget lt(),
+// CrewCare visitor-Helfer): Sprache -> en -> de -> erster Wert.
+export type LocalizedText = string | Partial<Record<"de" | "en" | "fr" | "es", string>>;
+
 export interface FestivalDay {
   id: string; // "fr" | "sa" | "so"
-  label: string; // "Freitag 31.07."
+  label: LocalizedText; // "Freitag 31.07." oder { de: "Freitag", en: "Friday", … }
   dayStart: string; // logischer Tagesbeginn
   dayEnd: string; // logisches Tagesende (Mitternachtsüberlauf!)
 }
@@ -42,7 +47,7 @@ export interface Artist {
   id: string;
   slug: string;
   name: string;
-  bio?: string;
+  bio?: LocalizedText;
   genres?: string[]; // optional – darf leer ([]) oder weggelassen sein
   country?: string;
   isHeadliner?: boolean;

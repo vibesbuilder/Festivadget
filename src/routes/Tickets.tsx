@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { lt } from "@/lib/localized";
 import { ExternalLink } from "lucide-react";
 import { useTickets } from "@/data/queries";
 import { BackLink } from "@/components/BackLink";
@@ -6,7 +7,7 @@ import { LoadingState, ErrorState, EmptyState } from "@/components/states";
 import type { TicketProvider } from "@/types";
 
 function TicketEmbed({ provider }: { provider: TicketProvider }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   return (
     <div className="space-y-2">
@@ -21,7 +22,7 @@ function TicketEmbed({ provider }: { provider: TicketProvider }) {
           {t("tickets.open")} <ExternalLink size={14} />
         </a>
       </div>
-      {provider.note && <p className="text-sm text-rid-muted">{provider.note}</p>}
+      {lt(provider.note, i18n.language) && <p className="text-sm text-rid-muted">{lt(provider.note, i18n.language)}</p>}
 
       {provider.embedType === "iframe" ? (
         // iframe with a restrictive sandbox (§12.11). Fallback is the link above,

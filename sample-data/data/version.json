@@ -1,17 +1,17 @@
 {
   "generatedAt": "2027-06-01T12:00:00+02:00",
   "datasets": {
-    "artists": "f0847350",
-    "festival": "d1f1e9eb",
+    "artists": "2cc3349d",
+    "festival": "af0d719f",
     "info": "f3772a52",
     "map": "f7099da2",
     "news": "8004be38",
-    "poi-categories": "c8b88c31",
-    "pois": "6c8c39f8",
+    "poi-categories": "ca9229b8",
+    "pois": "05183c62",
     "slots": "c7660808",
     "sponsors": "94fed18e",
     "stages": "07b27fc0",
-    "tickets": "3f8bacb6",
+    "tickets": "57084dec",
     "weather": "96e4f087"
   }
 }

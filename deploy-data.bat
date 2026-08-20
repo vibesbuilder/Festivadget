@@ -17,7 +17,7 @@ setlocal enabledelayedexpansion
 cd /d "%~dp0"
 
 if not exist "deploy.env.bat" (
-  echo [Fehler] deploy.env.bat fehlt - aus deploy.env.example.bat erstellen und Zugangsdaten eintragen.
+  echo [Error] deploy.env.bat missing - create it from deploy.env.example.bat and fill in the credentials.
   exit /b 1
 )
 call "deploy.env.bat"
@@ -27,24 +27,24 @@ if /i "%~1"=="full" set "MODE=full"
 if /i "%~1"=="push" goto :uploadpush
 
 echo(
-echo === 1/4  Import aus Quellen (pnpm run import) ===
+echo === 1/4  Import from sources (pnpm run import) ===
 call pnpm run import || goto :fail
 
 echo(
-echo === 2/4  Validierung + version.json (pnpm run build:data) ===
+echo === 2/4  Validation + version.json (pnpm run build:data) ===
 call pnpm run build:data || goto :fail
 
 echo(
-echo === 3/4  Produktions-Build (pnpm run build) ===
+echo === 3/4  Production build (pnpm run build) ===
 call pnpm run build || goto :fail
 
 if /i "%MODE%"=="full" goto :uploadfull
 
 REM --- Data upload (default) ---------------------------------------------
 echo(
-echo === 4/4  Upload Inhaltsdaten nach %FTP_HOST%%FTP_REMOTE_ROOT%/data ===
+echo === 4/4  Uploading content data to %FTP_HOST%%FTP_REMOTE_ROOT%/data ===
 if not exist "dist\data\*.json" (
-  echo [Fehler] Keine Dateien unter dist\data\ gefunden.
+  echo [Error] No files found under dist\data\.
   goto :fail
 )
 set "N=0"
@@ -54,16 +54,16 @@ for %%F in (dist\data\*.json) do (
   set /a N+=1
 )
 echo(
-echo Fertig (Daten). !N! Datei(en) hochgeladen. Clients ziehen in ^<= 2 min nach.
+echo Done (data). !N! file(s) uploaded. Clients catch up within ^<= 2 min.
 endlocal
 exit /b 0
 
 REM --- Full upload (entire dist\) ----------------------------------------
 :uploadfull
 echo(
-echo === 4/4  Upload KOMPLETTE App (dist\) nach %FTP_HOST%%FTP_REMOTE_ROOT%/ ===
+echo === 4/4  Uploading the FULL app (dist\) to %FTP_HOST%%FTP_REMOTE_ROOT%/ ===
 if not exist "dist\index.html" (
-  echo [Fehler] dist\index.html fehlt - Build unvollstaendig.
+  echo [Error] dist\index.html missing - build incomplete.
   goto :fail
 )
 pushd "dist"
@@ -79,17 +79,17 @@ for /r %%F in (*) do (
 )
 popd
 echo(
-echo Fertig (komplette App). !N! Datei(en) hochgeladen.
-echo Hinweis: Das Push-Backend laedt "deploy-data.bat push" hoch (config.php/vendor\ ausgenommen).
+echo Done (full app). !N! file(s) uploaded.
+echo Note: the push backend is uploaded by "deploy-data.bat push" (config.php/vendor\ excluded).
 endlocal
 exit /b 0
 
 REM --- Push backend upload (PHP endpoints only, no secrets) ----------------
 :uploadpush
 echo(
-echo === Upload Push-Backend nach %FTP_HOST%%FTP_REMOTE_ROOT%/push ===
+echo === Uploading the push backend to %FTP_HOST%%FTP_REMOTE_ROOT%/push ===
 if not exist "push\*.php" (
-  echo [Fehler] Keine PHP-Dateien unter push\ gefunden.
+  echo [Error] No PHP files found under push\.
   goto :fail
 )
 set "N=0"
@@ -119,13 +119,13 @@ for %%F in (push\cms\*.php) do (
   set /a N+=1
 )
 echo(
-echo Fertig (Push-Backend). !N! Datei(en) hochgeladen.
+echo Done (push backend). !N! file(s) uploaded.
 echo Nicht enthalten: config.php (am Server pflegen), vendor\ (Composer, docs\PUSH.md).
 endlocal
 exit /b 0
 
 :fail
 echo(
-echo [ABGEBROCHEN] Schritt fehlgeschlagen - bitte Ausgabe oben pruefen.
+echo [ABORTED] A step failed - please check the output above.
 endlocal
 exit /b 1

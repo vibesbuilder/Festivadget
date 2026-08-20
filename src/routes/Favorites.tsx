@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { lt } from "@/lib/localized";
 import { AlertTriangle, Star } from "lucide-react";
 import { useArtists, useFestival, useSlots, useStages } from "@/data/queries";
 import { useFavorites } from "@/store/favorites";
@@ -13,7 +14,7 @@ import { parse } from "@/lib/time";
 import type { Artist, Stage } from "@/types";
 
 export default function Favorites() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { data: festival, isLoading: l1 } = useFestival();
   const { data: stages } = useStages();
   const { data: artists } = useArtists();
@@ -100,7 +101,7 @@ export default function Favorites() {
         return (
           <div key={day.id} className="space-y-2">
             <h2 className="text-sm font-semibold uppercase tracking-wide text-rid-muted">
-              {day.label}
+              {lt(day.label, i18n.language)}
             </h2>
             {list.map((slot) => (
               <SlotCard

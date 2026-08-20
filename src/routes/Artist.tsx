@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { lt } from "@/lib/localized";
 import { useArtists, useSlots, useStages } from "@/data/queries";
 import { LoadingState, EmptyState } from "@/components/states";
 import { Markdown } from "@/components/Markdown";
@@ -83,9 +84,9 @@ export default function Artist() {
 
       {artist.youtube && <YouTubeEmbed value={artist.youtube} />}
 
-      {artist.bio && (
+      {lt(artist.bio, i18n.language) && (
         <section className="rid-card p-4">
-          <Markdown>{artist.bio}</Markdown>
+          <Markdown>{lt(artist.bio, i18n.language)}</Markdown>
         </section>
       )}
     </article>
