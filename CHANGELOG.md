@@ -5,6 +5,8 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.0.0/), Versionier
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-08-20
+
 ### Added
 - **Mehrsprachige Event-Inhalte**: Info-Seiten und News (Titel, Text, Link-Beschriftung)
   können je Sprache gepflegt werden (`{ "de": …, "en": …, "fr": …, "es": … }` oder
