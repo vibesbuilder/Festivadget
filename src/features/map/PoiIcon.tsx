@@ -1,8 +1,8 @@
 import { isImageIcon } from "./poiMeta";
 import { lucideComp } from "./poiIcons";
 
-// Stellt ein POI-/Kategorie-Icon dar: Bild (<img>) bei Pfad/URL, Lucide-Icon bei
-// bekanntem Lucide-Namen, sonst Emoji als Text.
+// Renders a POI/category icon: image (<img>) for a path/URL, Lucide icon for a
+// known Lucide name, otherwise emoji as text.
 export function PoiIcon({
   icon,
   size = 16,

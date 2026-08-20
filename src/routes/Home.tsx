@@ -14,10 +14,10 @@ import { formatDateRange } from "@/lib/time";
 export default function Home() {
   const { t } = useTranslation();
   const { data: festival } = useFestival();
-  // Kopf (Name + Datum) per Admin-Einstellung ausblendbar (fehlender Key = anzeigen).
+  // Header (name + date) hideable via admin setting (missing key = show).
   const { homeHeader } = useAppConfig();
 
-  // Titel/Datum aus festival.json (im Admin unter „Inhalte" → „Festival" pflegbar).
+  // Title/date from festival.json (maintainable in the admin under "Content" -> "Festival").
   const title = festival?.name ?? "Festivadget";
   const dateRange =
     festival?.start && festival?.end
@@ -35,10 +35,10 @@ export default function Home() {
 
       <NotificationsToggle />
 
-      {/* Intro-Video (CMS-Tab „Branding") – volle Breite oberhalb des Newsfeeds. */}
+      {/* Intro video (CMS tab "Branding") - full width above the newsfeed. */}
       <HomeVideo />
 
-      {/* Newsfeed zuerst (oberhalb der Programmübersicht). */}
+      {/* Newsfeed first (above the program overview). */}
       <section>
         <div className="mb-2 flex items-center justify-between">
           <h2 className="text-sm font-semibold uppercase tracking-wide text-rid-muted">
@@ -54,7 +54,7 @@ export default function Home() {
         <NewsfeedPreview />
       </section>
 
-      {/* Live-Wetter (GeoSphere, self-gating – verschwindet ohne Daten). */}
+      {/* Live weather (GeoSphere, self-gating - disappears without data). */}
       <WeatherHomeCard />
 
       <section>

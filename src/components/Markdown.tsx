@@ -4,18 +4,18 @@ import rehypeRaw from "rehype-raw";
 import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
 import { Link } from "react-router-dom";
 
-// Einheitliches Markdown-Rendering für Bio/Info/News (§3, §12.9).
-// Unterstützt zusätzlich eingebettetes (sanitiziertes) HTML aus dem CMS-Import:
-// Überschriften, Bilder und iframes von erlaubten Hosts.
+// Uniform Markdown rendering for bio/info/news (§3, §12.9).
+// Additionally supports embedded (sanitized) HTML from the CMS import:
+// headings, images and iframes from allowed hosts.
 
-// Erlaubte iframe-Quellen (Defense-in-Depth zusätzlich zum Server-Whitelist im Import).
+// Allowed iframe sources (defense in depth on top of the server whitelist in the import).
 const IFRAME_EXACT_HOSTS = [
   "youtube.com",
   "www.youtube.com",
   "www.youtube-nocookie.com",
   "open.spotify.com",
 ];
-// Google Maps in allen Varianten: (www.|maps.)google.<tld>. Anker gegen Spoofing.
+// Google Maps in all variants: (www.|maps.)google.<tld>. Anchored against spoofing.
 const GOOGLE_HOST = /^(www\.|maps\.)?google\.(com|at|de|ch)$/;
 
 function iframeAllowed(src?: string): boolean {
@@ -28,8 +28,8 @@ function iframeAllowed(src?: string): boolean {
   }
 }
 
-// Sanitize-Schema: Standard + iframe (mit Einbettungs-Attributen) + Bild-Attribute.
-// `protocols` des Standardschemas beschränkt src/href weiterhin auf http(s).
+// Sanitize schema: default + iframe (with embed attributes) + image attributes.
+// The default schema's `protocols` still restricts src/href to http(s).
 const schema = {
   ...defaultSchema,
   tagNames: [...(defaultSchema.tagNames ?? []), "iframe"],
@@ -80,7 +80,7 @@ export function Markdown({ children }: { children: string }) {
           ol: ({ children }) => <ol className="list-decimal space-y-1 pl-5">{children}</ol>,
           a: ({ children, href }) =>
             href && href.startsWith("/") ? (
-              // Interner Link → in-App navigieren (kein neuer Tab).
+              // Internal link -> navigate in-app (no new tab).
               <Link to={href} className="text-rid-accent underline underline-offset-2">
                 {children}
               </Link>

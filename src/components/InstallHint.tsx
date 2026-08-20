@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { Download, Share, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
-// Install-Hinweise (§13): Android/Chrome via beforeinstallprompt-Button,
-// iOS via Teilen-Hinweis. Einmal dismissbar (localStorage).
+// Install hints (§13): Android/Chrome via beforeinstallprompt button,
+// iOS via share hint. Dismissable once (localStorage).
 
 const DISMISS_KEY = "festivadget:install-dismissed";
 
@@ -32,7 +32,7 @@ export function InstallHint() {
   useEffect(() => {
     if (isStandalone() || localStorage.getItem(DISMISS_KEY)) return;
 
-    // Android/Chrome: Prompt abfangen.
+    // Android/Chrome: intercept the prompt.
     const onPrompt = (e: Event) => {
       e.preventDefault();
       setDeferred(e as BeforeInstallPromptEvent);
@@ -40,7 +40,7 @@ export function InstallHint() {
     };
     window.addEventListener("beforeinstallprompt", onPrompt);
 
-    // iOS: kein Prompt-Event → eigener Hinweis.
+    // iOS: no prompt event -> custom hint.
     if (isIos()) setShow(true);
 
     return () => window.removeEventListener("beforeinstallprompt", onPrompt);

@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useArtists, useSlots, useStages } from "@/data/queries";
 import { now, parse, formatTime, isLive } from "@/lib/time";
 
-// Now / Up Next (§12.6): pro Stage „läuft gerade" + „als Nächstes".
+// Now / Up Next (§12.6): per stage "playing now" + "up next".
 export function NowNextWidget() {
   const { t } = useTranslation();
   const { data: slots } = useSlots();

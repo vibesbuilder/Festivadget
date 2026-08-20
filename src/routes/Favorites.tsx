@@ -24,7 +24,7 @@ export default function Favorites() {
   const artistById = useMemo(() => new Map((artists ?? []).map((a) => [a.id, a])), [artists]);
   const stageById = useMemo(() => new Map((stages ?? []).map((s) => [s.id, s])), [stages]);
 
-  // Favorisierte Slots chronologisch, gruppiert nach Tag (§12.3).
+  // Favorited slots chronologically, grouped by day (§12.3).
   const byDay = useMemo(() => {
     const favSlots = (slots ?? [])
       .filter((s) => favorites.has(s.id))
@@ -39,7 +39,7 @@ export default function Favorites() {
     return groups;
   }, [slots, favorites]);
 
-  // Einträge für den Sammel-.ics-Export.
+  // Entries for the bulk .ics export.
   const allEntries = useMemo(() => {
     return (slots ?? [])
       .filter((s) => favorites.has(s.id))
@@ -62,7 +62,7 @@ export default function Favorites() {
         <BackLink to="/more" label={t("nav.more")} />
         <h1 className="text-2xl font-bold">{t("favorites.title")}</h1>
         <NotificationsToggle />
-        {/* Erklärung der Funktion an der Stelle, wo sonst die Favoriten stehen. */}
+        {/* Explanation of the feature where the favorites would otherwise be. */}
         <div className="rid-card flex flex-col items-center gap-3 p-6 text-center">
           <Star size={32} className="text-rid-accent" />
           <p className="font-semibold">{t("favorites.emptyTitle")}</p>

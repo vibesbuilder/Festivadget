@@ -14,20 +14,20 @@ import { useUi } from "@/store/ui";
 import { useAppConfig } from "@/data/useAppConfig";
 import { useFestival } from "@/data/queries";
 
-// App-Shell: TopBar, OfflineBadge, scrollbarer Inhalt (<Outlet/>), untere Nav (§10).
+// App shell: top bar, offline badge, scrollable content (<Outlet/>), bottom nav (§10).
 export function AppShell() {
-  // Startet das 2-Minuten-Versions-Polling + gezielte Invalidierung.
+  // Starts the 2-minute version polling + targeted invalidation.
   useVersionSync();
 
-  // Globale Admin-Einstellungen (data/app-config.json).
+  // Global admin settings (data/app-config.json).
   const config = useAppConfig();
 
-  // Home-Bildschirm-Label (iOS „Zum Home-Bildschirm") datengetrieben aus festival.shortName.
-  // iOS liest das Meta-Tag beim Hinzufügen – die App ist dann offen, daher wirkt das Setzen
-  // zur Laufzeit. index.html hält den statischen Fallback ("ROCK IM DORF").
+  // Home screen label (iOS "Add to Home Screen") driven by festival.shortName.
+  // iOS reads the meta tag when adding - the app is open at that point, so setting
+  // it at runtime works. index.html keeps the static fallback ("ROCK IM DORF").
   const { data: festival } = useFestival();
   useEffect(() => {
-    // Branding-Kurzname (CMS) gewinnt über festival.shortName.
+    // The branding short name (CMS) wins over festival.shortName.
     const shortName = config.branding?.shortName || festival?.shortName;
     if (!shortName) return;
     document
@@ -35,7 +35,7 @@ export function AppShell() {
       ?.setAttribute("content", shortName);
   }, [festival?.shortName, config.branding?.shortName]);
 
-  // Admin-Standard-Theme anwenden – nur solange der User nicht selbst gewählt hat.
+  // Apply the admin default theme - only while the user has not chosen themselves.
   const themeExplicit = useUi((s) => s.themeExplicit);
   const applyServerThemeDefault = useUi((s) => s.applyServerThemeDefault);
   useEffect(() => {
@@ -44,7 +44,7 @@ export function AppShell() {
     }
   }, [config.themeDefault, themeExplicit, applyServerThemeDefault]);
 
-  // Admin-Standard-Sprache anwenden – nur solange der User nicht selbst gewählt hat.
+  // Apply the admin default language - only while the user has not chosen themselves.
   const languageExplicit = useUi((s) => s.languageExplicit);
   const applyServerLanguageDefault = useUi((s) => s.applyServerLanguageDefault);
   useEffect(() => {
@@ -55,7 +55,7 @@ export function AppShell() {
     }
   }, [config.languageDefault, languageExplicit, applyServerLanguageDefault]);
 
-  // Hell-/Dunkel-Modus auf <html> spiegeln (Inline-Skript in index.html setzt den Startwert).
+  // Mirror light/dark mode onto <html> (an inline script in index.html sets the initial value).
   const theme = useUi((s) => s.theme);
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
@@ -64,20 +64,20 @@ export function AppShell() {
       ?.setAttribute("content", themeColorFor(config.branding, theme));
   }, [theme, config.branding]);
 
-  // Kunden-Branding (Farben/Schrift/Titel/Manifest) anwenden – muss bei
-  // Theme-Wechsel erneut laufen (Inline-Vars gelten je aktivem Theme).
+  // Apply customer branding (colors/font/title/manifest) - must run again on
+  // theme changes (inline vars apply per active theme).
   useEffect(() => {
     applyBranding(config.branding, theme);
   }, [config.branding, theme]);
 
-  // Hintergrundgrafik an/aus (data-bg="off" → --rid-bg-image: none, siehe index.css).
+  // Background artwork on/off (data-bg="off" -> --rid-bg-image: none, see index.css).
   useEffect(() => {
     document.documentElement.dataset.bg = config.background === false ? "off" : "on";
   }, [config.background]);
 
-  // Eigenes Hintergrundbild aus dem Admin (app-config.json → backgroundImage,
-  // z. B. /data/uploads/hero.webp). Inline-Var nur setzen, solange die Grafik
-  // aktiv ist – sonst würde sie das data-bg="off"-Stylesheet überstimmen.
+  // Custom background image from the admin (app-config.json -> backgroundImage,
+  // e.g. /data/uploads/hero.webp). Only set the inline var while the artwork
+  // is active - otherwise it would override the data-bg="off" stylesheet.
   useEffect(() => {
     const root = document.documentElement;
     const img = config.background !== false ? config.backgroundImage : undefined;
@@ -88,15 +88,15 @@ export function AppShell() {
     }
   }, [config.backgroundImage, config.background]);
 
-  // Einmalig: PWA-Install-/Standalone-Events + Client-Fehler-Protokoll
-  // (nur Produktiv-Build, siehe lib/track.ts).
+  // Once: PWA install/standalone events + client error log
+  // (production build only, see lib/track.ts).
   useEffect(() => {
     initTracking();
   }, []);
 
-  // Bei jedem Seitenwechsel an den Anfang scrollen (sonst öffnet die neue Seite
-  // an der vorherigen Scroll-Position, z. B. Artist-Seite aus dem Line-Up).
-  // Nebenbei: anonymer Seitenzähler (nur Produktiv-Build, siehe lib/track.ts).
+  // Scroll to the top on every page change (otherwise the new page opens at the
+  // previous scroll position, e.g. an artist page opened from the line-up).
+  // Also: anonymous page counter (production build only, see lib/track.ts).
   const { pathname } = useLocation();
   useEffect(() => {
     window.scrollTo(0, 0);

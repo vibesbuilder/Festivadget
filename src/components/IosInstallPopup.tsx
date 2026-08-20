@@ -1,22 +1,23 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Share, Plus, X } from "lucide-react";
 import { useFestival } from "@/data/queries";
 
-// Einmaliges Popup beim ersten Start – NUR für iOS-Nutzer, die die App noch nicht
-// zum Home-Bildschirm hinzugefügt haben. Erklärt, dass das nötig ist, um
-// Push-Nachrichten zu empfangen (iOS erlaubt Web-Push nur für installierte PWAs).
-// Kann zusätzlich jederzeit über das Fenster-Event erneut geöffnet werden
-// (z. B. „Mehr Infos" im Benachrichtigungs-Schalter).
+// One-time popup on first start - ONLY for iOS users who have not yet added the
+// app to their home screen. Explains that this is required to receive push
+// notifications (iOS only allows web push for installed PWAs).
+// Can also be reopened at any time via the window event
+// (e.g. "More info" in the notifications toggle).
 
 const SHOWN_KEY = "festivadget:ios-popup-shown";
 
-// Event, mit dem andere Komponenten (z. B. NotificationsToggle) das Popup erneut öffnen.
+// Event other components (e.g. NotificationsToggle) use to reopen the popup.
 export const IOS_POPUP_EVENT = "festivadget:show-ios-popup";
 
 function isIos(): boolean {
   const ua = navigator.userAgent;
   const iOSDevice = /iphone|ipad|ipod/i.test(ua);
-  // iPadOS 13+ meldet sich als „Macintosh" mit Touch.
+  // iPadOS 13+ identifies as "Macintosh" with touch support.
   const iPadOS = /Macintosh/.test(ua) && navigator.maxTouchPoints > 1;
   return iOSDevice || iPadOS;
 }
@@ -29,18 +30,19 @@ function isStandalone(): boolean {
 }
 
 export function IosInstallPopup() {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const { data: festival } = useFestival();
   const appName = festival?.shortName ?? festival?.name ?? "die App";
 
-  // Beim ersten Start automatisch zeigen (iOS, noch nicht installiert).
+  // Show automatically on first start (iOS, not installed yet).
   useEffect(() => {
     if (isIos() && !isStandalone() && !localStorage.getItem(SHOWN_KEY)) {
       setOpen(true);
     }
   }, []);
 
-  // Manuell erneut öffnen (z. B. „Mehr Infos") – unabhängig vom „schon gezeigt"-Flag.
+  // Reopen manually (e.g. "More info") - independent of the "already shown" flag.
   useEffect(() => {
     const reopen = () => setOpen(true);
     window.addEventListener(IOS_POPUP_EVENT, reopen);
@@ -68,7 +70,7 @@ export function IosInstallPopup() {
       >
         <div className="mb-3 flex items-start justify-between gap-3">
           <h2 className="text-lg font-bold">Benachrichtigungen aktivieren</h2>
-          <button onClick={dismiss} aria-label="Schließen" className="p-1 text-rid-muted">
+          <button onClick={dismiss} aria-label={t("common.close")} className="p-1 text-rid-muted">
             <X size={20} />
           </button>
         </div>

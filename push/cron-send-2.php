@@ -1,6 +1,6 @@
 <?php
-// Dünner Wrapper für einen weiteren Cron-Job-Eintrag. Viele Hoster lassen denselben
-// Dateipfad nicht mehrfach als Cron eintragen – diese Datei ermöglicht einen
-// zusätzlichen Eintrag, der EXAKT dieselbe Logik ausführt (Inhalt nur in cron-send.php).
-// Mehrfachläufe sind dank push_log (Idempotenz) ungefährlich. Cron-Zeiten versetzen!
+// Thin wrapper for an additional cron job entry. Many hosters do not allow the
+// same file path as multiple cron entries - this file enables an additional
+// entry executing EXACTLY the same logic (content only in cron-send.php).
+// Multiple runs are harmless thanks to push_log (idempotency). Stagger the cron times!
 require __DIR__ . '/cron-send.php';

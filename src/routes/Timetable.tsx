@@ -28,8 +28,8 @@ export default function Timetable() {
   const toggleStageHidden = useUi((s) => s.toggleStageHidden);
   const favorites = useFavorites((s) => s.favorites);
 
-  // Beim Öffnen immer den heutigen Festivaltag wählen (04:00-Grenze);
-  // außerhalb des Festivals den ersten Tag. Danach freie Auswahl.
+  // On open, always select today's festival day (04:00 boundary);
+  // outside the festival the first day. Free selection afterwards.
   const days = festival?.days ?? [];
   const dayApplied = useRef(false);
   useEffect(() => {
@@ -39,7 +39,7 @@ export default function Timetable() {
       setSelectedDay(currentDayId(days) ?? days[0].id);
       return;
     }
-    // Absicherung: ungültig gewordene Auswahl (z. B. Datenwechsel) korrigieren.
+    // Safeguard: correct a selection that became invalid (e.g. data change).
     if (!days.some((d) => d.id === selectedDayId)) {
       setSelectedDay(days[0].id);
     }
@@ -91,7 +91,7 @@ export default function Timetable() {
 
       <DayTabs days={days} selectedId={activeDay.id} onSelect={setSelectedDay} />
 
-      {/* Bühnen ein-/ausblenden */}
+      {/* Show/hide stages */}
       <div className="flex flex-wrap gap-2">
         {stages.map((stage) => {
           const isVisible = !hidden.has(stage.id);
@@ -123,7 +123,7 @@ export default function Timetable() {
       </label>
 
       {visibleStages.length === 0 ? (
-        <EmptyState label="Alle Bühnen ausgeblendet." />
+        <EmptyState label={t("timetable.allHidden")} />
       ) : view === "grid" ? (
         <TimetableGrid
           day={activeDay}

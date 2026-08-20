@@ -8,8 +8,8 @@ import { LINEUP_IMAGE_LIMIT } from "@/config";
 import { useAppConfig } from "@/data/useAppConfig";
 import type { Artist } from "@/types";
 
-// Sortierung: zuerst Acts mit gesetztem `order` (aufsteigend), danach der Rest –
-// Headliner zuerst, sonst alphabetisch (§12.1).
+// Sorting: first acts with `order` set (ascending), then the rest -
+// headliners first, otherwise alphabetical (§12.1).
 function byLineupOrder(a: Artist, b: Artist): number {
   const ao = a.order ?? Infinity;
   const bo = b.order ?? Infinity;
@@ -26,9 +26,9 @@ export default function Lineup() {
   const lineupDayId = useUi((s) => s.lineupDayId);
   const setLineupDay = useUi((s) => s.setLineupDay);
 
-  // Zuordnung Artist -> Tage, an denen er spielt. Der Tag stammt aus slot.dayId,
-  // das den Mitternachtsüberlauf (Auftritte nach 0 Uhr, vor ~8 Uhr) bereits dem
-  // vorherigen Festivaltag zuordnet (§7.1, §12.2).
+  // Mapping artist -> days they play on. The day comes from slot.dayId, which
+  // already assigns the midnight overflow (shows after midnight, before ~8 am)
+  // to the previous festival day (§7.1, §12.2).
   const daysByArtist = useMemo(() => {
     const map = new Map<string, Set<string>>();
     for (const s of slots ?? []) {
@@ -41,16 +41,16 @@ export default function Lineup() {
 
   const days = festival?.days ?? [];
 
-  // Vollständige, sortierte Line-Up-Liste (ohne Tagesfilter) – Basis für Rang/Bild-Limit.
+  // Full, sorted line-up list (without day filter) - basis for rank/image limit.
   const shownSorted = useMemo(() => {
     if (!artists) return [];
-    // Nur Acts mit lineup !== false anzeigen (Aktivitäten/Programmpunkte ausblendbar).
+    // Only show acts with lineup !== false (activities/program items can be hidden).
     return artists.filter((a) => a.lineup !== false).slice().sort(byLineupOrder);
   }, [artists]);
 
-  // Die ersten N Acts (nach globaler Reihenfolge) erhalten ein Bild, alle weiteren
-  // werden ohne Bild dargestellt – unabhängig vom Tagesfilter. N kommt aus dem
-  // Admin (lineupImageLimit), Fallback ist die Konstante.
+  // The first N acts (by global order) get an image, all further ones render
+  // without an image - independent of the day filter. N comes from the admin
+  // (lineupImageLimit), fallback is the constant.
   const { lineupImageLimit } = useAppConfig();
   const imageLimit = lineupImageLimit ?? LINEUP_IMAGE_LIMIT;
   const imageArtistIds = useMemo(
@@ -74,7 +74,7 @@ export default function Lineup() {
     <section>
       <h1 className="mb-4 text-2xl font-bold">{t("lineup.title")}</h1>
 
-      {/* Filter nach Festivaltag */}
+      {/* Filter by festival day */}
       <div className="mb-4 flex gap-2 overflow-x-auto pb-1">
         <button
           onClick={() => setLineupDay(null)}
@@ -94,7 +94,7 @@ export default function Lineup() {
       </div>
 
       {filtered.length === 0 ? (
-        <EmptyState label="Keine Acts an diesem Tag." />
+        <EmptyState label={t("lineup.noActs")} />
       ) : (
         <div className="grid grid-cols-2 gap-3">
           {filtered.map((artist) => (

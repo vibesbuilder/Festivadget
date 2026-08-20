@@ -15,7 +15,7 @@ interface Props {
 
 import { useTranslation } from "react-i18next";
 
-// Filterleiste: Chips je vorhandener (sichtbarer) POI-Kategorie (§12.4).
+// Filter bar: chips per existing (visible) POI category (§12.4).
 export function PoiFilterBar({ available, active, onToggle, onReset }: Props) {
   const { t } = useTranslation();
   const allActive = active.size === 0;

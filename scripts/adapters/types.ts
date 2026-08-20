@@ -1,7 +1,7 @@
 import type { ContentSourcesConfig, SourceBinding } from "../../content-sources.config";
 
-// Gemeinsames Adapter-Interface (§6.2). Jeder Adapter liefert bereits auf das
-// Schema (§7) gemappte Datensätze als unknown[] (Validierung in build-data).
+// Shared adapter interface (§6.2). Every adapter delivers records already mapped
+// to the schema (§7) as unknown[] (validation in build-data).
 export interface SourceAdapter {
   fetchDomain(
     domain: string,

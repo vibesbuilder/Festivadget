@@ -1,6 +1,6 @@
 <?php
-// Geschützte Admin-Seite: Nachricht eintippen → sofort an alle Abos senden.
-// Für Safety-Durchsagen und spontane Infos (unabhängig vom Cron-Intervall).
+// Protected admin page: type a message -> send to all subscriptions immediately.
+// For safety announcements and spontaneous info (independent of the cron interval).
 
 declare(strict_types=1);
 
@@ -18,9 +18,9 @@ if (($_POST['do'] ?? '') === 'login') {
     $hash = (string) ($cfg['adminPasswordHash'] ?? '');
     if ($hash !== '' && password_verify((string) ($_POST['password'] ?? ''), $hash)) {
         $_SESSION['push_admin'] = true;
-        app_log('info', 'auth', 'Push-Admin-Login erfolgreich.');
+        app_log('info', 'auth', 'Push admin login successful.');
     } else {
-        app_log('warn', 'auth', 'Push-Admin-Login fehlgeschlagen (falsches Passwort).');
+        app_log('warn', 'auth', 'Push admin login failed (wrong password).');
         $error = 'Falsches Passwort.';
     }
 }
@@ -33,7 +33,7 @@ if (($_POST['do'] ?? '') === 'logout') {
 
 $loggedIn = !empty($_SESSION['push_admin']);
 
-// --- Senden ------------------------------------------------------------
+// --- Send --------------------------------------------------------------
 if ($loggedIn && ($_POST['do'] ?? '') === 'send') {
     require_once __DIR__ . '/sender.php';
     $title = trim((string) ($_POST['title'] ?? ''));

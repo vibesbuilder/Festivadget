@@ -1,9 +1,9 @@
 <?php
-// Anonymer Nutzungs-Zähler + Client-Fehlermeldungen.
-// POST JSON { page, anon, session, lang?, theme? }        -> eine Statistik-Zeile
-// POST JSON { type:"error", message, route, anon, session } -> Protokoll-Eintrag
-// Wird vom Client per sendBeacon gerufen (nur im Produktiv-Build).
-// Keine IPs, keine User-Agents – siehe stats-db.php / log.php.
+// Anonymous usage counter + client error reports.
+// POST JSON { page, anon, session, lang?, theme? }        -> one statistics row
+// POST JSON { type:"error", message, route, anon, session } -> log entry
+// Called by the client via sendBeacon (production build only).
+// No IPs, no user agents - see stats-db.php / log.php.
 
 declare(strict_types=1);
 
@@ -25,7 +25,7 @@ if (!is_array($body)) {
     exit;
 }
 
-// Eingaben hart normalisieren (Endpoint ist naturgemäß offen).
+// Normalize inputs strictly (the endpoint is inherently open).
 $clean = static function ($v, int $max): string {
     $s = strtolower((string) $v);
     $s = preg_replace('/[^a-z0-9_-]/', '', $s) ?? '';
@@ -40,7 +40,7 @@ if (strlen($anon) < 8 || strlen($session) < 8) {
     exit;
 }
 
-// --- Client-Fehler → Protokoll (Quelle "client") ---------------------------
+// --- Client errors -> log (source "client") --------------------------------
 if (($body['type'] ?? '') === 'error') {
     $route   = substr(preg_replace('#[^a-z0-9/_-]#i', '', (string) ($body['route'] ?? '')) ?? '', 0, 64);
     $message = (string) ($body['message'] ?? '');
@@ -51,7 +51,7 @@ if (($body['type'] ?? '') === 'error') {
     exit;
 }
 
-// --- Seitenaufruf → Statistik ----------------------------------------------
+// --- Page view -> statistics ------------------------------------------------
 $page  = $clean($body['page'] ?? '', 32);
 $lang  = $clean($body['lang'] ?? '', 8);
 $theme = $clean($body['theme'] ?? '', 8);
@@ -66,10 +66,10 @@ try {
     $now = new DateTimeImmutable('now', new DateTimeZone('Europe/Vienna'));
     stats_db()
         ->prepare('INSERT INTO app_stats_events (ts, day, page, anon, session, lang, theme) VALUES (?, ?, ?, ?, ?, ?, ?)')
-        // Mikrosekunden: Events derselben Sekunde bleiben eindeutig sortierbar.
+        // Microseconds: events of the same second stay uniquely sortable.
         ->execute([$now->format('Y-m-d H:i:s.u'), $now->format('Y-m-d'), $page, $anon, $session, $lang, $theme]);
     http_response_code(204);
 } catch (Throwable) {
-    // Statistik ist nachrangig – nie einen Fehler an den Client eskalieren.
+    // Statistics are secondary - never escalate an error to the client.
     http_response_code(204);
 }

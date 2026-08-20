@@ -1,32 +1,32 @@
 <?php
-// Wetter-Endpoint mit wählbarem Anbieter (GeoSphere Austria, OpenWeather,
-// WeatherAPI.com, MET Norway – Adapter in weather-providers.php) und
-// Lazy-Datei-Cache – KEIN Cronjob nötig. Der erste Abruf nach Ablauf der TTL
-// holt frische Daten, alle anderen bekommen den Cache. Bei Anbieter-Ausfall
-// wird der letzte Stand (als "stale") weiter ausgeliefert.
+// Weather endpoint with a selectable provider (GeoSphere Austria, OpenWeather,
+// WeatherAPI.com, MET Norway - adapters in weather-providers.php) and a lazy
+// file cache - NO cron job needed. The first request after the TTL expires
+// fetches fresh data, everyone else gets the cache. On provider outage the
+// last state continues to be served (as "stale").
 //
-// Einstellungen (Priorität von unten nach oben):
-// 1. Fallback-Defaults unten,
+// Settings (priority from bottom to top):
+// 1. fallback defaults below,
 // 2. push/config.php ['weather' => ...],
-// 3. push/weather-settings.json – wird vom CMS-Tab „Wetter" geschrieben
-//    (liegt per .htaccess NICHT öffentlich, enthält ggf. API-Keys).
+// 3. push/weather-settings.json - written by the CMS tab "Weather"
+//    (NOT public via .htaccess, may contain API keys).
 
 declare(strict_types=1);
 
 require_once __DIR__ . '/weather-providers.php';
 
 header('Content-Type: application/json; charset=utf-8');
-// Öffentliche, unkritische Daten – CORS offen (auch für lokale Dev-Server).
+// Public, uncritical data - CORS open (also for local dev servers).
 header('Access-Control-Allow-Origin: *');
 header('Cache-Control: no-store');
 
 const WEATHER_TTL_S       = 900;      // 15 min Cache
-const WEATHER_STALE_S     = 3 * 3600; // ab 3 h ohne frische Daten: stale-Flag
-const WEATHER_FAIL_RETRY_S = 120;     // nach Fehlschlag: 2 min kein neuer Fetch-Versuch
+const WEATHER_STALE_S     = 3 * 3600; // stale flag after 3 h without fresh data
+const WEATHER_FAIL_RETRY_S = 120;     // after a failure: no new fetch attempt for 2 min
 const STATION_URL      = 'https://dataset.api.hub.geosphere.at/v1/station/current/tawes-v1-10min';
-// --- Aggregation: unified rows → current + 3 Tage mit Abschnitten -------------
+// --- Aggregation: unified rows -> current + 3 days with sections --------------
 
-// Priorität fürs dominante Symbol (höher = wichtiger).
+// Priority for the dominant symbol (higher = more important).
 const ICON_PRIO = [
     'thunderstorm' => 100, 'heavy-rain' => 90, 'heavy-snow' => 90, 'sleet' => 80,
     'rain' => 70, 'snow' => 70, 'fog' => 50, 'overcast' => 40, 'cloudy' => 35,
@@ -44,11 +44,11 @@ function icon_variant(string $base, bool $night): string
 function wind_direction_text(float $deg): string
 {
     $dirs = ['N', 'NO', 'O', 'SO', 'S', 'SW', 'W', 'NW'];
-    // PHP-% kann negativ werden (anders als Python) → in [0..7] normalisieren.
+    // PHP % can go negative (unlike Python) -> normalize into [0..7].
     return $dirs[(((int) round($deg / 45.0)) % 8 + 8) % 8];
 }
 
-/** Aggregiert Stunden-Zeilen zu einem Tagesabschnitt (leer -> noData). */
+/** Aggregates hourly rows into a day section (empty -> noData). */
 function build_section(array $rows): array
 {
     if ($rows === []) {
@@ -87,10 +87,10 @@ function build_section(array $rows): array
 }
 
 /**
- * Unified rows (Provider) → current + 3 Tage (Kalendertag-Kennzahlen +
- * Abschnitte Morgens/Mittags/Abends/Nachts). Wie in CrewCare gilt:
- * „Nachts" (0–6 h) zeigt die FOLGENDE Nacht (aus dem Folgetag gezogen);
- * die Tages-Kennzahlen (min/max/precip/Symbol) bleiben über den Kalendertag.
+ * Unified rows (provider) -> current + 3 days (calendar day metrics +
+ * sections morning/noon/evening/night). As in CrewCare:
+ * "night" (0-6 h) shows the FOLLOWING night (pulled from the next day);
+ * the day metrics (min/max/precip/symbol) stay over the calendar day.
  */
 function weather_aggregate(array $unified, DateTimeZone $tz): ?array
 {
@@ -112,7 +112,7 @@ function weather_aggregate(array $unified, DateTimeZone $tz): ?array
             'windKmh' => $r['windKmh'],
             'windDeg' => $r['windDeg'],
         ];
-        // "Aktuell" = erste Zeile, die jetzt oder in der Zukunft liegt.
+        // "Current" = the first row lying now or in the future.
         if ($current === null && $local >= $now->modify('-30 minutes')) {
             $current = [
                 'temp' => $r['temp'] !== null ? round($r['temp'], 1) : null,
@@ -129,7 +129,7 @@ function weather_aggregate(array $unified, DateTimeZone $tz): ?array
         $nextDay = $today->modify('+' . ($offset + 1) . ' days')->format('Y-m-d');
         $dayRows = $rows[$date] ?? [];
 
-        // Tages-Kennzahlen über den Kalendertag.
+        // Day metrics over the calendar day.
         $min = null;
         $max = null;
         $precip = 0.0;
@@ -162,7 +162,7 @@ function weather_aggregate(array $unified, DateTimeZone $tz): ?array
                 'morning' => build_section($inRange($dayRows, 6, 12)),
                 'noon'    => build_section($inRange($dayRows, 12, 18)),
                 'evening' => build_section($inRange($dayRows, 18, 24)),
-                // Folgende Nacht: 0–6 h des NÄCHSTEN Kalendertags.
+                // Following night: 0-6 h of the NEXT calendar day.
                 'night'   => build_section($inRange($rows[$nextDay] ?? [], 0, 6)),
             ],
         ];
@@ -174,7 +174,7 @@ function weather_aggregate(array $unified, DateTimeZone $tz): ?array
     return ['current' => $current, 'days' => $out];
 }
 
-/** Aktueller TAWES-Messwert (Lufttemperatur) – nur für GeoSphere sinnvoll. */
+/** Current TAWES measurement (air temperature) - only meaningful for GeoSphere. */
 function fetch_station_temp(string $stationId): ?float
 {
     if ($stationId === '') {
@@ -190,7 +190,7 @@ function fetch_station_temp(string $stationId): ?float
     return null;
 }
 
-// --- Cache + Abruf ------------------------------------------------------------
+// --- Cache + fetch ---------------------------------------------------------------
 $cfg      = weather_config();
 $provider = weather_provider_key($cfg);
 
@@ -200,7 +200,7 @@ if (is_file($cacheFile)) {
     $raw    = file_get_contents($cacheFile);
     $cached = is_string($raw) ? json_decode($raw, true) : null;
     $cached = is_array($cached) ? $cached : null;
-    // Anbieter gewechselt → alter Cache ist wertlos (falsche Quelle/Attribution).
+    // Provider changed -> the old cache is worthless (wrong source/attribution).
     if ($cached !== null && ($cached['provider'] ?? '') !== $provider) {
         $cached = null;
     }
@@ -213,7 +213,7 @@ if ($hasData && $cacheAge < WEATHER_TTL_S) {
     echo json_encode($cached, JSON_UNESCAPED_UNICODE);
     exit;
 }
-// Retry-Sperre nach Fehlschlag: kurz NICHT erneut fetchen (Lastschutz).
+// Retry lock after failure: do NOT fetch again briefly (load protection).
 if ($cached !== null && (int) ($cached['_retryAt'] ?? 0) > time()) {
     if ($hasData) {
         unset($cached['_cachedAt'], $cached['_retryAt']);
@@ -221,11 +221,11 @@ if ($cached !== null && (int) ($cached['_retryAt'] ?? 0) > time()) {
         echo json_encode($cached, JSON_UNESCAPED_UNICODE);
     } else {
         http_response_code(502);
-        echo json_encode(['ok' => false, 'error' => 'Wetterdienst derzeit nicht erreichbar.']);
+        echo json_encode(['ok' => false, 'error' => 'Weather service currently unavailable.']);
     }
     exit;
 }
-// Reine Fehl-Marker (ok=false) sind ab hier wertlos.
+// Pure failure markers (ok=false) are worthless from here on.
 if (!$hasData) {
     $cached = null;
     $cacheAge = PHP_INT_MAX;
@@ -241,15 +241,15 @@ try {
 }
 
 if ($normalized === null) {
-    // Fehlschlag protokollieren (nur wenn config.php + DB vorhanden; fail-silent).
+    // Log the failure (only when config.php + DB exist; fail-silent).
     if (is_file(__DIR__ . '/config.php')) {
         require_once __DIR__ . '/log.php';
         $label = WEATHER_PROVIDERS[$provider]['label'];
-        app_log('warn', 'weather', ($fetchError ?: "$label: leere Antwort.")
-            . ($cached !== null ? ' – letzter Cache wird ausgeliefert.' : ' – kein Cache vorhanden (502).'));
+        app_log('warn', 'weather', ($fetchError ?: "$label: empty response.")
+            . ($cached !== null ? ' - serving the last cache.' : ' - no cache available (502).'));
     }
-    // Negativ-Cache: bei Anbieter-Ausfall nicht mit JEDEM Request erneut einen
-    // bis zu 20-s-Fetch anstoßen (öffentlich triggerbare Lastspitze).
+    // Negative cache: on provider outage, do not trigger an up-to-20-s fetch with
+    // EVERY request (publicly triggerable load spike).
     $marker = ($cached ?? ['ok' => false, 'provider' => $provider]) + [];
     $marker['_cachedAt']  = (int) ($cached['_cachedAt'] ?? 0); // Nutz-TTL NICHT verlängern
     $marker['_retryAt']   = time() + WEATHER_FAIL_RETRY_S;
@@ -257,21 +257,21 @@ if ($normalized === null) {
     if (@file_put_contents($mTmp, json_encode($marker, JSON_UNESCAPED_UNICODE)) !== false) {
         @rename($mTmp, $cacheFile);
     }
-    // Abruf fehlgeschlagen: letzten Cache (als stale) weiterreichen, sonst Fehler.
+    // Fetch failed: pass on the last cache (as stale), otherwise an error.
     if ($cached !== null) {
         unset($cached['_cachedAt'], $cached['_retryAt']);
         $cached['stale'] = $cacheAge > WEATHER_STALE_S;
         echo json_encode($cached, JSON_UNESCAPED_UNICODE);
     } else {
         http_response_code(502);
-        // Öffentlich nur generisch – die konkrete Ursache steht im Protokoll
-        // bzw. im CMS-Verbindungstest (keine internen Details an Anonyme).
-        echo json_encode(['ok' => false, 'error' => 'Wetterdienst derzeit nicht erreichbar.']);
+        // Publicly only generic - the concrete cause is in the log or the CMS
+        // connection test (no internal details for anonymous users).
+        echo json_encode(['ok' => false, 'error' => 'Weather service currently unavailable.']);
     }
     exit;
 }
 
-// TAWES-Messwert (optional, nur GeoSphere) überschreibt die "aktuelle" Temperatur.
+// TAWES measurement (optional, GeoSphere only) overrides the "current" temperature.
 if ($provider === 'geosphere') {
     $stationTemp = fetch_station_temp((string) $cfg['station_id']);
     if ($stationTemp !== null && is_array($normalized['current'])) {
@@ -290,7 +290,7 @@ $payload = [
     'attribution' => WEATHER_PROVIDERS[$provider]['attribution'],
 ];
 
-// Atomar schreiben (tmp + rename, eindeutiger Name gegen parallele Schreiber).
+// Write atomically (tmp + rename, unique name against parallel writers).
 $tmp = $cacheFile . '.tmp' . uniqid('', true);
 if (@file_put_contents($tmp, json_encode($payload + ['_cachedAt' => time()], JSON_UNESCAPED_UNICODE)) !== false) {
     @rename($tmp, $cacheFile);

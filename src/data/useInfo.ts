@@ -1,8 +1,8 @@
 import { useInfoPages } from "./queries";
 
-// Effektive Info-Seiten. Der Live-Override (data/app-info.json) wird bereits
-// generisch in useDataset behandelt – hier genügt ein Delegat, damit Komponenten
-// und Suche eine sprechende API behalten.
+// Effective info pages. The live override (data/app-info.json) is already
+// handled generically in useDataset - a delegate suffices here so components
+// and search keep an expressive API.
 export function useInfo() {
   return useInfoPages();
 }

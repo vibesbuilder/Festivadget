@@ -1,17 +1,19 @@
-// Web-Push-Client (§13). Verwaltet das Abo über die Push-API und meldet es an
-// das PHP-Backend (/push/subscribe.php). Der VAPID-Public-Key kommt zur
-// Laufzeit vom Server (/push/vapid.php, gecacht in localStorage); die
-// Build-Env (VITE_VAPID_PUBLIC_KEY) bleibt optionaler Fallback. Ohne Key
-// (kein Backend + keine Env) ist Push deaktiviert.
+// Web push client (§13). Manages the subscription via the Push API and reports
+// it to the PHP backend (/push/subscribe.php). The VAPID public key arrives at
+// runtime from the server (/push/vapid.php, cached in localStorage); the
+// build env (VITE_VAPID_PUBLIC_KEY) remains an optional fallback. Without a key
+// (no backend + no env) push is disabled.
 
 import { useFavorites } from "@/store/favorites";
+import { useUi } from "@/store/ui";
+import i18n from "@/i18n/config";
 
 const BUILD_VAPID_KEY = import.meta.env.VITE_VAPID_PUBLIC_KEY as string | undefined;
 const SUBSCRIBE_URL = `${import.meta.env.BASE_URL}push/subscribe.php`;
 const VAPID_URL = `${import.meta.env.BASE_URL}push/vapid.php`;
 const VAPID_CACHE_KEY = "rid-vapid-key";
 
-// Base64URL-kodierter unkomprimierter P-256-Punkt (üblich: 87 Zeichen).
+// Base64URL-encoded uncompressed P-256 point (typically 87 chars).
 const VAPID_KEY_RE = /^[A-Za-z0-9_-]{80,100}$/;
 
 function cachedVapidKey(): string | undefined {
@@ -23,13 +25,13 @@ function cachedVapidKey(): string | undefined {
   }
 }
 
-// Bekannter Key: Build-Env vor localStorage-Cache; sonst per ensureVapidKey().
+// Known key: build env before the localStorage cache; otherwise via ensureVapidKey().
 let vapidKey: string | undefined = BUILD_VAPID_KEY || cachedVapidKey();
 
 /**
- * Liefert den VAPID-Public-Key – ggf. per einmaligem Fetch vom Backend
- * (danach aus localStorage, damit die App offline startklar bleibt).
- * undefined = kein Key erreichbar (Push bleibt deaktiviert), wirft nie.
+ * Returns the VAPID public key - fetched once from the backend if needed
+ * (afterwards from localStorage so the app stays ready to start offline).
+ * undefined = no key reachable (push stays disabled), never throws.
  */
 export async function ensureVapidKey(): Promise<string | undefined> {
   if (vapidKey) return vapidKey;
@@ -43,20 +45,20 @@ export async function ensureVapidKey(): Promise<string | undefined> {
     try {
       localStorage.setItem(VAPID_CACHE_KEY, key);
     } catch {
-      /* ignore – dann eben beim nächsten Start erneut holen */
+      /* ignore - fetch again on the next start */
     }
     return key;
   } catch {
-    return undefined; // offline/kein Backend → Push (vorerst) nicht verfügbar
+    return undefined; // offline/no backend -> push unavailable (for now)
   }
 }
 
-/** Kann dieser Browser Web-Push (unabhängig von der Key-Konfiguration)? */
+/** Can this browser do web push (independent of the key configuration)? */
 export function isPushCapable(): boolean {
   return "serviceWorker" in navigator && "PushManager" in window && "Notification" in window;
 }
 
-/** Ist Web-Push möglich UND ein Key bekannt (Build, Cache oder bereits geholt)? */
+/** Is web push possible AND a key known (build, cache or already fetched)? */
 export function isPushSupported(): boolean {
   return !!vapidKey && isPushCapable();
 }
@@ -65,7 +67,7 @@ export function notificationPermission(): NotificationPermission {
   return typeof Notification !== "undefined" ? Notification.permission : "denied";
 }
 
-// VAPID-Key (Base64URL) → Uint8Array für applicationServerKey.
+// VAPID key (Base64URL) -> Uint8Array for applicationServerKey.
 function urlBase64ToUint8Array(base64String: string): Uint8Array {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
   const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
@@ -81,13 +83,13 @@ export async function currentSubscription(): Promise<PushSubscription | null> {
   return reg.pushManager.getSubscription();
 }
 
-// Vom Nutzer wählbare Push-Kategorien (Safety kommt immer an, ist nicht wählbar).
+// User-selectable push categories (safety always gets through, not selectable).
 export const PUSH_CATEGORIES = ["info", "lineup", "general"] as const;
 export type PushCategory = (typeof PUSH_CATEGORIES)[number];
 
 const CATS_KEY = "rid-push-categories";
 
-/** Lokale Auswahl der Push-Kategorien (Default: alle). */
+/** Local selection of push categories (default: all). */
 export function getPushCategories(): PushCategory[] {
   try {
     const raw = localStorage.getItem(CATS_KEY);
@@ -109,10 +111,10 @@ function storePushCategories(cats: PushCategory[]): void {
   }
 }
 
-// --- „Mein Plan" (Erinnerung vor Konzertbeginn an favorisierte Acts) --------
+// --- "My plan" (reminder before showtime for favorited acts) ----------------
 const PLAN_KEY = "rid-push-plan";
 
-/** Ist das „Mein Plan"-Abo (Favoriten-Erinnerungen) aktiviert? (Default: aus) */
+/** Is the "My plan" subscription (favorite reminders) enabled? (default: off) */
 export function getPlanEnabled(): boolean {
   try {
     return localStorage.getItem(PLAN_KEY) === "1";
@@ -129,15 +131,15 @@ function storePlanEnabled(on: boolean): void {
   }
 }
 
-/** Aktuell ans Backend zu meldende Plan-Slots: nur wenn Plan-Abo aktiv. */
+/** Plan slots to report to the backend right now: only while the plan subscription is active. */
 function currentPlanSlots(): string[] {
   return getPlanEnabled() ? Array.from(useFavorites.getState().favorites) : [];
 }
 
-/** Meldet den aktuellen Zustand (Kategorien + Plan) ans Backend – falls abonniert. */
+/** Reports the current state (categories + plan) to the backend - if subscribed. */
 async function postSubscriptionState(): Promise<void> {
   const sub = await currentSubscription();
-  if (!sub) return; // nur lokal merken, bis abonniert wird
+  if (!sub) return; // only remember locally until subscribed
   await fetch(SUBSCRIBE_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -146,19 +148,20 @@ async function postSubscriptionState(): Promise<void> {
       subscription: sub.toJSON(),
       categories: getPushCategories(),
       plan: currentPlanSlots(),
+      lang: useUi.getState().language,
     }),
   }).catch(() => {
-    /* offline → wird beim nächsten Subscribe/Update nachgezogen */
+    /* offline -> caught up on the next subscribe/update */
   });
 }
 
-/** Fordert Erlaubnis an, abonniert und meldet das Abo (Kategorien + Plan) ans Backend. */
+/** Requests permission, subscribes and reports the subscription (categories + plan) to the backend. */
 export async function subscribePush(): Promise<PushSubscription> {
   const key = await ensureVapidKey();
-  if (!key) throw new Error("Kein VAPID-Public-Key konfiguriert.");
+  if (!key) throw new Error(i18n.t("push.noKey"));
 
   const permission = await Notification.requestPermission();
-  if (permission !== "granted") throw new Error("Benachrichtigungen nicht erlaubt.");
+  if (permission !== "granted") throw new Error(i18n.t("push.denied"));
 
   const reg = await navigator.serviceWorker.ready;
   let sub = await reg.pushManager.getSubscription();
@@ -177,32 +180,38 @@ export async function subscribePush(): Promise<PushSubscription> {
       subscription: sub.toJSON(),
       categories: getPushCategories(),
       plan: currentPlanSlots(),
+      lang: useUi.getState().language,
     }),
   });
-  if (!res.ok) throw new Error(`Abo konnte nicht gespeichert werden (HTTP ${res.status}).`);
+  if (!res.ok) throw new Error(i18n.t("push.saveFailed", { status: res.status }));
 
   return sub;
 }
 
-/** Aktualisiert die Kategorie-Auswahl (lokal + Backend, falls bereits abonniert). */
+/** Updates the category selection (locally + backend, if already subscribed). */
 export async function updatePushCategories(cats: PushCategory[]): Promise<void> {
   storePushCategories(cats);
   await postSubscriptionState();
 }
 
-/** Schaltet das „Mein Plan"-Abo um und meldet den Stand ans Backend. */
+/** Toggles the "My plan" subscription and reports the state to the backend. */
 export async function updatePushPlanEnabled(on: boolean): Promise<void> {
   storePlanEnabled(on);
   await postSubscriptionState();
 }
 
-/** Bei Favoriten-Änderung aufrufen: synchronisiert den Plan, falls aktiv + abonniert. */
+/** Call on favorite changes: syncs the plan if active + subscribed. */
 export async function syncPushPlan(): Promise<void> {
   if (!getPlanEnabled()) return;
   await postSubscriptionState();
 }
 
-/** Meldet das Abo ab (Backend + Browser). */
+/** Call on language changes: updates the subscription language at the backend. */
+export async function syncPushLanguage(): Promise<void> {
+  await postSubscriptionState();
+}
+
+/** Unsubscribes (backend + browser). */
 export async function unsubscribePush(): Promise<void> {
   const sub = await currentSubscription();
   if (!sub) return;
@@ -212,7 +221,7 @@ export async function unsubscribePush(): Promise<void> {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ action: "unsubscribe", endpoint: sub.endpoint }),
   }).catch(() => {
-    /* Abmeldung im Browser trotzdem versuchen. */
+    /* Still attempt to unsubscribe in the browser. */
   });
 
   await sub.unsubscribe();

@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Star } from "lucide-react";
 import type { Artist, FestivalDay, Slot, Stage } from "@/types";
 import { formatTime } from "@/lib/time";
@@ -14,12 +15,13 @@ interface Props {
   clashes: Set<string>;
 }
 
-const GUTTER = 36; // px Breite der Zeitachse links
+const GUTTER = 36; // px width of the time axis on the left
 
-// Grid-Ansicht: Spalten = Stages (nach order), Reihen = Zeitachse (§12.2).
-// Spalten teilen sich die volle Breite (flex-1) → passt auf 360 px ohne Scrollen;
-// ausgeblendete Bühnen geben ihre Breite an die übrigen ab.
+// Grid view: columns = stages (by order), rows = time axis (§12.2).
+// Columns share the full width (flex-1) -> fits 360 px without scrolling;
+// hidden stages hand their width to the remaining ones.
 export function TimetableGrid({ day, stages, slots, artistById, clashes }: Props) {
+  const { t } = useTranslation();
   const range = dayRange(day);
   const marks = hourMarks(range);
   const current = useNow();
@@ -28,13 +30,13 @@ export function TimetableGrid({ day, stages, slots, artistById, clashes }: Props
 
   const sortedStages = stages.slice().sort((a, b) => a.order - b.order);
 
-  // NowLine nur zeigen, wenn die aktuelle Zeit in der Tagesspanne liegt.
+  // Only show the NowLine while the current time is within the day span.
   const nowMin = current.diff(range.start, "minutes").minutes;
   const showNow = nowMin >= 0 && nowMin <= range.totalMinutes;
 
   return (
     <div className="rid-card w-full p-2">
-      {/* Stage-Kopfzeile */}
+      {/* Stage header row */}
       <div className="flex" style={{ paddingLeft: GUTTER }}>
         {sortedStages.map((stage) => (
           <div
@@ -47,9 +49,9 @@ export function TimetableGrid({ day, stages, slots, artistById, clashes }: Props
         ))}
       </div>
 
-      {/* Zeitachse + Spalten */}
+      {/* Time axis + columns */}
       <div className="relative" style={{ height: range.heightPx }}>
-        {/* Stundenlinien + Zeitlabels */}
+        {/* Hour lines + time labels */}
         {marks.map((m) => (
           <div key={m.label} className="absolute left-0 right-0" style={{ top: m.topPx }}>
             <div className="border-t border-rid-muted/25" style={{ marginLeft: GUTTER }} />
@@ -75,7 +77,7 @@ export function TimetableGrid({ day, stages, slots, artistById, clashes }: Props
           </div>
         )}
 
-        {/* Spalten je Stage (flex-1 = gleiche Breite, füllt die volle Breite) */}
+        {/* One column per stage (flex-1 = equal width, fills the full width) */}
         <div className="absolute inset-y-0 right-0 flex" style={{ left: GUTTER }}>
           {sortedStages.map((stage) => (
             <div
@@ -112,7 +114,7 @@ export function TimetableGrid({ day, stages, slots, artistById, clashes }: Props
                           {artist?.name ?? slot.artistId}
                         </span>
                       )}
-                      {/* Stern oben-bündig zum Text: zu „Mein Plan" hinzufügen, ohne zu navigieren. */}
+                      {/* Star top-aligned with the text: add to "My plan" without navigating. */}
                       <button
                         type="button"
                         onClick={(e) => {
@@ -120,7 +122,7 @@ export function TimetableGrid({ day, stages, slots, artistById, clashes }: Props
                           e.stopPropagation();
                           toggle(slot.id);
                         }}
-                        aria-label={isFav ? "Aus Mein Plan entfernen" : "Zu Mein Plan hinzufügen"}
+                        aria-label={isFav ? t("timetable.removePlan") : t("timetable.addPlan")}
                         aria-pressed={isFav}
                         className="absolute right-0 top-0 flex h-full w-5 items-start justify-center pt-0.5 hover:bg-black/10"
                       >

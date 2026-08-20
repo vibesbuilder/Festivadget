@@ -12,9 +12,9 @@ interface Props {
   onSelect: (poi: Poi) => void;
 }
 
-// Interaktive Offline-Karte mit Leaflet L.CRS.Simple + ImageOverlay (§12.4).
-// POI-Koordinaten (x,y) sind Pixel im Bild (Ursprung oben-links); Umrechnung
-// auf Leaflet-LatLng = [height - y, x].
+// Interactive offline map using Leaflet L.CRS.Simple + ImageOverlay (§12.4).
+// POI coordinates (x,y) are pixels in the image (origin top-left); conversion
+// to Leaflet LatLng = [height - y, x].
 export function FestivalMap({ config, pois, categories, onSelect }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
@@ -22,7 +22,7 @@ export function FestivalMap({ config, pois, categories, onSelect }: Props) {
   const onSelectRef = useRef(onSelect);
   onSelectRef.current = onSelect;
 
-  // Karte einmalig initialisieren.
+  // Initialize the map once.
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
 
@@ -40,9 +40,9 @@ export function FestivalMap({ config, pois, categories, onSelect }: Props) {
     });
 
     L.imageOverlay(config.image, bounds).addTo(map);
-    // Anfangs-Zoom: explizit per startZoom (entkoppelt vom minZoom = maximum zoom-out),
-    // sonst Bild einpassen. So kann man weiter herauszoomen, ohne dass die Karte
-    // bereits herausgezoomt startet.
+    // Initial zoom: explicit via startZoom (decoupled from minZoom = maximum zoom-out),
+    // otherwise fit the image. This allows zooming out further without the map
+    // already starting zoomed out.
     if (typeof config.startZoom === "number") {
       map.setView([config.height / 2, config.width / 2], config.startZoom);
     } else {
@@ -53,8 +53,8 @@ export function FestivalMap({ config, pois, categories, onSelect }: Props) {
     markersRef.current = L.layerGroup().addTo(map);
     mapRef.current = map;
 
-    // Containerhöhe ist dynamisch (dvh) – Leaflet bei Größenänderung nachziehen,
-    // sonst bleiben Kacheln/Bounds auf der alten Größe hängen.
+    // The container height is dynamic (dvh) - update Leaflet on size changes,
+    // otherwise tiles/bounds stick to the old size.
     const ro = new ResizeObserver(() => map.invalidateSize());
     ro.observe(containerRef.current);
 
@@ -66,7 +66,7 @@ export function FestivalMap({ config, pois, categories, onSelect }: Props) {
     };
   }, [config]);
 
-  // Marker bei Änderung der (gefilterten) POIs neu aufbauen.
+  // Rebuild markers when the (filtered) POIs change.
   useEffect(() => {
     const group = markersRef.current;
     if (!group) return;

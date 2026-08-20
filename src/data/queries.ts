@@ -16,7 +16,7 @@ import type {
 } from "@/types";
 import { fetchJson } from "./fetchJson";
 
-// 2-Minuten-Poll nur, wenn Tab sichtbar und online (wie Live-News/App-Config).
+// 2-minute poll only while the tab is visible and online (like live news/app config).
 const livePoll = () =>
   typeof document !== "undefined" &&
   document.visibilityState === "visible" &&
@@ -24,11 +24,11 @@ const livePoll = () =>
     ? 120_000
     : false;
 
-// Generischer Dataset-Hook. Lädt den Build-Stand (data/<file>, via useVersionSync
-// gezielt invalidiert, §5.2) UND prüft live einen server-eigenen Override
-// (data/app-<file>, vom Admin/Import-Importer geschrieben). Liegt der Override
-// vor, ersetzt er den Build-Stand – so lässt sich jede Domäne ohne Neu-Deploy
-// pflegen (Admin-UI bzw. Server-Importer).
+// Generic dataset hook. Loads the build state (data/<file>, selectively invalidated
+// via useVersionSync, §5.2) AND live-checks a server-side override
+// (data/app-<file>, written by the admin/import importer). When the override
+// exists it replaces the build state - so every domain can be maintained without
+// a redeploy (admin UI or server importer).
 function useDataset<T>(key: DatasetKey, file: string): UseQueryResult<T> {
   const base = useQuery<T>({
     queryKey: ["data", key],

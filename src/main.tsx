@@ -4,7 +4,7 @@ import { registerSW } from "virtual:pwa-register";
 import App from "@/App";
 import "@/styles/index.css";
 
-// Service Worker registrieren (vite-plugin-pwa). autoUpdate übernimmt Updates.
+// Register the service worker (vite-plugin-pwa). autoUpdate handles updates.
 registerSW({ immediate: true });
 
 createRoot(document.getElementById("root")!).render(

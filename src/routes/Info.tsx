@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { lt } from "@/lib/localized";
 import { Link } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 import { useInfo } from "@/data/useInfo";
@@ -8,14 +9,14 @@ import { BackLink } from "@/components/BackLink";
 import { LoadingState, ErrorState, EmptyState } from "@/components/states";
 
 export default function Info() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { data, isLoading, isError, refetch } = useInfo();
 
   const pages = useMemo(
     () =>
       data
         ? data
-            .filter((p) => !p.hidden) // versteckte Einträge nicht im Menü zeigen
+            .filter((p) => !p.hidden) // keep hidden entries out of the menu
             .sort((a, b) => a.order - b.order)
         : [],
     [data],
@@ -37,7 +38,7 @@ export default function Info() {
               className="rid-card flex items-center gap-3 p-4 hover:border-rid-accent"
             >
               <InfoIcon name={page.icon} />
-              <span className="flex-1 font-medium">{page.title}</span>
+              <span className="flex-1 font-medium">{lt(page.title, i18n.language)}</span>
               <ChevronRight size={18} className="text-rid-muted" />
             </Link>
           </li>

@@ -1,6 +1,6 @@
-// „Heutiger" Festivaltag mit 04:00-Tagesgrenze: Zeiten vor 04:00 zählen zum
-// Vortag (Nachtprogramm). Außerhalb des Festivals: null (Aufrufer fällt auf
-// den ersten Tag zurück). Gleiches Verhalten wie in CrewCare.
+// "Today's" festival day with a 04:00 day boundary: times before 04:00 count
+// towards the previous day (night program). Outside the festival: null (callers
+// fall back to the first day). Same behavior as in CrewCare.
 export function currentDayId(
   days: { id: string; dayStart: string }[],
   now: Date = new Date(),

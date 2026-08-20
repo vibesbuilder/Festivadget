@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import { Home, Music2, CalendarClock, CalendarHeart, Menu } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
-// Untere Tab-Bar mit 5 Slots (§9). „Mehr" öffnet das More-Sheet via Route.
+// Bottom tab bar with 5 slots (§9). "More" opens the More sheet via a route.
 const tabs = [
   { to: "/", key: "home", icon: Home, end: true },
   { to: "/lineup", key: "lineup", icon: Music2, end: false },

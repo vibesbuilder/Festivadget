@@ -11,7 +11,7 @@ interface Props {
   isClash?: boolean;
 }
 
-// Listen-Darstellung eines Slots (§12.2 Liste).
+// List rendering of a slot (§12.2 list).
 export function SlotCard({ slot, artist, stage, isClash }: Props) {
   return (
     <div

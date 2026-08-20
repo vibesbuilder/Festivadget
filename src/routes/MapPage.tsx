@@ -18,7 +18,7 @@ export default function MapPage() {
   const [active, setActive] = useState<Set<string>>(new Set());
   const [selected, setSelected] = useState<Poi | null>(null);
 
-  // Kategorien als Map (schneller Lookup) + Set der ausgeblendeten (Master-Schalter).
+  // Categories as a Map (fast lookup) + set of hidden ones (master toggle).
   const catMap = useMemo(
     () => new Map((categories ?? []).map((c) => [c.id, c])),
     [categories],
@@ -28,13 +28,13 @@ export default function MapPage() {
     [categories],
   );
 
-  // Ausgeblendete Kategorien fliegen komplett raus (für alle Besucher).
+  // Hidden categories are removed entirely (for all visitors).
   const visiblePois = useMemo(
     () => (pois ?? []).filter((p) => !hiddenIds.has(p.type)),
     [pois, hiddenIds],
   );
 
-  // Filter-Chips nur für tatsächlich vorhandene, sichtbare Kategorien – nach Kategorie-order.
+  // Filter chips only for actually present, visible categories - by category order.
   const available = useMemo(() => {
     const present = new Set(visiblePois.map((p) => p.type));
     const orderOf = (id: string) => catMap.get(id)?.order ?? 999;
@@ -66,7 +66,7 @@ export default function MapPage() {
 
   if (l1 || l2) return <LoadingState />;
   if (isError || !config) return <ErrorState onRetry={() => void refetch()} />;
-  if (!pois || pois.length === 0) return <EmptyState label="Keine Kartenpunkte." />;
+  if (!pois || pois.length === 0) return <EmptyState label={t("map.noPois")} />;
 
   return (
     <section className="space-y-3">
@@ -77,10 +77,10 @@ export default function MapPage() {
         onToggle={toggle}
         onReset={() => setActive(new Set())}
       />
-      {/* Flexible Höhe: dynamischer Viewport (dvh) minus Kopf/Filter/Bottom-Nav –
-          70vh überlappte auf Smartphones mit dem unteren Menü. min-h als Netz.
-          isolate: Leaflet nutzt intern z-Index bis 1000 und würde sonst über
-          Sticky-Header/Bottom-Nav (z-30) malen. */}
+      {/* Flexible height: dynamic viewport (dvh) minus header/filter/bottom nav -
+          70vh overlapped the bottom menu on phones. min-h as a safety net.
+          isolate: Leaflet internally uses z-index up to 1000 and would otherwise
+          paint over the sticky header/bottom nav (z-30). */}
       <div className="relative isolate z-0 h-[calc(100dvh_-_248px)] min-h-[320px] overflow-hidden rounded-xl border border-rid-border bg-rid-surface">
         <FestivalMap config={config} pois={filtered} categories={catMap} onSelect={setSelected} />
         {selected && (

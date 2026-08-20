@@ -13,7 +13,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-// Mapping der info.icon-Strings (§7.9) auf lucide-Icons.
+// Maps the info.icon strings (§7.9) to lucide icons.
 const ICONS: Record<string, LucideIcon> = {
   car: Car,
   tent: Tent,

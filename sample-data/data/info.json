@@ -1,23 +1,42 @@
 [
   {
     "id": "getting-here",
-    "title": "Getting here",
+    "title": {
+      "en": "Getting here",
+      "de": "Anreise",
+      "fr": "Venir au festival",
+      "es": "Cómo llegar"
+    },
     "icon": "car",
     "order": 1,
-    "body": "## By car\nParking is signposted from the edge of the village.\n\n## Public transport\nShuttle bus from the train station, hourly until 2 am."
+    "body": {
+      "en": "## By car\nParking is signposted from the edge of the village.\n\n## Public transport\nShuttle bus from the train station, hourly until 2 am.",
+      "de": "## Mit dem Auto\nParkplätze sind ab dem Ortsrand ausgeschildert.\n\n## Öffentlich\nShuttle-Bus ab Bahnhof, stündlich bis 2 Uhr früh.",
+      "fr": "## En voiture\nLe parking est fléché depuis l'entrée du village.\n\n## Transports en commun\nNavette depuis la gare, toutes les heures jusqu'à 2 h du matin.",
+      "es": "## En coche\nEl aparcamiento está señalizado desde la entrada del pueblo.\n\n## Transporte público\nAutobús lanzadera desde la estación, cada hora hasta las 2 de la madrugada."
+    }
   },
   {
     "id": "camping",
-    "title": "Camping",
+    "title": {
+      "en": "Camping",
+      "de": "Camping"
+    },
     "icon": "tent",
     "order": 2,
-    "body": "The camping meadow opens on Friday at noon. Please no glass bottles - campfires only at the marked spots."
+    "body": {
+      "en": "The camping meadow opens on Friday at noon. Please no glass bottles - campfires only at the marked spots.",
+      "de": "Die Campingwiese öffnet Freitag um 12 Uhr. Bitte keine Glasflaschen – Lagerfeuer nur an den markierten Stellen."
+    }
   },
   {
     "id": "faq",
     "title": "FAQ",
     "icon": "help",
     "order": 3,
-    "body": "## Can I bring my own drinks?\nNot onto the festival grounds; on the campsite yes (no glass).\n\n## Is there drinking water?\nYes, free of charge at the info point and the restrooms."
+    "body": {
+      "en": "## Can I bring my own drinks?\nNot onto the festival grounds; on the campsite yes (no glass).\n\n## Is there drinking water?\nYes, free of charge at the info point and the restrooms.",
+      "de": "## Darf ich eigene Getränke mitbringen?\nAufs Festivalgelände nicht; auf den Campingplatz ja (kein Glas).\n\n## Gibt es Trinkwasser?\nJa, kostenlos beim Infopoint und bei den Sanitäranlagen."
+    }
   }
 ]

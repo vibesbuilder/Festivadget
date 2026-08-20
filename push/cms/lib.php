@@ -1,16 +1,16 @@
 <?php
-// Admin-UI (CMS) – gemeinsame Helfer: Auth (Session + adminPasswordHash aus
-// push/config.php), CSRF, sowie Lesen/Schreiben der server-eigenen JSON-Dateien
-// unter data/ (app-config.json, app-info.json, admin-news.json), die die App
-// live einliest (siehe useAppConfig.ts / useInfo.ts / useNewsFeed.ts).
+// Admin UI (CMS) - shared helpers: auth (session + adminPasswordHash from
+// push/config.php), CSRF, plus reading/writing the server-side JSON files
+// under data/ (app-config.json, app-info.json, admin-news.json) which the app
+// reads live (see useAppConfig.ts / useInfo.ts / useNewsFeed.ts).
 
 declare(strict_types=1);
 
 require_once __DIR__ . '/../db.php'; // push_config()
 require_once __DIR__ . '/i18n.php';  // cms_t()/cms_lang() – CMS-Mehrsprachigkeit
 
-// Session-Cookie härten (Keys/Inhalte hängen an dieser Session): kein JS-Zugriff,
-// Lax gegen Cross-Site-POSTs, secure auf HTTPS (lokal/HTTP bleibt nutzbar).
+// Harden the session cookie (keys/content hang off this session): no JS access,
+// Lax against cross-site POSTs, secure on HTTPS (local/HTTP stays usable).
 session_set_cookie_params([
     'httponly' => true,
     'secure'   => !empty($_SERVER['HTTPS']),
@@ -18,7 +18,7 @@ session_set_cookie_params([
 ]);
 session_start();
 
-// --- Authentifizierung -----------------------------------------------------
+// --- Authentication --------------------------------------------------------
 
 function cms_logged_in(): bool
 {
@@ -39,7 +39,7 @@ function cms_check_csrf(): bool
         && hash_equals($_SESSION['cms_csrf'] ?? '', (string) $_POST['csrf']);
 }
 
-/** Login/Logout verarbeiten. Gibt eine Fehlermeldung zurück oder null. */
+/** Handle login/logout. Returns an error message or null. */
 function cms_handle_auth(): ?string
 {
     $do = $_POST['do'] ?? '';
@@ -49,10 +49,10 @@ function cms_handle_auth(): ?string
         if ($hash !== '' && password_verify((string) ($_POST['password'] ?? ''), $hash)) {
             session_regenerate_id(true);
             $_SESSION['cms_admin'] = true;
-            app_log('info', 'auth', 'CMS-Login erfolgreich.');
+            app_log('info', 'auth', 'CMS login successful.');
             return null;
         }
-        app_log('warn', 'auth', 'CMS-Login fehlgeschlagen (falsches Passwort).');
+        app_log('warn', 'auth', 'CMS login failed (wrong password).');
         return cms_t('Falsches Passwort.');
     }
     if ($do === 'logout') {
@@ -63,7 +63,7 @@ function cms_handle_auth(): ?string
     return null;
 }
 
-// --- JSON-Dateien im data/-Ordner ------------------------------------------
+// --- JSON files in the data/ folder ----------------------------------------
 
 function cms_data_path(string $file): string
 {
@@ -71,7 +71,7 @@ function cms_data_path(string $file): string
     return rtrim($dir, "/\\") . '/' . $file;
 }
 
-/** Liest eine JSON-Datei aus data/. null, wenn sie fehlt oder ungültig ist. */
+/** Reads a JSON file from data/. null when missing or invalid. */
 function cms_read_json(string $file): ?array
 {
     $f = cms_data_path($file);
@@ -82,7 +82,7 @@ function cms_read_json(string $file): ?array
     return is_array($data) ? $data : null;
 }
 
-/** Atomar schreiben (temp + rename). false bei Fehler (z. B. Schreibrechte). */
+/** Write atomically (temp + rename). false on error (e.g. write permissions). */
 function cms_write_json(string $file, $data): bool
 {
     $f = cms_data_path($file);
@@ -100,7 +100,7 @@ function cms_write_json(string $file, $data): bool
     return rename($tmp, $f);
 }
 
-// --- App-Config (app-config.json) ------------------------------------------
+// --- App config (app-config.json) ------------------------------------------
 
 function cms_read_config(): array
 {
@@ -112,22 +112,75 @@ function cms_write_config(array $cfg): bool
     return cms_write_json('app-config.json', $cfg);
 }
 
-// --- Info-Seiten (app-info.json, Seed aus info.json) -----------------------
+// --- Info pages (app-info.json, seeded from info.json) ----------------------
 
-/** Aktuell verwaltete Info-Seiten: app-info.json, sonst Build-Stand info.json. */
+/** Currently managed info pages: app-info.json, otherwise build state info.json. */
 function cms_info_items(): array
 {
     $items = cms_read_json('app-info.json');
     if ($items === null) {
         $items = cms_read_json('info.json') ?? [];
     }
-    // Absicherung: nur Array-Einträge (robust gegen kaputte Override-Dateien).
+    // Safeguard: array entries only (robust against broken override files).
     $items = array_values(array_filter($items, 'is_array'));
     usort($items, static fn($a, $b) => ((float) ($a['order'] ?? 0)) <=> ((float) ($b['order'] ?? 0)));
     return $items;
 }
 
-/** Einfache, ASCII-orientierte Slug-Bildung für Info-IDs. */
+// --- Localized content fields (info/news: string OR {de:…,en:…}) ------------
+
+const CMS_CONTENT_LANGS = ['de', 'en', 'fr', 'es'];
+
+/** Value of a localized field for ONE language ('' when not maintained).
+ *  A plain string counts as German (legacy data). */
+function cms_loc_get($value, string $lang): string
+{
+    if (is_array($value)) {
+        return trim((string) ($value[$lang] ?? ''));
+    }
+    return $lang === 'de' ? trim((string) ($value ?? '')) : '';
+}
+
+/** Display/slug label of a localized field (de -> en -> first value). */
+function cms_loc_label($value): string
+{
+    if (!is_array($value)) {
+        return trim((string) ($value ?? ''));
+    }
+    foreach (CMS_CONTENT_LANGS as $lang) {
+        $text = trim((string) ($value[$lang] ?? ''));
+        if ($text !== '') {
+            return $text;
+        }
+    }
+    return '';
+}
+
+/** POST field (array per language or legacy string) -> stored value:
+ *  only German filled -> plain string (compatible with the legacy format),
+ *  multiple languages -> language map, nothing filled -> ''. */
+function cms_loc_from_post($raw)
+{
+    if (!is_array($raw)) {
+        return trim((string) $raw);
+    }
+    $map = [];
+    foreach (CMS_CONTENT_LANGS as $lang) {
+        $text = trim((string) ($raw[$lang] ?? ''));
+        if ($text !== '') {
+            $map[$lang] = $text;
+        }
+    }
+    if ($map === []) {
+        return '';
+    }
+    if (array_keys($map) === ['de']) {
+        return $map['de'];
+    }
+    return $map;
+}
+
+/** Simple, ASCII-oriented slug building for info IDs. */
 function cms_slug(string $s): string
 {
     $s = strtolower(trim($s));
@@ -144,21 +197,21 @@ function cms_tz(): string
     return (string) (push_config()['telegram']['tz'] ?? 'Europe/Vienna');
 }
 
-/** News (admin-news.json), absteigend nach publishAt. Beim ersten Mal aus dem
- *  Build-Stand (news.json) vorbefüllt; einmal gespeichert ist admin-news.json
- *  die maßgebliche Quelle und ersetzt den Build-Stand. */
+/** News (admin-news.json), descending by publishAt. Seeded from the build
+ *  state (news.json) on first open; once saved, admin-news.json is the
+ *  authoritative source and replaces the build state. */
 function cms_news_items(): array
 {
     $items = cms_read_json('admin-news.json');
     if ($items === null) {
-        $items = cms_read_json('news.json') ?? []; // Seed beim ersten Öffnen
+        $items = cms_read_json('news.json') ?? []; // seed on first open
     }
     $items = array_values(array_filter($items, 'is_array'));
     usort($items, static fn($a, $b) => strcmp((string) ($b['publishAt'] ?? ''), (string) ($a['publishAt'] ?? '')));
     return $items;
 }
 
-/** ISO-Datum → Wert für <input type="datetime-local"> (Vienna-Zeit). */
+/** ISO date -> value for <input type="datetime-local"> (Vienna time). */
 function cms_dt_local(?string $iso): string
 {
     if (!$iso) {
@@ -171,7 +224,7 @@ function cms_dt_local(?string $iso): string
     }
 }
 
-/** datetime-local-Eingabe → zonen-behaftetes ISO (z. B. 2026-07-31T18:00:00+02:00). */
+/** datetime-local input -> zoned ISO (e.g. 2026-07-31T18:00:00+02:00). */
 function cms_dt_iso(string $local): ?string
 {
     $local = trim($local);
@@ -192,9 +245,9 @@ const CMS_NEWS_CATEGORIES = [
     'lineup'  => 'Line-Up',
 ];
 
-// --- Inhalte (generischer JSON-Editor je Domäne) ---------------------------
+// --- Content (generic JSON editor per domain) -------------------------------
 
-// Editierbare Content-Domänen. type = erwartete JSON-Form (Schutz vor Tippfehlern).
+// Editable content domains. type = expected JSON shape (protection against typos).
 const CMS_CONTENT_DOMAINS = [
     'festival' => ['label' => 'Festival-Eckdaten', 'type' => 'object'],
     'stages'   => ['label' => 'Bühnen',            'type' => 'array'],
@@ -207,11 +260,11 @@ const CMS_CONTENT_DOMAINS = [
     'tickets'  => ['label' => 'Tickets',           'type' => 'object'],
     'weather'  => ['label' => 'Wetter',            'type' => 'object'],
     'info'     => ['label' => 'Infos (auch eigener Tab)', 'type' => 'array'],
-    // 'news' bewusst NICHT generisch editierbar – verwaltet wird ausschließlich
-    // über den komfortablen Tab „News" (admin-news.json), der den Build-Stand ersetzt.
+    // 'news' deliberately NOT generically editable - managed exclusively via the
+    // convenient "News" tab (admin-news.json), which replaces the build state.
 ];
 
-/** Aktueller Inhalt einer Domäne als Roh-JSON: Override (app-<d>.json) bevorzugt, sonst Build-Stand. */
+/** Current content of a domain as raw JSON: override (app-<d>.json) preferred, else build state. */
 function cms_content_raw(string $domain): string
 {
     $app = cms_data_path("app-$domain.json");
@@ -227,7 +280,7 @@ function cms_content_override_exists(string $domain): bool
     return is_file(cms_data_path("app-$domain.json"));
 }
 
-/** Aktuelle Datensätze einer Domäne (Override bevorzugt, sonst Build-Stand), dekodiert. */
+/** Current records of a domain (override preferred, else build state), decoded. */
 function cms_domain_records(string $domain): array
 {
     $app  = cms_data_path("app-$domain.json");
@@ -239,7 +292,7 @@ function cms_domain_records(string $domain): array
     return is_array($d) ? $d : [];
 }
 
-/** String → int (wenn ganzzahlig) oder float. */
+/** String -> int (when integral) or float. */
 function cms_to_number(string $v)
 {
     $v = trim($v);
@@ -253,7 +306,7 @@ function cms_to_number(string $v)
 const CMS_POI_TYPES     = ['stage', 'wc', 'food', 'drink', 'firstaid', 'atm', 'info', 'entrance', 'exit', 'camping', 'caravan', 'cashless', 'shuttle', 'merch', 'parking'];
 const CMS_SPONSOR_TIERS = ['main', 'premium', 'partner', 'supporter'];
 
-// Feld-Schemas für die Komfort-Formulare. type: text|number|checkbox|select|textarea|list|image
+// Field schemas for the convenience forms. type: text|number|checkbox|select|textarea|list|image
 const CMS_DOMAIN_FIELDS = [
     'stages' => [
         ['key' => 'name', 'label' => 'Name', 'type' => 'text'],
@@ -299,7 +352,7 @@ const CMS_DOMAIN_FIELDS = [
     ],
 ];
 
-/** Rendert ein einzelnes Formularfeld (HTML) je nach Typ. */
+/** Renders a single form field (HTML) depending on its type. */
 function cms_field_input(string $iname, array $f, $value): string
 {
     $n = cms_h($iname);
@@ -328,7 +381,7 @@ function cms_field_input(string $iname, array $f, $value): string
     }
 }
 
-// --- Bild-Upload (data/uploads, serviert unter /data/uploads) --------------
+// --- Image upload (data/uploads, served under /data/uploads) ----------------
 
 const CMS_UPLOAD_EXT     = ['webp', 'png', 'jpg', 'jpeg', 'svg'];
 const CMS_UPLOAD_MAXSIZE = 5242880; // 5 MB
@@ -342,7 +395,7 @@ function cms_uploads_dir(): string
     return $d;
 }
 
-/** Dateiname säubern (kein Pfad-Traversal, ASCII), Endung beibehalten. */
+/** Clean the file name (no path traversal, ASCII), keep the extension. */
 function cms_safe_filename(string $name): string
 {
     $ext  = strtolower((string) pathinfo($name, PATHINFO_EXTENSION));
@@ -357,7 +410,7 @@ function cms_safe_filename(string $name): string
     return $base . ($ext !== '' ? '.' . $ext : '');
 }
 
-/** Vorhandene Uploads (neueste zuerst), als ['name'=>..., 'path'=>'/data/uploads/...']. */
+/** Existing uploads (newest first), as ['name'=>..., 'path'=>'/data/uploads/...']. */
 function cms_list_uploads(): array
 {
     $d = cms_data_path('uploads');
@@ -372,9 +425,9 @@ function cms_list_uploads(): array
     return array_map(static fn($f) => ['name' => $f, 'path' => '/data/uploads/' . $f], $files);
 }
 
-// --- Menü-Definitionen ------------------------------------------------------
+// --- Menu definitions --------------------------------------------------------
 
-// MEHR-Menüpunkte. Die Schlüssel MÜSSEN mit src/routes/More.tsx übereinstimmen.
+// MORE menu entries. The keys MUST match src/routes/More.tsx.
 const CMS_MORE_ITEMS = [
     'news'      => 'Newsfeed',
     'map'       => 'Karte',
@@ -387,7 +440,7 @@ const CMS_MORE_ITEMS = [
     'language'  => 'Sprache',
 ];
 
-// Bekannte Info-Icons (müssen in src/components/InfoIcon.tsx gemappt sein).
+// Known info icons (must be mapped in src/components/InfoIcon.tsx).
 const CMS_INFO_ICONS = [
     'car', 'tent', 'credit-card', 'help-circle', 'gelaende', 'food',
     'kulinarik', 'drink', 'getraenke', 'shuttle', 'bus', 'platzordnung',

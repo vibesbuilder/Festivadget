@@ -1,7 +1,7 @@
 import { Loader2, AlertTriangle } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
-// Wiederverwendbare Lade-/Fehler-/Leer-Zustände.
+// Reusable loading/error/empty states.
 
 export function LoadingState({ label }: { label?: string }) {
   const { t } = useTranslation();

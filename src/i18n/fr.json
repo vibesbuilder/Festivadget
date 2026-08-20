@@ -28,7 +28,9 @@
     "retry": "Réessayer",
     "offline": "Hors ligne",
     "lastUpdate": "Mise à jour : {{time}}",
-    "empty": "Pas encore de contenu."
+    "empty": "Pas encore de contenu.",
+    "close": "Fermer",
+    "notFound": "Introuvable"
   },
   "home": {
     "now": "En ce moment",
@@ -42,7 +44,8 @@
   "lineup": {
     "title": "Line-up",
     "allGenres": "Tous",
-    "headliner": "Tête d'affiche"
+    "headliner": "Tête d'affiche",
+    "noActs": "Aucun artiste ce jour-là."
   },
   "timetable": {
     "title": "Programme",
@@ -50,7 +53,11 @@
     "list": "Liste",
     "favoritesOnly": "Favoris uniquement",
     "now": "Maintenant",
-    "clash": "Chevauchement"
+    "clash": "Chevauchement",
+    "noSlots": "Aucun créneau pour cette sélection.",
+    "allHidden": "Toutes les scènes sont masquées.",
+    "addPlan": "Ajouter à Mon programme",
+    "removePlan": "Retirer de Mon programme"
   },
   "favorites": {
     "title": "Mon planning",
@@ -63,10 +70,12 @@
   },
   "news": {
     "title": "Actualités",
-    "pinned": "Épinglé"
+    "pinned": "Épinglé",
+    "now": "En ce moment : {{artist}} @ {{stage}}"
   },
   "info": {
-    "title": "Infos"
+    "title": "Infos",
+    "notFound": "Page d'infos introuvable."
   },
   "sponsors": {
     "title": "Sponsors",
@@ -85,7 +94,8 @@
   "artist": {
     "playtimes": "Stage Time",
     "favorite": "Ajouter aux favoris",
-    "favorited": "Dans les favoris"
+    "favorited": "Dans les favoris",
+    "notFound": "Artiste introuvable."
   },
   "install": {
     "cta": "Installe l'app pour l'utiliser hors ligne.",
@@ -114,9 +124,34 @@
   },
   "map": {
     "title": "Carte",
-    "all": "Tous"
+    "all": "Tous",
+    "noPois": "Aucun point sur la carte."
   },
   "search": {
-    "title": "Recherche"
+    "title": "Recherche",
+    "noResults": "Aucun résultat pour « {{query}} »."
+  },
+  "push": {
+    "noKey": "Aucune clé publique VAPID configurée.",
+    "denied": "Notifications non autorisées.",
+    "saveFailed": "L'abonnement n'a pas pu être enregistré (HTTP {{status}})."
+  },
+  "poi": {
+    "stage": "Scène",
+    "wc": "WC",
+    "food": "Restauration",
+    "drink": "Boissons",
+    "firstaid": "Premiers secours",
+    "atm": "Distributeur",
+    "info": "Info",
+    "entrance": "Entrée",
+    "exit": "Sortie",
+    "camping": "Camping",
+    "caravan": "Caravane",
+    "cashless": "Cashless",
+    "shuttle": "Navette",
+    "merch": "Merch",
+    "parking": "Parking",
+    "generic": "Point"
   }
 }

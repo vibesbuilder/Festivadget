@@ -1,13 +1,13 @@
 <?php
-// CMS-Updater (Task #92.4, Komfort-Variante): spielt ein Update-Paket
-// (festivadget-update-v*.zip) per 1-Klick ein. Kundeninhalte sind hart
-// geschützt: data/ (Inhalte + Uploads), push/config.php und die
-// CMS-/Wetter-Laufzeitdateien werden NIE überschrieben – zusätzlich zur
-// Paket-Seite (das Update-ZIP enthält data/ gar nicht erst).
+// CMS updater (task #92.4, convenience variant): applies an update package
+// (festivadget-update-v*.zip) with one click. Customer content is hard-
+// protected: data/ (content + uploads), push/config.php and the CMS/weather
+// runtime files are NEVER overwritten - in addition to the package side
+// (the update ZIP does not contain data/ in the first place).
 
 declare(strict_types=1);
 
-// Diese Pfade (Prefix-Match, relativ zum Webroot) bleiben immer unangetastet.
+// These paths (prefix match, relative to the webroot) always stay untouched.
 const CMS_UPDATE_PROTECTED = [
     'data/',
     'install/',
@@ -16,13 +16,13 @@ const CMS_UPDATE_PROTECTED = [
     'push/weather-settings.json',
 ];
 
-/** Webroot der Installation (Ziel des Updates). */
+/** Webroot of the installation (target of the update). */
 function cms_update_root(): string
 {
     return dirname(__DIR__, 2);
 }
 
-/** Installierte Version laut VERSION-Datei (Release-Pakete legen sie an). */
+/** Installed version according to the VERSION file (release packages create it). */
 function cms_update_version(): string
 {
     $f = cms_update_root() . '/VERSION';
@@ -30,10 +30,10 @@ function cms_update_version(): string
 }
 
 /**
- * Alle Datei-Einträge des ZIPs als [name => Inhalt-Lesefunktion].
- * ZipArchive (Standard am Hosting) mit PharData-Fallback (ext-phar).
+ * All file entries of the ZIP as [name => content read function].
+ * ZipArchive (standard on hosting) with PharData fallback (ext-phar).
  *
- * @return array<string, callable():string|false>|string Fehlercode-String bei Problemen.
+ * @return array<string, callable():string|false>|string error code string on problems.
  */
 function cms_update_entries(string $zipPath)
 {
@@ -65,7 +65,7 @@ function cms_update_entries(string $zipPath)
             if (!$file->isFile()) {
                 continue;
             }
-            // Pfad innerhalb des Archivs (nach dem "phar://...zip/"-Präfix).
+            // Path inside the archive (after the "phar://...zip/" prefix).
             $name = substr($file->getPathname(), strlen($phar->getPath()) + 8);
             $name = str_replace('\\', '/', ltrim($name, '/'));
             $path = $file->getPathname();
@@ -73,11 +73,11 @@ function cms_update_entries(string $zipPath)
         }
         return $entries;
     }
-    return 'zip-missing'; // weder ZipArchive noch Phar verfügbar
+    return 'zip-missing'; // neither ZipArchive nor Phar available
 }
 
 /**
- * Update-Paket anwenden. Liefert
+ * Apply an update package. Returns
  * ['ok'=>bool, 'error'=>?string, 'updated'=>int, 'skipped'=>int, 'version'=>string].
  */
 function cms_update_apply(string $zipPath): array
@@ -87,12 +87,12 @@ function cms_update_apply(string $zipPath): array
         return ['ok' => false, 'error' => $entries, 'updated' => 0, 'skipped' => 0, 'version' => ''];
     }
 
-    // Plausibilität: sieht das nach einem Festivadget-Update-Paket aus?
+    // Plausibility: does this look like a Festivadget update package?
     if (!isset($entries['index.html']) || !isset($entries['push/db.php'])) {
         return ['ok' => false, 'error' => 'not-update-package', 'updated' => 0, 'skipped' => 0, 'version' => ''];
     }
-    // Volles Release-Paket (mit data/) ist zum Updaten falsch – ablehnen,
-    // bevor Kundeninhalte auch nur theoretisch zur Debatte stehen.
+    // A full release package (with data/) is wrong for updating - reject it
+    // before customer content is even theoretically at stake.
     foreach ($entries as $name => $_) {
         if (str_starts_with($name, 'data/')) {
             return ['ok' => false, 'error' => 'full-package', 'updated' => 0, 'skipped' => 0, 'version' => ''];
@@ -102,7 +102,7 @@ function cms_update_apply(string $zipPath): array
     $root = cms_update_root();
     $updated = $skipped = 0;
     foreach ($entries as $name => $read) {
-        // Pfad-Härtung: keine Traversals, keine absoluten Pfade.
+        // Path hardening: no traversals, no absolute paths.
         if (str_contains($name, '..') || str_starts_with($name, '/') || preg_match('/^[a-zA-Z]:/', $name)) {
             return ['ok' => false, 'error' => 'bad-path', 'updated' => $updated, 'skipped' => $skipped, 'version' => ''];
         }

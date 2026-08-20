@@ -1,32 +1,32 @@
 <?php
-// Telegram-Webhook für Live-News (unmoderiert, nur erlaubte Absender).
-// Schreibt freigegebene Nachrichten direkt in data/live-news.json – die App
-// liest diese Datei zusätzlich zur (lokal gebauten) news.json und zeigt sie
-// innerhalb von ~2 Minuten an. Der lokale Build fasst live-news.json nie an.
+// Telegram webhook for live news (unmoderated, allowed senders only).
+// Writes approved messages directly into data/live-news.json - the app reads
+// this file in addition to the (locally built) news.json and shows it within
+// ~2 minutes. The local build never touches live-news.json.
 //
-// Einrichtung: siehe docs/TELEGRAM.md.
+// Setup: see docs/TELEGRAM.md.
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/db.php'; // nur für push_config()
+require_once __DIR__ . '/db.php'; // only for push_config()
 
 $cfg = push_config();
 $tg = $cfg['telegram'] ?? [];
 
 header('Content-Type: application/json; charset=utf-8');
 
-// 1) Webhook-Secret prüfen (Telegram sendet es im Header, in setWebhook gesetzt).
+// 1) Verify the webhook secret (Telegram sends it in a header, set in setWebhook).
 $secret = $tg['webhookSecret'] ?? '';
 $sentSecret = $_SERVER['HTTP_X_TELEGRAM_BOT_API_SECRET_TOKEN'] ?? '';
 if ($secret === '' || !hash_equals($secret, $sentSecret)) {
     require_once __DIR__ . '/log.php';
-    app_log('warn', 'telegram', 'Webhook-Aufruf mit falschem/fehlendem Secret abgewiesen.');
+    app_log('warn', 'telegram', 'Webhook call rejected (wrong/missing secret).');
     http_response_code(403);
     echo json_encode(['ok' => false]);
     exit;
 }
 
-// 2) Update einlesen.
+// 2) Read the update.
 $update = json_decode(file_get_contents('php://input') ?: '', true);
 $msg = $update['message'] ?? $update['edited_message'] ?? $update['channel_post'] ?? null;
 if (!is_array($msg)) {
@@ -38,15 +38,15 @@ $fromId = (int) ($msg['from']['id'] ?? $msg['sender_chat']['id'] ?? 0);
 $chatId = (int) ($msg['chat']['id'] ?? 0);
 $text = trim((string) ($msg['text'] ?? $msg['caption'] ?? ''));
 
-// Hilfsbefehl: eigene IDs anzeigen (auch ohne Freigabe – verrät nur die eigenen IDs).
-// Praktisch, um die Gruppen-ID herauszufinden: Bot in die Gruppe holen, /chatid senden.
+// Helper command: show your own IDs (even without approval - only reveals your own IDs).
+// Handy to find the group ID: add the bot to the group, send /chatid.
 if ($text === '/chatid' || $text === '/id') {
     tg_reply($tg, $chatId, "User-ID: {$fromId}\nChat-ID: {$chatId}");
     echo json_encode(['ok' => true]);
     exit;
 }
 
-// 3) Allowlist: erlaubter Benutzer ODER erlaubte Gruppe/Chat.
+// 3) Allowlist: allowed user OR allowed group/chat.
 $allowedUsers = array_map('intval', $tg['allowedUserIds'] ?? []);
 $allowedChats = array_map('intval', $tg['allowedChatIds'] ?? []);
 if (!in_array($fromId, $allowedUsers, true) && !in_array($chatId, $allowedChats, true)) {
@@ -62,7 +62,7 @@ if ($text === '') {
 $tz = new DateTimeZone($tg['tz'] ?? 'Europe/Vienna');
 $file = $tg['liveNewsFile'];
 
-// --- Befehle ------------------------------------------------------------
+// --- Commands -----------------------------------------------------------
 if ($text === '/clear') {
     write_live($file, []);
     tg_reply($tg, $chatId, '🗑️ Alle Live-News gelöscht.');
@@ -101,7 +101,7 @@ if (preg_match('#^/del\s+(\d+)$#', $text, $dm)) {
     exit;
 }
 
-// --- News aus der Nachricht bauen --------------------------------------
+// --- Build the news item from the message -------------------------------
 $category = 'general';
 $pinned = false;
 $expireSpec = null;
@@ -109,7 +109,7 @@ $doPush = false;
 $now = new DateTimeImmutable('now', $tz);
 $publish = $now; // Standard: sofort veröffentlichen
 
-// @HH:mm → geplanter Veröffentlichungszeitpunkt (heute; falls schon vorbei → morgen).
+// @HH:mm -> scheduled publish time (today; if already past -> tomorrow).
 $text = preg_replace_callback('/@(\d{1,2}):(\d{2})/', function (array $m) use (&$publish, $now) {
     $h = (int) $m[1];
     $min = (int) $m[2];
@@ -124,7 +124,7 @@ $text = preg_replace_callback('/@(\d{1,2}):(\d{2})/', function (array $m) use (&
     return '';
 }, $text);
 
-// Hashtags auswerten und aus dem Text entfernen.
+// Evaluate hashtags and remove them from the text.
 $catMap = ['safety' => 'safety', 'info' => 'info', 'lineup' => 'lineup', 'general' => 'general'];
 $text = preg_replace_callback('/#(\w+)/u', function (array $m) use (&$category, &$pinned, &$expireSpec, &$doPush, $catMap) {
     $tag = strtolower($m[1]);
@@ -148,7 +148,7 @@ $text = preg_replace_callback('/#(\w+)/u', function (array $m) use (&$category, 
 }, $text);
 $text = trim($text);
 
-// Erste Zeile = Titel, Rest = Body.
+// First line = title, rest = body.
 $lines = preg_split('/\r?\n/', $text, 2);
 $title = trim($lines[0] ?? '');
 $body = trim($lines[1] ?? '');
@@ -168,11 +168,11 @@ if ($pinned) {
     $item['pinned'] = true;
 }
 if ($expireSpec) {
-    // Ablauf relativ zum Veröffentlichungszeitpunkt (nicht zum Sendezeitpunkt).
+    // Expiry relative to the publish time (not the send time).
     $item['expiresAt'] = $publish->add(new DateInterval($expireSpec))->format('c');
 }
 
-// 4) An live-news.json anhängen (neueste Begrenzung).
+// 4) Append to live-news.json (bounded to the newest).
 $list = read_live($file);
 $list[] = $item;
 $max = (int) ($tg['maxItems'] ?? 200);
@@ -181,8 +181,8 @@ if (count($list) > $max) {
 }
 write_live($file, $list);
 
-// Push: bei #push ODER automatisch für bestimmte Kategorien (Standard: safety),
-// aber nur bei sofortiger Veröffentlichung (nicht bei geplanten Posts).
+// Push: on #push OR automatically for certain categories (default: safety),
+// but only on immediate publication (not for scheduled posts).
 $autoCats = $tg['pushAutoCategories'] ?? ['safety'];
 $pushNote = '';
 if (($doPush || in_array($category, $autoCats, true)) && $publish <= $now) {
@@ -198,10 +198,10 @@ $confirm = ($publish > $now
 tg_reply($tg, $chatId, $confirm);
 echo json_encode(['ok' => true]);
 
-// --- Helfer -------------------------------------------------------------
+// --- Helpers ------------------------------------------------------------
 function push_news_notification(array $item): ?array
 {
-    // Web-Push optional: ohne installierte Abhängigkeit/Setup einfach überspringen.
+    // Web push optional: simply skip without the installed dependency/setup.
     $autoload = __DIR__ . '/vendor/autoload.php';
     if (!is_file($autoload)) {
         return null;
@@ -219,8 +219,8 @@ function push_news_notification(array $item): ?array
         ]);
     } catch (Throwable $e) {
         require_once __DIR__ . '/log.php';
-        app_log('error', 'telegram', 'Push zur Live-News fehlgeschlagen: ' . $e->getMessage());
-        return null; // Push-Fehler darf das Posten nie stören
+        app_log('error', 'telegram', 'Push for live news failed: ' . $e->getMessage());
+        return null; // push errors must never disturb posting
     }
 }
 

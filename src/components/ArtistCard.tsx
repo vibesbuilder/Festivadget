@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 import type { Artist } from "@/types";
 
-// Artist-Karte mit Bild im Hochformat 4:5 (§2, §12.1).
-// `showImage = false` → kompakte Karte ohne Bild (Name/Genre), z. B. für Acts
-// jenseits des Bild-Limits im Line-Up (siehe LINEUP_IMAGE_LIMIT in config.ts).
+// Artist card with a 4:5 portrait image (§2, §12.1).
+// `showImage = false` -> compact card without image (name/genre), e.g. for acts
+// beyond the image limit in the line-up (see LINEUP_IMAGE_LIMIT in config.ts).
 export function ArtistCard({ artist, showImage = true }: { artist: Artist; showImage?: boolean }) {
   if (!showImage) {
     const genres = (artist.genres ?? []).join(" · ");

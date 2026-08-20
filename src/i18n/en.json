@@ -28,7 +28,9 @@
     "retry": "Try again",
     "offline": "Offline",
     "lastUpdate": "As of: {{time}}",
-    "empty": "No content yet."
+    "empty": "No content yet.",
+    "close": "Close",
+    "notFound": "Not found"
   },
   "home": {
     "now": "Now",
@@ -42,7 +44,8 @@
   "lineup": {
     "title": "Line-Up",
     "allGenres": "All",
-    "headliner": "Headliner"
+    "headliner": "Headliner",
+    "noActs": "No acts on this day."
   },
   "timetable": {
     "title": "Timetable",
@@ -50,7 +53,11 @@
     "list": "List",
     "favoritesOnly": "Favorites only",
     "now": "Now",
-    "clash": "Clash"
+    "clash": "Clash",
+    "noSlots": "No slots for this selection.",
+    "allHidden": "All stages hidden.",
+    "addPlan": "Add to My plan",
+    "removePlan": "Remove from My plan"
   },
   "favorites": {
     "title": "My Plan",
@@ -63,10 +70,12 @@
   },
   "news": {
     "title": "Newsfeed",
-    "pinned": "Pinned"
+    "pinned": "Pinned",
+    "now": "Now: {{artist}} @ {{stage}}"
   },
   "info": {
-    "title": "Info"
+    "title": "Info",
+    "notFound": "Info page not found."
   },
   "sponsors": {
     "title": "Sponsors",
@@ -85,7 +94,8 @@
   "artist": {
     "playtimes": "Stage Time",
     "favorite": "Add to favorites",
-    "favorited": "Favorited"
+    "favorited": "Favorited",
+    "notFound": "Act not found."
   },
   "install": {
     "cta": "Install the app for offline use.",
@@ -114,9 +124,34 @@
   },
   "map": {
     "title": "Map",
-    "all": "All"
+    "all": "All",
+    "noPois": "No map points."
   },
   "search": {
-    "title": "Search"
+    "title": "Search",
+    "noResults": "No results for “{{query}}”."
+  },
+  "push": {
+    "noKey": "No VAPID public key configured.",
+    "denied": "Notifications not allowed.",
+    "saveFailed": "Subscription could not be saved (HTTP {{status}})."
+  },
+  "poi": {
+    "stage": "Stage",
+    "wc": "WC",
+    "food": "Food",
+    "drink": "Drinks",
+    "firstaid": "First aid",
+    "atm": "ATM",
+    "info": "Info",
+    "entrance": "Entrance",
+    "exit": "Exit",
+    "camping": "Camping",
+    "caravan": "Caravan",
+    "cashless": "Cashless",
+    "shuttle": "Shuttle",
+    "merch": "Merch",
+    "parking": "Parking",
+    "generic": "Point"
   }
 }

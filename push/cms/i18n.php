@@ -1,8 +1,8 @@
 <?php
-// CMS-Mehrsprachigkeit: Deutsch ist die Quellsprache (= Schlüssel), en/fr/es
-// werden über die Tabelle CMS_I18N übersetzt (unbekannte Schlüssel fallen auf
-// Deutsch zurück). Die gewählte Sprache liegt serverseitig in
-// push/cms-settings.json und wird im Tab „Einstellungen" umgestellt.
+// CMS multilingualism: German is the source language (= key), en/fr/es are
+// translated via the CMS_I18N table (unknown keys fall back to German).
+// The chosen language is stored server-side in push/cms-settings.json and
+// switched in the "Settings" tab.
 
 declare(strict_types=1);
 
@@ -13,7 +13,7 @@ function cms_settings_file(): string
     return __DIR__ . '/../cms-settings.json';
 }
 
-/** Aktuelle CMS-Sprache (einmal geladen; per zweitem Argument umschaltbar). */
+/** Current CMS language (loaded once; switchable via the second argument). */
 function cms_lang(?string $set = null): string
 {
     static $lang = null;
@@ -22,14 +22,14 @@ function cms_lang(?string $set = null): string
     }
     if ($lang === null) {
         $data = json_decode((string) @file_get_contents(cms_settings_file()), true);
-        // Ohne gespeicherte Wahl: Englisch (GitHub-/Release-Standard).
+        // Without a stored choice: English (GitHub/release default).
         $l    = is_array($data) ? (string) ($data['lang'] ?? 'en') : 'en';
         $lang = isset(CMS_LANGS[$l]) ? $l : 'en';
     }
     return $lang;
 }
 
-/** Sprache speichern (cms-settings.json) und sofort für diese Antwort anwenden. */
+/** Store the language (cms-settings.json) and apply it immediately for this response. */
 function cms_set_lang(string $l): bool
 {
     if (!isset(CMS_LANGS[$l])) {
@@ -46,9 +46,9 @@ function cms_set_lang(string $l): bool
 }
 
 /**
- * Übersetzt einen deutschen UI-Text in die CMS-Sprache. Mit weiteren Argumenten
- * wird der (übersetzte) Text als sprintf-Vorlage behandelt. Einige Schlüssel
- * enthalten bewusst Inline-HTML (<b>/<code>) – diese NICHT durch cms_h() jagen.
+ * Translates a German UI text into the CMS language. With further arguments the
+ * (translated) text is treated as a sprintf template. Some keys deliberately
+ * contain inline HTML (<b>/<code>) - do NOT pass those through cms_h().
  */
 function cms_t(string $text, ...$args): string
 {
@@ -59,17 +59,17 @@ function cms_t(string $text, ...$args): string
     return $args === [] ? $text : vsprintf($text, $args);
 }
 
-/** Für Inline-JS (onclick="confirm('…')"): JS-Single-Quote- + HTML-Escaping. */
+/** For inline JS (onclick="confirm('…')"): JS single-quote + HTML escaping. */
 function cms_j(string $s): string
 {
     return htmlspecialchars(str_replace(['\\', "'"], ['\\\\', "\\'"], $s), ENT_QUOTES, 'UTF-8');
 }
 
 // ---------------------------------------------------------------------------
-// Übersetzungstabelle. Schlüssel = exakter deutscher UI-Text.
+// Translation table. Key = exact German UI text.
 // ---------------------------------------------------------------------------
 const CMS_I18N = [
-    // --- Allgemein / Auth ---------------------------------------------------
+    // --- General / auth -----------------------------------------------------
     'Anmelden' => ['en' => 'Log in', 'fr' => 'Se connecter', 'es' => 'Iniciar sesión'],
     'Abmelden' => ['en' => 'Log out', 'fr' => 'Se déconnecter', 'es' => 'Cerrar sesión'],
     'Passwort' => ['en' => 'Password', 'fr' => 'Mot de passe', 'es' => 'Contraseña'],
@@ -101,7 +101,7 @@ const CMS_I18N = [
     'Protokoll'      => ['en' => 'Log', 'fr' => 'Journal', 'es' => 'Registro'],
     'Hilfe'          => ['en' => 'Help', 'fr' => 'Aide', 'es' => 'Ayuda'],
 
-    // --- MEHR-Menü-Tab ------------------------------------------------------
+    // --- MORE menu tab ------------------------------------------------------
     'Sichtbare Punkte im MEHR-Menü' => [
         'en' => 'Visible items in the More menu',
         'fr' => 'Éléments visibles du menu Plus',
@@ -121,7 +121,7 @@ const CMS_I18N = [
     'Dark / Light' => ['en' => 'Dark / Light', 'fr' => 'Sombre / Clair', 'es' => 'Oscuro / Claro'],
     'Sprache'   => ['en' => 'Language', 'fr' => 'Langue', 'es' => 'Idioma'],
 
-    // --- Infos-Tab ----------------------------------------------------------
+    // --- Infos tab ----------------------------------------------------------
     'Import-Ergebnis' => ['en' => 'Import result', 'fr' => "Résultat de l'import", 'es' => 'Resultado de la importación'],
     'Kein Info-Eintrag auf Joomla/WordPress gesetzt.' => [
         'en' => 'No info entry is set to Joomla/WordPress.',
@@ -151,6 +151,11 @@ const CMS_I18N = [
     ],
     'Neuer Eintrag' => ['en' => 'New entry', 'fr' => 'Nouvelle entrée', 'es' => 'Nueva entrada'],
     'Titel'        => ['en' => 'Title', 'fr' => 'Titre', 'es' => 'Título'],
+    'Übersetzungen (en/fr/es) – leer = englischer bzw. deutscher Fallback' => [
+        'en' => 'Translations (en/fr/es) – empty = English or German fallback',
+        'fr' => 'Traductions (en/fr/es) – vide = repli anglais ou allemand',
+        'es' => 'Traducciones (en/fr/es) – vacío = alternativa en inglés o alemán',
+    ],
     'Reihenfolge'  => ['en' => 'Order', 'fr' => 'Ordre', 'es' => 'Orden'],
     'Icon (optional)' => ['en' => 'Icon (optional)', 'fr' => 'Icône (optionnel)', 'es' => 'Icono (opcional)'],
     'Versteckt (nicht im Menü/Suche)' => [
@@ -173,7 +178,7 @@ const CMS_I18N = [
     'z. B. 123' => ['en' => 'e.g. 123', 'fr' => 'p. ex. 123', 'es' => 'p. ej. 123'],
     'Text (Markdown)' => ['en' => 'Text (Markdown)', 'fr' => 'Texte (Markdown)', 'es' => 'Texto (Markdown)'],
 
-    // --- Inhalte-Tab --------------------------------------------------------
+    // --- Content tab --------------------------------------------------------
     'Jede Datei aus <code>/content</code> bearbeitbar → live wirksam (überschreibt den Build-Stand). „Override entfernen" stellt den Build-Stand wieder her.' => [
         'en' => '<code>/content</code> files are editable here → effective live (overrides the build state). "Remove override" restores the build state.',
         'fr' => "Chaque fichier de <code>/content</code> est modifiable → effet immédiat (remplace l'état du build). « Retirer l'override » restaure l'état du build.",
@@ -208,7 +213,7 @@ const CMS_I18N = [
     'Ende'   => ['en' => 'End', 'fr' => 'Fin', 'es' => 'Fin'],
     'Notiz (optional)' => ['en' => 'Note (optional)', 'fr' => 'Note (optionnel)', 'es' => 'Nota (opcional)'],
 
-    // Domänen-Labels (CMS_CONTENT_DOMAINS)
+    // Domain labels (CMS_CONTENT_DOMAINS)
     'Festival-Eckdaten' => ['en' => 'Festival basics', 'fr' => 'Données du festival', 'es' => 'Datos del festival'],
     'Bühnen'            => ['en' => 'Stages', 'fr' => 'Scènes', 'es' => 'Escenarios'],
     'Artists'           => ['en' => 'Artists', 'fr' => 'Artistes', 'es' => 'Artistas'],
@@ -221,7 +226,7 @@ const CMS_I18N = [
         'es' => 'Información (también pestaña propia)',
     ],
 
-    // Feld-Labels (CMS_DOMAIN_FIELDS)
+    // Field labels (CMS_DOMAIN_FIELDS)
     'Name'        => ['en' => 'Name', 'fr' => 'Nom', 'es' => 'Nombre'],
     'Kurzname'    => ['en' => 'Short name', 'fr' => 'Nom court', 'es' => 'Nombre corto'],
     'Farbe (Hex)' => ['en' => 'Color (hex)', 'fr' => 'Couleur (hex)', 'es' => 'Color (hex)'],
@@ -272,7 +277,7 @@ const CMS_I18N = [
         'es' => '/data/uploads/… (pestaña Imágenes)',
     ],
 
-    // --- Bilder-Tab ---------------------------------------------------------
+    // --- Images tab ---------------------------------------------------------
     'Bild hochladen' => ['en' => 'Upload image', 'fr' => 'Téléverser une image', 'es' => 'Subir imagen'],
     'Erlaubt: %s · max. 5 MB. Wird unter <code>/data/uploads/</code> gespeichert; den angezeigten Pfad kopierst du in „Inhalte" (z. B. Artist-<code>image</code> oder Sponsor-<code>logo</code>).' => [
         'en' => 'Allowed: %s · max. 5 MB. Stored under <code>/data/uploads/</code>; copy the shown path into "Content" (e.g. artist <code>image</code> or sponsor <code>logo</code>).',
@@ -305,7 +310,7 @@ const CMS_I18N = [
         'es' => 'Subido. Copia la ruta de abajo y úsala p. ej. como «image» de artista o «logo» de patrocinador.',
     ],
 
-    // --- Quellen-Tab --------------------------------------------------------
+    // --- Sources tab --------------------------------------------------------
     'Datenquelle je Domäne' => ['en' => 'Data source per domain', 'fr' => 'Source de données par domaine', 'es' => 'Fuente de datos por dominio'],
     'Pro Domäne wählen, woher die Daten kommen. <b>manual</b> = der „Inhalte"-Editor bzw. Build-Stand. <b>joomla</b>/<b>wordpress</b> = Server-Import. Locator: Joomla = Kategorie-ID, WordPress = Kategorie-Slug. Verbindung/Token in <code>push/config.php</code> → <code>sources</code>. <i>Generisches Mapping (Titel/Text); strukturierte Domänen ggf. im „Inhalte"-Tab nachbearbeiten.</i>' => [
         'en' => 'Choose per domain where the data comes from. <b>manual</b> = the "Content" editor or build state. <b>joomla</b>/<b>wordpress</b> = server import. Locator: Joomla = category ID, WordPress = category slug. Connection/token in <code>push/config.php</code> → <code>sources</code>. <i>Generic mapping (title/text); post-edit structured domains in the "Content" tab if needed.</i>',
@@ -343,7 +348,7 @@ const CMS_I18N = [
         'es' => 'Ninguna entrada de información asignada a Joomla/WordPress; nada que importar.',
     ],
 
-    // --- Einstellungen-Tab --------------------------------------------------
+    // --- Settings tab --------------------------------------------------------
     'Globale Einstellungen' => ['en' => 'Global settings', 'fr' => 'Réglages globaux', 'es' => 'Ajustes globales'],
     'CMS-Sprache' => ['en' => 'CMS language', 'fr' => 'Langue du CMS', 'es' => 'Idioma del CMS'],
     'Sprache dieser Admin-Oberfläche. Die App-Sprache wählt jeder Gast selbst in der App.' => [
@@ -446,7 +451,7 @@ const CMS_I18N = [
         'es' => 'Ajustes guardados. La app los aplica en ~2 minutos.',
     ],
 
-    // --- News-Tab -----------------------------------------------------------
+    // --- News tab -----------------------------------------------------------
     'News verwalten' => ['en' => 'Manage news', 'fr' => 'Gérer les actus', 'es' => 'Gestionar noticias'],
     'Diese News erscheinen im Newsfeed (zusätzlich zu Telegram-Live-News). Sichtbar ab „Veröffentlichen am", optional bis „Ablauf am". „Angepinnt" und „Sicherheit" stehen oben. Text = Markdown.' => [
         'en' => 'These news appear in the news feed (in addition to Telegram live news). Visible from "Publish at", optionally until "Expires at". "Pinned" and "Safety" stay on top. Text = Markdown.',
@@ -485,7 +490,7 @@ const CMS_I18N = [
         'es' => ' (falló el push inmediato: %s)',
     ],
 
-    // --- Push-Tab -----------------------------------------------------------
+    // --- Push tab -----------------------------------------------------------
     'Push-Nachricht senden' => ['en' => 'Send push message', 'fr' => 'Envoyer une notification push', 'es' => 'Enviar mensaje push'],
     'Geht sofort an alle Push-Abos (Web-Push muss eingerichtet sein, siehe <code>docs/PUSH.md</code>). Für getimte/automatische Pushes siehe News &amp; Cron.' => [
         'en' => 'Goes out immediately to all push subscriptions (web push must be set up, see <code>docs/PUSH.md</code>). For scheduled/automatic pushes see News &amp; cron.',
@@ -532,7 +537,7 @@ const CMS_I18N = [
         'es' => 'Estadísticas de suscripciones no disponibles (BD/push sin configurar).',
     ],
 
-    // --- Wetter-Tab ---------------------------------------------------------
+    // --- Weather tab ---------------------------------------------------------
     'Wetter-Anbieter' => ['en' => 'Weather provider', 'fr' => 'Fournisseur météo', 'es' => 'Proveedor meteorológico'],
     'Anbieter (Vorhersage fürs Home-Widget + Wetterseite)' => [
         'en' => 'Provider (forecast for the home widget + weather page)',
@@ -621,7 +626,7 @@ const CMS_I18N = [
     ],
     'Kein Wetter-Cache vorhanden.' => ['en' => 'No weather cache present.', 'fr' => 'Pas de cache météo.', 'es' => 'No hay caché del tiempo.'],
 
-    // --- Statistik-Tab ------------------------------------------------------
+    // --- Statistics tab ------------------------------------------------------
     'Letzte 7 Tage' => ['en' => 'Last 7 days', 'fr' => '7 derniers jours', 'es' => 'Últimos 7 días'],
     'Heute' => ['en' => 'Today', 'fr' => "Aujourd'hui", 'es' => 'Hoy'],
     'Eindeutige Nutzer' => ['en' => 'Unique users', 'fr' => 'Utilisateurs uniques', 'es' => 'Usuarios únicos'],
@@ -702,7 +707,7 @@ const CMS_I18N = [
         'es' => 'Falló el restablecimiento: %s',
     ],
 
-    // --- Protokoll-Tab ------------------------------------------------------
+    // --- Log tab ------------------------------------------------------------
     'Stufe' => ['en' => 'Level', 'fr' => 'Niveau', 'es' => 'Nivel'],
     'alle' => ['en' => 'all', 'fr' => 'tous', 'es' => 'todos'],
     'Filtern' => ['en' => 'Filter', 'fr' => 'Filtrer', 'es' => 'Filtrar'],
@@ -737,7 +742,7 @@ const CMS_I18N = [
     ],
     'Leeren fehlgeschlagen: %s' => ['en' => 'Clearing failed: %s', 'fr' => 'Échec du vidage : %s', 'es' => 'Falló el vaciado: %s'],
 
-    // --- Branding-Tab (Paket Y) ---------------------------------------------
+    // --- Branding tab (package Y) ---------------------------------------------
     'Branding' => ['en' => 'Branding', 'fr' => 'Branding', 'es' => 'Branding'],
     'Farben, Logo, Titel, Schrift und App-Icons der Besucher-App – vorausgefüllt mit den Standardwerten. Änderungen wirken ohne Neu-Build binnen ~2 Minuten.' => [
         'en' => 'Colors, logo, title, font and app icons of the visitor app – pre-filled with the defaults. Changes take effect without a rebuild within ~2 minutes.',
@@ -853,7 +858,7 @@ const CMS_I18N = [
     ],
     'Nur PNG erlaubt.' => ['en' => 'Only PNG allowed.', 'fr' => 'Seul le PNG est autorisé.', 'es' => 'Solo se permite PNG.'],
 
-    // --- Hilfe-Tab ----------------------------------------------------------
+    // --- Help tab -----------------------------------------------------------
     'Handbücher' => ['en' => 'Manuals', 'fr' => 'Manuels', 'es' => 'Manuales'],
     'Alle Handbücher als Markdown-Dateien, jeweils in Deutsch, Englisch, Französisch und Spanisch. Sie werden mit der App ausgeliefert (Ordner /docs).' => [
         'en' => 'All manuals as Markdown files, each in German, English, French and Spanish. They are shipped with the app (folder /docs).',
@@ -866,7 +871,7 @@ const CMS_I18N = [
         'es' => 'Idioma predeterminado de la app (mientras el visitante no elija)',
     ],
     'Build-Standard' => ['en' => 'Build default', 'fr' => 'Standard du build', 'es' => 'Estándar del build'],
-    // --- Intro-Video auf Home (Branding-Tab) ---
+    // --- Intro video on home (branding tab) ---
     'Intro-Video (Home)' => ['en' => 'Intro video (home)', 'fr' => 'Vidéo d’intro (accueil)', 'es' => 'Vídeo de intro (inicio)'],
     'Wird in voller Breite oberhalb des Newsfeeds angezeigt. Quelle „Link/Datei": direkte Videodatei (per FTP hochgeladen oder https-Link; YouTube/Vimeo werden automatisch als Player eingebettet). Quelle „Microsoft-Cloud": in OneDrive/SharePoint „Einbetten" wählen und die iframe-URL eintragen.' => [
         'en' => 'Shown full-width above the news feed. Source "Link/file": a direct video file (uploaded via FTP or an https link; YouTube/Vimeo are embedded as players automatically). Source "Microsoft cloud": choose "Embed" in OneDrive/SharePoint and paste the iframe URL.',
@@ -892,7 +897,7 @@ const CMS_I18N = [
     'aktiv' => ['en' => 'active', 'fr' => 'active', 'es' => 'activo'],
     'deaktiviert' => ['en' => 'disabled', 'fr' => 'désactivée', 'es' => 'desactivado'],
 
-    // --- Update-Tab (Task #92.4, 1-Klick-Updater) ---
+    // --- Update tab (task #92.4, 1-click updater) ---
     'Update' => ['en' => 'Update', 'fr' => 'Mise à jour', 'es' => 'Actualización'],
     'App-Update einspielen' => ['en' => 'Apply app update', 'fr' => 'Appliquer la mise à jour', 'es' => 'Aplicar actualización'],
     'Installierte Version: %s' => ['en' => 'Installed version: %s', 'fr' => 'Version installée : %s', 'es' => 'Versión instalada: %s'],
@@ -1018,7 +1023,7 @@ const CMS_I18N = [
         'es' => 'Aún no hay manuales en el servidor; llegan con el próximo despliegue de la app («deploy-data.bat full», carpeta /docs).',
     ],
 
-    // --- Generische Speicher-Meldungen --------------------------------------
+    // --- Generic save messages ------------------------------------------------
     'Gespeichert. Die App übernimmt es binnen ~2 Minuten (oder beim Neuladen).' => [
         'en' => 'Saved. The app picks it up within ~2 minutes (or on reload).',
         'fr' => "Enregistré. L'app le reprend sous ~2 minutes (ou au rechargement).",
@@ -1062,7 +1067,7 @@ const CMS_I18N = [
         'es' => 'Se espera un objeto { … }.',
     ],
 
-    // --- Importer (Report-Texte) --------------------------------------------
+    // --- Importer (report texts) ----------------------------------------------
     '⚠️ 0 Datensätze – nichts geschrieben.' => [
         'en' => '⚠️ 0 records – nothing written.',
         'fr' => '⚠️ 0 enregistrements – rien écrit.',

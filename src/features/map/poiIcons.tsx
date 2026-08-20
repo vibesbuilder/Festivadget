@@ -57,8 +57,8 @@ import {
 } from "lucide-react";
 import { isImageIcon, escapeHtml } from "./poiMeta";
 
-// Kuratierte Lucide-Icons für POIs/Kategorien. Schlüssel = Lucide-Slug (lucide.dev).
-// Wert kann auch ein Alias sein. Bei Änderungen docs/DATEN.md (Liste) aktualisieren.
+// Curated Lucide icons for POIs/categories. Key = Lucide slug (lucide.dev).
+// A value may also be an alias. Update docs/DATEN.md (list) on changes.
 export const LUCIDE_POI_ICONS: Record<string, LucideIcon> = {
   ambulance: Ambulance,
   "first-aid": Cross,
@@ -123,7 +123,7 @@ export const LUCIDE_POI_ICONS: Record<string, LucideIcon> = {
   cigarette: Cigarette,
 };
 
-// Lucide-Komponente zu einem Icon-Wert (Name), falls vorhanden.
+// Lucide component for an icon value (name), if available.
 export function lucideComp(icon?: string): LucideIcon | undefined {
   return icon ? LUCIDE_POI_ICONS[icon.trim().toLowerCase()] : undefined;
 }
@@ -132,7 +132,7 @@ export function isLucideName(icon?: string): boolean {
   return !!lucideComp(icon);
 }
 
-// Inneres HTML des Karten-Markers: Bild (<img>) > Lucide-SVG > Emoji-Text.
+// Inner HTML of the map marker: image (<img>) > Lucide SVG > emoji text.
 export function poiMarkerHtml(icon: string, size: number, color: string): string {
   if (isImageIcon(icon)) {
     return `<img src="${escapeHtml(icon)}" alt="" style="width:${size}px;height:${size}px;object-fit:contain;display:block" />`;

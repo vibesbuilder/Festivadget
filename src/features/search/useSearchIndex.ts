@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { lt } from "@/lib/localized";
 import { useArtists, usePois, usePoiCategories, useSlots, useStages } from "@/data/queries";
 import { useInfo } from "@/data/useInfo";
 import { formatDateTime } from "@/lib/time";
@@ -19,7 +20,7 @@ export interface SearchResult extends SearchEntry {
   score: number;
 }
 
-// Baut einen clientseitigen Suchindex über Artists/Slots/Info/POIs (§12.7).
+// Builds a client-side search index over artists/slots/info/POIs (§12.7).
 export function useSearchIndex(): SearchEntry[] {
   const { i18n } = useTranslation();
   const { data: artists } = useArtists();
@@ -59,12 +60,13 @@ export function useSearchIndex(): SearchEntry[] {
     }
 
     for (const p of (info ?? []).filter((x) => !x.hidden)) {
+      const title = lt(p.title, i18n.language);
       entries.push({
         kind: "info",
-        label: p.title,
+        label: title,
         sublabel: "Info",
         to: `/info/${p.id}`,
-        haystack: `${p.title} ${p.body}`.toLowerCase(),
+        haystack: `${title} ${lt(p.body, i18n.language)}`.toLowerCase(),
       });
     }
 
@@ -83,7 +85,7 @@ export function useSearchIndex(): SearchEntry[] {
   }, [artists, slots, stages, info, pois, categories, i18n.language]);
 }
 
-// Token-/Substring-Match mit einfachem Scoring.
+// Token/substring match with simple scoring.
 export function runSearch(index: SearchEntry[], query: string): SearchResult[] {
   const tokens = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
   if (tokens.length === 0) return [];
@@ -98,7 +100,7 @@ export function runSearch(index: SearchEntry[], query: string): SearchResult[] {
         matchedAll = false;
         break;
       }
-      // Treffer am Wortanfang höher gewichten.
+      // Weight matches at word starts higher.
       score += idx === 0 || entry.haystack[idx - 1] === " " ? 3 : 1;
     }
     if (matchedAll) results.push({ ...entry, score });

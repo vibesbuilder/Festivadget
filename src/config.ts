@@ -1,6 +1,6 @@
-// App-weite, leicht anpassbare Einstellungen.
+// App-wide, easily adjustable settings.
 
-// Line-Up: Anzahl der Acts (nach Line-Up-Reihenfolge `order`), die MIT Bild
-// angezeigt werden. Alle weiteren erscheinen als kompakte Karte OHNE Bild.
-// Hier den Wert ändern, um mehr/weniger Bild-Karten zu zeigen.
+// Line-up: number of acts (by line-up order `order`) shown WITH an image.
+// All further acts appear as a compact card WITHOUT an image.
+// Change the value here to show more/fewer image cards.
 export const LINEUP_IMAGE_LIMIT = 20;

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-/** Reaktiver Online-Status (für OfflineBadge). */
+/** Reactive online status (for the offline badge). */
 export function useOnline(): boolean {
   const [online, setOnline] = useState(() =>
     typeof navigator === "undefined" ? true : navigator.onLine,

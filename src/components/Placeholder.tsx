@@ -1,6 +1,6 @@
 import { Construction } from "lucide-react";
 
-// Platzhalter für Features kommender Phasen (Roadmap §17).
+// Placeholder for features of upcoming phases (roadmap §17).
 export function Placeholder({ title, phase }: { title: string; phase?: string }) {
   return (
     <section>

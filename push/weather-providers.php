@@ -1,19 +1,19 @@
 <?php
-// Wetter-Provider (PHP-Portierung der in CrewCare verifizierten Adapter):
+// Weather providers (PHP port of the adapters verified in CrewCare):
 // GeoSphere Austria, OpenWeather, WeatherAPI.com, MET Norway.
 //
-// Vertrag: Jede weather_rows_*-Funktion liefert "unified rows", sortiert:
+// Contract: every weather_rows_* function returns "unified rows", sorted:
 //   ['ts' => DateTimeImmutable (UTC), 'temp' => ?float (°C),
-//    'precip' => float (mm IM Schritt der Zeile, nie kumulativ/negativ),
+//    'precip' => float (mm WITHIN the row's step, never cumulative/negative),
 //    'base' => string (clear|partly|cloudy|overcast|fog|rain|heavy-rain|snow|
 //                      heavy-snow|sleet|thunderstorm|unknown),
-//    'windKmh' => ?float, 'windDeg' => ?float (meteorologisch, Herkunft)]
-// Fehler: Exceptions mit verständlicher Meldung (weather.php fängt sie und
-// liefert den letzten Cache bzw. 502). Kaputte Einzelzeilen werden übersprungen.
+//    'windKmh' => ?float, 'windDeg' => ?float (meteorological, origin)]
+// Errors: exceptions with an understandable message (weather.php catches them
+// and serves the last cache or 502). Broken individual rows are skipped.
 
 declare(strict_types=1);
 
-// --- Registry (Dropdown-Labels, Attribution, benötigter Key) -----------------
+// --- Registry (dropdown labels, attribution, required key) -------------------
 const WEATHER_PROVIDERS = [
     'geosphere' => [
         'label'       => 'GeoSphere Austria',
@@ -47,8 +47,8 @@ function weather_provider_key(array $cfg): string
     return isset(WEATHER_PROVIDERS[$p]) ? $p : 'geosphere';
 }
 
-// Vom CMS-Tab „Wetter" geschriebene Einstellungen (per .htaccess NICHT öffentlich,
-// enthält ggf. API-Keys). Merge-Reihenfolge: Defaults ← config.php ← diese Datei.
+// Settings written by the CMS tab "Weather" (NOT public via .htaccess,
+// may contain API keys). Merge order: defaults <- config.php <- this file.
 const WEATHER_SETTINGS_FILE = __DIR__ . '/weather-settings.json';
 
 function weather_config(): array
@@ -78,7 +78,7 @@ function weather_config(): array
     return $cfg;
 }
 
-// --- HTTP (curl mit Timeout, Fallback Streams – Webserver nie lange blockieren) ---
+// --- HTTP (curl with timeout, fallback streams - never block the web server long) ---
 function http_get_json(string $url): ?array
 {
     $body = null;
@@ -116,7 +116,7 @@ function http_get_json(string $url): ?array
     return is_array($json) ? $json : null;
 }
 
-/** Dispatch: Provider aus der Config → unified rows. Wirft bei Fehlern. */
+/** Dispatch: provider from the config -> unified rows. Throws on errors. */
 function weather_fetch_rows(array $cfg): array
 {
     $lat = (float) $cfg['lat'];
@@ -133,7 +133,7 @@ function weather_require_key(array $cfg, string $field, string $label): string
 {
     $key = trim((string) ($cfg[$field] ?? ''));
     if ($key === '') {
-        throw new RuntimeException("API-Key für $label fehlt (Admin → Wetter).");
+        throw new RuntimeException("API key for $label missing (Admin -> Weather).");
     }
     return $key;
 }
@@ -146,7 +146,7 @@ function weather_num($v): ?float
 // --- GeoSphere Austria (NWP nwp-v1-1h-2500m) ----------------------------------
 const GEOSPHERE_FORECAST_URL = 'https://dataset.api.hub.geosphere.at/v1/timeseries/forecast/nwp-v1-1h-2500m';
 
-// GeoSphere-sy-Code → Icon-Basis.
+// GeoSphere sy code -> icon base.
 const GEOSPHERE_SY_BASE = [
     1 => 'clear', 2 => 'partly', 3 => 'partly', 4 => 'cloudy', 5 => 'overcast',
     6 => 'overcast', 7 => 'fog', 8 => 'fog', 9 => 'rain', 10 => 'rain',
@@ -160,12 +160,12 @@ function weather_rows_geosphere(float $lat, float $lon): array
     $raw = http_get_json(GEOSPHERE_FORECAST_URL . '?lat_lon=' . rawurlencode($lat . ',' . $lon)
         . '&parameters=t2m,rr_acc,sy,u10m,v10m&forecast_offset=0&output_format=geojson');
     if (!is_array($raw)) {
-        throw new RuntimeException('GeoSphere nicht erreichbar.');
+        throw new RuntimeException('GeoSphere unreachable.');
     }
     $timestamps = $raw['timestamps'] ?? null;
     $params     = $raw['features'][0]['properties']['parameters'] ?? null;
     if (!is_array($timestamps) || !is_array($params)) {
-        throw new RuntimeException('GeoSphere: unerwartete Antwort.');
+        throw new RuntimeException('GeoSphere: unexpected response.');
     }
     $t2m = $params['t2m']['data'] ?? [];
     $rr  = $params['rr_acc']['data'] ?? [];
@@ -173,14 +173,14 @@ function weather_rows_geosphere(float $lat, float $lon): array
     $u10 = $params['u10m']['data'] ?? [];
     $v10 = $params['v10m']['data'] ?? [];
 
-    // WICHTIG: erst nach Zeit sortieren, DANN den kumulativen Niederschlag
-    // differenzieren – unsortierte Reihen ergäben falsche Deltas (Referenz-
-    // verhalten von CrewCare parse_forecast).
+    // IMPORTANT: sort by time first, THEN differentiate the cumulative
+    // precipitation - unsorted series would yield wrong deltas (reference
+    // behavior of CrewCare parse_forecast).
     $order = [];
     foreach ($timestamps as $i => $tsRaw) {
         $tsStr = trim((string) $tsRaw);
         if ($tsStr === '') {
-            continue; // DateTimeImmutable('') wäre "jetzt", nicht "kaputt"
+            continue; // DateTimeImmutable('') would be "now", not "broken"
         }
         try {
             $order[] = [$i, new DateTimeImmutable($tsStr, new DateTimeZone('UTC'))];
@@ -193,7 +193,7 @@ function weather_rows_geosphere(float $lat, float $lon): array
     $rows    = [];
     $prevAcc = 0.0;
     foreach ($order as [$i, $ts]) {
-        // Stundenniederschlag aus dem AKKUMULIERTEN Verlauf (Reset-tolerant).
+        // Hourly precipitation from the ACCUMULATED series (reset-tolerant).
         $acc   = weather_num($rr[$i] ?? null) ?? $prevAcc;
         $delta = $acc - $prevAcc;
         if ($delta < 0) {
@@ -224,11 +224,11 @@ function weather_rows_geosphere(float $lat, float $lon): array
     return $rows;
 }
 
-// --- OpenWeather (kostenloser "5 day / 3 hour forecast") -----------------------
-// Doku: https://openweathermap.org/forecast5 + /weather-conditions.
+// --- OpenWeather (free "5 day / 3 hour forecast") ------------------------------
+// Docs: https://openweathermap.org/forecast5 + /weather-conditions.
 const OPENWEATHER_URL = 'https://api.openweathermap.org/data/2.5/forecast';
 
-// Condition-Code (weather[0].id) → Icon-Basis (vollständige Tabelle, verifiziert).
+// Condition code (weather[0].id) -> icon base (complete table, verified).
 const OPENWEATHER_ID_BASE = [
     200 => 'thunderstorm', 201 => 'thunderstorm', 202 => 'thunderstorm',
     210 => 'thunderstorm', 211 => 'thunderstorm', 212 => 'thunderstorm',
@@ -246,7 +246,7 @@ const OPENWEATHER_ID_BASE = [
     800 => 'clear', 801 => 'partly', 802 => 'partly', 803 => 'cloudy', 804 => 'overcast',
 ];
 
-// Fallback für künftige Codes: Hunderter-Gruppe.
+// Fallback for future codes: hundreds group.
 const OPENWEATHER_GROUP_BASE = [2 => 'thunderstorm', 3 => 'rain', 5 => 'rain',
                                 6 => 'snow', 7 => 'fog', 8 => 'cloudy'];
 
@@ -257,7 +257,7 @@ function weather_rows_openweather(float $lat, float $lon, array $cfg): array
         'lat' => $lat, 'lon' => $lon, 'appid' => $key, 'units' => 'metric', 'lang' => 'de',
     ]));
     if (!is_array($raw) || !isset($raw['list']) || !is_array($raw['list'])) {
-        throw new RuntimeException('OpenWeather nicht erreichbar oder API-Key ungültig.');
+        throw new RuntimeException('OpenWeather unreachable or API key invalid.');
     }
     $rows = [];
     foreach ($raw['list'] as $entry) {
@@ -266,11 +266,11 @@ function weather_rows_openweather(float $lat, float $lon, array $cfg): array
         }
         $dt = weather_num($entry['dt'] ?? null);
         if ($dt === null || $dt < 0 || $dt > 4102444800) {
-            continue; // fehlend oder absurd (nach 2100) → Zeile wertlos
+            continue; // missing or absurd (after 2100) -> row worthless
         }
-        // precip = rain["3h"] + snow["3h"] – mm IM 3-h-Schritt (laut Doku bereits
-        // Schrittmenge, nicht kumulativ); fehlende Blöcke → 0. Erst auf Array
-        // prüfen: ['3h'] auf einem String wäre eine "Illegal offset"-Warnung.
+        // precip = rain["3h"] + snow["3h"] - mm WITHIN the 3-h step (per docs already
+        // a step amount, not cumulative); missing blocks -> 0. Check for array first:
+        // ['3h'] on a string would be an "Illegal offset" warning.
         $precip = 0.0;
         foreach (['rain', 'snow'] as $k) {
             $block = $entry[$k] ?? null;
@@ -299,11 +299,11 @@ function weather_rows_openweather(float $lat, float $lon, array $cfg): array
     return $rows;
 }
 
-// --- WeatherAPI.com (forecast.json, Free-Plan: 3 Tage) --------------------------
-// Doku: https://www.weatherapi.com/docs/ (+ conditions.json, 60 Codes).
+// --- WeatherAPI.com (forecast.json, free plan: 3 days) --------------------------
+// Docs: https://www.weatherapi.com/docs/ (+ conditions.json, 60 codes).
 const WEATHERAPI_URL = 'https://api.weatherapi.com/v1/forecast.json';
 
-// condition.code → Icon-Basis (vollständige 60er-Tabelle, verifiziert).
+// condition.code -> icon base (complete table of 60, verified).
 const WEATHERAPI_CODE_BASE = [
     1000 => 'clear', 1003 => 'partly', 1006 => 'cloudy', 1009 => 'overcast',
     1012 => 'fog', 1015 => 'fog', 1018 => 'fog', 1021 => 'fog', 1024 => 'fog',
@@ -331,7 +331,7 @@ function weather_rows_weatherapi(float $lat, float $lon, array $cfg): array
     ]));
     $days = is_array($raw) ? ($raw['forecast']['forecastday'] ?? null) : null;
     if (!is_array($days)) {
-        throw new RuntimeException('WeatherAPI.com nicht erreichbar oder API-Key ungültig.');
+        throw new RuntimeException('WeatherAPI.com unreachable or API key invalid.');
     }
     $rows = [];
     foreach ($days as $day) {
@@ -340,7 +340,7 @@ function weather_rows_weatherapi(float $lat, float $lon, array $cfg): array
             if (!is_array($h)) {
                 continue;
             }
-            // time_epoch = Unix-SEKUNDEN (UTC); der lokale "time"-String wäre eine Falle.
+            // time_epoch = Unix SECONDS (UTC); the local "time" string would be a trap.
             $epoch = weather_num($h['time_epoch'] ?? null);
             if ($epoch === null) {
                 continue;
@@ -363,12 +363,12 @@ function weather_rows_weatherapi(float $lat, float $lon, array $cfg): array
 }
 
 // --- MET Norway (Locationforecast 2.0 compact) ----------------------------------
-// Doku: https://api.met.no/weatherapi/locationforecast/2.0/documentation
-// TOS: identifizierender User-Agent (setzt http_get_json immer) und Koordinaten
-// auf max. 4 Dezimalstellen ("Do not use more than 4 decimals to avoid blocking").
+// Docs: https://api.met.no/weatherapi/locationforecast/2.0/documentation
+// TOS: identifying user agent (http_get_json always sets one) and coordinates
+// with max. 4 decimals ("Do not use more than 4 decimals to avoid blocking").
 const MET_NORWAY_URL = 'https://api.met.no/weatherapi/locationforecast/2.0/compact';
 
-// Basis-Codes ohne Niederschlagsanteil; Rest per Muster (Gewitter hat Vorrang).
+// Base codes without a precipitation part; the rest via patterns (thunderstorm wins).
 const MET_PLAIN_BASE = ['clearsky' => 'clear', 'fair' => 'partly',
                         'partlycloudy' => 'partly', 'cloudy' => 'cloudy', 'fog' => 'fog'];
 
@@ -412,7 +412,7 @@ function weather_rows_met_norway(float $lat, float $lon): array
     ]));
     $series = $raw['properties']['timeseries'] ?? null;
     if (!is_array($raw) || !is_array($series)) {
-        throw new RuntimeException('MET Norway nicht erreichbar.');
+        throw new RuntimeException('MET Norway unreachable.');
     }
     $rows = [];
     foreach ($series as $entry) {
@@ -421,7 +421,7 @@ function weather_rows_met_norway(float $lat, float $lon): array
         }
         $tsStr = trim((string) ($entry['time'] ?? ''));
         if ($tsStr === '') {
-            continue; // DateTimeImmutable('') wäre "jetzt", nicht "kaputt"
+            continue; // DateTimeImmutable('') would be "now", not "broken"
         }
         try {
             $ts = new DateTimeImmutable($tsStr, new DateTimeZone('UTC'));
@@ -429,9 +429,9 @@ function weather_rows_met_norway(float $lat, float $lon): array
             continue;
         }
         $data = is_array($entry['data'] ?? null) ? $entry['data'] : [];
-        // next_1_hours bevorzugt (feiner), sonst next_6_hours – ein LEERES
-        // next_1_hours-Objekt fällt wie in der Referenz auf next_6_hours zurück.
-        // Zeilen ganz ohne Fenster (Reihen-Ende, nur "instant") überspringen.
+        // Prefer next_1_hours (finer), otherwise next_6_hours - an EMPTY
+        // next_1_hours object falls back to next_6_hours as in the reference.
+        // Skip rows without any window (end of series, only "instant").
         $w1 = $data['next_1_hours'] ?? null;
         $window = (is_array($w1) && $w1 !== []) ? $w1 : ($data['next_6_hours'] ?? null);
         if (!is_array($window) || $window === []) {
@@ -439,7 +439,7 @@ function weather_rows_met_norway(float $lat, float $lon): array
         }
         $instant = is_array($data['instant']['details'] ?? null) ? $data['instant']['details'] : [];
         $speed   = weather_num($instant['wind_speed'] ?? null); // m/s → km/h
-        // precipitation_amount = Menge IM Fenster der Zeile → bereits Schrittmenge.
+        // precipitation_amount = amount WITHIN the row's window -> already a step amount.
         $precip  = weather_num($window['details']['precipitation_amount'] ?? null);
         $rows[]  = [
             'ts'      => $ts,

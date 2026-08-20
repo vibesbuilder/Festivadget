@@ -6,8 +6,8 @@ import config, {
   type ContentSourcesConfig,
 } from "../content-sources.config";
 
-// .env laden (Node-eingebaut, ab Node 20.12+/21.7+), damit CMS-Tokens aus der
-// .env in process.env landen (§6.6). Bei reinem "manual"-Build ohne .env egal.
+// Load .env (built into Node, from 20.12+/21.7+) so CMS tokens from .env end
+// up in process.env (§6.6). Irrelevant for a pure "manual" build without .env.
 if (existsSync(resolve(process.cwd(), ".env"))) {
   process.loadEnvFile(resolve(process.cwd(), ".env"));
 }
@@ -18,12 +18,12 @@ import { readSlotsCsv } from "./adapters/csv";
 import type { SourceAdapter } from "./adapters/types";
 import { slugify } from "./lib/normalize";
 
-// Orchestrierung (§6.2): iteriert über bindings, ruft je provider den Adapter,
-// normalisiert auf das Schema (§7) und schreibt public/data/<domain>.json.
+// Orchestration (§6.2): iterates over bindings, calls the adapter per provider,
+// normalizes to the schema (§7) and writes public/data/<domain>.json.
 
 const OUT_DIR = resolve(process.cwd(), "public", "data");
 
-// Domänen, die als einzelnes Objekt (nicht Array) ausgegeben werden.
+// Domains emitted as a single object (not an array).
 const OBJECT_DOMAINS = new Set(["festival", "map", "tickets", "weather"]);
 
 function adapterFor(binding: SourceBinding): SourceAdapter {
@@ -46,7 +46,7 @@ async function writeDomain(domain: string, data: unknown): Promise<void> {
   console.log(`  ✓ ${domain}.json (${count})`);
 }
 
-/** Slots aus CSV: join über artistSlug mit den (zuvor importierten) Artists. */
+/** Slots from CSV: join via artistSlug with the (previously imported) artists. */
 async function buildSlotsFromCsv(artists: Array<{ id: string; slug: string }>): Promise<unknown[]> {
   const rows = await readSlotsCsv();
   const idBySlug = new Map(artists.map((a) => [a.slug, a.id]));
@@ -75,11 +75,11 @@ interface InfoItem {
 }
 
 /**
- * info (§6.4): Die Default-Quelle liefert Struktur + Texte (content/info.json:
- * id, icon, order, hidden, Fallback-Titel/-Text). Pro Eintrag-ID kann in
- * `info.overrides` eine andere Quelle (joomla/wordpress) gewählt werden – diese
- * liefert dann nur Titel/Text, die Struktur (id/icon/order/hidden) bleibt aus
- * der Default-Quelle. So ist jeder Untermenüpunkt einzeln an eine Quelle bindbar.
+ * info (§6.4): the default source delivers structure + texts (content/info.json:
+ * id, icon, order, hidden, fallback title/text). Per entry ID a different source
+ * (joomla/wordpress) can be chosen in `info.overrides` - it then delivers only
+ * title/text, the structure (id/icon/order/hidden) stays from the default
+ * source. This binds every submenu entry to a source individually.
  */
 async function importInfo(cfg: ContentSourcesConfig): Promise<void> {
   const infoCfg = cfg.bindings.info;
@@ -97,7 +97,7 @@ async function importInfo(cfg: ContentSourcesConfig): Promise<void> {
       merged.push(item);
       continue;
     }
-    // Override-Quelle abrufen – nur Titel/Text übernehmen, Struktur beibehalten.
+    // Fetch the override source - only take title/text, keep the structure.
     const recs = (await adapterFor(ov).fetchDomain("info", ov, cfg)) as InfoItem[];
     const src = recs[0];
     if (!src) {
@@ -118,15 +118,15 @@ async function importDomain(
   cfg: ContentSourcesConfig,
   ctx: { artists: Array<{ id: string; slug: string }> },
 ): Promise<void> {
-  // Slots-Sonderfall (§6.5): Quelle über slots.format gesteuert.
+  // Slots special case (§6.5): source controlled via slots.format.
   if (domain === "slots") {
     const slotsBinding = cfg.bindings.slots;
     if (slotsBinding.provider === "manual" && (slotsBinding.format ?? "csv") === "csv") {
       await writeDomain("slots", await buildSlotsFromCsv(ctx.artists));
       return;
     }
-    // joomla-customfields / wordpress-acf: Slots aus Artist-Datensätzen ableiten
-    // (in Phase 1 verfeinern) – Fallback: regulärer Adapter.
+    // joomla-customfields / wordpress-acf: derive slots from artist records
+    // (refine in phase 1) - fallback: the regular adapter.
   }
 
   const records = await adapterFor(binding).fetchDomain(domain, binding, cfg);
@@ -142,7 +142,7 @@ async function main(): Promise<void> {
   console.log("Festivadget · Import aus konfigurierten Quellen (§6)\n");
   await mkdir(OUT_DIR, { recursive: true });
 
-  // Artists zuerst importieren (für den Slots-CSV-Join benötigt).
+  // Import artists first (needed for the slots CSV join).
   const artistRecords = (await adapterFor(config.bindings.artists).fetchDomain(
     "artists",
     config.bindings.artists,
@@ -168,7 +168,7 @@ async function main(): Promise<void> {
     await importDomain(domain, binding, config, ctx);
   }
 
-  // info: Quelle je Eintrag (Default + optionale Overrides je ID, §6.4).
+  // info: source per entry (default + optional overrides per ID, §6.4).
   await importInfo(config);
 
   console.log("\nImport abgeschlossen. Nächster Schritt: npm run build:data");

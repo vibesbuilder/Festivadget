@@ -1,12 +1,12 @@
 <?php
-// Festivadget Web-Installer (Joomla-Prinzip, Task #92.3): Erst-Einrichtung im
-// Browser, ohne Build-Maschine. Prüft Voraussetzungen, fragt CMS-Passwort und
-// optional MySQL (Web-Push) ab, erzeugt VAPID-Schlüssel serverseitig und
-// schreibt push/config.php. Danach sperrt sich der Installer selbst
-// (config.php vorhanden) und kann sich per Knopf selbst löschen.
+// Festivadget web installer (Joomla principle, task #92.3): first-time setup in
+// the browser, without a build machine. Checks prerequisites, asks for the CMS
+// password and optionally MySQL (web push), generates VAPID keys server-side and
+// writes push/config.php. Afterwards the installer locks itself
+// (config.php present) and can delete itself via a button.
 //
-// Sicherheit: Solange keine config.php existiert, ist die Installation offen –
-// wie bei Joomla/WordPress gilt: Paket hochladen und SOFORT installieren.
+// Security: while no config.php exists, the installation is open - as with
+// Joomla/WordPress: upload the package and install IMMEDIATELY.
 
 declare(strict_types=1);
 
@@ -17,7 +17,7 @@ $pushDir    = $root . '/push';
 $configFile = $pushDir . '/config.php';
 $dataDir    = $root . '/data';
 
-// --- Sprache (de/en) -----------------------------------------------------------
+// --- Language (de/en) ------------------------------------------------------------
 
 $lang = $_GET['lang'] ?? $_POST['lang'] ?? $_SESSION['lang']
     ?? (str_starts_with((string) ($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? ''), 'de') ? 'de' : 'en');
@@ -98,7 +98,7 @@ $STRINGS = [
     ],
 ];
 
-/** Übersetzung (Schlüssel → aktive Sprache). */
+/** Translation (key -> active language). */
 function t(string $key): string
 {
     global $STRINGS, $lang;
@@ -117,12 +117,12 @@ if (empty($_SESSION['csrf'])) {
 }
 $csrfOk = ($_POST['csrf'] ?? '') === $_SESSION['csrf'];
 
-// --- Selbstlöschung (auch nach der Installation erlaubt) -------------------------
+// --- Self-deletion (also allowed after installation) ------------------------------
 
 if (($_POST['do'] ?? '') === 'selfdelete' && $csrfOk) {
-    // Erfolg = alle Dateien gelöscht; das rmdir des eigenen Ordners darf
-    // scheitern (Windows hält das laufende Skript bis Request-Ende offen,
-    // ein leerer Restordner ist harmlos).
+    // Success = all files deleted; the rmdir of its own folder may fail
+    // (Windows keeps the running script open until the request ends,
+    // an empty leftover folder is harmless).
     $ok = true;
     foreach (array_diff(scandir(__DIR__) ?: [], ['.', '..']) as $f) {
         $ok = @unlink(__DIR__ . '/' . $f) && $ok;
@@ -136,17 +136,17 @@ if (($_POST['do'] ?? '') === 'selfdelete' && $csrfOk) {
     exit;
 }
 
-// --- Voraussetzungen -------------------------------------------------------------
+// --- Prerequisites -----------------------------------------------------------------
 
 @mkdir($dataDir, 0775, true); // best effort – Prüfung unten
 
 $pdoMysql = extension_loaded('pdo') && in_array('mysql', PDO::getAvailableDrivers(), true);
-// Der App-Build verwendet absolute Pfade (/assets, /data, Service Worker):
-// eine Unterordner-Installation liefert nur eine weiße Seite. SCRIPT_NAME
-// muss daher direkt /install/... sein.
+// The app build uses absolute paths (/assets, /data, service worker):
+// a subfolder installation yields only a white page. SCRIPT_NAME must
+// therefore be directly /install/…
 $inWebroot = str_starts_with((string) ($_SERVER['SCRIPT_NAME'] ?? ''), '/install/');
 $checks = [
-    // [Label-Key, erfüllt?, erforderlich?]
+    // [label key, fulfilled?, required?]
     ['php_version', PHP_VERSION_ID >= 80100, true],
     ['webroot', $inWebroot, true],
     ['writable_data', is_dir($dataDir) && is_writable($dataDir), true],
@@ -211,8 +211,8 @@ if (!$installed && ($_POST['do'] ?? '') === 'install' && $requiredOk) {
     }
 
     if (!$errors) {
-        // VAPID-Schlüssel nur mit Datenbank (ohne DB soll der Push-Schalter in
-        // der App verborgen bleiben – vapid.php liefert dann einen leeren Key).
+        // VAPID keys only with a database (without a DB the push toggle in the app
+        // should stay hidden - vapid.php then delivers an empty key).
         $vapidPub = $vapidPriv = '';
         if ($wantsPush) {
             try {
@@ -287,7 +287,7 @@ if (!$installed && ($_POST['do'] ?? '') === 'install' && $requiredOk) {
     }
 }
 
-// --- Ausgabe ---------------------------------------------------------------------
+// --- Output ------------------------------------------------------------------------
 
 header('Content-Type: text/html; charset=utf-8');
 ?><!doctype html>

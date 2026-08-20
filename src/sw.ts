@@ -4,18 +4,18 @@ import { registerRoute } from "workbox-routing";
 import { NetworkFirst, StaleWhileRevalidate } from "workbox-strategies";
 import { ExpirationPlugin } from "workbox-expiration";
 
-// Eigener Service Worker (injectManifest, Phase 5). Bildet das bisherige
-// Runtime-Caching (§5.1) ab UND ergänzt Web-Push (§13).
+// Custom service worker (injectManifest, phase 5). Reproduces the previous
+// runtime caching (§5.1) AND adds web push (§13).
 
 declare const self: ServiceWorkerGlobalScope & {
   __WB_MANIFEST: Array<{ url: string; revision: string | null }>;
 };
 
-// App-Shell precachen (von vite-plugin-pwa injiziert).
+// Precache the app shell (injected by vite-plugin-pwa).
 precacheAndRoute(self.__WB_MANIFEST);
 cleanupOutdatedCaches();
 
-// version.json: stets vom Netz, Cache nur als Offline-Fallback.
+// version.json: always from the network, cache only as offline fallback.
 registerRoute(
   ({ url }) => url.pathname.endsWith("/data/version.json"),
   new NetworkFirst({
@@ -25,7 +25,7 @@ registerRoute(
   }),
 );
 
-// Inhalts-JSON: NetworkFirst mit kurzem Timeout, Fallback Cache.
+// Content JSON: NetworkFirst with a short timeout, fallback cache.
 registerRoute(
   ({ url }) => url.pathname.startsWith("/data/") && url.pathname.endsWith(".json"),
   new NetworkFirst({
@@ -35,7 +35,7 @@ registerRoute(
   }),
 );
 
-// Bilder/Karte: StaleWhileRevalidate.
+// Images/map: StaleWhileRevalidate.
 registerRoute(
   ({ url }) => url.pathname.startsWith("/img/") || url.pathname.startsWith("/map/"),
   new StaleWhileRevalidate({
@@ -44,7 +44,7 @@ registerRoute(
   }),
 );
 
-// Sofortige Aktivierung neuer SW-Versionen (autoUpdate-Verhalten).
+// Immediate activation of new SW versions (autoUpdate behavior).
 self.addEventListener("install", () => {
   void self.skipWaiting();
 });
@@ -52,7 +52,7 @@ self.addEventListener("activate", (event) => {
   event.waitUntil(self.clients.claim());
 });
 
-// --- Web-Push (§13) -------------------------------------------------------
+// --- Web push (§13) -------------------------------------------------------
 
 interface PushPayload {
   title?: string;
@@ -87,7 +87,7 @@ self.addEventListener("notificationclick", (event) => {
 
   event.waitUntil(
     self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((clients) => {
-      // Bereits offenes Fenster fokussieren, sonst neues öffnen.
+      // Focus an already open window, otherwise open a new one.
       for (const client of clients) {
         if ("focus" in client) {
           void client.focus();

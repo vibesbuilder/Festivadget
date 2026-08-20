@@ -1,16 +1,16 @@
-// Normalisiertes, quellenunabhängiges Datenschema (IMPLEMENTATION.md §7).
-// Alle Zeitstempel: ISO 8601 mit Offset (z. B. "2026-07-31T22:00:00+02:00").
+// Normalized, source-independent data schema (IMPLEMENTATION.md §7).
+// All timestamps: ISO 8601 with offset (e.g. "2026-07-31T22:00:00+02:00").
 //
-// Die geteilten Schedule-Typen (Festival/Day/Stage/Artist/Slot) liegen in @rid/core
-// und werden hier re-exportiert, damit App-Importe `@/types` unverändert bleiben.
-// Festivadget-spezifische Typen (POIs, News, Sponsoren, Infos, Tickets, Wetter,
-// Versionsmanifest) stehen weiterhin hier.
+// The shared schedule types (Festival/Day/Stage/Artist/Slot) live in @rid/core
+// and are re-exported here so app imports of `@/types` stay unchanged.
+// Festivadget-specific types (POIs, news, sponsors, infos, tickets, weather,
+// version manifest) remain here.
 
 export type { Festival, FestivalDay, Stage, Artist, ArtistLinks, Slot } from "@rid/core";
 
 // §7.5 pois.json
-// POI-Kategorie-Schlüssel = Poi.type. Datengetrieben über poi-categories.json
-// (früher feste Union); daher offener String, damit eigene Kategorien möglich sind.
+// POI category key = Poi.type. Data-driven via poi-categories.json
+// (previously a fixed union); hence an open string so custom categories are possible.
 export type PoiType = string;
 
 export interface Poi {
@@ -21,17 +21,17 @@ export interface Poi {
   x: number; // Pixelkoordinate (CRS.Simple)
   y: number;
   stageId?: string;
-  icon?: string; // optionales Emoji je POI; überschreibt das Kategorie-Icon
+  icon?: string; // optional emoji per POI; overrides the category icon
 }
 
-// §7.5b poi-categories.json – Kategorien der Karten-Punkte (im Admin pflegbar)
+// §7.5b poi-categories.json - categories of the map points (maintainable in the admin)
 export interface PoiCategory {
   id: string; // = Poi.type
   label: string;
   color: string; // Hex-Farbe des Markers
   icon: string; // Emoji-Marker
-  hidden?: boolean; // true = komplett aus Karte UND Filter (Master-Schalter)
-  order?: number; // Reihenfolge in der Filterleiste
+  hidden?: boolean; // true = removed from map AND filter entirely (master toggle)
+  order?: number; // order in the filter bar
 }
 
 // §7.6 map.json
@@ -41,24 +41,26 @@ export interface MapConfig {
   height: number;
   minZoom: number; // weitestes Heraus-Zoomen (maximum zoom-out)
   maxZoom: number; // weitestes Hinein-Zoomen
-  startZoom?: number; // Anfangs-Zoom (ohne Wert: Bild einpassen). Liegt typ. über minZoom.
+  startZoom?: number; // initial zoom (without a value: fit the image). Typically above minZoom.
 }
 
 // §7.7 news.json
 export type NewsCategory = "info" | "safety" | "lineup" | "general";
 
+import type { LocalizedText } from "@/lib/localized";
+
 export interface NewsItem {
   id: string;
-  title: string;
-  body: string;
+  title: LocalizedText;
+  body: LocalizedText;
   category: NewsCategory;
-  publishAt: string; // erst ab diesem Zeitpunkt sichtbar
+  publishAt: string; // visible only from this point in time
   expiresAt?: string;
   pinned?: boolean;
-  // Ausblenden X Minuten nach dem ersten App-Öffnen dieses Geräts (z. B. Willkommen-News).
+  // Hide X minutes after this device's first app open (e.g. the welcome news).
   hideAfterFirstOpenMin?: number;
   image?: string;
-  link?: { label: string; url: string };
+  link?: { label: LocalizedText; url: string };
 }
 
 // §7.8 sponsors.json
@@ -76,12 +78,12 @@ export interface Sponsor {
 // §7.9 info.json
 export interface InfoPage {
   id: string; // "anreise" | "gelaende" | "camping" | ...
-  title: string;
+  title: LocalizedText;
   icon?: string;
   order: number;
-  body: string; // Markdown
-  hidden?: boolean; // true = im Menü/Suche ausgeblendet (Struktur bleibt erhalten)
-  faq?: boolean; // true = Body als Frage/Antwort-Accordion (## = Frage); Text vor der 1. Frage = Intro
+  body: LocalizedText; // Markdown
+  hidden?: boolean; // true = hidden from menu/search (structure is preserved)
+  faq?: boolean; // true = body as Q&A accordion (## = question); text before the 1st question = intro
 }
 
 // §7.10 tickets.json
@@ -97,7 +99,7 @@ export interface TicketsConfig {
   providers: TicketProvider[];
 }
 
-// §7.11 weather.json (von RastaWeather befüllt)
+// §7.11 weather.json (filled by RastaWeather)
 export interface WeatherDay {
   dayId: string;
   date: string;

@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { get as idbGet, set as idbSet } from "idb-keyval";
 
-// Favoriten als Set<slotId>, persistiert in IndexedDB (§11).
+// Favorites as Set<slotId>, persisted in IndexedDB (§11).
 const IDB_KEY = "favorites";
 
 interface FavoritesState {
@@ -13,14 +13,14 @@ interface FavoritesState {
   clear: () => void;
 }
 
-// IndexedDB kann fehlen oder wegbrechen (Safari-Privatmodus, iOS-Lockdown,
-// „Connection to Indexed Database server lost") – Favoriten gelten dann nur
-// für die laufende Sitzung, statt Unhandled Rejections zu werfen.
+// IndexedDB may be missing or drop out (Safari private mode, iOS lockdown,
+// "Connection to Indexed Database server lost") - favorites then only apply
+// for the running session instead of throwing unhandled rejections.
 async function persist(set: Set<string>): Promise<void> {
   try {
     await idbSet(IDB_KEY, Array.from(set));
   } catch {
-    // bewusst still – siehe oben
+    // deliberately silent - see above
   }
 }
 
@@ -33,7 +33,7 @@ export const useFavorites = create<FavoritesState>((set, getState) => ({
     try {
       stored = (await idbGet<string[]>(IDB_KEY)) ?? [];
     } catch {
-      // IndexedDB nicht verfügbar → leer starten (Sitzungs-Favoriten möglich).
+      // IndexedDB unavailable -> start empty (session favorites possible).
     }
     set({ favorites: new Set(stored), hydrated: true });
   },

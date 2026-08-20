@@ -4,8 +4,8 @@ import { AppShell } from "@/components/AppShell";
 import Home from "@/routes/Home";
 import { NotFound } from "@/routes/stubs";
 
-// Home bleibt eager (Landing). Übrige Routen werden lazy geladen (§17, Phase 4) –
-// schwere Abhängigkeiten (Leaflet, Markdown) landen so in eigenen Chunks.
+// Home stays eager (landing). Remaining routes are lazy-loaded (§17, phase 4) -
+// heavy dependencies (Leaflet, Markdown) end up in their own chunks.
 const Lineup = lazy(() => import("@/routes/Lineup"));
 const Artist = lazy(() => import("@/routes/Artist"));
 const More = lazy(() => import("@/routes/More"));
@@ -20,9 +20,9 @@ const News = lazy(() => import("@/routes/News"));
 const Search = lazy(() => import("@/routes/Search"));
 const Weather = lazy(() => import("@/routes/Weather"));
 
-// Routing-Tabelle (§9). Explizite (rein typseitige) Annotation, damit das
-// Declaration-Emit unter pnpm den Router-Typ benennen kann (sonst TS2742, weil
-// der transitive @remix-run/router-Typ im .pnpm-Store nicht portabel referenzierbar ist).
+// Routing table (§9). Explicit (purely type-level) annotation so declaration
+// emit under pnpm can name the router type (otherwise TS2742, because the
+// transitive @remix-run/router type in the .pnpm store is not portably referenceable).
 export const router: ReturnType<typeof createBrowserRouter> = createBrowserRouter(
   [
     {

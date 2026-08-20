@@ -14,8 +14,8 @@ const CATEGORY_LABELS: Record<PushCategory, string> = {
   general: "Allgemein",
 };
 
-// Auswahl der Push-Kategorien (Safety kommt immer an) + „Mein Plan"-Erinnerungen.
-// Wird im Header-Glocken-Popover verwendet.
+// Push category selection (safety always gets through) + "My plan" reminders.
+// Used in the header bell popover.
 export function PushCategoryPicker() {
   const [cats, setCats] = useState<PushCategory[]>(getPushCategories);
   const [plan, setPlan] = useState<boolean>(getPlanEnabled);

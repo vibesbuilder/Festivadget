@@ -5,6 +5,23 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.0.0/), Versionier
 
 ## [Unreleased]
 
+### Added
+- **Mehrsprachige Event-Inhalte**: Info-Seiten und News (Titel, Text, Link-Beschriftung)
+  können je Sprache gepflegt werden (`{ "de": …, "en": …, "fr": …, "es": … }` oder
+  weiterhin einfacher String). Die App zeigt die Sprache des Gastes mit Fallback
+  Sprache → Englisch → Deutsch; das CMS bietet je Eintrag einen Übersetzungs-Block.
+- **Push in der Abo-Sprache**: Das Push-Abo merkt sich die App-Sprache; News-Pushs,
+  „Gleich live“-Digests und „Mein Plan“-Erinnerungen kommen übersetzt an
+  (neue Spalte `lang`, Migration automatisch).
+- Beispieldaten demonstrieren das mehrsprachige Inhaltsmodell (en/de, teils fr/es).
+
+### Changed
+- **Code-Kommentare auf Englisch** (Repo-Konvention geändert), ebenso API-Fehlermeldungen
+  (JSON `error`), Server-Protokolleinträge und Importer-/Wetter-Fehlertexte.
+- Restliche fest verdrahtete deutsche UI-Texte in die App-Übersetzungen überführt
+  (Leer-/Fehlerzustände, Push-Fehler, POI-Fallback-Labels, Aria-Labels, 404).
+- Automatische Slot-News aus dem Daten-Build sind jetzt viersprachig.
+
 ## [1.4.4] - 2026-08-19
 
 ### Fixed

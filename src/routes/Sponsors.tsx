@@ -5,7 +5,7 @@ import { BackLink } from "@/components/BackLink";
 import { LoadingState, ErrorState, EmptyState } from "@/components/states";
 import type { Sponsor, SponsorTier } from "@/types";
 
-// Reihenfolge + Beschriftung der Tiers (§7.8, §12.8).
+// Order + labeling of the tiers (§7.8, §12.8).
 const TIER_ORDER: SponsorTier[] = ["main", "premium", "partner", "supporter"];
 const TIER_LABEL_KEY: Record<SponsorTier, string> = {
   main: "sponsors.tier.main",
@@ -23,7 +23,7 @@ function SponsorLogo({ sponsor }: { sponsor: Sponsor }) {
         loading="lazy"
         className="max-h-full max-w-full object-contain"
         onError={(e) => {
-          // Fallback: Name als Text, falls Logo fehlt.
+          // Fallback: name as text when the logo is missing.
           const el = e.currentTarget;
           el.style.display = "none";
           el.insertAdjacentText("afterend", sponsor.name);

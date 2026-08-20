@@ -1,16 +1,32 @@
 [
   {
     "id": "news-welcome",
-    "title": "Welcome to the Gadget Festival!",
-    "body": "Great to have you here! Two days, two stages and lots of music. You will find everything in this app - it even works offline.",
+    "title": {
+      "en": "Welcome to the Gadget Festival!",
+      "de": "Willkommen beim Gadget Festival!",
+      "fr": "Bienvenue au Gadget Festival !",
+      "es": "¡Bienvenidos al Gadget Festival!"
+    },
+    "body": {
+      "en": "Great to have you here! Two days, two stages and lots of music. You will find everything in this app - it even works offline.",
+      "de": "Schön, dass du da bist! Zwei Tage, zwei Bühnen und jede Menge Musik. Alles findest du in dieser App – sie funktioniert sogar offline.",
+      "fr": "Ravis de te voir ! Deux jours, deux scènes et beaucoup de musique. Tu trouveras tout dans cette appli – elle fonctionne même hors ligne.",
+      "es": "¡Qué bien que estés aquí! Dos días, dos escenarios y mucha música. Lo encontrarás todo en esta app: funciona incluso sin conexión."
+    },
     "category": "general",
     "publishAt": "2026-01-10T10:00:00+01:00",
     "pinned": true
   },
   {
     "id": "news-timetable",
-    "title": "The timetable is out",
-    "body": "All set times are online. Mark your favourites with the heart - the app can remind you before a show starts.",
+    "title": {
+      "en": "The timetable is out",
+      "de": "Der Timetable ist da"
+    },
+    "body": {
+      "en": "All set times are online. Mark your favourites with the heart - the app can remind you before a show starts.",
+      "de": "Alle Spielzeiten sind online. Markiere deine Favoriten mit dem Herz – die App kann dich vor Konzertbeginn erinnern."
+    },
     "category": "lineup",
     "publishAt": "2026-01-15T12:00:00+01:00"
   }

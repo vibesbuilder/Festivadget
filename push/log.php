@@ -1,11 +1,11 @@
 <?php
-// Zentrales Server-Protokoll (app_log): Push-Versand, Abo-Änderungen,
-// Admin-Logins, Wetter-/Telegram-Fehler und Client-Fehler aus der App.
+// Central server log (app_log): push sends, subscription changes,
+// admin logins, weather/Telegram errors and client errors from the app.
 //
-// Grundsätze:
-// - app_log() ist FAIL-SILENT: Logging darf nie einen Endpoint brechen.
-// - Keine IPs, keine User-Agents, keine personenbezogenen Daten.
-// - Aufbewahrung ~90 Tage (Bereinigung läuft gelegentlich beim Schreiben mit).
+// Principles:
+// - app_log() is FAIL-SILENT: logging must never break an endpoint.
+// - No IPs, no user agents, no personal data.
+// - Retention ~90 days (cleanup runs occasionally alongside writes).
 
 declare(strict_types=1);
 
@@ -15,7 +15,7 @@ const APP_LOG_RETENTION_DAYS = 90;
 
 function app_log_init(PDO $pdo): void
 {
-    // DDL MySQL- und SQLite-kompatibel (wie app_stats_events).
+    // DDL compatible with MySQL and SQLite (like app_stats_events).
     $pdo->exec(
         'CREATE TABLE IF NOT EXISTS app_log (
             ts      VARCHAR(26) NOT NULL,
@@ -27,33 +27,33 @@ function app_log_init(PDO $pdo): void
     try {
         $pdo->exec('CREATE INDEX idx_log_ts ON app_log (ts)');
     } catch (Throwable) {
-        // Index existiert bereits.
+        // Index already exists.
     }
 }
 
-/** Eintrag schreiben. $level: info|warn|error, $source: kurzes Kürzel (push, auth, …). */
+/** Write an entry. $level: info|warn|error, $source: short tag (push, auth, …). */
 function app_log(string $level, string $source, string $message): void
 {
     try {
         $pdo = stats_db();
         app_log_init($pdo);
         $now = new DateTimeImmutable('now', new DateTimeZone('Europe/Vienna'));
-        // Steuerzeichen raus, Länge deckeln (Quelle kann Client-Input sein).
+        // Strip control characters, cap the length (the source may be client input).
         $message = substr(preg_replace('/[\x00-\x1f\x7f]+/', ' ', $message) ?? '', 0, 500);
         $level   = in_array($level, ['info', 'warn', 'error'], true) ? $level : 'info';
         $pdo->prepare('INSERT INTO app_log (ts, level, source, message) VALUES (?, ?, ?, ?)')
             ->execute([$now->format('Y-m-d H:i:s.u'), $level, substr($source, 0, 16), $message]);
-        // Gelegentliche Bereinigung (~1 % der Schreibvorgänge reicht völlig).
+        // Occasional cleanup (~1 % of writes is plenty).
         if (random_int(1, 100) === 1) {
             $cutoff = $now->modify('-' . APP_LOG_RETENTION_DAYS . ' days')->format('Y-m-d H:i:s');
             $pdo->prepare('DELETE FROM app_log WHERE ts < ?')->execute([$cutoff]);
         }
     } catch (Throwable) {
-        // Logging ist nachrangig – nie eskalieren.
+        // Logging is secondary - never escalate.
     }
 }
 
-/** Letzte Einträge (neueste zuerst), optional nach Level/Quelle gefiltert. */
+/** Last entries (newest first), optionally filtered by level/source. */
 function app_log_recent(?string $level = null, ?string $source = null, int $limit = 200): array
 {
     try {
@@ -80,7 +80,7 @@ function app_log_recent(?string $level = null, ?string $source = null, int $limi
     }
 }
 
-/** Vorhandene Quellen (für den Filter im Protokoll-Tab). */
+/** Existing sources (for the filter in the log tab). */
 function app_log_sources(): array
 {
     try {

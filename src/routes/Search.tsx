@@ -35,7 +35,7 @@ export default function Search() {
       </div>
 
       {query.trim() && results.length === 0 && (
-        <p className="py-8 text-center text-rid-muted">Keine Treffer für „{query}".</p>
+        <p className="py-8 text-center text-rid-muted">{t("search.noResults", { query })}</p>
       )}
 
       <ul className="space-y-2">

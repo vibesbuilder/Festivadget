@@ -1,11 +1,11 @@
 import type { SourceAdapter } from "./types";
 import { htmlToMarkdown, slugify } from "../lib/normalize";
 
-// WordPress-Adapter (§6.4): WP REST API.
+// WordPress adapter (§6.4): WP REST API.
 // GET {baseUrl}/wp-json/wp/v2/{postType}?categories={id}
-// Auth: Application Password (Basic-Auth über WP_USER/WP_APP_PW).
+// Auth: application password (basic auth via WP_USER/WP_APP_PW).
 //
-// Best-Effort-Generic-Mapping wie beim Joomla-Adapter; Feinabbildung in Phase 1.
+// Best-effort generic mapping like the Joomla adapter; fine mapping in phase 1.
 export const wordpressAdapter: SourceAdapter = {
   async fetchDomain(_domain, binding, cfg) {
     const conn = cfg.wordpress;

@@ -15,8 +15,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-// Icon-Codes des Wetter-Endpoints (push/weather.php, GeoSphere-sy normalisiert) –
-// gleiche Basen wie in CrewCare.
+// Icon codes of the weather endpoint (push/weather.php, GeoSphere-sy normalized) -
+// same bases as in CrewCare.
 const ICONS: Record<string, LucideIcon> = {
   "clear-day": Sun,
   "clear-night": Moon,

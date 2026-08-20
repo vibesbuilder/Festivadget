@@ -1,13 +1,13 @@
 import type { SourceAdapter } from "./types";
 import { htmlToMarkdown, slugify } from "../lib/normalize";
 
-// Joomla-Adapter (§6.3): Joomla Web-Services REST API.
+// Joomla adapter (§6.3): Joomla Web Services REST API.
 // GET {baseUrl}/api/index.php/v1/content/articles?filter[category]={id}
 // Header: Authorization: Bearer {JOOMLA_API_TOKEN}
 //
-// Hinweis: Das hier ist ein Best-Effort-Generic-Mapping (id/slug/name/body +
-// Custom Fields). Die domänenspezifische Feinabbildung (Artist vs. News vs. Info)
-// wird in Phase 1 verfeinert. Ohne erreichbaren Joomla-Endpunkt ungenutzt.
+// Note: this is a best-effort generic mapping (id/slug/name/body +
+// custom fields). The domain-specific fine mapping (artist vs. news vs. info)
+// is refined in phase 1. Unused without a reachable Joomla endpoint.
 export const joomlaAdapter: SourceAdapter = {
   async fetchDomain(domain, binding, cfg) {
     const conn = cfg.joomla;
@@ -22,7 +22,7 @@ export const joomlaAdapter: SourceAdapter = {
       Accept: "application/vnd.api+json",
     };
 
-    // Artikel-Liste je Kategorie oder explizite IDs.
+    // Article list per category or explicit IDs.
     const urls: string[] = [];
     if (loc.ids?.length) {
       urls.push(...loc.ids.map((id) => `${base}/api/index.php/v1/content/articles/${id}`));
@@ -64,7 +64,7 @@ function mapCustomFields(
   mapping?: Record<string, string>,
 ): Record<string, unknown> {
   if (!mapping) return {};
-  // Joomla liefert Custom Fields oft unter attrs.com_fields oder jcfields.
+  // Joomla often delivers custom fields under attrs.com_fields or jcfields.
   const fields = (attrs.jcfields ?? attrs.com_fields) as
     | Array<{ name: string; rawvalue?: unknown; value?: unknown }>
     | undefined;

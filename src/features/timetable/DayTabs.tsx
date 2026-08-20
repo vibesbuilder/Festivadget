@@ -6,7 +6,7 @@ interface Props {
   onSelect: (id: string) => void;
 }
 
-// Tag-Auswahl als Tabs (§12.2).
+// Day selection as tabs (§12.2).
 export function DayTabs({ days, selectedId, onSelect }: Props) {
   return (
     <div className="flex gap-2 overflow-x-auto pb-1">

@@ -15,7 +15,7 @@ interface Props {
   variant?: "primary" | "ghost";
 }
 
-// Lädt einen oder mehrere Termine als .ics mit 15-Min-Vorlauf (§11, §12.3).
+// Downloads one or more events as .ics with a 15-min lead time (§11, §12.3).
 export function IcsButton({ entries, label, filename, variant = "ghost" }: Props) {
   const onClick = () => {
     if (entries.length === 0) return;

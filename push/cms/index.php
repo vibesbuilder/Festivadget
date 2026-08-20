@@ -1,7 +1,7 @@
 <?php
-// Admin-UI (CMS). Tabs: Einstellungen (Start), MEHR-Menü, Infos (CRUD), News, Push, …
-// Schreibt server-eigene JSONs unter data/, die die App live einliest.
-// UI-Texte laufen durch cms_t() (Deutsch = Quellsprache, en/fr/es via cms/i18n.php).
+// Admin UI (CMS). Tabs: settings (start), MORE menu, infos (CRUD), news, push, …
+// Writes server-side JSONs under data/ which the app reads live.
+// UI texts run through cms_t() (German = source language, en/fr/es via cms/i18n.php).
 
 declare(strict_types=1);
 
@@ -12,10 +12,10 @@ require_once __DIR__ . '/update.php';
 
 $error    = cms_handle_auth();
 $notice   = null;
-$uploaded = null; // Pfad der zuletzt hochgeladenen Datei (für Anzeige)
+$uploaded = null; // path of the last uploaded file (for display)
 $importReport = null; // Ergebnis von „Jetzt importieren"
 
-// --- CSV-Export: anonymer Abo-Verlauf (nur eingeloggt) ---------------------
+// --- CSV export: anonymous subscription history (logged in only) -----------
 if (cms_logged_in() && ($_GET['export'] ?? '') === 'push-stats') {
     try {
         $rows = push_db()->query(
@@ -36,15 +36,15 @@ if (cms_logged_in() && ($_GET['export'] ?? '') === 'push-stats') {
     exit;
 }
 
-// --- POST-Aktionen ---------------------------------------------------------
+// --- POST actions -----------------------------------------------------------
 if (cms_logged_in() && ($_POST['do'] ?? '') !== '' && $_POST['do'] !== 'logout' && $_POST['do'] !== 'login') {
     if (!cms_check_csrf()) {
         $error = cms_t('Sicherheits-Token ungültig – bitte erneut speichern.');
     } else {
         switch ($_POST['do']) {
             case 'save_weather':
-                // Wetter-Einstellungen → push/weather-settings.json (per .htaccess
-                // geschützt, enthält ggf. API-Keys). Überschreibt config.php['weather'].
+                // Weather settings -> push/weather-settings.json (protected via .htaccess,
+                // may contain API keys). Overrides config.php['weather'].
                 require_once __DIR__ . '/../weather-providers.php';
                 $prov = (string) ($_POST['wprovider'] ?? 'geosphere');
                 if (!isset(WEATHER_PROVIDERS[$prov])) {
@@ -53,7 +53,7 @@ if (cms_logged_in() && ($_POST['do'] ?? '') !== '' && $_POST['do'] !== 'logout' 
                 $num = static function ($v, float $min, float $max): ?float {
                     $s = str_replace(',', '.', trim((string) $v));
                     if (!is_numeric($s)) {
-                        return null; // sonst würde z. B. "abc" still zu 0.0
+                        return null; // otherwise e.g. "abc" would silently become 0.0
                     }
                     $f = (float) $s;
                     return ($f >= $min && $f <= $max) ? $f : null;
@@ -82,9 +82,9 @@ if (cms_logged_in() && ($_POST['do'] ?? '') !== '' && $_POST['do'] !== 'logout' 
                 }
                 @unlink(__DIR__ . '/../weather-cache.json'); // alter Anbieter-Cache ist wertlos
                 require_once __DIR__ . '/../log.php';
-                app_log('info', 'weather', 'Einstellungen gespeichert (Anbieter: ' . WEATHER_PROVIDERS[$prov]['label'] . ').');
+                app_log('info', 'weather', 'Settings saved (provider: ' . WEATHER_PROVIDERS[$prov]['label'] . ').');
                 $notice = cms_t('Wetter-Einstellungen gespeichert (Cache geleert).');
-                // Optional: gleich live testen (zweiter Submit-Button).
+                // Optional: test live right away (second submit button).
                 if (!empty($_POST['test'])) {
                     try {
                         $rows = weather_fetch_rows(weather_config());
@@ -112,14 +112,14 @@ if (cms_logged_in() && ($_POST['do'] ?? '') !== '' && $_POST['do'] !== 'logout' 
                 break;
 
             case 'reset_stats':
-                // Nutzungsstatistik komplett zurücksetzen (z. B. nach der Testphase).
+                // Reset the usage statistics entirely (e.g. after the test phase).
                 require_once __DIR__ . '/../stats-db.php';
                 require_once __DIR__ . '/../log.php';
                 try {
                     $pdo = stats_db();
                     $n = (int) $pdo->query('SELECT COUNT(*) FROM app_stats_events')->fetchColumn();
                     $pdo->exec('DELETE FROM app_stats_events');
-                    app_log('info', 'stats', "Statistik im CMS zurückgesetzt ($n Einträge gelöscht).");
+                    app_log('info', 'stats', "Statistics reset in the CMS ($n entries deleted).");
                     $notice = cms_t('Statistik zurückgesetzt (%d Einträge gelöscht).', $n);
                 } catch (Throwable $e) {
                     $error = cms_t('Zurücksetzen fehlgeschlagen: %s', $e->getMessage());
@@ -127,14 +127,14 @@ if (cms_logged_in() && ($_POST['do'] ?? '') !== '' && $_POST['do'] !== 'logout' 
                 break;
 
             case 'clear_log':
-                // Protokoll leeren (unabhängig von der 90-Tage-Bereinigung).
+                // Clear the log (independent of the 90-day cleanup).
                 require_once __DIR__ . '/../log.php';
                 try {
                     $pdo = stats_db();
                     app_log_init($pdo);
                     $n = (int) $pdo->query('SELECT COUNT(*) FROM app_log')->fetchColumn();
                     $pdo->exec('DELETE FROM app_log');
-                    app_log('info', 'stats', "Protokoll im CMS geleert ($n Einträge gelöscht).");
+                    app_log('info', 'stats', "Log cleared in the CMS ($n entries deleted).");
                     $notice = cms_t('Protokoll geleert (%d Einträge gelöscht).', $n);
                 } catch (Throwable $e) {
                     $error = cms_t('Leeren fehlgeschlagen: %s', $e->getMessage());
@@ -155,7 +155,7 @@ if (cms_logged_in() && ($_POST['do'] ?? '') !== '' && $_POST['do'] !== 'logout' 
                     $error = cms_t('Nur ZIP-Dateien (festivadget-update-v*.zip) erlaubt.');
                     break;
                 }
-                // PharData-Fallback braucht die .zip-Endung → erst umkopieren.
+                // The PharData fallback needs the .zip extension -> copy first.
                 $tmpZip = sys_get_temp_dir() . '/festivadget-update-' . bin2hex(random_bytes(6)) . '.zip';
                 if (!move_uploaded_file((string) $file['tmp_name'], $tmpZip)) {
                     $error = cms_t('Upload konnte nicht gespeichert werden.');
@@ -185,7 +185,7 @@ if (cms_logged_in() && ($_POST['do'] ?? '') !== '' && $_POST['do'] !== 'logout' 
                 break;
 
             case 'save_branding':
-                // Titel/Kurzname/Schrift/Farben (Logo + Icons haben eigene Aktionen).
+                // Title/short name/font/colors (logo + icons have their own actions).
                 $b = cms_branding();
                 $title = trim((string) ($_POST['btitle'] ?? ''));
                 if ($title === '') {
@@ -297,7 +297,7 @@ if (cms_logged_in() && ($_POST['do'] ?? '') !== '' && $_POST['do'] !== 'logout' 
                 break;
 
             case 'save_home_video':
-                // Intro-Video auf Home (Branding-Tab): Link/FTP oder Microsoft-Cloud.
+                // Intro video on home (branding tab): link/FTP or Microsoft cloud.
                 $url = trim((string) ($_POST['hv_url'] ?? ''));
                 $source = ($_POST['hv_source'] ?? 'link') === 'mscloud' ? 'mscloud' : 'link';
                 $enabled = !empty($_POST['hv_enabled']);
@@ -336,17 +336,17 @@ if (cms_logged_in() && ($_POST['do'] ?? '') !== '' && $_POST['do'] !== 'logout' 
                     if (!empty($row['delete'])) {
                         continue;
                     }
-                    $title = trim((string) ($row['title'] ?? ''));
-                    if ($title === '') {
-                        continue; // leere/ungenutzte Zeile überspringen
+                    $title = cms_loc_from_post($row['title'] ?? '');
+                    if (cms_loc_label($title) === '') {
+                        continue; // skip empty/unused rows
                     }
-                    $id = trim((string) ($row['id'] ?? '')) ?: cms_slug($title);
+                    $id = trim((string) ($row['id'] ?? '')) ?: cms_slug(cms_loc_label($title));
                     $icon = trim((string) ($row['icon'] ?? ''));
                     $item = [
                         'id'    => $id,
                         'title' => $title,
                         'order' => (float) ($row['order'] ?? 0),
-                        'body'  => (string) ($row['body'] ?? ''),
+                        'body'  => cms_loc_from_post($row['body'] ?? ''),
                     ];
                     if ($icon !== '') {
                         $item['icon'] = $icon;
@@ -357,7 +357,7 @@ if (cms_logged_in() && ($_POST['do'] ?? '') !== '' && $_POST['do'] !== 'logout' 
                     if (!empty($row['faq'])) {
                         $item['faq'] = true; // Body als Frage/Antwort-Accordion anzeigen
                     }
-                    // Quelle je Eintrag (manual = getippte Werte; joomla/wordpress = Import).
+                    // Source per entry (manual = typed values; joomla/wordpress = import).
                     $src = (string) ($row['source'] ?? 'manual');
                     if (in_array($src, ['joomla', 'wordpress'], true)) {
                         $item['source'] = $src;
@@ -375,7 +375,7 @@ if (cms_logged_in() && ($_POST['do'] ?? '') !== '' && $_POST['do'] !== 'logout' 
                 break;
 
             case 'save_settings':
-                // CMS-Sprache (cms-settings.json, wirkt sofort auf diese Antwort).
+                // CMS language (cms-settings.json, takes effect immediately for this response).
                 $cl = (string) ($_POST['cmsLang'] ?? '');
                 if ($cl !== '' && $cl !== cms_lang()) {
                     cms_set_lang($cl);
@@ -388,16 +388,16 @@ if (cms_logged_in() && ($_POST['do'] ?? '') !== '' && $_POST['do'] !== 'logout' 
                     $cfg['lineupImageLimit'] = max(0, (int) $lim);
                 }
                 $cfg['background'] = !empty($_POST['background']);
-                // Eigenes Hintergrundbild (nur Uploads-Pfade zulassen; leer = Build-Grafik).
+                // Custom background image (only allow upload paths; empty = build artwork).
                 $bgi = trim((string) ($_POST['backgroundImage'] ?? ''));
                 if ($bgi !== '' && preg_match('#^/data/uploads/[A-Za-z0-9._-]+$#', $bgi)) {
                     $cfg['backgroundImage'] = $bgi;
                 } else {
                     unset($cfg['backgroundImage']);
                 }
-                // Home-Kopf (Festivalname + Datum) ein-/ausblenden.
+                // Show/hide the home header (festival name + date).
                 $cfg['homeHeader'] = !empty($_POST['homeHeader']);
-                // Ziele der MEHR-Eintraege Kontakt/Impressum (leer = ausgeblendet).
+                // Targets of the MORE entries contact/legal notice (empty = hidden).
                 foreach (['contactUrl', 'impressumUrl'] as $urlKey) {
                     $u = trim((string) ($_POST[$urlKey] ?? ''));
                     if ($u !== '' && preg_match('#^https?://#i', $u)) {
@@ -412,14 +412,14 @@ if (cms_logged_in() && ($_POST['do'] ?? '') !== '' && $_POST['do'] !== 'logout' 
                 } else {
                     unset($cfg['themeDefault']);
                 }
-                // Standard-App-Sprache (solange der Gast nicht selbst wählt).
+                // Default app language (while the guest has not chosen themselves).
                 $ld = (string) ($_POST['languageDefault'] ?? '');
                 if (in_array($ld, ['de', 'en', 'fr', 'es'], true)) {
                     $cfg['languageDefault'] = $ld;
                 } else {
                     unset($cfg['languageDefault']);
                 }
-                // Auto-Push-Schalter (überschreiben config.php; vom Cron gelesen).
+                // Auto-push switches (override config.php; read by the cron).
                 $cfg['autoPushUpcoming'] = !empty($_POST['autoPushUpcoming']);
                 $cfg['autoPushNews']     = !empty($_POST['autoPushNews']);
                 $win = trim((string) ($_POST['upcomingWindowMin'] ?? ''));
@@ -428,7 +428,7 @@ if (cms_logged_in() && ($_POST['do'] ?? '') !== '' && $_POST['do'] !== 'logout' 
                 } else {
                     $cfg['upcomingWindowMin'] = max(1, (int) $win);
                 }
-                // Auto-Push-Kategorien (Safety immer implizit, daher nicht gespeichert).
+                // Auto-push categories (safety always implicit, hence not stored).
                 $pc = array_values(array_intersect(
                     ['info', 'lineup', 'general'],
                     array_keys((array) ($_POST['pushcat'] ?? []))
@@ -441,18 +441,18 @@ if (cms_logged_in() && ($_POST['do'] ?? '') !== '' && $_POST['do'] !== 'logout' 
 
             case 'save_news':
                 $out = [];
-                $pushNow = []; // id => true, wenn „Sofort pushen" angehakt
+                $pushNow = []; // id => true when "push now" is checked
                 foreach (($_POST['news'] ?? []) as $row) {
                     if (!empty($row['delete'])) {
                         continue;
                     }
-                    $title = trim((string) ($row['title'] ?? ''));
-                    if ($title === '') {
+                    $title = cms_loc_from_post($row['title'] ?? '');
+                    if (cms_loc_label($title) === '') {
                         continue;
                     }
                     $id = trim((string) ($row['id'] ?? ''));
                     if ($id === '') {
-                        $id = 'admin-' . (cms_slug($title) ?: 'news') . '-' . bin2hex(random_bytes(2));
+                        $id = 'admin-' . (cms_slug(cms_loc_label($title)) ?: 'news') . '-' . bin2hex(random_bytes(2));
                     }
                     $cat = (string) ($row['category'] ?? 'general');
                     if (!isset(CMS_NEWS_CATEGORIES[$cat])) {
@@ -460,7 +460,7 @@ if (cms_logged_in() && ($_POST['do'] ?? '') !== '' && $_POST['do'] !== 'logout' 
                     }
                     $pub = cms_dt_iso((string) ($row['publishAt'] ?? ''))
                         ?? (new DateTimeImmutable('now', new DateTimeZone(cms_tz())))->format('c');
-                    $item = ['id' => $id, 'title' => $title, 'body' => (string) ($row['body'] ?? ''), 'category' => $cat, 'publishAt' => $pub];
+                    $item = ['id' => $id, 'title' => $title, 'body' => cms_loc_from_post($row['body'] ?? ''), 'category' => $cat, 'publishAt' => $pub];
                     if ($exp = cms_dt_iso((string) ($row['expiresAt'] ?? ''))) {
                         $item['expiresAt'] = $exp;
                     }
@@ -469,7 +469,12 @@ if (cms_logged_in() && ($_POST['do'] ?? '') !== '' && $_POST['do'] !== 'logout' 
                     }
                     $lurl = trim((string) ($row['linkUrl'] ?? ''));
                     if ($lurl !== '') {
-                        $item['link'] = ['label' => (trim((string) ($row['linkLabel'] ?? '')) ?: 'Mehr'), 'url' => $lurl];
+                        $label = cms_loc_from_post($row['linkLabel'] ?? '');
+                        if (cms_loc_label($label) === '') {
+                            // Store the default label multilingual right away.
+                            $label = ['de' => 'Mehr', 'en' => 'More', 'fr' => 'Plus', 'es' => 'Más'];
+                        }
+                        $item['link'] = ['label' => $label, 'url' => $lurl];
                     }
                     $pushNow[$id] = !empty($row['pushNow']);
                     $out[] = $item;
@@ -480,8 +485,8 @@ if (cms_logged_in() && ($_POST['do'] ?? '') !== '' && $_POST['do'] !== 'logout' 
                     ? cms_t('News gespeichert. Übernahme in der App binnen ~2 Minuten.')
                     : cms_t('Speichern fehlgeschlagen – Schreibrechte des data-Ordners prüfen.');
 
-                // „Sofort pushen": markierte, bereits veröffentlichte Einträge einmalig
-                // pushen (kategoriebewusst). push_log verhindert Doppelung mit dem Cron.
+                // "Push now": push checked, already published entries once
+                // (category-aware). push_log prevents duplication with the cron.
                 $pushIds = array_keys(array_filter($pushNow));
                 if ($ok && $pushIds) {
                     try {
@@ -505,12 +510,8 @@ if (cms_logged_in() && ($_POST['do'] ?? '') !== '' && $_POST['do'] !== 'logout' 
                                 $skipped++; continue;
                             }
                             if ($pub > $nowDt) { $skipped++; continue; } // erst ab Veröffentlichung
-                            $body = (string) ($it['body'] ?? '');
-                            if (mb_strlen($body) > 180) {
-                                $body = mb_substr($body, 0, 177) . '…';
-                            }
                             $r = push_send_news(
-                                ['title' => (string) $it['title'], 'body' => $body, 'url' => '/news', 'tag' => 'news'],
+                                ['title' => $it['title'] ?? '', 'body' => $it['body'] ?? '', 'url' => '/news', 'tag' => 'news'],
                                 (string) ($it['category'] ?? 'general')
                             );
                             $ins->execute([$ref]);
@@ -597,10 +598,10 @@ if (cms_logged_in() && ($_POST['do'] ?? '') !== '' && $_POST['do'] !== 'logout' 
                     if (!empty($row['__delete'])) {
                         continue;
                     }
-                    // Identitäts-Feld: i. d. R. „name", für Kategorien „label" bzw. die getippte ID.
+                    // Identity field: usually "name", for categories "label" or the typed ID.
                     $primary = trim((string) ($row['name'] ?? $row['label'] ?? $row['id'] ?? ''));
                     if ($primary === '') {
-                        continue; // leere/ungenutzte Zeile
+                        continue; // empty/unused row
                     }
                     $id  = trim((string) ($row['__id'] ?? ''))
                         ?: trim((string) ($row['id'] ?? ''))
@@ -669,7 +670,7 @@ if (cms_logged_in() && ($_POST['do'] ?? '') !== '' && $_POST['do'] !== 'logout' 
                     $stageId  = trim((string) ($row['stageId'] ?? ''));
                     $dayId    = trim((string) ($row['dayId'] ?? ''));
                     if ($artistId === '' || $stageId === '' || $dayId === '') {
-                        continue; // unvollständige/leere Zeile
+                        continue; // incomplete/empty row
                     }
                     $id  = trim((string) ($row['__id'] ?? '')) ?: ($dayId . '-' . $stageId . '-' . cms_slug($artistId));
                     $rec = ['id' => $id, 'artistId' => $artistId, 'stageId' => $stageId, 'dayId' => $dayId];
@@ -758,16 +759,16 @@ if (cms_logged_in() && ($_POST['do'] ?? '') !== '' && $_POST['do'] !== 'logout' 
     }
 }
 
-// Einstellungen sind der Start-Tab (Direktaufruf der URL ohne ?tab=…).
+// Settings is the start tab (direct URL call without ?tab=…).
 $tab  = $_GET['tab'] ?? 'settings';
 $csrf = cms_csrf_token();
 ?>
 <!doctype html>
 <?php
-// CMS-Titel datengetrieben: Festivalname aus den Daten (Override vor Build-Stand),
-// damit auch Kunden-Installationen ihren eigenen Namen sehen.
-// Guard: ohne push/config.php (vor der Installation) würde cms_read_json über
-// push_config() mitten in der Seite abbrechen.
+// CMS title data-driven: festival name from the data (override before build state),
+// so customer installations see their own name too.
+// Guard: without push/config.php (before installation) cms_read_json would
+// abort mid-page via push_config().
 $cmsFest  = is_file(__DIR__ . '/../config.php')
     ? (cms_read_json('app-festival.json') ?: cms_read_json('festival.json'))
     : [];
@@ -799,7 +800,7 @@ $cmsTitle = trim((string) ($cmsFest['name'] ?? '')) ?: 'Festivadget';
   button { background:var(--accent); color:#000; border:0; border-radius:999px; padding:.6rem 1.1rem; font-weight:700; font-size:.95rem; cursor:pointer; }
   button.ghost { background:var(--surface2); color:var(--text); border:1px solid var(--border); }
   .bar { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1rem; }
-  /* Aktionsleiste (Speichern etc.) – auch oben, klebrig beim Scrollen langer Listen. */
+  /* Action bar (save etc.) - also at the top, sticky while scrolling long lists. */
   .actions { display:flex; gap:.6rem; flex-wrap:wrap; margin-top:.5rem; }
   .actions.top { position:sticky; top:0; z-index:5; margin:-.4rem -1rem .8rem; padding:.6rem 1rem; background:var(--surface); border-bottom:1px solid var(--border); }
   .msg { padding:.7rem .9rem; border-radius:10px; margin-bottom:1rem; }
@@ -865,7 +866,7 @@ $cmsTitle = trim((string) ($cmsFest['name'] ?? '')) ?: 'Festivadget';
 
   <?php elseif ($tab === 'info'):
     $items = cms_info_items();
-    // Eine leere „neue Zeile" anhängen.
+    // Append an empty "new row".
     $items[] = ['id' => '', 'title' => '', 'icon' => '', 'order' => '', 'body' => '', 'hidden' => false, '__new' => true];
     ?>
     <?php if ($importReport !== null): ?>
@@ -893,7 +894,7 @@ $cmsTitle = trim((string) ($cmsFest['name'] ?? '')) ?: 'Festivadget';
         $isNew = !empty($it['__new']); ?>
         <div class="item">
           <div class="head">
-            <strong><?= $isNew ? cms_h(cms_t('Neuer Eintrag')) : cms_h((string) $it['title']) ?></strong>
+            <strong><?= $isNew ? cms_h(cms_t('Neuer Eintrag')) : cms_h(cms_loc_label($it['title'] ?? '')) ?></strong>
             <?php if (!$isNew): ?>
               <label class="muted" style="display:flex;align-items:center;gap:.4rem">
                 <input type="checkbox" name="items[<?= $i ?>][delete]" value="1"> <?= cms_h(cms_t('Löschen')) ?>
@@ -904,8 +905,8 @@ $cmsTitle = trim((string) ($cmsFest['name'] ?? '')) ?: 'Festivadget';
             <input type="hidden" name="items[<?= $i ?>][id]" value="<?= cms_h((string) ($it['id'] ?? '')) ?>">
           <?php endif; ?>
           <div class="grid2">
-            <label class="fld"><span><?= cms_h(cms_t('Titel')) ?></span>
-              <input type="text" name="items[<?= $i ?>][title]" value="<?= cms_h((string) ($it['title'] ?? '')) ?>"></label>
+            <label class="fld"><span><?= cms_h(cms_t('Titel')) ?> (de)</span>
+              <input type="text" name="items[<?= $i ?>][title][de]" value="<?= cms_h(cms_loc_get($it['title'] ?? '', 'de')) ?>"></label>
             <label class="fld"><span><?= cms_h(cms_t('Reihenfolge')) ?></span>
               <input type="number" step="0.1" name="items[<?= $i ?>][order]" value="<?= cms_h((string) ($it['order'] ?? '')) ?>"></label>
           </div>
@@ -937,8 +938,25 @@ $cmsTitle = trim((string) ($cmsFest['name'] ?? '')) ?: 'Festivadget';
             <label class="fld"><span><?= cms_h(cms_t('Locator (Joomla-Artikel-ID / WP-Slug)')) ?></span>
               <input type="text" name="items[<?= $i ?>][sourceLocator]" value="<?= cms_h((string) ($it['sourceLocator'] ?? '')) ?>" placeholder="<?= cms_h(cms_t('z. B. 123')) ?>"></label>
           </div>
-          <label class="fld"><span><?= cms_h(cms_t('Text (Markdown)')) ?></span>
-            <textarea name="items[<?= $i ?>][body]"><?= cms_h((string) ($it['body'] ?? '')) ?></textarea></label>
+          <label class="fld"><span><?= cms_h(cms_t('Text (Markdown)')) ?> (de)</span>
+            <textarea name="items[<?= $i ?>][body][de]"><?= cms_h(cms_loc_get($it['body'] ?? '', 'de')) ?></textarea></label>
+          <?php $hasTr = false;
+          foreach (['en', 'fr', 'es'] as $tl) {
+              if (cms_loc_get($it['title'] ?? '', $tl) !== '' || cms_loc_get($it['body'] ?? '', $tl) !== '') {
+                  $hasTr = true;
+              }
+          } ?>
+          <details <?= $hasTr ? 'open' : '' ?>>
+            <summary class="muted"><?= cms_h(cms_t('Übersetzungen (en/fr/es) – leer = englischer bzw. deutscher Fallback')) ?></summary>
+            <?php foreach (['en', 'fr', 'es'] as $tl): ?>
+              <div class="grid2" style="margin-top:.5rem">
+                <label class="fld"><span><?= cms_h(cms_t('Titel')) ?> (<?= $tl ?>)</span>
+                  <input type="text" name="items[<?= $i ?>][title][<?= $tl ?>]" value="<?= cms_h(cms_loc_get($it['title'] ?? '', $tl)) ?>"></label>
+              </div>
+              <label class="fld"><span><?= cms_h(cms_t('Text (Markdown)')) ?> (<?= $tl ?>)</span>
+                <textarea name="items[<?= $i ?>][body][<?= $tl ?>]"><?= cms_h(cms_loc_get($it['body'] ?? '', $tl)) ?></textarea></label>
+            <?php endforeach; ?>
+          </details>
         </div>
       <?php endforeach; ?>
       <div class="actions"><?= $infoBar ?></div>
@@ -1036,7 +1054,7 @@ $cmsTitle = trim((string) ($cmsFest['name'] ?? '')) ?: 'Festivadget';
 
       <?php else:
         $fields  = CMS_DOMAIN_FIELDS[$domain];
-        // POI-Kategorie-Dropdown dynamisch aus den vorhandenen Kategorien füllen.
+        // Fill the POI category dropdown dynamically from the existing categories.
         if ($domain === 'pois') {
             $catIds = array_values(array_filter(array_map(
                 static fn($c) => is_array($c) ? (string) ($c['id'] ?? '') : '',
@@ -1275,7 +1293,7 @@ $cmsTitle = trim((string) ($cmsFest['name'] ?? '')) ?: 'Festivadget';
         $isNew = !empty($it['__new']); ?>
         <div class="item">
           <div class="head">
-            <strong><?= $isNew ? cms_h(cms_t('Neue News')) : cms_h((string) $it['title']) ?></strong>
+            <strong><?= $isNew ? cms_h(cms_t('Neue News')) : cms_h(cms_loc_label($it['title'] ?? '')) ?></strong>
             <?php if (!$isNew): ?>
               <label class="muted" style="display:flex;align-items:center;gap:.4rem">
                 <input type="checkbox" name="news[<?= $i ?>][delete]" value="1"> <?= cms_h(cms_t('Löschen')) ?>
@@ -1285,10 +1303,10 @@ $cmsTitle = trim((string) ($cmsFest['name'] ?? '')) ?: 'Festivadget';
           <?php if (!$isNew): ?>
             <input type="hidden" name="news[<?= $i ?>][id]" value="<?= cms_h((string) ($it['id'] ?? '')) ?>">
           <?php endif; ?>
-          <label class="fld"><span><?= cms_h(cms_t('Titel')) ?></span>
-            <input type="text" name="news[<?= $i ?>][title]" value="<?= cms_h((string) ($it['title'] ?? '')) ?>"></label>
-          <label class="fld"><span><?= cms_h(cms_t('Text (Markdown)')) ?></span>
-            <textarea name="news[<?= $i ?>][body]"><?= cms_h((string) ($it['body'] ?? '')) ?></textarea></label>
+          <label class="fld"><span><?= cms_h(cms_t('Titel')) ?> (de)</span>
+            <input type="text" name="news[<?= $i ?>][title][de]" value="<?= cms_h(cms_loc_get($it['title'] ?? '', 'de')) ?>"></label>
+          <label class="fld"><span><?= cms_h(cms_t('Text (Markdown)')) ?> (de)</span>
+            <textarea name="news[<?= $i ?>][body][de]"><?= cms_h(cms_loc_get($it['body'] ?? '', 'de')) ?></textarea></label>
           <div class="grid2">
             <label class="fld"><span><?= cms_h(cms_t('Kategorie')) ?></span>
               <select name="news[<?= $i ?>][category]">
@@ -1309,11 +1327,31 @@ $cmsTitle = trim((string) ($cmsFest['name'] ?? '')) ?: 'Festivadget';
               <input type="datetime-local" name="news[<?= $i ?>][expiresAt]" value="<?= cms_h(cms_dt_local($it['expiresAt'] ?? null)) ?>"></label>
           </div>
           <div class="grid2">
-            <label class="fld"><span><?= cms_h(cms_t('Link-Text (optional)')) ?></span>
-              <input type="text" name="news[<?= $i ?>][linkLabel]" value="<?= cms_h((string) ($it['link']['label'] ?? '')) ?>"></label>
+            <label class="fld"><span><?= cms_h(cms_t('Link-Text (optional)')) ?> (de)</span>
+              <input type="text" name="news[<?= $i ?>][linkLabel][de]" value="<?= cms_h(cms_loc_get($it['link']['label'] ?? '', 'de')) ?>"></label>
             <label class="fld"><span><?= cms_h(cms_t('Link-URL (optional)')) ?></span>
               <input type="text" name="news[<?= $i ?>][linkUrl]" value="<?= cms_h((string) ($it['link']['url'] ?? '')) ?>"></label>
           </div>
+          <?php $hasTr = false;
+          foreach (['en', 'fr', 'es'] as $tl) {
+              if (cms_loc_get($it['title'] ?? '', $tl) !== '' || cms_loc_get($it['body'] ?? '', $tl) !== ''
+                  || cms_loc_get($it['link']['label'] ?? '', $tl) !== '') {
+                  $hasTr = true;
+              }
+          } ?>
+          <details <?= $hasTr ? 'open' : '' ?>>
+            <summary class="muted"><?= cms_h(cms_t('Übersetzungen (en/fr/es) – leer = englischer bzw. deutscher Fallback')) ?></summary>
+            <?php foreach (['en', 'fr', 'es'] as $tl): ?>
+              <div class="grid2" style="margin-top:.5rem">
+                <label class="fld"><span><?= cms_h(cms_t('Titel')) ?> (<?= $tl ?>)</span>
+                  <input type="text" name="news[<?= $i ?>][title][<?= $tl ?>]" value="<?= cms_h(cms_loc_get($it['title'] ?? '', $tl)) ?>"></label>
+                <label class="fld"><span><?= cms_h(cms_t('Link-Text (optional)')) ?> (<?= $tl ?>)</span>
+                  <input type="text" name="news[<?= $i ?>][linkLabel][<?= $tl ?>]" value="<?= cms_h(cms_loc_get($it['link']['label'] ?? '', $tl)) ?>"></label>
+              </div>
+              <label class="fld"><span><?= cms_h(cms_t('Text (Markdown)')) ?> (<?= $tl ?>)</span>
+                <textarea name="news[<?= $i ?>][body][<?= $tl ?>]"><?= cms_h(cms_loc_get($it['body'] ?? '', $tl)) ?></textarea></label>
+            <?php endforeach; ?>
+          </details>
           <label class="row">
             <input type="checkbox" name="news[<?= $i ?>][pushNow]" value="1">
             <span><?= cms_t('Beim Speichern <b>sofort pushen</b> <span class="muted">(einmalig; nur wenn bereits veröffentlicht; Web-Push muss eingerichtet sein)</span>') ?></span>
@@ -1376,8 +1414,8 @@ $cmsTitle = trim((string) ($cmsFest['name'] ?? '')) ?: 'Festivadget';
     } ?>
 
   <?php elseif ($tab === 'weather'):
-    // Wetter-Anbieter + Standort (wie CrewCare). Gespeichert wird in
-    // push/weather-settings.json (geschützt, überschreibt config.php['weather']).
+    // Weather provider + location (like CrewCare). Stored in
+    // push/weather-settings.json (protected, overrides config.php['weather']).
     require_once __DIR__ . '/../weather-providers.php';
     $wcfg  = weather_config();
     $wprov = weather_provider_key($wcfg);
@@ -1432,14 +1470,14 @@ $cmsTitle = trim((string) ($cmsFest['name'] ?? '')) ?: 'Festivadget';
     </div>
 
   <?php elseif ($tab === 'stats'):
-    // App-Nutzungsstatistik (anonym, aus app_stats_events via push/track.php).
+    // App usage statistics (anonymous, from app_stats_events via push/track.php).
     require_once __DIR__ . '/../stats-db.php';
     try {
         $pdo   = stats_db();
         $vTz   = new DateTimeZone('Europe/Vienna');
         $today = (new DateTimeImmutable('now', $vTz))->format('Y-m-d');
         $week  = (new DateTimeImmutable('now', $vTz))->modify('-6 days')->format('Y-m-d');
-        // Meta-Events (_install/_standalone) zählen nicht als Seitenaufruf.
+        // Meta events (_install/_standalone) do not count as page views.
         $noMeta = "SUBSTR(page,1,1) <> '_'";
 
         $scope = static function (string $where, array $args) use ($pdo, $noMeta): array {
@@ -1466,12 +1504,12 @@ $cmsTitle = trim((string) ($cmsFest['name'] ?? '')) ?: 'Festivadget';
              FROM app_stats_events WHERE $noMeta GROUP BY day ORDER BY day DESC LIMIT 14"
         )->fetchAll();
 
-        // PWA: appinstalled-Events + Geräte, die als installierte App starten.
+        // PWA: appinstalled events + devices starting as an installed app.
         $installs   = (int) $pdo->query("SELECT COUNT(*) FROM app_stats_events WHERE page = '_install'")->fetchColumn();
         $standalone = (int) $pdo->query("SELECT COUNT(DISTINCT anon) FROM app_stats_events WHERE page = '_standalone'")->fetchColumn();
         $devices    = (int) $pdo->query('SELECT COUNT(DISTINCT anon) FROM app_stats_events')->fetchColumn();
 
-        // Sprache/Theme: letzter bekannter Stand je Gerät (Window-Funktion, MySQL 8/SQLite).
+        // Language/theme: last known state per device (window function, MySQL 8/SQLite).
         $distribution = static function (string $col) use ($pdo): array {
             return $pdo->query(
                 "SELECT $col val, COUNT(*) n FROM (
@@ -1483,7 +1521,7 @@ $cmsTitle = trim((string) ($cmsFest['name'] ?? '')) ?: 'Festivadget';
         $langs  = $distribution('lang');
         $themes = $distribution('theme');
 
-        // Stunden-Verteilung: Festivaltage (festival.json), sonst letzte 7 Tage.
+        // Hourly distribution: festival days (festival.json), otherwise the last 7 days.
         $festDays = [];
         foreach ((array) (cms_read_json('festival.json')['days'] ?? []) as $d) {
             if (!empty($d['dayStart'])) {
@@ -1629,7 +1667,7 @@ $cmsTitle = trim((string) ($cmsFest['name'] ?? '')) ?: 'Festivadget';
     } ?>
 
   <?php elseif ($tab === 'log'):
-    // Server-Protokoll (app_log): Push-Versand, Logins, Wetter-/Client-Fehler.
+    // Server log (app_log): push sends, logins, weather/client errors.
     require_once __DIR__ . '/../log.php';
     $fLevel  = (string) ($_GET['level'] ?? '');
     $fSource = (string) ($_GET['src'] ?? '');
@@ -1691,8 +1729,8 @@ $cmsTitle = trim((string) ($cmsFest['name'] ?? '')) ?: 'Festivadget';
     </div>
 
   <?php elseif ($tab === 'branding'):
-    // Kunden-Branding (Paket Y): Farben/Logo/Titel/Schrift/PWA-Icons, alles
-    // vorausgefüllt mit den Build-Standardwerten; wirkt ohne Neu-Build.
+    // Customer branding (package Y): colors/logo/title/font/PWA icons, everything
+    // prefilled with the build defaults; takes effect without a rebuild.
     $b = cms_branding();
     $bTitle = (string) ($b['title'] ?? '');
     $bShort = (string) ($b['shortName'] ?? '');
@@ -1810,7 +1848,7 @@ $cmsTitle = trim((string) ($cmsFest['name'] ?? '')) ?: 'Festivadget';
     </div>
 
     <?php
-    // Intro-Video auf Home (volle Breite oberhalb des Newsfeeds).
+    // Intro video on home (full width above the newsfeed).
     $hv = cms_read_config()['homeVideo'] ?? [];
     $hvUrl = (string) ($hv['url'] ?? '');
     $hvSource = ($hv['source'] ?? 'link') === 'mscloud' ? 'mscloud' : 'link';
@@ -1839,7 +1877,7 @@ $cmsTitle = trim((string) ($cmsFest['name'] ?? '')) ?: 'Festivadget';
     </div>
 
   <?php elseif ($tab === 'update'):
-    // 1-Klick-Updater (Komfort): Update-Paket hochladen und einspielen.
+    // 1-click updater (convenience): upload and apply an update package.
     $curVersion = cms_update_version();
     $zipAvailable = class_exists('ZipArchive') || extension_loaded('phar'); ?>
     <div class="card">
@@ -1861,9 +1899,9 @@ $cmsTitle = trim((string) ($cmsFest['name'] ?? '')) ?: 'Festivadget';
     </div>
 
   <?php elseif ($tab === 'help'):
-    // Handbücher: Markdown-Dateien, die mit der App unter /docs/ ausgeliefert
-    // werden (Build kopiert sie nach dist/docs; Upload via deploy-data.bat full).
-    // Später sollen hier PDF-Varianten verlinkt werden – die Liste bleibt datengetrieben.
+    // Manuals: Markdown files shipped with the app under /docs/ (the build copies
+    // them to dist/docs; upload via deploy-data.bat full).
+    // PDF variants are to be linked here later - the list stays data-driven.
     $docsDir = dirname(dirname(cms_data_path('version.json'))) . '/docs';
     $manuals = [
         ['file' => 'INSTALL',        'title' => cms_t('Installation (Web-Installer)'), 'desc' => cms_t('Release-Paket hochladen und im Browser einrichten – ohne Build-Maschine.')],
@@ -1873,7 +1911,7 @@ $cmsTitle = trim((string) ($cmsFest['name'] ?? '')) ?: 'Festivadget';
         ['file' => 'TELEGRAM',       'title' => cms_t('Telegram-Live-News'),    'desc' => cms_t('Bot einrichten, Tags, Befehle, Gruppen.')],
         ['file' => 'IMPLEMENTATION', 'title' => cms_t('Technisches Konzept'),   'desc' => cms_t('Architektur, Datenmodell, Caching, Roadmap.')],
     ];
-    // Englisch ist die Basis-Datei (GitHub-Standard), Deutsch traegt .de.
+    // English is the base file (GitHub default), German carries .de.
     $docLangs = ['de' => '.de', 'en' => '', 'fr' => '.fr', 'es' => '.es'];
     $anyDoc = false; ?>
     <div class="card">

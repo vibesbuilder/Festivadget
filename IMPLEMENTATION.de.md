@@ -429,14 +429,20 @@ interface MapConfig {
 
 ### 7.7 `news.json`
 ```ts
+type LocalizedText = string | Partial<Record<"de" | "en" | "fr" | "es", string>>;
 type NewsCategory = "info" | "safety" | "lineup" | "general";
 interface NewsItem {
-  id: string; title: string; body: string; category: NewsCategory;
+  id: string; title: LocalizedText; body: LocalizedText; category: NewsCategory;
   publishAt: string;      // Client zeigt erst ab diesem Zeitpunkt
   expiresAt?: string; pinned?: boolean;
-  image?: string; link?: { label: string; url: string };
+  image?: string; link?: { label: LocalizedText; url: string };
 }
 ```
+> **Lokalisierbare Inhalte**: `title`, `body` und `link.label` akzeptieren entweder
+> einen einfachen String (einsprachig) oder eine Sprach-Map wie `{ "de": "…", "en": "…" }`.
+> Die App löst die Nutzersprache mit der Fallback-Kette Sprache → en → de → erster
+> vorhandener Wert auf (`src/lib/localized.ts`); Push-Texte werden je Abo-Sprache
+> aufgelöst (`push/texts.php`).
 > **Auto-Konzertstart-Einträge** werden zur Laufzeit aus `slots.json` erzeugt (siehe §12.5)
 > und mit den redaktionellen News gemerged.
 
@@ -451,7 +457,7 @@ interface Sponsor { id: string; name: string; logo: string; tier: SponsorTier; u
 interface InfoPage {
   id: string;   // "anreise"|"gelaende"|"camping"|"caravan"|"cashless"
                 // "bringmichheim"|"kulinarik"|"getraenke"|"faq"
-  title: string; icon?: string; order: number; body: string; // Markdown
+  title: LocalizedText; icon?: string; order: number; body: LocalizedText; // Markdown
 }
 ```
 

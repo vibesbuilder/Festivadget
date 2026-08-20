@@ -28,7 +28,9 @@
     "retry": "Reintentar",
     "offline": "Sin conexión",
     "lastUpdate": "Actualizado: {{time}}",
-    "empty": "Aún no hay contenido."
+    "empty": "Aún no hay contenido.",
+    "close": "Cerrar",
+    "notFound": "No encontrado"
   },
   "home": {
     "now": "Ahora",
@@ -42,7 +44,8 @@
   "lineup": {
     "title": "Cartel",
     "allGenres": "Todos",
-    "headliner": "Cabeza de cartel"
+    "headliner": "Cabeza de cartel",
+    "noActs": "No hay artistas este día."
   },
   "timetable": {
     "title": "Horarios",
@@ -50,7 +53,11 @@
     "list": "Lista",
     "favoritesOnly": "Solo favoritos",
     "now": "Ahora",
-    "clash": "Solapamiento"
+    "clash": "Solapamiento",
+    "noSlots": "No hay horarios para esta selección.",
+    "allHidden": "Todos los escenarios están ocultos.",
+    "addPlan": "Añadir a Mi plan",
+    "removePlan": "Quitar de Mi plan"
   },
   "favorites": {
     "title": "Mi plan",
@@ -63,10 +70,12 @@
   },
   "news": {
     "title": "Noticias",
-    "pinned": "Fijado"
+    "pinned": "Fijado",
+    "now": "Ahora: {{artist}} @ {{stage}}"
   },
   "info": {
-    "title": "Información"
+    "title": "Información",
+    "notFound": "Página de información no encontrada."
   },
   "sponsors": {
     "title": "Patrocinadores",
@@ -85,7 +94,8 @@
   "artist": {
     "playtimes": "Stage Time",
     "favorite": "Añadir a favoritos",
-    "favorited": "En favoritos"
+    "favorited": "En favoritos",
+    "notFound": "Artista no encontrado."
   },
   "install": {
     "cta": "Instala la app para usarla sin conexión.",
@@ -114,9 +124,34 @@
   },
   "map": {
     "title": "Mapa",
-    "all": "Todos"
+    "all": "Todos",
+    "noPois": "No hay puntos en el mapa."
   },
   "search": {
-    "title": "Búsqueda"
+    "title": "Búsqueda",
+    "noResults": "Sin resultados para «{{query}}»."
+  },
+  "push": {
+    "noKey": "No hay clave pública VAPID configurada.",
+    "denied": "Notificaciones no permitidas.",
+    "saveFailed": "No se pudo guardar la suscripción (HTTP {{status}})."
+  },
+  "poi": {
+    "stage": "Escenario",
+    "wc": "WC",
+    "food": "Comida",
+    "drink": "Bebidas",
+    "firstaid": "Primeros auxilios",
+    "atm": "Cajero",
+    "info": "Info",
+    "entrance": "Entrada",
+    "exit": "Salida",
+    "camping": "Camping",
+    "caravan": "Caravana",
+    "cashless": "Cashless",
+    "shuttle": "Lanzadera",
+    "merch": "Merchandising",
+    "parking": "Aparcamiento",
+    "generic": "Punto"
   }
 }

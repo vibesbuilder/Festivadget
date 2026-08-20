@@ -4,9 +4,9 @@ import { findClashes } from "@rid/core";
 import { useFavorites } from "@/store/favorites";
 
 /**
- * Ermittelt Slot-IDs favorisierter Acts, die sich zeitlich mit einem anderen
- * Favoriten überschneiden (§12.2/§12.3). Liefert ein Set zur schnellen Abfrage.
- * Die reine Clash-Logik steckt in @rid/core; hier nur die React-Anbindung.
+ * Determines slot IDs of favorited acts that overlap in time with another
+ * favorite (§12.2/§12.3). Returns a Set for fast lookups.
+ * The pure clash logic lives in @rid/core; this is only the React binding.
  */
 export function useClashes(slots: Slot[] | undefined): Set<string> {
   const favorites = useFavorites((s) => s.favorites);

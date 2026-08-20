@@ -439,14 +439,20 @@ interface MapConfig {
 
 ### 7.7 `news.json`
 ```ts
+type LocalizedText = string | Partial<Record<"de" | "en" | "fr" | "es", string>>;
 type NewsCategory = "info" | "safety" | "lineup" | "general";
 interface NewsItem {
-  id: string; title: string; body: string; category: NewsCategory;
+  id: string; title: LocalizedText; body: LocalizedText; category: NewsCategory;
   publishAt: string;      // client shows it only from this point in time
   expiresAt?: string; pinned?: boolean;
-  image?: string; link?: { label: string; url: string };
+  image?: string; link?: { label: LocalizedText; url: string };
 }
 ```
+> **Localizable content**: `title`, `body` and `link.label` accept either a plain
+> string (single-language) or a language map like `{ "de": "…", "en": "…" }`.
+> The app resolves the user's language with fallback chain language → en → de →
+> first available value (`src/lib/localized.ts`); push payloads resolve per
+> subscription language (`push/texts.php`).
 > **Auto concert-start entries** are generated at runtime from `slots.json`
 > (see §12.5) and merged with the editorial news.
 
@@ -461,7 +467,7 @@ interface Sponsor { id: string; name: string; logo: string; tier: SponsorTier; u
 interface InfoPage {
   id: string;   // "anreise"|"gelaende"|"camping"|"caravan"|"cashless"
                 // "bringmichheim"|"kulinarik"|"getraenke"|"faq"
-  title: string; icon?: string; order: number; body: string; // Markdown
+  title: LocalizedText; icon?: string; order: number; body: LocalizedText; // Markdown
 }
 ```
 

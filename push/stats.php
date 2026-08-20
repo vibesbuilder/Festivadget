@@ -1,5 +1,5 @@
 <?php
-// Die Statistik lebt im CMS (eigener Tab) – diese Adresse leitet nur noch um.
+// The statistics live in the CMS (own tab) - this address only redirects now.
 
 declare(strict_types=1);
 

@@ -5,19 +5,20 @@ import { queryClient } from "@/data/client";
 import { router } from "@/router";
 import { useFavorites } from "@/store/favorites";
 import { getFirstOpenAt } from "@/lib/firstOpen";
-import { syncPushPlan } from "@/lib/push";
+import { syncPushLanguage, syncPushPlan } from "@/lib/push";
+import { useUi } from "@/store/ui";
 import "@/i18n/config";
 
 export default function App() {
   const hydrate = useFavorites((s) => s.hydrate);
 
-  // Favoriten aus IndexedDB laden (§11) + Erstöffnung früh festhalten.
+  // Load favorites from IndexedDB (§11) + record the first open early.
   useEffect(() => {
     void hydrate();
     getFirstOpenAt();
   }, [hydrate]);
 
-  // Favoriten-Änderungen ans „Mein Plan"-Push-Abo durchreichen (entprellt).
+  // Forward favorite changes to the "My plan" push subscription (debounced).
   useEffect(() => {
     let t: ReturnType<typeof setTimeout>;
     const unsub = useFavorites.subscribe((state, prev) => {
@@ -29,6 +30,14 @@ export default function App() {
       clearTimeout(t);
       unsub();
     };
+  }, []);
+
+  // Forward language changes to the push subscription (push texts follow it).
+  useEffect(() => {
+    const unsub = useUi.subscribe((state, prev) => {
+      if (state.language !== prev.language) void syncPushLanguage();
+    });
+    return unsub;
   }, []);
 
   return (

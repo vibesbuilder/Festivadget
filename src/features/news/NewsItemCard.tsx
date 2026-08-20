@@ -3,6 +3,7 @@ import { Megaphone, Info, Music2, ShieldAlert } from "lucide-react";
 import type { NewsCategory } from "@/types";
 import { Markdown } from "@/components/Markdown";
 import { formatDateTime } from "@/lib/time";
+import { lt } from "@/lib/localized";
 import type { FeedItem } from "./useNewsFeed";
 
 const CATEGORY_ICON: Record<NewsCategory, typeof Info> = {
@@ -14,8 +15,9 @@ const CATEGORY_ICON: Record<NewsCategory, typeof Info> = {
 
 export function NewsItemCard({ item }: { item: FeedItem }) {
   const { t, i18n } = useTranslation();
-  // Fallback, falls eine unbekannte Kategorie in den Daten steht (kein Crash).
+  // Fallback in case the data contains an unknown category (no crash).
   const Icon = CATEGORY_ICON[item.category] ?? Megaphone;
+  const body = lt(item.body, i18n.language);
 
   return (
     <article className="rid-card p-4">
@@ -28,10 +30,10 @@ export function NewsItemCard({ item }: { item: FeedItem }) {
           </span>
         )}
       </div>
-      <h2 className="font-semibold">{item.title}</h2>
-      {item.body && (
+      <h2 className="font-semibold">{lt(item.title, i18n.language)}</h2>
+      {body && (
         <div className="mt-1 text-sm">
-          <Markdown>{item.body}</Markdown>
+          <Markdown>{body}</Markdown>
         </div>
       )}
       {item.image && (
@@ -44,7 +46,7 @@ export function NewsItemCard({ item }: { item: FeedItem }) {
           rel="noopener noreferrer"
           className="mt-2 inline-block text-sm text-rid-accent underline underline-offset-2"
         >
-          {item.link.label}
+          {lt(item.link.label, i18n.language)}
         </a>
       )}
     </article>

@@ -28,7 +28,7 @@ export default function Artist() {
   }, [artist, slots, stages]);
 
   if (isLoading) return <LoadingState />;
-  if (!artist) return <EmptyState label="Act nicht gefunden." />;
+  if (!artist) return <EmptyState label={t("artist.notFound")} />;
 
   return (
     <article className="space-y-5">
@@ -36,7 +36,7 @@ export default function Artist() {
         ← {t("lineup.title")}
       </Link>
 
-      {/* Oben: Bild links (klein), rechts Name/Genre/Land + Spielzeiten */}
+      {/* Top: image on the left (small), name/genre/country + set times on the right */}
       <div className="flex gap-4">
         {artist.image && (
           <div className="aspect-4/5 w-[150px] shrink-0 overflow-hidden rounded-xl bg-rid-surface-2">

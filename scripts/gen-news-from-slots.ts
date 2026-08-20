@@ -4,19 +4,21 @@ import { DateTime } from "luxon";
 import { readSlotsCsv } from "./adapters/csv";
 import { slugify } from "./lib/normalize";
 
-// Erzeugt pro Slot in content/slots.csv einen Lineup-News-Eintrag, der 15 Minuten
-// vor Slot-Beginn erscheint (publishAt = start − 15 min), führt ihn mit den
-// redaktionellen News zusammen und sortiert alles chronologisch (älteste oben).
+// Generates one line-up news entry per slot in content/slots.csv, appearing 15
+// minutes before the slot starts (publishAt = start - 15 min), merges it with
+// the editorial news and sorts everything chronologically (oldest first).
 //
-// Generierte Einträge haben eine id mit Präfix "slot-" und werden bei erneutem
-// Lauf ersetzt; redaktionelle News bleiben unangetastet.
+// Generated entries have an id prefixed "slot-" and are replaced on re-runs;
+// editorial news stays untouched.
 
 const CONTENT = resolve(process.cwd(), "content");
 
+type LocalizedText = string | Partial<Record<"de" | "en" | "fr" | "es", string>>;
+
 interface NewsItem {
   id: string;
-  title: string;
-  body: string;
+  title: LocalizedText;
+  body: LocalizedText;
   category: string;
   publishAt: string;
   [k: string]: unknown;
@@ -35,7 +37,7 @@ async function main(): Promise<void> {
   const nameBySlug = new Map(artists.map((a) => [a.slug, a.name]));
   const nameByStage = new Map(stages.map((s) => [s.id, s.name]));
 
-  // Generierte Slot-News (eindeutig je id; doppelte CSV-Zeilen werden zusammengeführt).
+  // Generated slot news (unique per id; duplicate CSV rows are merged).
   const generated = new Map<string, NewsItem>();
   for (const r of rows) {
     const start = DateTime.fromISO(r.start, { setZone: true });
@@ -44,16 +46,27 @@ async function main(): Promise<void> {
     const artist = nameBySlug.get(r.artistSlug) ?? r.artistSlug;
     const stage = nameByStage.get(r.stageId) ?? r.stageId;
     const id = `slot-${r.dayId}-${r.stageId}-${slugify(r.artistSlug)}`;
+    const range = `${start.toFormat("HH:mm")} - ${end.toFormat("HH:mm")}`;
     generated.set(id, {
       id,
-      title: `Gleich: ${artist}`,
-      body: `${start.toFormat("HH:mm")} - ${end.toFormat("HH:mm")} Uhr - ${stage}`,
+      title: {
+        de: `Gleich: ${artist}`,
+        en: `Up next: ${artist}`,
+        fr: `Bientôt : ${artist}`,
+        es: `Pronto: ${artist}`,
+      },
+      body: {
+        de: `${range} Uhr - ${stage}`,
+        en: `${range} - ${stage}`,
+        fr: `${range} - ${stage}`,
+        es: `${range} - ${stage}`,
+      },
       category: "lineup",
       publishAt,
     });
   }
 
-  // Redaktionelle News behalten (alles, was NICHT generiert ist).
+  // Keep editorial news (everything that is NOT generated).
   const editorial = existing.filter((n) => !n.id.startsWith("slot-"));
 
   const merged = [...editorial, ...generated.values()].sort(

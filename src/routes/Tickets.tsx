@@ -24,8 +24,8 @@ function TicketEmbed({ provider }: { provider: TicketProvider }) {
       {provider.note && <p className="text-sm text-rid-muted">{provider.note}</p>}
 
       {provider.embedType === "iframe" ? (
-        // iframe mit restriktivem sandbox (§12.11). Fallback ist der Link oben,
-        // falls der Shop Framing per X-Frame-Options/CSP verbietet.
+        // iframe with a restrictive sandbox (§12.11). Fallback is the link above,
+        // in case the shop forbids framing via X-Frame-Options/CSP.
         <iframe
           title={provider.name}
           src={provider.url}

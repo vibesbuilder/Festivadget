@@ -1,9 +1,9 @@
 import { useLocation } from "react-router-dom";
 import { useFestival, useSponsors } from "@/data/queries";
 
-// Fußzeile am Ende jeder Seite: Eventname (Festival-Eckdaten), „Presented by",
-// darunter die Logos der Hauptsponsoren (Tier „main"). Ohne main-Sponsor
-// verschwindet die Fußzeile komplett.
+// Footer at the end of every page: event name (festival facts), "Presented by",
+// below it the logos of the main sponsors (tier "main"). Without a main sponsor
+// the footer disappears entirely.
 export function PresentedByFooter() {
   const { pathname } = useLocation();
   const { data } = useSponsors();
@@ -12,8 +12,8 @@ export function PresentedByFooter() {
     .filter((s) => s.tier === "main")
     .sort((a, b) => a.order - b.order);
 
-  // Auf der Sponsoren-Seite weglassen – dort sind die Hauptsponsoren bereits gelistet.
-  // Auf Artist-Seiten ebenfalls weglassen.
+  // Omit on the sponsors page - the main sponsors are already listed there.
+  // Also omit on artist pages.
   if (pathname === "/sponsors" || pathname.startsWith("/artist/")) return null;
   if (main.length === 0) return null;
 

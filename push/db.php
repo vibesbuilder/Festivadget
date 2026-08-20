@@ -1,5 +1,5 @@
 <?php
-// Konfiguration + Datenbank (PDO/MySQL) inkl. Schema-Bootstrap.
+// Configuration + database (PDO/MySQL) incl. schema bootstrap.
 
 declare(strict_types=1);
 
@@ -37,7 +37,7 @@ function push_db(): PDO
 
 function push_init_schema(PDO $pdo): void
 {
-    // Abos. endpoint ist eindeutig (Re-Subscribe aktualisiert die Keys).
+    // Subscriptions. endpoint is unique (re-subscribe updates the keys).
     $pdo->exec(
         'CREATE TABLE IF NOT EXISTS push_subscriptions (
             id         INT AUTO_INCREMENT PRIMARY KEY,
@@ -50,22 +50,28 @@ function push_init_schema(PDO $pdo): void
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4'
     );
 
-    // Migration für bestehende Installationen: Kategorie-Präferenz je Abo
-    // (CSV der gewählten Kategorien; NULL = alle). Idempotent.
+    // Migration for existing installations: category preference per subscription
+    // (CSV of the chosen categories; NULL = all). Idempotent.
     try {
         $pdo->exec('ALTER TABLE push_subscriptions ADD COLUMN categories VARCHAR(255) NULL');
     } catch (Throwable $e) {
-        // Spalte existiert bereits → ignorieren.
+        // Column already exists -> ignore.
     }
-    // „Mein Plan": favorisierte Slot-IDs (CSV) für persönliche Erinnerungen.
-    // Leer/NULL = kein Plan-Abo. Idempotent.
+    // "My plan": favorited slot IDs (CSV) for personal reminders.
+    // Empty/NULL = no plan subscription. Idempotent.
     try {
         $pdo->exec('ALTER TABLE push_subscriptions ADD COLUMN plan TEXT NULL');
     } catch (Throwable $e) {
-        // Spalte existiert bereits → ignorieren.
+        // Column already exists -> ignore.
+    }
+    // App language of the subscription (de/en/fr/es); NULL = instance default. Idempotent.
+    try {
+        $pdo->exec('ALTER TABLE push_subscriptions ADD COLUMN lang VARCHAR(5) NULL');
+    } catch (Throwable $e) {
+        // Column already exists -> ignore.
     }
 
-    // Idempotenz für zeitgesteuerte Pushes (z. B. ref = "slot:fr-main-greeen").
+    // Idempotency for scheduled pushes (e.g. ref = "slot:fr-main-greeen").
     $pdo->exec(
         'CREATE TABLE IF NOT EXISTS push_log (
             id      INT AUTO_INCREMENT PRIMARY KEY,
@@ -74,7 +80,7 @@ function push_init_schema(PDO $pdo): void
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4'
     );
 
-    // Anonyme Zeitreihe der Abo-Zahlen (nur Zähler, KEINE personenbezogenen Daten).
+    // Anonymous time series of subscription counts (counters only, NO personal data).
     $pdo->exec(
         'CREATE TABLE IF NOT EXISTS push_stats (
             id        INT AUTO_INCREMENT PRIMARY KEY,
@@ -88,8 +94,8 @@ function push_init_schema(PDO $pdo): void
 }
 
 /**
- * Aktuelle Abo-Zahlen (live). Safety = total (alle erhalten Safety). Abos mit
- * categories = NULL (Altbestand/Default) zählen als „alle Kategorien".
+ * Current subscription counts (live). Safety = total (everyone receives safety).
+ * Subscriptions with categories = NULL (legacy/default) count as "all categories".
  * @return array{total:int,c_info:int,c_lineup:int,c_general:int}
  */
 function push_stats_current(): array
@@ -109,13 +115,13 @@ function push_stats_current(): array
     ];
 }
 
-/** Schreibt einen Snapshot der Abo-Zahlen – höchstens alle $minIntervalMin Minuten. */
+/** Writes a snapshot of the subscription counts - at most every $minIntervalMin minutes. */
 function push_stats_snapshot(int $minIntervalMin = 55): bool
 {
     $pdo  = push_db();
     $last = $pdo->query('SELECT MAX(taken_at) FROM push_stats')->fetchColumn();
     if ($last && (time() - strtotime((string) $last)) < $minIntervalMin * 60) {
-        return false; // zu früh – Tabelle nicht zumüllen
+        return false; // too early - do not clutter the table
     }
     $c = push_stats_current();
     $pdo->prepare('INSERT INTO push_stats (total, c_info, c_lineup, c_general) VALUES (?, ?, ?, ?)')
@@ -123,7 +129,7 @@ function push_stats_snapshot(int $minIntervalMin = 55): bool
     return true;
 }
 
-/** Letzte N Snapshots (neueste zuerst). */
+/** Last N snapshots (newest first). */
 function push_stats_recent(int $limit = 24): array
 {
     $limit = max(1, min(200, $limit));

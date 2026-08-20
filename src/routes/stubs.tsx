@@ -1,4 +1,8 @@
+import { useTranslation } from "react-i18next";
 import { Placeholder } from "@/components/Placeholder";
 
-// Platzhalter für Routen ohne eigene Implementierung (404).
-export const NotFound = () => <Placeholder title="Nicht gefunden" />;
+// Placeholder for routes without their own implementation (404).
+export const NotFound = () => {
+  const { t } = useTranslation();
+  return <Placeholder title={t("common.notFound")} />;
+};

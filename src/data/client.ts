@@ -1,8 +1,8 @@
 import { QueryClient } from "@tanstack/react-query";
 
-// Zentrale TanStack-Query-Instanz.
-// staleTime 2 min entspricht der Datenaktualität (§5/§11); Invalidierung erfolgt
-// gezielt über das Versions-Polling (useVersionSync).
+// Central TanStack Query instance.
+// staleTime of 2 min matches the data freshness (§5/§11); invalidation happens
+// selectively via the version polling (useVersionSync).
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {

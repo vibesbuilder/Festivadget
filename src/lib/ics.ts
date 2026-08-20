@@ -1,3 +1,3 @@
-// .ics-Erzeugung lebt jetzt in @rid/core (geteilt mit CrewCare). Dünner Re-Export,
-// damit App-Importe `@/lib/ics` unverändert bleiben.
+// .ics generation now lives in @rid/core (shared with CrewCare). Thin re-export
+// so app imports of `@/lib/ics` stay unchanged.
 export { slotToVEvent, buildIcs, downloadIcs } from "@rid/core";

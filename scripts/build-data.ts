@@ -3,14 +3,14 @@ import { createHash } from "node:crypto";
 import { resolve } from "node:path";
 import { DateTime } from "luxon";
 
-// Validiert die generierten public/data/*.json gegen das Schema (§7, leichtgewichtig)
-// und erzeugt version.json mit Content-Hashes (§5.2).
+// Validates the generated public/data/*.json against the schema (§7, lightweight)
+// and produces version.json with content hashes (§5.2).
 
 const DATA_DIR = resolve(process.cwd(), "public", "data");
 
 type Kind = "object" | "array";
 
-// Erwartete Datei-Art + Pflichtfelder pro Datensatz (light validation).
+// Expected file kind + required fields per record (light validation).
 const SCHEMA: Record<string, { kind: Kind; required: string[] }> = {
   festival: { kind: "object", required: ["name", "timezone", "days"] },
   stages: { kind: "array", required: ["id", "name", "shortName", "color", "order"] },
@@ -32,7 +32,7 @@ function shortHash(content: string): string {
 
 function validate(domain: string, parsed: unknown): void {
   const spec = SCHEMA[domain];
-  if (!spec) return; // unbekannte Datei – nur hashen
+  if (!spec) return; // unknown file - hash only
 
   if (spec.kind === "array") {
     if (!Array.isArray(parsed)) throw new Error(`${domain}.json muss ein Array sein.`);

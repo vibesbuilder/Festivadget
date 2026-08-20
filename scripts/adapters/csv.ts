@@ -14,8 +14,8 @@ interface CsvSlotRow {
   note?: string;
 }
 
-// Liest content/slots.csv (§6.5). Spalten: artistSlug,stageId,dayId,start,end,note
-// Join mit Artists (über artistSlug) passiert im Orchestrator.
+// Reads content/slots.csv (§6.5). Columns: artistSlug,stageId,dayId,start,end,note
+// The join with artists (via artistSlug) happens in the orchestrator.
 export async function readSlotsCsv(): Promise<CsvSlotRow[]> {
   if (!existsSync(SLOTS_CSV)) {
     throw new Error("[csv] content/slots.csv fehlt (slots.format === 'csv').");

@@ -35,7 +35,7 @@ export default function More() {
   const theme = useUi((s) => s.theme);
   const toggleTheme = useUi((s) => s.toggleTheme);
 
-  // Per Admin (data/app-config.json) ausgeblendete MEHR-Punkte.
+  // MORE entries hidden via the admin (data/app-config.json).
   const { moreHidden, contactUrl, impressumUrl } = useAppConfig();
   const hidden = (key: string) => moreHidden.includes(key);
 
@@ -127,10 +127,10 @@ export default function More() {
         )}
       </ul>
 
-      {/* Install-Hinweis nur hier unter „Mehr" (§13). */}
+      {/* Install hint only here under "More" (§13). */}
       <InstallHint />
 
-      {/* Instanz-Override via VITE_FOOTER_CREDIT (RID-.env); Release baut neutral. */}
+      {/* Instance override via VITE_FOOTER_CREDIT (RID .env); the release builds neutral. */}
       <p className="pt-4 text-center text-xs text-rid-muted">
         {import.meta.env.VITE_FOOTER_CREDIT || "Festivadget by vibesbuilder"}
       </p>

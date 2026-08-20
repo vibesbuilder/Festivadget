@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-// Antwortformat von push/weather.php (GeoSphere-Daten, serverseitig gecacht).
+// Response format of push/weather.php (GeoSphere data, cached server-side).
 export interface LiveWeatherSection {
   icon: string;
   maxTemp: number | null;
@@ -17,7 +17,7 @@ export interface LiveWeatherDay {
   min: number | null;
   precip: number;
   noData: boolean;
-  // „night" ist die FOLGENDE Nacht (0–6 h des Folgetags), wie in CrewCare.
+  // "night" is the FOLLOWING night (0-6 h of the next day), as in CrewCare.
   sections: Record<"morning" | "noon" | "evening" | "night", LiveWeatherSection>;
 }
 
@@ -31,8 +31,8 @@ export interface LiveWeather {
   attribution: string;
 }
 
-// Im Dev-Modus lokaler PHP-Server (php -S 127.0.0.1:8787 im Ordner push/),
-// im Build same-origin – wie die übrigen push/-Endpoints.
+// In dev mode a local PHP server (php -S 127.0.0.1:8787 inside push/),
+// in the build same-origin - like the other push/ endpoints.
 const WEATHER_URL = import.meta.env.DEV
   ? "http://127.0.0.1:8787/weather.php"
   : `${import.meta.env.BASE_URL}push/weather.php`;
@@ -45,7 +45,7 @@ export function useLiveWeather() {
       if (!res.ok) throw new Error(`Wetter: HTTP ${res.status}`);
       return (await res.json()) as LiveWeather;
     },
-    staleTime: 10 * 60_000, // Server cached 15 min – Client muss nicht öfter fragen.
+    staleTime: 10 * 60_000, // server caches 15 min - the client need not ask more often.
     refetchInterval: 15 * 60_000,
     retry: 1,
   });

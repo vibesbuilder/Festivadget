@@ -1,7 +1,7 @@
 import { useWeather } from "@/data/queries";
 
-// Wetter-Strip (§12.10): pro Tag Symbol + Min/Max aus weather.json (RastaWeather).
-// Symbol-Mapping bewusst simpel (Emoji) – später durch Icon-Set ersetzbar.
+// Weather strip (§12.10): per day symbol + min/max from weather.json (RastaWeather).
+// Symbol mapping deliberately simple (emoji) - replaceable by an icon set later.
 const SYMBOL: Record<string, string> = {
   clear: "☀️",
   partly: "⛅",

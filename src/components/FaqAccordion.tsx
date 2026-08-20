@@ -7,10 +7,10 @@ interface QA {
   answer: string;
 }
 
-// Zerlegt Markdown-Body in optionalen Intro (Text vor der 1. Frage) + "## Frage"-Blöcke (§12.9).
+// Splits a Markdown body into an optional intro (text before the 1st question) + "## question" blocks (§12.9).
 function parseFaq(body: string): { intro: string; items: QA[] } {
   const parts = body.split(/^##\s+/m);
-  // Erster Teil steht vor der ersten "## " und ist – falls vorhanden – der Intro-Text.
+  // The first part precedes the first "## " and - if present - is the intro text.
   const intro = (parts.shift() ?? "").trim();
   const items = parts
     .filter((p) => p.trim())
@@ -25,7 +25,7 @@ export function FaqAccordion({ body }: { body: string }) {
   const { intro, items } = useMemo(() => parseFaq(body), [body]);
   const [open, setOpen] = useState<number | null>(0);
 
-  // Keine "## "-Fragen erkannt → wie bisher als reines Markdown anzeigen.
+  // No "## " questions detected -> render as plain Markdown as before.
   if (items.length === 0) return <Markdown>{body}</Markdown>;
 
   return (

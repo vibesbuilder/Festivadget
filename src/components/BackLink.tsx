@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
 
-// Einheitlicher Zurück-Link (Beschriftung = Zielbereich).
+// Uniform back link (label = target section).
 export function BackLink({ to, label }: { to: string; label: string }) {
   return (
     <Link

@@ -1,11 +1,11 @@
-// Anonymer Nutzungs-Zähler + Client-Fehlermeldungen (push/track.php):
-// zufällige Geräte- und Sitzungskennung, Seitenname, Sprache/Theme – sonst
-// nichts. Läuft nur im Produktiv-Build, fire-and-forget per sendBeacon –
-// darf die App nie bremsen oder brechen.
+// Anonymous usage counter + client error reports (push/track.php):
+// random device and session IDs, page name, language/theme - nothing else.
+// Runs only in the production build, fire-and-forget via sendBeacon -
+// must never slow down or break the app.
 
 const ANON_KEY = "festivadget:anon";
 const SESSION_KEY = "festivadget:session";
-const SESSION_GAP_MS = 30 * 60_000; // 30 min Inaktivität = neue Sitzung
+const SESSION_GAP_MS = 30 * 60_000; // 30 min inactivity = new session
 const MAX_ERRORS_PER_SESSION = 5;
 
 const TRACK_URL = `${import.meta.env.BASE_URL}push/track.php`;
@@ -40,7 +40,7 @@ function sessionId(): string {
   }
 }
 
-// Sprache/Theme aus dem persistierten UI-Store (zustand, "festivadget:ui").
+// Language/theme from the persisted UI store (zustand, "festivadget:ui").
 function uiState(): { lang: string; theme: string } {
   try {
     const raw = localStorage.getItem("festivadget:ui");
@@ -60,11 +60,11 @@ function send(payload: Record<string, unknown>): void {
       }),
     );
   } catch {
-    // Statistik ist nachrangig.
+    // Statistics are secondary.
   }
 }
 
-/** Seitenaufruf melden (page = erstes Pfadsegment, z. B. "home", "timetable"). */
+/** Report a page view (page = first path segment, e.g. "home", "timetable"). */
 export function trackPage(pathname: string): void {
   if (!import.meta.env.PROD) return;
   const page = pathname.replace(/^\/+/, "").split("/")[0] || "home";
@@ -72,10 +72,10 @@ export function trackPage(pathname: string): void {
 }
 
 /**
- * Einmalige Initialisierung (AppShell): PWA-Events + Client-Fehler.
- * - "_install": appinstalled-Event (Android/Chrome; iOS kennt das nicht).
- * - "_standalone": App läuft installiert (Home-Bildschirm) – 1x pro Seitenladen.
- * - Fehler: window.onerror/unhandledrejection → Protokoll (max. 5 je Sitzung).
+ * One-time initialization (AppShell): PWA events + client errors.
+ * - "_install": appinstalled event (Android/Chrome; iOS does not have it).
+ * - "_standalone": app runs installed (home screen) - once per page load.
+ * - Errors: window.onerror/unhandledrejection -> log (max. 5 per session).
  */
 let initialized = false;
 
@@ -90,8 +90,8 @@ export function initTracking(): void {
     (navigator as { standalone?: boolean }).standalone === true;
   if (standalone) send({ page: "_standalone" });
 
-  // Bekanntes Fremd-Rauschen (Browser-Erweiterungen, In-App-Browser-Bridges von
-  // Instagram/Facebook & Co.): keine App-Fehler → nicht ins Server-Protokoll.
+  // Known third-party noise (browser extensions, in-app browser bridges of
+  // Instagram/Facebook & co.): not app errors -> keep out of the server log.
   const IGNORED_PATTERNS = [
     "Script error", // Cross-Origin ohne Details (Erweiterungen/Fremd-Skripte)
     "webkit.messageHandlers", // iOS-In-App-Browser-Bridge
@@ -112,7 +112,7 @@ export function initTracking(): void {
       message: message.slice(0, 300),
     });
   };
-  window.addEventListener("error", (e) => reportError(String(e.message ?? "Unbekannter Fehler")));
+  window.addEventListener("error", (e) => reportError(String(e.message ?? "Unknown error")));
   window.addEventListener("unhandledrejection", (e) =>
     reportError(`Unhandled rejection: ${String((e as PromiseRejectionEvent).reason).slice(0, 250)}`),
   );

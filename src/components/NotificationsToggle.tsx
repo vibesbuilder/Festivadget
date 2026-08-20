@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { BellOff, Loader2 } from "lucide-react";
 import { subscribePush, notificationPermission } from "@/lib/push";
 import { usePushActive, useRefreshPush } from "@/lib/usePush";
@@ -12,10 +13,11 @@ function isIosNotStandalone(): boolean {
   return ios && !standalone;
 }
 
-// Aufruf zum Aktivieren von Web-Push (§13). Blendet sich aus, wenn Push nicht
-// verfügbar ist ODER bereits aktiv – dann übernimmt die Glocke im Header
-// (Kategorie-Wahl + Ausschalten).
+// Call to action for enabling web push (§13). Hides itself when push is not
+// available OR already active - then the bell in the header takes over
+// (category selection + turning off).
 export function NotificationsToggle() {
+  const { t } = useTranslation();
   const { supported, active } = usePushActive();
   const refresh = useRefreshPush();
   const [busy, setBusy] = useState(false);
@@ -32,7 +34,7 @@ export function NotificationsToggle() {
       await subscribePush();
       refresh(); // Glocke im Header erscheint, dieser Schalter verschwindet
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Fehler");
+      setError(e instanceof Error ? e.message : t("common.error"));
     } finally {
       setBusy(false);
     }

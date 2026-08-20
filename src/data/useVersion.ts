@@ -7,12 +7,12 @@ import { fetchJson } from "./fetchJson";
 const VERSION_FILE = "version.json";
 const LAST_VERSION_KEY = "festivadget:last-version";
 
-// Polling-Intervall: 2 Minuten (§5.2).
+// Polling interval: 2 minutes (§5.2).
 const POLL_MS = 120_000;
 
 /**
- * Lädt version.json near-live. Pollt nur, wenn Tab sichtbar und online ist.
- * Offline-Fallback: zuletzt bekanntes Manifest aus IndexedDB.
+ * Loads version.json near-live. Polls only while the tab is visible and online.
+ * Offline fallback: last known manifest from IndexedDB.
  */
 export function useVersion() {
   return useQuery<VersionManifest>({
@@ -20,8 +20,8 @@ export function useVersion() {
     queryFn: async ({ signal }) => {
       try {
         const manifest = await fetchJson<VersionManifest>(VERSION_FILE, signal);
-        // IndexedDB-Fehler (Safari-Privatmodus/Verbindungsabriss) dürfen den
-        // erfolgreichen Abruf nicht scheitern lassen – Cache ist nachrangig.
+        // IndexedDB errors (Safari private mode/connection loss) must not fail the
+        // successful fetch - the cache is secondary.
         await idbSet(LAST_VERSION_KEY, manifest).catch(() => undefined);
         return manifest;
       } catch (err) {
@@ -39,8 +39,8 @@ export function useVersion() {
 }
 
 /**
- * Vergleicht die Dataset-Hashes bei jeder Version-Aktualisierung und invalidiert
- * gezielt nur die geänderten Datensätze (§5.2). In der App-Shell einmal mounten.
+ * Compares the dataset hashes on every version update and selectively invalidates
+ * only the changed datasets (§5.2). Mount once in the app shell.
  */
 export function useVersionSync(): void {
   const { data } = useVersion();

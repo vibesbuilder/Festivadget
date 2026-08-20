@@ -8,8 +8,8 @@ function temp(v: number | null | undefined): string {
   return typeof v === "number" ? `${Math.round(v)}°` : "–";
 }
 
-// Kompakter Home-Wetterblock (wie CrewCare): nur Heute + Morgen, ein Klick
-// öffnet die Wetterseite. Self-gating: ohne Daten/bei Fehler unsichtbar.
+// Compact home weather block (like CrewCare): only today + tomorrow, one click
+// opens the weather page. Self-gating: invisible without data/on error.
 export function WeatherHomeCard() {
   const { t } = useTranslation();
   const { data } = useLiveWeather();

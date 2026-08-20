@@ -9,11 +9,11 @@ function temp(v: number | null | undefined): string {
   return typeof v === "number" ? `${Math.round(v)}°` : "–";
 }
 
-// Ein Tag liest sich Morgens → Mittags → Abends → Nachts (kommende Nacht).
+// A day reads morning -> noon -> evening -> night (upcoming night).
 const SECTION_KEYS = ["morning", "noon", "evening", "night"] as const;
 
-// Wetterseite (portiert aus CrewCare): Heute/Morgen/Übermorgen mit je vier
-// Tagesabschnitten (Temperatur, Niederschlag, Wind) + GeoSphere-Attribution.
+// Weather page (ported from CrewCare): today/tomorrow/day after with four
+// day sections each (temperature, precipitation, wind) + GeoSphere attribution.
 export default function Weather() {
   const { t, i18n } = useTranslation();
   const { data, isLoading, isError, refetch } = useLiveWeather();
@@ -23,7 +23,7 @@ export default function Weather() {
 
   const dayLabel = (index: number) =>
     [t("weather.today"), t("weather.tomorrow"), t("weather.dayAfter")][index] ?? "";
-  // Datums-Locale passend zur App-Sprache.
+  // Date locale matching the app language.
   const locale =
     { de: "de-AT", en: "en-GB", fr: "fr-FR", es: "es-ES" }[i18n.language] ?? "de-AT";
   const weekday = (date: string) =>
@@ -40,7 +40,7 @@ export default function Weather() {
       <BackLink to="/more" label={t("more.title")} />
       <h1 className="text-2xl font-bold">{t("weather.title")}</h1>
 
-      {/* Kopf: Standort + aktuelle Temperatur + letzte Aktualisierung */}
+      {/* Header: location + current temperature + last update */}
       <div className="space-y-1">
         <p className="inline-flex items-center gap-1.5 text-sm font-medium">
           <MapPin size={15} className="text-rid-accent" /> {data.location}
@@ -58,14 +58,14 @@ export default function Weather() {
         </p>
       </div>
 
-      {/* Tageskarten: Heute / Morgen / Übermorgen */}
+      {/* Day cards: today / tomorrow / day after */}
       <div className="space-y-3">
         {data.days.map((day, i) => (
           <DayCard key={day.date} day={day} label={dayLabel(i)} weekday={weekday(day.date)} />
         ))}
       </div>
 
-      {/* Quellenangabe (CC BY 4.0) */}
+      {/* Attribution (CC BY 4.0) */}
       <p className="pt-1 text-center text-xs text-rid-muted">{data.attribution}</p>
     </section>
   );

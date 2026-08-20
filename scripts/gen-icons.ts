@@ -2,8 +2,8 @@ import { readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import sharp from "sharp";
 
-// Erzeugt finale PWA-PNG-Icons aus den SVG-Quellen (§13, Phase 4).
-// Aufruf: npm run gen-icons
+// Generates the final PWA PNG icons from the SVG sources (§13, phase 4).
+// Usage: npm run gen-icons
 
 const ICON_DIR = resolve(process.cwd(), "public", "icons");
 

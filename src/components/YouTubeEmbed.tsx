@@ -1,13 +1,13 @@
-// YouTube-Embed für Artist-Pages. Akzeptiert flexibel, was man in `artist.youtube`
-// einträgt: Watch-Link (youtube.com/watch?v=…), Kurz-Link (youtu.be/…), Shorts-Link,
-// Embed-URL, kompletten <iframe>-Embed-Code oder die nackte 11-stellige Video-ID.
+// YouTube embed for artist pages. Flexibly accepts whatever is entered in
+// `artist.youtube`: watch link (youtube.com/watch?v=…), short link (youtu.be/…),
+// shorts link, embed URL, full <iframe> embed code or the bare 11-char video ID.
 export function youtubeEmbedSrc(value?: string): string | null {
   if (!value) return null;
   const m =
     value.match(/(?:youtu\.be\/|watch\?v=|embed\/|shorts\/|v=)([A-Za-z0-9_-]{11})/) ??
     value.match(/^\s*([A-Za-z0-9_-]{11})\s*$/);
   if (!m) return null;
-  // nocookie-Variante = datenschutzfreundlicher.
+  // nocookie variant = more privacy-friendly.
   return `https://www.youtube-nocookie.com/embed/${m[1]}`;
 }
 

@@ -1,10 +1,10 @@
 import { useTranslation } from "react-i18next";
 import { useAppConfig } from "@/data/useAppConfig";
 
-// Intro-Video auf der Home-Seite (CMS-Tab „Branding"): volle Breite oberhalb
-// des Newsfeeds. Quellen wie bei CrewCare – Microsoft-Cloud (OneDrive/
-// SharePoint-„Einbetten"-Link) als iframe, direkte Videodateien (FTP/Uploads
-// oder https-Link) als <video>, YouTube/Vimeo automatisch als Player-iframe.
+// Intro video on the home page (CMS tab "Branding"): full width above the
+// newsfeed. Sources as in CrewCare - Microsoft cloud (OneDrive/SharePoint
+// "Embed" link) as an iframe, direct video files (FTP/uploads or https link)
+// as <video>, YouTube/Vimeo automatically as a player iframe.
 
 function embedUrl(url: string): string | null {
   const yt = url.match(
@@ -18,7 +18,7 @@ function embedUrl(url: string): string | null {
 
 const isVideoFile = (url: string) => /\.(mp4|webm|m4v|mov|ogv)(\?|#|$)/i.test(url);
 
-// Passender MIME-Typ zur Dateiendung (hilft dem Player, das Format zu erkennen).
+// MIME type matching the file extension (helps the player detect the format).
 function videoMime(url: string): string | undefined {
   const ext = url.toLowerCase().match(/\.(mp4|m4v|webm|ogv|mov)(\?|#|$)/)?.[1];
   return { mp4: "video/mp4", m4v: "video/mp4", webm: "video/webm", ogv: "video/ogg", mov: "video/quicktime" }[
@@ -57,7 +57,7 @@ export function HomeVideo() {
     );
   }
 
-  // Unbekanntes Format: als externer Link statt kaputtem Player.
+  // Unknown format: render as an external link instead of a broken player.
   return (
     <section>
       <a

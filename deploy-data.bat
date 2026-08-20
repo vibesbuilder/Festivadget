@@ -1,17 +1,17 @@
 @echo off
-REM Festivadget - bauen und hochladen.
+REM Festivadget - build and upload.
 REM
-REM   deploy-data.bat            -> nur Inhaltsdaten (dist\data\*.json + version.json)
-REM   deploy-data.bat full       -> komplette App (ganzer dist\-Ordner, fuer App-Updates)
-REM   deploy-data.bat push       -> Push-Backend (push\*.php + push\cms\*.php) - OHNE
-REM                                 config.php/config.example.php/vapid-keys.php und ohne
-REM                                 vendor\ (config bleibt Server-Sache, vendor: docs\PUSH.md)
+REM   deploy-data.bat            -> content data only (dist\data\*.json + version.json)
+REM   deploy-data.bat full       -> full app (entire dist\ folder, for app updates)
+REM   deploy-data.bat push       -> push backend (push\*.php + push\cms\*.php) - WITHOUT
+REM                                 config.php/config.example.php/vapid-keys.php and without
+REM                                 vendor\ (config stays server-side, vendor: docs\PUSH.md)
 REM
-REM Ablauf data/full: pnpm run import -> build:data -> build, danach Upload.
-REM Ablauf push: nur Upload (PHP braucht keinen Build).
-REM Voraussetzung: Node/pnpm im PATH, curl (in Windows 10/11 enthalten), deploy.env.bat angelegt.
-REM Hinweis: Diese Datei liegt im App-Ordner Festivadget\ und springt per cd /d "%~dp0"
-REM hierher; die pnpm-Scripts laufen damit im Paket "festivadget".
+REM Flow data/full: pnpm run import -> build:data -> build, then upload.
+REM Flow push: upload only (PHP needs no build).
+REM Prerequisites: Node/pnpm in PATH, curl (included in Windows 10/11), deploy.env.bat created.
+REM Note: this file lives in the app folder Festivadget\ and jumps here via cd /d "%~dp0";
+REM the pnpm scripts thus run in the "festivadget" package.
 
 setlocal enabledelayedexpansion
 cd /d "%~dp0"
@@ -40,7 +40,7 @@ call pnpm run build || goto :fail
 
 if /i "%MODE%"=="full" goto :uploadfull
 
-REM --- Daten-Upload (Standard) -------------------------------------------
+REM --- Data upload (default) ---------------------------------------------
 echo(
 echo === 4/4  Upload Inhaltsdaten nach %FTP_HOST%%FTP_REMOTE_ROOT%/data ===
 if not exist "dist\data\*.json" (
@@ -58,7 +58,7 @@ echo Fertig (Daten). !N! Datei(en) hochgeladen. Clients ziehen in ^<= 2 min nach
 endlocal
 exit /b 0
 
-REM --- Voll-Upload (gesamtes dist\) --------------------------------------
+REM --- Full upload (entire dist\) ----------------------------------------
 :uploadfull
 echo(
 echo === 4/4  Upload KOMPLETTE App (dist\) nach %FTP_HOST%%FTP_REMOTE_ROOT%/ ===
@@ -84,7 +84,7 @@ echo Hinweis: Das Push-Backend laedt "deploy-data.bat push" hoch (config.php/ven
 endlocal
 exit /b 0
 
-REM --- Push-Backend-Upload (nur PHP-Endpoints, keine Secrets) --------------
+REM --- Push backend upload (PHP endpoints only, no secrets) ----------------
 :uploadpush
 echo(
 echo === Upload Push-Backend nach %FTP_HOST%%FTP_REMOTE_ROOT%/push ===
@@ -95,8 +95,8 @@ if not exist "push\*.php" (
 set "N=0"
 for %%F in (push\*.php) do (
   set "SKIP="
-  REM config.php (Server-Secrets) und config.example.php gehoeren nicht auf den
-  REM Server; vapid-keys.php soll dort laut docs\PUSH.md nicht liegen bleiben.
+  REM config.php (server secrets) and config.example.php do not belong on the
+  REM server; per docs\PUSH.md, vapid-keys.php should not remain there either.
   if /i "%%~nxF"=="config.php" set "SKIP=1"
   if /i "%%~nxF"=="config.example.php" set "SKIP=1"
   if /i "%%~nxF"=="vapid-keys.php" set "SKIP=1"
@@ -106,13 +106,13 @@ for %%F in (push\*.php) do (
     set /a N+=1
   )
 )
-REM .htaccess schuetzt config/Settings/Cache - muss mit (Glob erfasst sie nicht).
+REM .htaccess protects config/settings/cache - must come along (the glob misses it).
 if exist "push\.htaccess" (
   echo   ^> push/.htaccess
   curl -sS %CURL_OPTS% --ftp-create-dirs -T "push\.htaccess" "ftp://%FTP_HOST%%FTP_REMOTE_ROOT%/push/.htaccess" --user "%FTP_USER%:%FTP_PASS%" || goto :fail
   set /a N+=1
 )
-REM Admin-UI (CMS) gehoert zum Backend dazu.
+REM The admin UI (CMS) is part of the backend.
 for %%F in (push\cms\*.php) do (
   echo   ^> push/cms/%%~nxF
   curl -sS %CURL_OPTS% --ftp-create-dirs -T "%%F" "ftp://%FTP_HOST%%FTP_REMOTE_ROOT%/push/cms/%%~nxF" --user "%FTP_USER%:%FTP_PASS%" || goto :fail

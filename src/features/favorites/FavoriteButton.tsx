@@ -2,7 +2,7 @@ import { Star } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useFavorites } from "@/store/favorites";
 
-// Favoriten-Stern auf Slot-Ebene (§12.3). Gelb gefüllt, wenn favorisiert.
+// Favorite star at slot level (§12.3). Filled yellow when favorited.
 export function FavoriteButton({ slotId, label }: { slotId: string; label?: boolean }) {
   const { t } = useTranslation();
   const isFavorite = useFavorites((s) => s.favorites.has(slotId));

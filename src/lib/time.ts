@@ -1,5 +1,5 @@
-// Zeit-Helfer leben jetzt in @rid/core (geteilt mit CrewCare). Dünner Re-Export,
-// damit App-Importe `@/lib/time` unverändert bleiben.
+// Time helpers now live in @rid/core (shared with CrewCare). Thin re-export
+// so app imports of `@/lib/time` stay unchanged.
 export {
   DEFAULT_TZ,
   parse,

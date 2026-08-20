@@ -4,8 +4,8 @@ import { usePushActive, useRefreshPush } from "@/lib/usePush";
 import { unsubscribePush } from "@/lib/push";
 import { PushCategoryPicker } from "./PushCategoryPicker";
 
-// Glocke im Header (links neben der Suche): nur sichtbar, wenn Push aktiv ist.
-// Öffnet ein Popover zur Kategorie-Wahl + „Benachrichtigungen ausschalten".
+// Bell in the header (left of the search): only visible while push is active.
+// Opens a popover for category selection + "turn off notifications".
 export function PushBellButton() {
   const { supported, active } = usePushActive();
   const refresh = useRefreshPush();

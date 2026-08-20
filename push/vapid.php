@@ -1,8 +1,8 @@
 <?php
-// Öffentlicher VAPID-Key zur Laufzeit. Der Client (src/lib/push.ts) holt den
-// Key von hier statt aus der Build-Env, damit Kunden-Installationen ohne
-// Build-Maschine auskommen (VITE_VAPID_PUBLIC_KEY bleibt optionaler Fallback).
-// Der Public-Key ist kein Geheimnis – er steht ohnehin in jeder Subscription.
+// Public VAPID key at runtime. The client (src/lib/push.ts) fetches the key
+// from here instead of the build env so customer installations work without
+// a build machine (VITE_VAPID_PUBLIC_KEY remains an optional fallback).
+// The public key is no secret - it is in every subscription anyway.
 
 declare(strict_types=1);
 

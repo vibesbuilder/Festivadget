@@ -1,13 +1,13 @@
 <?php
-// Server-Importer: zieht je Domäne aus Joomla/WordPress und schreibt
-// data/app-<domain>.json (vom Phase-5-Override live übernommen).
+// Server importer: pulls per domain from Joomla/WordPress and writes
+// data/app-<domain>.json (picked up live by the phase-5 override).
 //
-// HINWEIS: Best-effort *generisches* Mapping (id/slug/title/name/body). Für
-// reine Text-Inhalte (Infos) passt das gut; strukturierte Domänen (Artists,
-// Slots, News mit Kategorie/Zeit) brauchen i. d. R. eine Nachbearbeitung im
-// „Inhalte"-Tab bzw. ein Feinmapping gegen das konkrete CMS. Verbindung
-// (baseUrl/Token) in push/config.php → 'sources'. Steuert NUR den Server-Import,
-// unabhängig von content-sources.config.ts (lokaler Build-Import).
+// NOTE: best-effort *generic* mapping (id/slug/title/name/body). For pure
+// text content (infos) this fits well; structured domains (artists, slots,
+// news with category/time) usually need post-processing in the "Content"
+// tab or a fine mapping against the concrete CMS. Connection
+// (baseUrl/token) in push/config.php -> 'sources'. Controls ONLY the server
+// import, independent of content-sources.config.ts (local build import).
 
 declare(strict_types=1);
 
@@ -21,7 +21,7 @@ function cms_source_config(): array
 function cms_http_get(string $url, array $headers): string
 {
     if (!function_exists('curl_init')) {
-        throw new RuntimeException('curl-Erweiterung nicht verfügbar.');
+        throw new RuntimeException('curl extension not available.');
     }
     $ch = curl_init($url);
     curl_setopt_array($ch, [
@@ -35,7 +35,7 @@ function cms_http_get(string $url, array $headers): string
     $err  = curl_error($ch);
     curl_close($ch);
     if ($res === false) {
-        throw new RuntimeException("Netzwerkfehler: $err");
+        throw new RuntimeException("Network error: $err");
     }
     if ($code >= 400) {
         throw new RuntimeException("HTTP $code");
@@ -45,16 +45,16 @@ function cms_http_get(string $url, array $headers): string
 
 function cms_strip_html(string $html): string
 {
-    // Block-Enden → Absatz, <br> → Zeilenumbruch, dann Tags entfernen.
+    // Block ends -> paragraph, <br> -> line break, then strip tags.
     $t = preg_replace('/<\s*\/(p|div|h[1-6]|li)\s*>/i', "\n\n", $html) ?? $html;
     $t = preg_replace('/<\s*br\s*\/?>/i', "\n", $t) ?? $t;
     $t = strip_tags($t);
     $t = html_entity_decode($t, ENT_QUOTES, 'UTF-8');
-    $t = preg_replace('/[ \t]+\n/', "\n", $t) ?? $t;     // trailing spaces je Zeile
+    $t = preg_replace('/[ \t]+\n/', "\n", $t) ?? $t;     // trailing spaces per line
     $t = preg_replace('/\n{3,}/', "\n\n", $t) ?? $t;     // max. eine Leerzeile
     $t = trim($t);
-    // Absicherung: ungültiges UTF-8 bereinigen (sonst kann json_encode scheitern)
-    // und Länge begrenzen (verhindert Speicher-/Renderprobleme bei Riesen-Importen).
+    // Safeguard: clean invalid UTF-8 (otherwise json_encode can fail) and limit
+    // the length (prevents memory/render issues with huge imports).
     if (function_exists('mb_substr')) {
         if (!mb_check_encoding($t, 'UTF-8')) {
             $t = mb_convert_encoding($t, 'UTF-8', 'UTF-8');
@@ -68,13 +68,13 @@ function cms_strip_html(string $html): string
     return $t;
 }
 
-// --- HTML erhalten + sanitizen (Bilder, iframes von erlaubten Hosts, Überschriften) ---
+// --- Preserve + sanitize HTML (images, iframes from allowed hosts, headings) ---
 
 const CMS_HTML_KEEP    = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'br', 'ul', 'ol', 'li', 'strong', 'em', 'b', 'i', 'u', 'a', 'img', 'iframe', 'blockquote'];
 const CMS_HTML_DROP    = ['script', 'style', 'link', 'meta', 'noscript', 'head', 'title'];
 const CMS_IFRAME_HOSTS = ['youtube.com', 'www.youtube.com', 'www.youtube-nocookie.com', 'open.spotify.com'];
 
-/** Erlaubter iframe-Host? Exakte Liste ODER Google Maps in allen Varianten. */
+/** Allowed iframe host? Exact list OR Google Maps in all variants. */
 function cms_iframe_host_ok(string $host): bool
 {
     return in_array($host, CMS_IFRAME_HOSTS, true)
@@ -86,7 +86,7 @@ const CMS_HTML_ATTRS   = [
     'iframe' => ['src', 'width', 'height', 'allow', 'allowfullscreen', 'frameborder', 'loading', 'title', 'referrerpolicy'],
 ];
 
-/** Bereinigt CMS-HTML auf eine sichere Teilmenge (sonst Fallback: reiner Text). */
+/** Cleans CMS HTML down to a safe subset (otherwise fallback: plain text). */
 function cms_clean_html(string $html): string
 {
     $html = trim($html);
@@ -129,14 +129,14 @@ function cms_clean_html(string $html): string
     return $out;
 }
 
-/** Rekursiv: erlaubte Tags behalten, gefährliche entfernen, unbekannte „auspacken". */
+/** Recursive: keep allowed tags, remove dangerous ones, "unwrap" unknown ones. */
 function cms_clean_node(DOMNode $node): void
 {
     foreach (iterator_to_array($node->childNodes) as $child) {
         if ($child->nodeType === XML_TEXT_NODE) {
             continue;
         }
-        if ($child->nodeType !== XML_ELEMENT_NODE) { // Kommentare/PI
+        if ($child->nodeType !== XML_ELEMENT_NODE) { // comments/PI
             $child->parentNode->removeChild($child);
             continue;
         }
@@ -154,7 +154,7 @@ function cms_clean_node(DOMNode $node): void
                 $child->parentNode->removeChild($child);
                 continue;
             }
-            $src   = preg_replace('/#.*$/', '', $src) ?? $src; // #joomlaImage-Fragment weg
+            $src   = preg_replace('/#.*$/', '', $src) ?? $src; // drop the #joomlaImage fragment
             $attrs = ['src' => $src];
             if ($child->getAttribute('alt') !== '') {
                 $attrs['alt'] = $child->getAttribute('alt');
@@ -181,7 +181,7 @@ function cms_clean_node(DOMNode $node): void
         }
 
         if (!in_array($tag, CMS_HTML_KEEP, true)) {
-            cms_clean_node($child); // Kinder zuerst säubern
+            cms_clean_node($child); // clean children first
             while ($child->firstChild) {
                 $child->parentNode->insertBefore($child->firstChild, $child);
             }
@@ -189,7 +189,7 @@ function cms_clean_node(DOMNode $node): void
             continue;
         }
 
-        // erlaubtes Tag: Attribute auf Whitelist beschränken
+        // allowed tag: restrict attributes to the whitelist
         $allowed = CMS_HTML_ATTRS[$tag] ?? [];
         $keep    = [];
         foreach ($allowed as $a) {
@@ -206,7 +206,7 @@ function cms_clean_node(DOMNode $node): void
     }
 }
 
-/** Setzt genau die übergebenen Attribute (entfernt alle bisherigen). */
+/** Sets exactly the given attributes (removes all previous ones). */
 function cms_set_attrs(DOMElement $el, array $attrs): void
 {
     foreach (iterator_to_array($el->attributes) as $attr) {
@@ -217,22 +217,22 @@ function cms_set_attrs(DOMElement $el, array $attrs): void
     }
 }
 
-/** Einzelner Joomla-Artikel nach ID → ['title'=>, 'body'=>(Markdown-ähnlich)]. */
+/** Single Joomla article by ID -> ['title'=>, 'body'=>(Markdown-like)]. */
 function cms_joomla_article(string $id, array $conn): array
 {
     $base  = rtrim((string) ($conn['baseUrl'] ?? ''), '/');
     $token = (string) ($conn['token'] ?? '');
     if ($base === '' || $token === '') {
-        throw new RuntimeException('Joomla baseUrl/token fehlen in config.php.');
+        throw new RuntimeException('Joomla baseUrl/token missing in config.php.');
     }
-    // SEF-Form ohne index.php: manche Server verschlucken den PATH_INFO nach index.php.
+    // SEF form without index.php: some servers swallow the PATH_INFO after index.php.
     $url  = "$base/api/v1/content/articles/" . rawurlencode($id);
     $json = json_decode(cms_http_get($url, ["Authorization: Bearer $token", 'Accept: application/vnd.api+json']), true);
     $a    = $json['data']['attributes'] ?? null;
     if (!is_array($a)) {
-        throw new RuntimeException("Joomla-Artikel $id nicht gefunden.");
+        throw new RuntimeException("Joomla article $id not found.");
     }
-    // Text kann in `text` (zusammengesetzt) oder getrennt in introtext/fulltext liegen.
+    // The text may live in `text` (combined) or split into introtext/fulltext.
     $raw = trim((string) ($a['text'] ?? ''));
     if ($raw === '') {
         $raw = trim(((string) ($a['introtext'] ?? '')) . "\n\n" . ((string) ($a['fulltext'] ?? '')));
@@ -243,12 +243,12 @@ function cms_joomla_article(string $id, array $conn): array
     ];
 }
 
-/** Einzelner WordPress-Beitrag nach ID (numerisch) oder Slug → ['title'=>, 'body'=>]. */
+/** Single WordPress post by ID (numeric) or slug -> ['title'=>, 'body'=>]. */
 function cms_wp_post(string $loc, array $conn): array
 {
     $base = rtrim((string) ($conn['baseUrl'] ?? ''), '/');
     if ($base === '') {
-        throw new RuntimeException('WordPress baseUrl fehlt in config.php.');
+        throw new RuntimeException('WordPress baseUrl missing in config.php.');
     }
     $headers = ['Accept: application/json'];
     if (($conn['user'] ?? '') !== '' && ($conn['appPassword'] ?? '') !== '') {
@@ -260,7 +260,7 @@ function cms_wp_post(string $loc, array $conn): array
     $res = json_decode(cms_http_get($url, $headers), true);
     $p   = isset($res['id']) ? $res : ($res[0] ?? null);
     if (!is_array($p)) {
-        throw new RuntimeException("WordPress-Beitrag '$loc' nicht gefunden.");
+        throw new RuntimeException("WordPress post '$loc' not found.");
     }
     return [
         'title' => (string) ($p['title']['rendered'] ?? ''),
@@ -269,9 +269,9 @@ function cms_wp_post(string $loc, array $conn): array
 }
 
 /**
- * Item-weiser Info-Import: je Info-Eintrag mit `source` = joomla/wordpress wird
- * Titel/Text aus dem hinterlegten Artikel gezogen; Struktur (id/icon/order/
- * hidden/source/sourceLocator) und manuelle Einträge bleiben unangetastet.
+ * Item-wise info import: for every info entry with `source` = joomla/wordpress,
+ * title/text is pulled from the linked article; structure (id/icon/order/
+ * hidden/source/sourceLocator) and manual entries stay untouched.
  */
 function cms_import_info(): array
 {
@@ -305,12 +305,18 @@ function cms_import_info(): array
             $a = $src === 'joomla'
                 ? cms_joomla_article($loc, (array) ($conns['joomla'] ?? []))
                 : cms_wp_post($loc, (array) ($conns['wordpress'] ?? []));
+            // The import is single-language (source = German article): for multilingual
+            // entries only replace the de slot, keep the translations.
             if (($a['title'] ?? '') !== '') {
-                $it['title'] = $a['title'];
+                $it['title'] = is_array($it['title'] ?? null)
+                    ? array_merge($it['title'], ['de' => $a['title']])
+                    : $a['title'];
             }
             $emptyBody = ($a['body'] ?? '') === '';
             if (!$emptyBody) {
-                $it['body'] = $a['body'];
+                $it['body'] = is_array($it['body'] ?? null)
+                    ? array_merge($it['body'], ['de' => $a['body']])
+                    : $a['body'];
             }
             $report[$id] = $emptyBody
                 ? cms_t('⚠️ aus %s geholt, aber Text war leer (Titel übernommen).', $src)
@@ -329,11 +335,11 @@ function cms_import_joomla(array $binding, array $conn): array
     $base  = rtrim((string) ($conn['baseUrl'] ?? ''), '/');
     $token = (string) ($conn['token'] ?? '');
     if ($base === '' || $token === '') {
-        throw new RuntimeException('Joomla baseUrl/token fehlen in config.php.');
+        throw new RuntimeException('Joomla baseUrl/token missing in config.php.');
     }
     $loc = trim((string) ($binding['locator'] ?? ''));
     if ($loc === '') {
-        throw new RuntimeException('Locator (Kategorie-ID) fehlt.');
+        throw new RuntimeException('Locator (category ID) missing.');
     }
     $url  = "$base/api/v1/content/articles?filter[category]=" . rawurlencode($loc);
     $json = json_decode(cms_http_get($url, ["Authorization: Bearer $token", 'Accept: application/vnd.api+json']), true);
@@ -357,7 +363,7 @@ function cms_import_wordpress(array $binding, array $conn): array
 {
     $base = rtrim((string) ($conn['baseUrl'] ?? ''), '/');
     if ($base === '') {
-        throw new RuntimeException('WordPress baseUrl fehlt in config.php.');
+        throw new RuntimeException('WordPress baseUrl missing in config.php.');
     }
     $loc     = trim((string) ($binding['locator'] ?? ''));
     $headers = ['Accept: application/json'];
@@ -383,14 +389,14 @@ function cms_import_wordpress(array $binding, array $conn): array
     return $out;
 }
 
-/** Import für alle Domänen mit provider != manual. Gibt einen Domain→Status-Report zurück. */
+/** Import for all domains with provider != manual. Returns a domain -> status report. */
 function cms_run_import(): array
 {
     $cfg    = cms_source_config();
     $conns  = (array) (push_config()['sources'] ?? []);
     $report = [];
     foreach (CMS_CONTENT_DOMAINS as $domain => $meta) {
-        // Infos werden item-weise importiert (Quelle je Eintrag im „Infos"-Tab).
+        // Infos are imported item-wise (source per entry in the "Infos" tab).
         if ($domain === 'info') {
             foreach (cms_import_info() as $iid => $st) {
                 $report["info:$iid"] = $st;

@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import type { Artist, Slot, Stage } from "@/types";
 import { parse } from "@/lib/time";
 import { EmptyState } from "@/components/states";
@@ -10,13 +11,14 @@ interface Props {
   clashes: Set<string>;
 }
 
-// Listen-Ansicht: chronologisch je Tag (§12.2).
+// List view: chronological per day (§12.2).
 export function TimetableList({ slots, artistById, stageById, clashes }: Props) {
+  const { t } = useTranslation();
   const sorted = slots
     .slice()
     .sort((a, b) => parse(a.start).toMillis() - parse(b.start).toMillis());
 
-  if (sorted.length === 0) return <EmptyState label="Keine Slots für diese Auswahl." />;
+  if (sorted.length === 0) return <EmptyState label={t("timetable.noSlots")} />;
 
   return (
     <ul className="space-y-2">

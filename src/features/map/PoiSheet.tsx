@@ -1,4 +1,5 @@
 import { X } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import type { Poi, Stage } from "@/types";
 import { contrastColor, poiIcon, type PoiMeta } from "./poiMeta";
@@ -11,8 +12,9 @@ interface Props {
   onClose: () => void;
 }
 
-// Detail-Sheet zu einem POI (§12.4), als Bottom-Sheet über der Karte.
+// Detail sheet for a POI (§12.4), as a bottom sheet above the map.
 export function PoiSheet({ poi, meta, stage, onClose }: Props) {
+  const { t } = useTranslation();
   return (
     <div className="absolute inset-x-0 bottom-0 z-[1000] p-3">
       <div className="mx-auto max-w-app rounded-2xl border border-rid-border bg-rid-surface p-4 shadow-2xl">
@@ -34,7 +36,7 @@ export function PoiSheet({ poi, meta, stage, onClose }: Props) {
               <p className="text-xs text-rid-muted">{meta.label}</p>
             </div>
           </div>
-          <button onClick={onClose} aria-label="Schließen" className="p-1 text-rid-muted">
+          <button onClick={onClose} aria-label={t("common.close")} className="p-1 text-rid-muted">
             <X size={20} />
           </button>
         </div>

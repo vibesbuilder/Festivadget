@@ -4,7 +4,7 @@ import { DateTime } from "luxon";
 import { useOnline } from "@/lib/useOnline";
 import { useVersion } from "@/data/useVersion";
 
-// Zeigt „Offline / Stand: HH:MM" basierend auf dem letzten erfolgreichen Abruf (§5.3).
+// Shows "Offline / as of HH:MM" based on the last successful fetch (§5.3).
 export function OfflineBadge() {
   const online = useOnline();
   const { t } = useTranslation();

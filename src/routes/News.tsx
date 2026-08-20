@@ -11,8 +11,8 @@ export default function News() {
 
   if (isLoading) return <LoadingState />;
 
-  // Nur die im Banner hervorgehobenen (gepinnten) Safety-Items nicht doppelt
-  // listen; ungepinnte Sicherheits-News reihen sich normal in den Feed ein.
+  // Only avoid listing the (pinned) safety items highlighted in the banner twice;
+  // unpinned safety news queues into the feed normally.
   const feedWithoutSafetyDupes = items.filter((i) => !(i.category === "safety" && i.pinned));
 
   return (

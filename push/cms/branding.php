@@ -1,19 +1,19 @@
 <?php
-// Kunden-Branding (Paket Y) – Helfer für den CMS-Tab „Branding".
+// Customer branding (package Y) - helpers for the CMS tab "Branding".
 //
-// Gespeichert wird alles in data/app-config.json unter dem Schlüssel
-// ``branding`` (die App wendet es zur Laufzeit an, siehe src/lib/branding.ts):
+// Everything is stored in data/app-config.json under the key ``branding``
+// (the app applies it at runtime, see src/lib/branding.ts):
 //   colors: { accent, accent2, dark:{bg,surface,surface2,text,muted,border},
-//             light:{…} }            – Hex "#rrggbb"
+//             light:{…} }            - hex "#rrggbb"
 //   font:   "standard"|"system"|"serif"|"plakat"
-//   logo:   "/data/uploads/branding-logo.<ext>?v=…"   (leer = Build-Logo)
-//   title / shortName                – Browser-Titel bzw. Home-Bildschirm-Label
-//   icons:  Versions-Token, wenn eigene PWA-Icons erzeugt wurden
-//   manifest: true → App nutzt das dynamische /push/manifest.php
+//   logo:   "/data/uploads/branding-logo.<ext>?v=…"   (empty = build logo)
+//   title / shortName                - browser title / home screen label
+//   icons:  version token when custom PWA icons were generated
+//   manifest: true -> the app uses the dynamic /push/manifest.php
 
 declare(strict_types=1);
 
-// Build-Standardwerte – MÜSSEN mit src/styles/index.css übereinstimmen.
+// Build defaults - MUST match src/styles/index.css.
 const BRANDING_DEFAULT_COLORS = [
     'accent'  => '#ffb300',
     'accent2' => '#e4572e',
@@ -27,9 +27,9 @@ const BRANDING_DEFAULT_COLORS = [
     ],
 ];
 
-// Schrift-Sets (reine CSS-Stacks, keine Font-Dateien) – Schlüssel müssen mit
-// src/lib/branding.ts (FONT_SETS) übereinstimmen. Werte = deutsche Labels
-// (werden bei der Ausgabe durch cms_t() übersetzt).
+// Font sets (pure CSS stacks, no font files) - keys must match
+// src/lib/branding.ts (FONT_SETS). Values = German labels
+// (translated by cms_t() on output).
 const BRANDING_FONTS = [
     'standard' => 'Standard (Oswald & Inter, kondensiert)',
     'system'   => 'System (neutral, Gerätestandard)',
@@ -46,8 +46,8 @@ function cms_branding(): array
 function cms_branding_write(array $b): bool
 {
     $cfg = cms_read_config();
-    // manifest-Flag ableiten: dynamisches Manifest nur nötig, wenn Titel,
-    // Kurzname oder eigene Icons gesetzt sind (Farben allein brauchen es nicht).
+    // Derive the manifest flag: a dynamic manifest is only needed when title,
+    // short name or custom icons are set (colors alone do not need it).
     if (!empty($b['title']) || !empty($b['shortName']) || !empty($b['icons'])) {
         $b['manifest'] = true;
     } else {
@@ -61,14 +61,14 @@ function cms_branding_write(array $b): bool
     return cms_write_config($cfg);
 }
 
-/** "#rrggbb" (auch Großschreibung) validieren → normalisiert oder null. */
+/** Validate "#rrggbb" (uppercase too) -> normalized or null. */
 function cms_branding_hex($v): ?string
 {
     $v = strtolower(trim((string) $v));
     return preg_match('/^#[0-9a-f]{6}$/', $v) === 1 ? $v : null;
 }
 
-/** Farben aus dem POST einsammeln (volles Set; ungültige Werte → Standard). */
+/** Collect colors from the POST (full set; invalid values -> default). */
 function cms_branding_colors_from_post(array $post): array
 {
     $out = ['accent' => null, 'accent2' => null, 'dark' => [], 'light' => []];
@@ -83,9 +83,9 @@ function cms_branding_colors_from_post(array $post): array
 }
 
 /**
- * PWA-Icons aus einem hochgeladenen PNG erzeugen (GD): 192/512 transparent
- * eingepasst + 512er-maskable mit vollflächigem Hintergrund (Safe-Zone 80 %).
- * Rückgabe: Fehlertext (deutsch, für cms_t bereits übersetzte Aufrufer) oder null.
+ * Generate PWA icons from an uploaded PNG (GD): 192/512 fitted transparently
+ * + 512 maskable with a full-bleed background (safe zone 80 %).
+ * Returns: error text (German, callers translate via cms_t) or null.
  */
 function cms_branding_make_icons(string $tmpFile, string $maskBgHex): ?string
 {
@@ -130,7 +130,7 @@ function cms_branding_make_icons(string $tmpFile, string $maskBgHex): ?string
         }
     }
 
-    // Maskable: vollflächiger Hintergrund in der (dunklen) Markenfarbe.
+    // Maskable: full-bleed background in the (dark) brand color.
     $mask = imagecreatetruecolor(512, 512);
     $hex  = cms_branding_hex($maskBgHex) ?? BRANDING_DEFAULT_COLORS['dark']['bg'];
     [$r, $g, $b] = sscanf($hex, '#%02x%02x%02x');
@@ -145,7 +145,7 @@ function cms_branding_make_icons(string $tmpFile, string $maskBgHex): ?string
     return $ok ? null : 'write-failed';
 }
 
-/** Branding-Logo-Dateien (alle Endungen) im Upload-Ordner entfernen. */
+/** Remove branding logo files (all extensions) from the upload folder. */
 function cms_branding_delete_logo_files(): void
 {
     $dir = cms_uploads_dir();

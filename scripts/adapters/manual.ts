@@ -5,8 +5,8 @@ import type { SourceAdapter } from "./types";
 
 const CONTENT_DIR = resolve(process.cwd(), "content");
 
-// Manueller Adapter (§6.2): liest content/<domain>.json (im Repo gepflegt).
-// Gibt das geparste JSON zurück (Array oder Objekt – Validierung in build-data).
+// Manual adapter (§6.2): reads content/<domain>.json (maintained in the repo).
+// Returns the parsed JSON (array or object - validation in build-data).
 export const manualAdapter: SourceAdapter = {
   async fetchDomain(domain) {
     const file = resolve(CONTENT_DIR, `${domain}.json`);
@@ -18,11 +18,11 @@ export const manualAdapter: SourceAdapter = {
     try {
       parsed = JSON.parse(raw);
     } catch (e) {
-      // Datei nennen, damit man bei mehreren content-Dateien sofort weiß, wo der Fehler steckt.
+      // Name the file so with multiple content files it is immediately clear where the error is.
       throw new Error(`content/${domain}.json ist kein gültiges JSON – ${(e as Error).message}`);
     }
-    // Einheitlich als Array zurückgeben; Objekt-Domänen (festival/map/tickets/weather)
-    // werden vom Orchestrator wieder ausgepackt.
+    // Return uniformly as an array; object domains (festival/map/tickets/weather)
+    // are unwrapped again by the orchestrator.
     return Array.isArray(parsed) ? parsed : [parsed];
   },
 };

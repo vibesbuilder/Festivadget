@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import type { Artist, NewsItem, Slot, Stage } from "@/types";
 import { useArtists, useNews, useSlots, useStages } from "@/data/queries";
@@ -18,7 +19,7 @@ const polling = () =>
     ? 120_000
     : false;
 
-// Live-News (server-seitig via Telegram): fehlende Datei → [] (nur zusätzlich gemischt).
+// Live news (server-side via Telegram): missing file -> [] (only mixed in additionally).
 function useLiveNews() {
   return useQuery<NewsItem[]>({
     queryKey: ["live-news"],
@@ -34,9 +35,9 @@ function useLiveNews() {
   });
 }
 
-// Admin-News (über die Admin-UI gepflegt): die maßgebliche News-Quelle. Liegt die
-// Datei vor (auch leer []), ersetzt sie den Build-Stand (news.json); fehlt sie
-// (null), gilt der Build-Stand.
+// Admin news (maintained via the admin UI): the authoritative news source. When the
+// file exists (even empty []) it replaces the build state (news.json); when it is
+// missing (null), the build state applies.
 function useAdminNews() {
   return useQuery<NewsItem[] | null>({
     queryKey: ["admin-news"],
@@ -52,11 +53,12 @@ function useAdminNews() {
   });
 }
 
-// Virtuelle Auto-Konzertstart-Items aus slots erzeugen (§12.5).
+// Generate virtual auto concert-start items from slots (§12.5).
 function autoConcertItems(
   slots: Slot[],
   artistById: Map<string, Artist>,
   stageById: Map<string, Stage>,
+  makeTitle: (artist: string, stage: string) => string,
 ): FeedItem[] {
   return slots
     .filter((s) => !s.cancelled)
@@ -65,7 +67,7 @@ function autoConcertItems(
       const stage = stageById.get(s.stageId);
       return {
         id: `auto-${s.id}`,
-        title: `Jetzt: ${artist?.name ?? s.artistId} @ ${stage?.name ?? s.stageId}`,
+        title: makeTitle(artist?.name ?? s.artistId, stage?.name ?? s.stageId),
         body: "",
         category: "lineup" as const,
         publishAt: s.start, // sichtbar ab Slot-Beginn
@@ -75,13 +77,14 @@ function autoConcertItems(
 }
 
 /**
- * Gemergter Feed (§12.5): redaktionelle Items (nur wenn publishAt <= now und
- * expiresAt > now) + Auto-Konzertstart-Items (ab slot.start). Absteigend nach
- * Zeit; nur explizit gepinnte Items zuerst (auch Sicherheit reiht sich sonst
- * normal ein, User-Wunsch 08/2026). `safety` = gepinnte Sicherheits-Items
- * für das hervorgehobene Banner.
+ * Merged feed (§12.5): editorial items (only when publishAt <= now and
+ * expiresAt > now) + auto concert-start items (from slot.start). Descending by
+ * time; only explicitly pinned items first (safety also queues in normally
+ * otherwise, user request 08/2026). `safety` = pinned safety items
+ * for the highlighted banner.
  */
 export function useNewsFeed(): { items: FeedItem[]; safety: FeedItem[]; isLoading: boolean } {
+  const { t } = useTranslation();
   const { data: news, isLoading: l1 } = useNews();
   const { data: slots, isLoading: l2 } = useSlots();
   const { data: artists } = useArtists();
@@ -94,28 +97,30 @@ export function useNewsFeed(): { items: FeedItem[]; safety: FeedItem[]; isLoadin
     const artistById = new Map((artists ?? []).map((a) => [a.id, a]));
     const stageById = new Map((stages ?? []).map((s) => [s.id, s]));
 
-    // Admin-News ist die maßgebliche Quelle: liegt sie vor (auch []), ersetzt sie
-    // den Build-Stand (news.json); fehlt sie (null/undefined), gilt der Build-Stand.
-    // Live-News (Telegram) werden stets zusätzlich gemischt.
+    // Admin news is the authoritative source: when present (even []) it replaces
+    // the build state (news.json); when missing (null/undefined) the build state applies.
+    // Live news (Telegram) is always mixed in additionally.
     const newsBase = adminNews ?? news ?? [];
     const firstOpenMs = getFirstOpenAt();
     const editorial: FeedItem[] = [...newsBase, ...(liveNews ?? [])].filter((n) => {
       const published = parse(n.publishAt) <= now;
       const notExpired = !n.expiresAt || parse(n.expiresAt) > now;
-      // Ausblenden X Minuten nach erstem App-Öffnen (pro Gerät).
+      // Hide X minutes after the first app open (per device).
       const notFirstOpenHidden =
         typeof n.hideAfterFirstOpenMin !== "number" ||
         now.toMillis() < firstOpenMs + n.hideAfterFirstOpenMin * 60_000;
       return published && notExpired && notFirstOpenHidden;
     });
 
-    const autos = autoConcertItems(slots ?? [], artistById, stageById).filter(
+    const autos = autoConcertItems(slots ?? [], artistById, stageById, (artist, stage) =>
+      t("news.now", { artist, stage }),
+    ).filter(
       (a) => parse(a.publishAt) <= now,
     );
 
     const merged = [...editorial, ...autos];
 
-    // Sortierung: nur gepinnte zuerst, dann absteigend nach Zeit.
+    // Sorting: only pinned first, then descending by time.
     const weight = (i: FeedItem) => (i.pinned ? 1 : 0);
     merged.sort((a, b) => {
       const w = weight(b) - weight(a);
@@ -123,10 +128,10 @@ export function useNewsFeed(): { items: FeedItem[]; safety: FeedItem[]; isLoadin
       return parse(b.publishAt).toMillis() - parse(a.publishAt).toMillis();
     });
 
-    // Banner nur für GEPINNTE Sicherheits-Items; ungepinnte laufen als
-    // normale Karten im Feed mit.
+    // Banner only for PINNED safety items; unpinned ones run as normal
+    // cards in the feed.
     const safety = editorial.filter((i) => i.category === "safety" && i.pinned);
 
     return { items: merged, safety, isLoading: l1 || l2 };
-  }, [news, liveNews, adminNews, slots, artists, stages, now, l1, l2]);
+  }, [news, liveNews, adminNews, slots, artists, stages, now, l1, l2, t]);
 }

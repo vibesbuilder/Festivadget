@@ -1,6 +1,6 @@
-// Datenquellen-Konfiguration (IMPLEMENTATION.md §6).
-// Pro Inhaltsdomäne wählbar: "manual" | "joomla" | "wordpress".
-// Das Laufzeit-Schema (§7) ist quellenunabhängig – Adapter mappen darauf.
+// Data source configuration (IMPLEMENTATION.md §6).
+// Selectable per content domain: "manual" | "joomla" | "wordpress".
+// The runtime schema (§7) is source-independent - adapters map onto it.
 
 export type Provider = "manual" | "joomla" | "wordpress";
 
@@ -27,7 +27,7 @@ export type SlotsBinding = SourceBinding & {
 };
 
 export interface ContentSourcesConfig {
-  // Verbindungs-Defaults (Tokens NUR aus ENV, nie committen, §6.6):
+  // Connection defaults (tokens ONLY from ENV, never commit, §6.6):
   joomla?: { baseUrl: string; tokenEnv: string };
   wordpress?: { baseUrl: string; userEnv?: string; appPwEnv?: string };
 
@@ -49,9 +49,9 @@ export interface ContentSourcesConfig {
   };
 }
 
-// MVP-Default: alles "manual" (aus content/*.json + content/slots.csv),
-// damit der Build offline und ohne CMS-Anbindung funktioniert.
-// Einzelne Domänen bei Bedarf auf "joomla"/"wordpress" umstellen.
+// MVP default: everything "manual" (from content/*.json + content/slots.csv),
+// so the build works offline and without a CMS connection.
+// Switch individual domains to "joomla"/"wordpress" as needed.
 export const config: ContentSourcesConfig = {
   joomla: { baseUrl: "https://rockimdorf.at", tokenEnv: "JOOMLA_API_TOKEN" },
   wordpress: { baseUrl: "https://example.org", userEnv: "WP_USER", appPwEnv: "WP_APP_PW" },
@@ -66,11 +66,11 @@ export const config: ContentSourcesConfig = {
     sponsors: { provider: "manual" },
     tickets: { provider: "manual" },
     weather: { provider: "manual" },
-    // info: Quelle je Untermenüpunkt (§6.4). `default` liefert Struktur + Texte
-    // (content/info.json: id, icon, order, hidden, Fallback-Titel/-Text).
-    // In `overrides` kann pro Eintrag-ID eine andere Quelle gewählt werden –
-    // diese liefert dann nur Titel/Text, die Struktur bleibt aus `default`.
-    // Beispiel (Text der Seite "parken" aus einem Joomla-Artikel):
+    // info: source per submenu entry (§6.4). `default` delivers structure + texts
+    // (content/info.json: id, icon, order, hidden, fallback title/text).
+    // In `overrides` a different source can be chosen per entry ID -
+    // it then delivers only title/text, the structure stays from `default`.
+    // Example (text of the "parken" page from a Joomla article):
     //   overrides: { parken: { provider: "joomla", joomla: { ids: [42] } } }
     info: {
       default: { provider: "manual" },

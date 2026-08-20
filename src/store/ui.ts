@@ -5,17 +5,17 @@ import { DEFAULT_LANGUAGE, type AppLanguage } from "@/i18n/config";
 export type TimetableView = "grid" | "list";
 export type Theme = "dark" | "light";
 
-// UI-State (Tag-Auswahl, Filter, Ansicht, Sprache, Theme), persistiert in localStorage (§11).
+// UI state (day selection, filters, view, language, theme), persisted in localStorage (§11).
 interface UiState {
   selectedDayId: string | null;
   timetableView: TimetableView;
   favoritesOnly: boolean;
   lineupDayId: string | null; // Line-Up-Filter nach Tag (null = alle)
-  hiddenStageIds: string[]; // im Timetable ausgeblendete Bühnen
+  hiddenStageIds: string[]; // stages hidden in the timetable
   language: AppLanguage;
-  languageExplicit: boolean; // true = User hat selbst gewählt (Admin-Default greift dann nicht mehr)
+  languageExplicit: boolean; // true = user chose themselves (admin default no longer applies)
   theme: Theme; // Hell-/Dunkel-Modus
-  themeExplicit: boolean; // true = User hat selbst gewählt (Admin-Default greift dann nicht mehr)
+  themeExplicit: boolean; // true = user chose themselves (admin default no longer applies)
   setSelectedDay: (dayId: string | null) => void;
   setTimetableView: (view: TimetableView) => void;
   setFavoritesOnly: (only: boolean) => void;
@@ -24,8 +24,8 @@ interface UiState {
   setLanguage: (lang: AppLanguage) => void;
   setTheme: (theme: Theme) => void;
   toggleTheme: () => void;
-  applyServerThemeDefault: (theme: Theme) => void; // nur wirksam, solange !themeExplicit
-  applyServerLanguageDefault: (lang: AppLanguage) => void; // nur wirksam, solange !languageExplicit
+  applyServerThemeDefault: (theme: Theme) => void; // only effective while !themeExplicit
+  applyServerLanguageDefault: (lang: AppLanguage) => void; // only effective while !languageExplicit
 }
 
 export const useUi = create<UiState>()(
@@ -54,10 +54,10 @@ export const useUi = create<UiState>()(
       setTheme: (theme) => set({ theme, themeExplicit: true }),
       toggleTheme: () =>
         set((state) => ({ theme: state.theme === "dark" ? "light" : "dark", themeExplicit: true })),
-      // Admin-Standard-Theme anwenden – aber nur, solange der User nicht selbst gewählt hat.
+      // Apply the admin default theme - but only while the user has not chosen themselves.
       applyServerThemeDefault: (theme) =>
         set((state) => (state.themeExplicit ? {} : { theme })),
-      // Admin-Standard-Sprache anwenden – aber nur, solange der User nicht selbst gewählt hat.
+      // Apply the admin default language - but only while the user has not chosen themselves.
       applyServerLanguageDefault: (language) =>
         set((state) => (state.languageExplicit ? {} : { language })),
     }),

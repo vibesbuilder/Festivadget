@@ -5,9 +5,9 @@ import { fileURLToPath, URL } from "node:url";
 import { copyFileSync, mkdirSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
-// Handbücher (Markdown, alle Sprachen) mit ausliefern: docs/*.md und
-// IMPLEMENTATION*.md landen unter dist/docs/ – der CMS-Tab „Hilfe" verlinkt
-// sie als /docs/<name>.md. Bewusst NICHT im SW-Precache (nur Admin-Lektüre).
+// Ship the manuals (Markdown, all languages): docs/*.md and IMPLEMENTATION*.md
+// end up under dist/docs/ - the CMS tab "Help" links them as /docs/<name>.md.
+// Deliberately NOT in the SW precache (admin reading only).
 function copyDocsPlugin(): Plugin {
   return {
     name: "festivadget:copy-docs",
@@ -26,8 +26,8 @@ function copyDocsPlugin(): Plugin {
   };
 }
 
-// Festivadget – Vite-Konfiguration.
-// PWA: App-Shell wird precached; Laufzeit-Caching gemäß IMPLEMENTATION.md §5.1.
+// Festivadget - Vite configuration.
+// PWA: the app shell is precached; runtime caching per IMPLEMENTATION.md §5.1.
 export default defineConfig({
   resolve: {
     alias: {
@@ -37,10 +37,10 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        // Kuratierter App-Vendor-Chunk (stets benötigt). Leaflet kommt in einen
-        // eigenen Chunk (nur Karte). Markdown/Luxon u. a. überlässt man Rollups
-        // automatischer Shared-Chunk-Aufteilung – sie landen so in eigenen, lazy
-        // geladenen Chunks, ohne zirkuläre Abhängigkeiten zu erzeugen.
+        // Curated app vendor chunk (always needed). Leaflet goes into its own chunk
+        // (map only). Markdown/Luxon etc. are left to Rollup's automatic shared-chunk
+        // splitting - they end up in their own lazily loaded chunks without creating
+        // circular dependencies.
         manualChunks(id) {
           if (!id.includes("node_modules")) return undefined;
           if (id.includes("node_modules/leaflet")) return "leaflet";
@@ -67,7 +67,7 @@ export default defineConfig({
     copyDocsPlugin(),
     VitePWA({
       registerType: "autoUpdate",
-      // Eigener Service Worker (Phase 5: Web-Push). Caching-Logik liegt in src/sw.ts.
+      // Custom service worker (phase 5: web push). Caching logic lives in src/sw.ts.
       strategies: "injectManifest",
       srcDir: "src",
       filename: "sw.ts",
@@ -102,14 +102,14 @@ export default defineConfig({
         ],
       },
       injectManifest: {
-        // Per-Datei-Limit anheben, damit auch der große Geländeplan (venue.jpg ~0,8 MB)
-        // precacht wird (Workbox-Default sind 2 MiB – hier großzügig auf 4 MiB).
+        // Raise the per-file limit so the large venue map (venue.jpg ~0.8 MB) is
+        // precached too (Workbox default is 2 MiB - generously 4 MiB here).
         maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
         globPatterns: [
           "**/*.{js,css,html,woff2,svg,png}",
-          // Medien für vollständige Offline-Nutzung precachen (auch ohne vorherigen
-          // Online-Aufruf): Sponsor-Logos, Artist-Fotos und der Geländeplan.
-          // background.webp bleibt absichtlich im Runtime-Cache (nur Deko).
+          // Precache media for full offline use (even without a prior online visit):
+          // sponsor logos, artist photos and the venue map.
+          // background.webp deliberately stays in the runtime cache (decoration only).
           "img/sponsors/**/*.{webp,jpg,jpeg}",
           "img/artists/**/*.{webp,jpg,jpeg}",
           "map/**/*.{jpg,jpeg}",

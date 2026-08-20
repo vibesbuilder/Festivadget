@@ -4,10 +4,10 @@ import { useFestival } from "@/data/queries";
 import { useAppConfig } from "@/data/useAppConfig";
 import { PushBellButton } from "./PushBellButton";
 
-// Schlanke obere Leiste: Logo-Grafik (max. 36px hoch, 300px breit) + Glocke + Suche.
+// Slim top bar: logo artwork (max. 36px high, 300px wide) + bell + search.
 export function TopBar() {
   const { data: festival } = useFestival();
-  // Kunden-Logo aus dem Branding (CMS); leer = Build-Logo.
+  // Customer logo from the branding (CMS); empty = build logo.
   const { branding } = useAppConfig();
 
   return (

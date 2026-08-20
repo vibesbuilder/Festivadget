@@ -28,7 +28,9 @@
     "retry": "Erneut versuchen",
     "offline": "Offline",
     "lastUpdate": "Stand: {{time}}",
-    "empty": "Noch keine Inhalte."
+    "empty": "Noch keine Inhalte.",
+    "close": "Schließen",
+    "notFound": "Nicht gefunden"
   },
   "home": {
     "now": "Jetzt",
@@ -42,7 +44,8 @@
   "lineup": {
     "title": "Line-Up",
     "allGenres": "Alle",
-    "headliner": "Headliner"
+    "headliner": "Headliner",
+    "noActs": "Keine Acts an diesem Tag."
   },
   "timetable": {
     "title": "Timetable",
@@ -50,7 +53,11 @@
     "list": "Liste",
     "favoritesOnly": "Nur Favoriten",
     "now": "Jetzt",
-    "clash": "Überschneidung"
+    "clash": "Überschneidung",
+    "noSlots": "Keine Slots für diese Auswahl.",
+    "allHidden": "Alle Bühnen ausgeblendet.",
+    "addPlan": "Zu Mein Plan hinzufügen",
+    "removePlan": "Aus Mein Plan entfernen"
   },
   "favorites": {
     "title": "Mein Plan",
@@ -63,10 +70,12 @@
   },
   "news": {
     "title": "Newsfeed",
-    "pinned": "Angepinnt"
+    "pinned": "Angepinnt",
+    "now": "Jetzt: {{artist}} @ {{stage}}"
   },
   "info": {
-    "title": "Infos"
+    "title": "Infos",
+    "notFound": "Info-Seite nicht gefunden."
   },
   "sponsors": {
     "title": "Sponsoren",
@@ -85,7 +94,8 @@
   "artist": {
     "playtimes": "Stage Time",
     "favorite": "Favorisieren",
-    "favorited": "Favorisiert"
+    "favorited": "Favorisiert",
+    "notFound": "Act nicht gefunden."
   },
   "install": {
     "cta": "App installieren für Offline-Nutzung.",
@@ -114,9 +124,34 @@
   },
   "map": {
     "title": "Karte",
-    "all": "Alle"
+    "all": "Alle",
+    "noPois": "Keine Kartenpunkte."
   },
   "search": {
-    "title": "Suche"
+    "title": "Suche",
+    "noResults": "Keine Treffer für „{{query}}“."
+  },
+  "push": {
+    "noKey": "Kein VAPID-Public-Key konfiguriert.",
+    "denied": "Benachrichtigungen nicht erlaubt.",
+    "saveFailed": "Abo konnte nicht gespeichert werden (HTTP {{status}})."
+  },
+  "poi": {
+    "stage": "Bühne",
+    "wc": "WC",
+    "food": "Essen",
+    "drink": "Getränke",
+    "firstaid": "Sanitäter",
+    "atm": "Bankomat",
+    "info": "Info",
+    "entrance": "Eingang",
+    "exit": "Ausgang",
+    "camping": "Camping",
+    "caravan": "Caravan",
+    "cashless": "Cashless",
+    "shuttle": "Shuttle",
+    "merch": "Merch",
+    "parking": "Parken",
+    "generic": "Punkt"
   }
 }

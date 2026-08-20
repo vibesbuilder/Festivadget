@@ -445,14 +445,20 @@ interface MapConfig {
 
 ### 7.7 `news.json`
 ```ts
+type LocalizedText = string | Partial<Record<"de" | "en" | "fr" | "es", string>>;
 type NewsCategory = "info" | "safety" | "lineup" | "general";
 interface NewsItem {
-  id: string; title: string; body: string; category: NewsCategory;
+  id: string; title: LocalizedText; body: LocalizedText; category: NewsCategory;
   publishAt: string;      // le client n'affiche qu'à partir de ce moment
   expiresAt?: string; pinned?: boolean;
-  image?: string; link?: { label: string; url: string };
+  image?: string; link?: { label: LocalizedText; url: string };
 }
 ```
+> **Contenus localisables** : `title`, `body` et `link.label` acceptent soit une
+> chaîne simple (monolingue), soit une carte de langues comme `{ "de": "…", "en": "…" }`.
+> L'appli résout la langue de l'utilisateur avec la chaîne de repli langue → en → de →
+> première valeur disponible (`src/lib/localized.ts`) ; les textes push sont résolus
+> par langue d'abonnement (`push/texts.php`).
 > Les **entrées auto de début de concert** sont générées à l'exécution depuis
 > `slots.json` (voir §12.5) et fusionnées avec les actus éditoriales.
 
@@ -467,7 +473,7 @@ interface Sponsor { id: string; name: string; logo: string; tier: SponsorTier; u
 interface InfoPage {
   id: string;   // "anreise"|"gelaende"|"camping"|"caravan"|"cashless"
                 // "bringmichheim"|"kulinarik"|"getraenke"|"faq"
-  title: string; icon?: string; order: number; body: string; // Markdown
+  title: LocalizedText; icon?: string; order: number; body: LocalizedText; // Markdown
 }
 ```
 
