@@ -1,0 +1,164 @@
+{
+  "nav": {
+    "home": "Hjem",
+    "lineup": "Line-up",
+    "timetable": "Program",
+    "myplan": "Min plan",
+    "map": "Kort",
+    "more": "Mere"
+  },
+  "more": {
+    "title": "Mere",
+    "favorites": "Mit program",
+    "news": "Nyheder",
+    "map": "Kort",
+    "info": "Info",
+    "sponsors": "Sponsorer",
+    "tickets": "Billetter",
+    "search": "Søg",
+    "contact": "Kontakt",
+    "impressum": "Kolofon",
+    "language": "Sprog",
+    "theme": "Dark / Light",
+    "weather": "Vejr"
+  },
+  "common": {
+    "loading": "Indlæser …",
+    "error": "Noget gik galt.",
+    "retry": "Prøv igen",
+    "offline": "Offline",
+    "lastUpdate": "Status: {{time}}",
+    "empty": "Intet indhold endnu.",
+    "close": "Luk",
+    "notFound": "Ikke fundet"
+  },
+  "home": {
+    "now": "Nu",
+    "upNext": "Næste",
+    "overview": "Programoversigt",
+    "newsfeed": "Nyheder",
+    "nextFavorite": "Din næste favorit",
+    "video": "Se video",
+    "all": "Alle"
+  },
+  "lineup": {
+    "title": "Line-up",
+    "allGenres": "Alle",
+    "headliner": "Headliner",
+    "noActs": "Ingen optrædener denne dag."
+  },
+  "timetable": {
+    "title": "Program",
+    "grid": "Gitter",
+    "list": "Liste",
+    "favoritesOnly": "Kun favoritter",
+    "now": "Nu",
+    "clash": "Overlap",
+    "noSlots": "Ingen slots for dette valg.",
+    "allHidden": "Alle scener skjult.",
+    "addPlan": "Føj til min plan",
+    "removePlan": "Fjern fra min plan"
+  },
+  "favorites": {
+    "title": "Min plan",
+    "empty": "Ingen favoritter endnu. Tryk på stjernen ved en kunstner.",
+    "emptyTitle": "Ingen favoritter endnu",
+    "explain": "Tryk på stjernen ved en kunstner i line-uppet eller programmet for at føje den til din personlige plan. Alle dine favoritter vises her kronologisk – med advarsel ved overlap og .ics-eksport til din kalender.",
+    "exportAll": "Gem alle tidspunkter i kalenderen",
+    "reminder": "Påmindelse (.ics)",
+    "clashWarning": "Mindst ét programpunkt overlapper med en anden favorit."
+  },
+  "news": {
+    "title": "Nyheder",
+    "pinned": "Fastgjort",
+    "now": "Nu: {{artist}} @ {{stage}}"
+  },
+  "info": {
+    "title": "Info",
+    "notFound": "Infosiden blev ikke fundet."
+  },
+  "sponsors": {
+    "title": "Sponsorer",
+    "tier": {
+      "main": "Presented by",
+      "premium": "Premiumpartner",
+      "partner": "Partner",
+      "supporter": "Støtte"
+    }
+  },
+  "tickets": {
+    "title": "Billetter",
+    "open": "Åbn",
+    "shop": "Til billetshoppen"
+  },
+  "artist": {
+    "playtimes": "Stage Time",
+    "favorite": "Føj til favoritter",
+    "favorited": "Favorit",
+    "notFound": "Kunstner ikke fundet."
+  },
+  "install": {
+    "cta": "Installer appen til offline-brug.",
+    "ios1": "Til hjemmeskærmen:",
+    "ios2": "Del → ”Føj til hjemmeskærm”.",
+    "button": "Installer",
+    "close": "Luk"
+  },
+  "weather": {
+    "title": "Vejr",
+    "today": "I dag",
+    "tomorrow": "I morgen",
+    "dayAfter": "I overmorgen",
+    "todayShort": "i dag",
+    "tomorrowShort": "i morgen",
+    "now": "aktuelt",
+    "updated": "Opdateret",
+    "stale": "data kan være forældede",
+    "noData": "ingen data endnu",
+    "section": {
+      "morning": "Morgen",
+      "noon": "Middag",
+      "evening": "Aften",
+      "night": "Nat"
+    }
+  },
+  "map": {
+    "title": "Kort",
+    "all": "Alle",
+    "noPois": "Ingen punkter på kortet."
+  },
+  "search": {
+    "title": "Søg",
+    "noResults": "Ingen resultater for ”{{query}}”."
+  },
+  "push": {
+    "noKey": "Ingen offentlig VAPID-nøgle konfigureret.",
+    "denied": "Notifikationer ikke tilladt.",
+    "saveFailed": "Abonnementet kunne ikke gemmes (HTTP {{status}}).",
+    "catInfo": "Info",
+    "catLineup": "Line-up",
+    "catGeneral": "Generelt",
+    "catSafety": "Sikkerhed",
+    "alwaysOn": "(altid aktiv)",
+    "myPlan": "Min plan",
+    "myPlanHint": "(påmindelse før koncerten)"
+  },
+  "poi": {
+    "stage": "Scene",
+    "wc": "WC",
+    "food": "Mad",
+    "drink": "Drikkevarer",
+    "firstaid": "Førstehjælp",
+    "atm": "Hæveautomat",
+    "info": "Info",
+    "entrance": "Indgang",
+    "exit": "Udgang",
+    "camping": "Camping",
+    "caravan": "Campingvogn",
+    "cashless": "Cashless",
+    "shuttle": "Shuttle",
+    "merch": "Merch",
+    "parking": "Parkering",
+    "generic": "Punkt"
+  }
+}

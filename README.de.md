@@ -71,8 +71,10 @@ Inhalte ersetzt du direkt im CMS. Updates sind ein Klick im CMS-Tab
   Sponsoren-Grid, Ticket-Einbindung.
 - **PWA komplett**: installierbar (Android/iOS-Hinweise eingebaut), offline-fähig,
   automatische Updates, Daten-Refresh im Betrieb ohne App-Rebuild (~2 min).
-- **Dark/Light-Theme** und wählbare App-Sprache: **Deutsch, Englisch,
-  Französisch, Spanisch**.
+- **Dark/Light-Theme** und wählbare App-Sprache: **23 Besucher-Sprachen**
+  (de, en, fr, es, it, nl, cs, pl, pt, fi, hu, sk, hr, da, sv, uk, ro, sl, tr,
+  pt-BR, zh-CN, ja-JP, ko-KR). Inhalte (Infos, News, Tages-Labels, POIs, …)
+  sind je Sprache pflegbar, mit Englisch/Deutsch-Fallback.
 - **Anonyme Statistik** (optional): Seitenaufrufe ohne Nutzerbezug, Auswertung im CMS.
 - **Mini-CMS** (optional, PHP): News-Editor mit Planung & Push, POI-/Kategorien-Pflege,
   Statistik, Wetter-Konfiguration – erreichbar vom Handy des Orga-Teams;

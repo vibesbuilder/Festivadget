@@ -134,7 +134,14 @@
   "push": {
     "noKey": "No hay clave pública VAPID configurada.",
     "denied": "Notificaciones no permitidas.",
-    "saveFailed": "No se pudo guardar la suscripción (HTTP {{status}})."
+    "saveFailed": "No se pudo guardar la suscripción (HTTP {{status}}).",
+    "catInfo": "Información",
+    "catLineup": "Line-Up",
+    "catGeneral": "General",
+    "catSafety": "Seguridad",
+    "alwaysOn": "(siempre activo)",
+    "myPlan": "Mi plan",
+    "myPlanHint": "(recordatorio antes del concierto)"
   },
   "poi": {
     "stage": "Escenario",

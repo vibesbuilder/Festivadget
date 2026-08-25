@@ -25,7 +25,7 @@ export default function Weather() {
     [t("weather.today"), t("weather.tomorrow"), t("weather.dayAfter")][index] ?? "";
   // Date locale matching the app language.
   const locale =
-    { de: "de-AT", en: "en-GB", fr: "fr-FR", es: "es-ES" }[i18n.language] ?? "de-AT";
+    { de: "de-AT", en: "en-GB", fr: "fr-FR", es: "es-ES" }[i18n.language] ?? i18n.language;
   const weekday = (date: string) =>
     new Date(`${date}T12:00:00`).toLocaleDateString(locale, { weekday: "long" });
   const updated = new Date(data.fetchedAt).toLocaleString(locale, {

@@ -1,0 +1,164 @@
+{
+  "nav": {
+    "home": "Hem",
+    "lineup": "Line-up",
+    "timetable": "Schema",
+    "myplan": "Min plan",
+    "map": "Karta",
+    "more": "Mer"
+  },
+  "more": {
+    "title": "Mer",
+    "favorites": "Mitt schema",
+    "news": "Nyheter",
+    "map": "Karta",
+    "info": "Info",
+    "sponsors": "Sponsorer",
+    "tickets": "Biljetter",
+    "search": "Sök",
+    "contact": "Kontakt",
+    "impressum": "Utgivningsinfo",
+    "language": "Språk",
+    "theme": "Dark / Light",
+    "weather": "Väder"
+  },
+  "common": {
+    "loading": "Laddar …",
+    "error": "Något gick fel.",
+    "retry": "Försök igen",
+    "offline": "Offline",
+    "lastUpdate": "Status: {{time}}",
+    "empty": "Inget innehåll ännu.",
+    "close": "Stäng",
+    "notFound": "Hittades inte"
+  },
+  "home": {
+    "now": "Nu",
+    "upNext": "Härnäst",
+    "overview": "Programöversikt",
+    "newsfeed": "Nyheter",
+    "nextFavorite": "Din nästa favorit",
+    "video": "Se video",
+    "all": "Alla"
+  },
+  "lineup": {
+    "title": "Line-up",
+    "allGenres": "Alla",
+    "headliner": "Headliner",
+    "noActs": "Inga akter denna dag."
+  },
+  "timetable": {
+    "title": "Schema",
+    "grid": "Rutnät",
+    "list": "Lista",
+    "favoritesOnly": "Endast favoriter",
+    "now": "Nu",
+    "clash": "Krock",
+    "noSlots": "Inga tider för detta urval.",
+    "allHidden": "Alla scener dolda.",
+    "addPlan": "Lägg till i min plan",
+    "removePlan": "Ta bort från min plan"
+  },
+  "favorites": {
+    "title": "Min plan",
+    "empty": "Inga favoriter ännu. Tryck på stjärnan vid en akt.",
+    "emptyTitle": "Inga favoriter ännu",
+    "explain": "Tryck på stjärnan vid en akt i line-upen eller schemat för att lägga till den i din personliga plan. Alla dina favoriter visas här kronologiskt – med varning vid krockar och .ics-export till din kalender.",
+    "exportAll": "Spara alla tider i kalendern",
+    "reminder": "Påminnelse (.ics)",
+    "clashWarning": "Minst en programpunkt krockar med en annan favorit."
+  },
+  "news": {
+    "title": "Nyheter",
+    "pinned": "Fäst",
+    "now": "Nu: {{artist}} @ {{stage}}"
+  },
+  "info": {
+    "title": "Info",
+    "notFound": "Infosidan hittades inte."
+  },
+  "sponsors": {
+    "title": "Sponsorer",
+    "tier": {
+      "main": "Presented by",
+      "premium": "Premiumpartner",
+      "partner": "Partner",
+      "supporter": "Supporter"
+    }
+  },
+  "tickets": {
+    "title": "Biljetter",
+    "open": "Öppna",
+    "shop": "Till biljettshopen"
+  },
+  "artist": {
+    "playtimes": "Stage Time",
+    "favorite": "Lägg till som favorit",
+    "favorited": "Favorit",
+    "notFound": "Akten hittades inte."
+  },
+  "install": {
+    "cta": "Installera appen för offline-användning.",
+    "ios1": "Till hemskärmen:",
+    "ios2": "Dela → ”Lägg till på hemskärmen”.",
+    "button": "Installera",
+    "close": "Stäng"
+  },
+  "weather": {
+    "title": "Väder",
+    "today": "I dag",
+    "tomorrow": "I morgon",
+    "dayAfter": "I övermorgon",
+    "todayShort": "i dag",
+    "tomorrowShort": "i morgon",
+    "now": "just nu",
+    "updated": "Uppdaterat",
+    "stale": "data kan vara inaktuella",
+    "noData": "inga data ännu",
+    "section": {
+      "morning": "Morgon",
+      "noon": "Middag",
+      "evening": "Kväll",
+      "night": "Natt"
+    }
+  },
+  "map": {
+    "title": "Karta",
+    "all": "Alla",
+    "noPois": "Inga punkter på kartan."
+  },
+  "search": {
+    "title": "Sök",
+    "noResults": "Inga träffar för ”{{query}}”."
+  },
+  "push": {
+    "noKey": "Ingen publik VAPID-nyckel konfigurerad.",
+    "denied": "Notiser tillåts inte.",
+    "saveFailed": "Prenumerationen kunde inte sparas (HTTP {{status}}).",
+    "catInfo": "Info",
+    "catLineup": "Line-up",
+    "catGeneral": "Allmänt",
+    "catSafety": "Säkerhet",
+    "alwaysOn": "(alltid på)",
+    "myPlan": "Min plan",
+    "myPlanHint": "(påminnelse före konserten)"
+  },
+  "poi": {
+    "stage": "Scen",
+    "wc": "WC",
+    "food": "Mat",
+    "drink": "Dryck",
+    "firstaid": "Första hjälpen",
+    "atm": "Bankomat",
+    "info": "Info",
+    "entrance": "Entré",
+    "exit": "Utgång",
+    "camping": "Camping",
+    "caravan": "Husvagn",
+    "cashless": "Cashless",
+    "shuttle": "Shuttle",
+    "merch": "Merch",
+    "parking": "Parkering",
+    "generic": "Punkt"
+  }
+}

@@ -1,0 +1,164 @@
+{
+  "nav": {
+    "home": "ホーム",
+    "lineup": "ラインナップ",
+    "timetable": "タイムテーブル",
+    "myplan": "マイプラン",
+    "map": "マップ",
+    "more": "その他"
+  },
+  "more": {
+    "title": "その他",
+    "favorites": "マイタイムテーブル",
+    "news": "ニュース",
+    "map": "マップ",
+    "info": "インフォメーション",
+    "sponsors": "スポンサー",
+    "tickets": "チケット",
+    "search": "検索",
+    "contact": "お問い合わせ",
+    "impressum": "運営者情報",
+    "language": "言語",
+    "theme": "Dark / Light",
+    "weather": "天気"
+  },
+  "common": {
+    "loading": "読み込み中…",
+    "error": "問題が発生しました。",
+    "retry": "再試行",
+    "offline": "オフライン",
+    "lastUpdate": "更新：{{time}}",
+    "empty": "まだコンテンツがありません。",
+    "close": "閉じる",
+    "notFound": "見つかりません"
+  },
+  "home": {
+    "now": "ただいま",
+    "upNext": "次の出演",
+    "overview": "プログラム一覧",
+    "newsfeed": "ニュース",
+    "nextFavorite": "次のお気に入り",
+    "video": "動画を見る",
+    "all": "すべて"
+  },
+  "lineup": {
+    "title": "ラインナップ",
+    "allGenres": "すべて",
+    "headliner": "ヘッドライナー",
+    "noActs": "この日の出演はありません。"
+  },
+  "timetable": {
+    "title": "タイムテーブル",
+    "grid": "グリッド",
+    "list": "リスト",
+    "favoritesOnly": "お気に入りのみ",
+    "now": "現在",
+    "clash": "時間の重複",
+    "noSlots": "この条件に該当する出演はありません。",
+    "allHidden": "すべてのステージが非表示です。",
+    "addPlan": "マイプランに追加",
+    "removePlan": "マイプランから削除"
+  },
+  "favorites": {
+    "title": "マイプラン",
+    "empty": "まだお気に入りがありません。アーティストの星をタップしてください。",
+    "emptyTitle": "まだお気に入りがありません",
+    "explain": "ラインナップやタイムテーブルでアーティストの星をタップすると、あなただけのプランに追加できます。お気に入りはここに時系列で表示され、時間の重複警告やカレンダー用の .ics エクスポートも利用できます。",
+    "exportAll": "すべての予定をカレンダーに保存",
+    "reminder": "リマインダー（.ics）",
+    "clashWarning": "少なくとも1つの出演が別のお気に入りと重なっています。"
+  },
+  "news": {
+    "title": "ニュース",
+    "pinned": "固定",
+    "now": "ただいま：{{artist}} @ {{stage}}"
+  },
+  "info": {
+    "title": "インフォメーション",
+    "notFound": "インフォページが見つかりません。"
+  },
+  "sponsors": {
+    "title": "スポンサー",
+    "tier": {
+      "main": "Presented by",
+      "premium": "プレミアムパートナー",
+      "partner": "パートナー",
+      "supporter": "サポーター"
+    }
+  },
+  "tickets": {
+    "title": "チケット",
+    "open": "開く",
+    "shop": "チケットショップへ"
+  },
+  "artist": {
+    "playtimes": "出演時間",
+    "favorite": "お気に入りに追加",
+    "favorited": "お気に入り済み",
+    "notFound": "アーティストが見つかりません。"
+  },
+  "install": {
+    "cta": "オフラインでも使えるようにアプリをインストールしましょう。",
+    "ios1": "ホーム画面に追加：",
+    "ios2": "共有 →「ホーム画面に追加」。",
+    "button": "インストール",
+    "close": "閉じる"
+  },
+  "weather": {
+    "title": "天気",
+    "today": "今日",
+    "tomorrow": "明日",
+    "dayAfter": "明後日",
+    "todayShort": "今日",
+    "tomorrowShort": "明日",
+    "now": "現在",
+    "updated": "更新済み",
+    "stale": "データが古い可能性があります",
+    "noData": "まだデータがありません",
+    "section": {
+      "morning": "朝",
+      "noon": "昼",
+      "evening": "夕方",
+      "night": "夜"
+    }
+  },
+  "map": {
+    "title": "マップ",
+    "all": "すべて",
+    "noPois": "マップ上にスポットがありません。"
+  },
+  "search": {
+    "title": "検索",
+    "noResults": "「{{query}}」に一致する結果はありません。"
+  },
+  "push": {
+    "noKey": "VAPID 公開鍵が設定されていません。",
+    "denied": "通知が許可されていません。",
+    "saveFailed": "購読を保存できませんでした（HTTP {{status}}）。",
+    "catInfo": "インフォメーション",
+    "catLineup": "ラインナップ",
+    "catGeneral": "一般",
+    "catSafety": "安全",
+    "alwaysOn": "（常にオン）",
+    "myPlan": "マイプラン",
+    "myPlanHint": "（開演前のリマインダー）"
+  },
+  "poi": {
+    "stage": "ステージ",
+    "wc": "トイレ",
+    "food": "フード",
+    "drink": "ドリンク",
+    "firstaid": "救護所",
+    "atm": "ATM",
+    "info": "インフォメーション",
+    "entrance": "入口",
+    "exit": "出口",
+    "camping": "キャンプ",
+    "caravan": "キャンピングカー",
+    "cashless": "キャッシュレス",
+    "shuttle": "シャトル",
+    "merch": "グッズ",
+    "parking": "駐車場",
+    "generic": "スポット"
+  }
+}

@@ -134,7 +134,14 @@
   "push": {
     "noKey": "No VAPID public key configured.",
     "denied": "Notifications not allowed.",
-    "saveFailed": "Subscription could not be saved (HTTP {{status}})."
+    "saveFailed": "Subscription could not be saved (HTTP {{status}}).",
+    "catInfo": "Info",
+    "catLineup": "Line-Up",
+    "catGeneral": "General",
+    "catSafety": "Safety",
+    "alwaysOn": "(always on)",
+    "myPlan": "My Plan",
+    "myPlanHint": "(reminder before showtime)"
   },
   "poi": {
     "stage": "Stage",

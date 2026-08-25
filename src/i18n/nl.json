@@ -1,0 +1,164 @@
+{
+  "nav": {
+    "home": "Home",
+    "lineup": "Line-up",
+    "timetable": "Timetable",
+    "myplan": "Mijn planning",
+    "map": "Kaart",
+    "more": "Meer"
+  },
+  "more": {
+    "title": "Meer",
+    "favorites": "Mijn timetable",
+    "news": "Nieuwsfeed",
+    "map": "Kaart",
+    "info": "Info",
+    "sponsors": "Sponsors",
+    "tickets": "Tickets",
+    "search": "Zoeken",
+    "contact": "Contact",
+    "impressum": "Colofon",
+    "language": "Taal",
+    "theme": "Dark / Light",
+    "weather": "Weer"
+  },
+  "common": {
+    "loading": "Laden …",
+    "error": "Er is iets misgegaan.",
+    "retry": "Opnieuw proberen",
+    "offline": "Offline",
+    "lastUpdate": "Stand: {{time}}",
+    "empty": "Nog geen inhoud.",
+    "close": "Sluiten",
+    "notFound": "Niet gevonden"
+  },
+  "home": {
+    "now": "Nu",
+    "upNext": "Hierna",
+    "overview": "Programmaoverzicht",
+    "newsfeed": "Nieuwsfeed",
+    "nextFavorite": "Je volgende favoriet",
+    "video": "Video bekijken",
+    "all": "Alle"
+  },
+  "lineup": {
+    "title": "Line-up",
+    "allGenres": "Alle",
+    "headliner": "Headliner",
+    "noActs": "Geen acts op deze dag."
+  },
+  "timetable": {
+    "title": "Timetable",
+    "grid": "Raster",
+    "list": "Lijst",
+    "favoritesOnly": "Alleen favorieten",
+    "now": "Nu",
+    "clash": "Overlapping",
+    "noSlots": "Geen slots voor deze selectie.",
+    "allHidden": "Alle podia verborgen.",
+    "addPlan": "Toevoegen aan mijn planning",
+    "removePlan": "Verwijderen uit mijn planning"
+  },
+  "favorites": {
+    "title": "Mijn planning",
+    "empty": "Nog geen favorieten. Tik op de ster bij een act.",
+    "emptyTitle": "Nog geen favorieten",
+    "explain": "Tik in de line-up of de timetable op de ster bij een act om die aan je persoonlijke planning toe te voegen. Al je favorieten verschijnen hier chronologisch – inclusief waarschuwing bij overlappingen en .ics-export voor je agenda.",
+    "exportAll": "Alle afspraken in agenda opslaan",
+    "reminder": "Herinnering (.ics)",
+    "clashWarning": "Minstens één programmapunt overlapt met een andere favoriet."
+  },
+  "news": {
+    "title": "Nieuwsfeed",
+    "pinned": "Vastgezet",
+    "now": "Nu: {{artist}} @ {{stage}}"
+  },
+  "info": {
+    "title": "Info",
+    "notFound": "Infopagina niet gevonden."
+  },
+  "sponsors": {
+    "title": "Sponsors",
+    "tier": {
+      "main": "Presented by",
+      "premium": "Premiumpartner",
+      "partner": "Partner",
+      "supporter": "Supporter"
+    }
+  },
+  "tickets": {
+    "title": "Tickets",
+    "open": "Openen",
+    "shop": "Naar de ticketshop"
+  },
+  "artist": {
+    "playtimes": "Stage Time",
+    "favorite": "Aan favorieten toevoegen",
+    "favorited": "Favoriet",
+    "notFound": "Act niet gevonden."
+  },
+  "install": {
+    "cta": "Installeer de app voor offline gebruik.",
+    "ios1": "Zet op het beginscherm:",
+    "ios2": "Delen → „Zet op beginscherm“.",
+    "button": "Installeren",
+    "close": "Sluiten"
+  },
+  "weather": {
+    "title": "Weer",
+    "today": "Vandaag",
+    "tomorrow": "Morgen",
+    "dayAfter": "Overmorgen",
+    "todayShort": "vandaag",
+    "tomorrowShort": "morgen",
+    "now": "nu",
+    "updated": "Bijgewerkt",
+    "stale": "gegevens mogelijk verouderd",
+    "noData": "nog geen gegevens",
+    "section": {
+      "morning": "Ochtend",
+      "noon": "Middag",
+      "evening": "Avond",
+      "night": "Nacht"
+    }
+  },
+  "map": {
+    "title": "Kaart",
+    "all": "Alle",
+    "noPois": "Geen kaartpunten."
+  },
+  "search": {
+    "title": "Zoeken",
+    "noResults": "Geen resultaten voor „{{query}}”."
+  },
+  "push": {
+    "noKey": "Geen publieke VAPID-sleutel geconfigureerd.",
+    "denied": "Meldingen niet toegestaan.",
+    "saveFailed": "Abonnement kon niet worden opgeslagen (HTTP {{status}}).",
+    "catInfo": "Info",
+    "catLineup": "Line-up",
+    "catGeneral": "Algemeen",
+    "catSafety": "Veiligheid",
+    "alwaysOn": "(altijd actief)",
+    "myPlan": "Mijn planning",
+    "myPlanHint": "(herinnering voor aanvang)"
+  },
+  "poi": {
+    "stage": "Podium",
+    "wc": "WC",
+    "food": "Eten",
+    "drink": "Drinken",
+    "firstaid": "EHBO",
+    "atm": "Geldautomaat",
+    "info": "Info",
+    "entrance": "Ingang",
+    "exit": "Uitgang",
+    "camping": "Camping",
+    "caravan": "Caravan",
+    "cashless": "Cashless",
+    "shuttle": "Shuttle",
+    "merch": "Merch",
+    "parking": "Parkeren",
+    "generic": "Punt"
+  }
+}

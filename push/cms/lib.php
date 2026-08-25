@@ -7,6 +7,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../db.php'; // push_config()
+require_once __DIR__ . '/../texts.php'; // FESTIVADGET_LANGS/PUSH_LANGS (Besucher-Sprachen)
 require_once __DIR__ . '/i18n.php';  // cms_t()/cms_lang() – CMS-Mehrsprachigkeit
 
 // Harden the session cookie (keys/content hang off this session): no JS access,
@@ -153,6 +154,12 @@ function cms_loc_label($value): string
             return $text;
         }
     }
+    foreach ($value as $text) {
+        $text = trim((string) $text);
+        if ($text !== '') {
+            return $text;
+        }
+    }
     return '';
 }
 
@@ -165,7 +172,7 @@ function cms_loc_from_post($raw)
         return trim((string) $raw);
     }
     $map = [];
-    foreach (CMS_CONTENT_LANGS as $lang) {
+    foreach (PUSH_LANGS as $lang) {
         $text = trim((string) ($raw[$lang] ?? ''));
         if ($text !== '') {
             $map[$lang] = $text;
@@ -178,6 +185,25 @@ function cms_loc_from_post($raw)
         return $map['de'];
     }
     return $map;
+}
+
+/** Form languages for localized fields: en/fr/es plus any additional visitor
+ *  languages already carrying content in one of the given values (so content in
+ *  further languages stays editable and is never dropped on save). */
+function cms_loc_form_langs(...$values): array
+{
+    $langs = ['en', 'fr', 'es'];
+    foreach ($values as $v) {
+        if (!is_array($v)) {
+            continue;
+        }
+        foreach ($v as $code => $text) {
+            if ($code !== 'de' && trim((string) $text) !== '' && !in_array($code, $langs, true)) {
+                $langs[] = (string) $code;
+            }
+        }
+    }
+    return $langs;
 }
 
 /** Simple, ASCII-oriented slug building for info IDs. */
@@ -368,8 +394,9 @@ function cms_field_input(string $iname, array $f, $value): string
                     ? '<textarea name="' . $n . '[' . $lang . ']">' . $v . '</textarea>'
                     : '<input type="text" name="' . $n . '[' . $lang . ']" value="' . $v . '">';
             };
+            $formLangs = cms_loc_form_langs($value);
             $hasTr = false;
-            foreach (['en', 'fr', 'es'] as $tl) {
+            foreach ($formLangs as $tl) {
                 if (cms_loc_get($value, $tl) !== '') {
                     $hasTr = true;
                 }
@@ -378,7 +405,7 @@ function cms_field_input(string $iname, array $f, $value): string
             $h .= '<details' . ($hasTr ? ' open' : '') . '><summary class="muted">'
                 . cms_h(cms_t('Übersetzungen (en/fr/es) – leer = englischer bzw. deutscher Fallback'))
                 . '</summary>';
-            foreach (['en', 'fr', 'es'] as $tl) {
+            foreach ($formLangs as $tl) {
                 $h .= '<label class="fld" style="margin-top:.35rem"><span>' . $tl . '</span>' . $mk($tl) . '</label>';
             }
             return $h . '</details>';

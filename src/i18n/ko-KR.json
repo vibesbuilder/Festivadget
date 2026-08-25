@@ -1,0 +1,164 @@
+{
+  "nav": {
+    "home": "홈",
+    "lineup": "라인업",
+    "timetable": "타임테이블",
+    "myplan": "내 플랜",
+    "map": "지도",
+    "more": "더보기"
+  },
+  "more": {
+    "title": "더보기",
+    "favorites": "내 타임테이블",
+    "news": "소식",
+    "map": "지도",
+    "info": "안내",
+    "sponsors": "스폰서",
+    "tickets": "티켓",
+    "search": "검색",
+    "contact": "문의",
+    "impressum": "법적 고지",
+    "language": "언어",
+    "theme": "Dark / Light",
+    "weather": "날씨"
+  },
+  "common": {
+    "loading": "불러오는 중…",
+    "error": "문제가 발생했습니다.",
+    "retry": "다시 시도",
+    "offline": "오프라인",
+    "lastUpdate": "기준: {{time}}",
+    "empty": "아직 콘텐츠가 없습니다.",
+    "close": "닫기",
+    "notFound": "찾을 수 없음"
+  },
+  "home": {
+    "now": "지금",
+    "upNext": "다음 순서",
+    "overview": "프로그램 안내",
+    "newsfeed": "소식",
+    "nextFavorite": "다음 즐겨찾기",
+    "video": "영상 보기",
+    "all": "전체"
+  },
+  "lineup": {
+    "title": "라인업",
+    "allGenres": "전체",
+    "headliner": "헤드라이너",
+    "noActs": "이 날에는 공연이 없습니다."
+  },
+  "timetable": {
+    "title": "타임테이블",
+    "grid": "그리드",
+    "list": "목록",
+    "favoritesOnly": "즐겨찾기만",
+    "now": "지금",
+    "clash": "시간 겹침",
+    "noSlots": "이 조건에 해당하는 공연이 없습니다.",
+    "allHidden": "모든 무대가 숨겨져 있습니다.",
+    "addPlan": "내 플랜에 추가",
+    "removePlan": "내 플랜에서 제거"
+  },
+  "favorites": {
+    "title": "내 플랜",
+    "empty": "아직 즐겨찾기가 없습니다. 아티스트 옆의 별을 탭하세요.",
+    "emptyTitle": "아직 즐겨찾기가 없습니다",
+    "explain": "라인업이나 타임테이블에서 아티스트 옆의 별을 탭하면 나만의 플랜에 추가됩니다. 모든 즐겨찾기가 여기 시간순으로 표시되며, 시간 겹침 경고와 캘린더용 .ics 내보내기도 지원합니다.",
+    "exportAll": "모든 일정을 캘린더에 저장",
+    "reminder": "알림(.ics)",
+    "clashWarning": "공연 중 하나 이상이 다른 즐겨찾기와 시간이 겹칩니다."
+  },
+  "news": {
+    "title": "소식",
+    "pinned": "고정됨",
+    "now": "지금: {{artist}} @ {{stage}}"
+  },
+  "info": {
+    "title": "안내",
+    "notFound": "안내 페이지를 찾을 수 없습니다."
+  },
+  "sponsors": {
+    "title": "스폰서",
+    "tier": {
+      "main": "Presented by",
+      "premium": "프리미엄 파트너",
+      "partner": "파트너",
+      "supporter": "서포터"
+    }
+  },
+  "tickets": {
+    "title": "티켓",
+    "open": "열기",
+    "shop": "티켓 샵으로"
+  },
+  "artist": {
+    "playtimes": "공연 시간",
+    "favorite": "즐겨찾기에 추가",
+    "favorited": "즐겨찾기됨",
+    "notFound": "아티스트를 찾을 수 없습니다."
+  },
+  "install": {
+    "cta": "오프라인에서도 쓸 수 있도록 앱을 설치하세요.",
+    "ios1": "홈 화면에 추가:",
+    "ios2": "공유 → “홈 화면에 추가”.",
+    "button": "설치",
+    "close": "닫기"
+  },
+  "weather": {
+    "title": "날씨",
+    "today": "오늘",
+    "tomorrow": "내일",
+    "dayAfter": "모레",
+    "todayShort": "오늘",
+    "tomorrowShort": "내일",
+    "now": "현재",
+    "updated": "업데이트됨",
+    "stale": "데이터가 오래되었을 수 있습니다",
+    "noData": "아직 데이터가 없습니다",
+    "section": {
+      "morning": "아침",
+      "noon": "낮",
+      "evening": "저녁",
+      "night": "밤"
+    }
+  },
+  "map": {
+    "title": "지도",
+    "all": "전체",
+    "noPois": "지도에 지점이 없습니다."
+  },
+  "search": {
+    "title": "검색",
+    "noResults": "“{{query}}”에 대한 결과가 없습니다."
+  },
+  "push": {
+    "noKey": "VAPID 공개 키가 설정되어 있지 않습니다.",
+    "denied": "알림이 허용되지 않았습니다.",
+    "saveFailed": "구독을 저장하지 못했습니다(HTTP {{status}}).",
+    "catInfo": "안내",
+    "catLineup": "라인업",
+    "catGeneral": "일반",
+    "catSafety": "안전",
+    "alwaysOn": "(항상 켜짐)",
+    "myPlan": "내 플랜",
+    "myPlanHint": "(공연 시작 전 알림)"
+  },
+  "poi": {
+    "stage": "무대",
+    "wc": "화장실",
+    "food": "음식",
+    "drink": "음료",
+    "firstaid": "응급 처치",
+    "atm": "ATM",
+    "info": "안내소",
+    "entrance": "입구",
+    "exit": "출구",
+    "camping": "캠핑",
+    "caravan": "카라반",
+    "cashless": "캐시리스",
+    "shuttle": "셔틀",
+    "merch": "굿즈",
+    "parking": "주차장",
+    "generic": "지점"
+  }
+}

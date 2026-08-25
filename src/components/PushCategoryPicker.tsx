@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   PUSH_CATEGORIES,
   getPushCategories,
@@ -8,15 +9,17 @@ import {
   type PushCategory,
 } from "@/lib/push";
 
-const CATEGORY_LABELS: Record<PushCategory, string> = {
-  info: "Infos",
-  lineup: "Line-Up",
-  general: "Allgemein",
+// Labels come from i18n (push.cat*) so the picker follows the app language.
+const CATEGORY_KEYS: Record<PushCategory, string> = {
+  info: "push.catInfo",
+  lineup: "push.catLineup",
+  general: "push.catGeneral",
 };
 
 // Push category selection (safety always gets through) + "My plan" reminders.
 // Used in the header bell popover.
 export function PushCategoryPicker() {
+  const { t } = useTranslation();
   const [cats, setCats] = useState<PushCategory[]>(getPushCategories);
   const [plan, setPlan] = useState<boolean>(getPlanEnabled);
 
@@ -42,12 +45,12 @@ export function PushCategoryPicker() {
             onChange={() => toggle(c)}
             className="h-4 w-4 accent-rid-accent"
           />
-          {CATEGORY_LABELS[c]}
+          {t(CATEGORY_KEYS[c])}
         </label>
       ))}
       <label className="flex items-center gap-2 text-sm text-rid-muted">
         <input type="checkbox" checked disabled className="h-4 w-4 accent-rid-accent" />
-        Sicherheit <span className="text-xs">(immer aktiv)</span>
+        {t("push.catSafety")} <span className="text-xs">{t("push.alwaysOn")}</span>
       </label>
       <label className="mt-1 flex items-center gap-2 border-t border-rid-border pt-2 text-sm">
         <input
@@ -56,7 +59,7 @@ export function PushCategoryPicker() {
           onChange={togglePlan}
           className="h-4 w-4 accent-rid-accent"
         />
-        Mein Plan <span className="text-xs text-rid-muted">(Erinnerung vor Konzertbeginn)</span>
+        {t("push.myPlan")} <span className="text-xs text-rid-muted">{t("push.myPlanHint")}</span>
       </label>
     </div>
   );

@@ -70,8 +70,10 @@ replace the content right in the CMS. Updates are one click in the CMS
   grid, ticket shop embedding.
 - **Full PWA**: installable (with built-in Android/iOS hints), offline-capable,
   automatic updates, content refresh in production without an app rebuild (~2 min).
-- **Dark/light theme** and selectable app language: **German, English, French,
-  Spanish**.
+- **Dark/light theme** and a selectable app language: **23 visitor languages**
+  (de, en, fr, es, it, nl, cs, pl, pt, fi, hu, sk, hr, da, sv, uk, ro, sl, tr,
+  pt-BR, zh-CN, ja-JP, ko-KR). Content (info pages, news, day labels, POIs, …)
+  can be maintained per language with an English/German fallback.
 - **Anonymous statistics** (optional): page views without user tracking, evaluated
   in the CMS.
 - **Mini CMS** (optional, PHP): news editor with scheduling & push, POI/category
@@ -177,8 +179,8 @@ Never prefix secrets (private VAPID key, CMS tokens) with `VITE_`.
   (dark and light theme), token structure in [`packages/tokens`](packages/tokens).
 - **Logo & icons**: `public/icons/` (SVG sources, `pnpm run gen-icons` produces the
   PWA PNGs), header logo and background artwork under `public/`.
-- **Copy**: app texts in all four languages under `src/i18n/`
-  (`de`/`en`/`fr`/`es`).
+- **Copy**: app texts for all 23 visitor languages under `src/i18n/`
+  (one JSON per language; the admin/CMS UI stays de/en/fr/es).
 
 ## Deployment (static hosting)
 

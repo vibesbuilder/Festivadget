@@ -1,0 +1,164 @@
+{
+  "nav": {
+    "home": "首页",
+    "lineup": "阵容",
+    "timetable": "节目表",
+    "myplan": "我的日程",
+    "map": "地图",
+    "more": "更多"
+  },
+  "more": {
+    "title": "更多",
+    "favorites": "我的节目表",
+    "news": "资讯",
+    "map": "地图",
+    "info": "信息",
+    "sponsors": "赞助商",
+    "tickets": "门票",
+    "search": "搜索",
+    "contact": "联系我们",
+    "impressum": "法律声明",
+    "language": "语言",
+    "theme": "Dark / Light",
+    "weather": "天气"
+  },
+  "common": {
+    "loading": "加载中…",
+    "error": "出了点问题。",
+    "retry": "重试",
+    "offline": "离线",
+    "lastUpdate": "更新于：{{time}}",
+    "empty": "暂无内容。",
+    "close": "关闭",
+    "notFound": "未找到"
+  },
+  "home": {
+    "now": "现在",
+    "upNext": "接下来",
+    "overview": "节目一览",
+    "newsfeed": "资讯",
+    "nextFavorite": "你的下一个收藏",
+    "video": "观看视频",
+    "all": "全部"
+  },
+  "lineup": {
+    "title": "阵容",
+    "allGenres": "全部",
+    "headliner": "压轴艺人",
+    "noActs": "当天没有演出。"
+  },
+  "timetable": {
+    "title": "节目表",
+    "grid": "网格",
+    "list": "列表",
+    "favoritesOnly": "仅收藏",
+    "now": "现在",
+    "clash": "时间冲突",
+    "noSlots": "此筛选条件下没有演出。",
+    "allHidden": "所有舞台均已隐藏。",
+    "addPlan": "加入我的日程",
+    "removePlan": "从我的日程移除"
+  },
+  "favorites": {
+    "title": "我的日程",
+    "empty": "还没有收藏。点击艺人旁边的星标。",
+    "emptyTitle": "还没有收藏",
+    "explain": "在阵容或节目表中点击艺人旁边的星标，即可将其加入你的个人日程。所有收藏会按时间顺序显示在这里——包括时间冲突提醒，并可导出 .ics 到你的日历。",
+    "exportAll": "将全部日程保存到日历",
+    "reminder": "提醒（.ics）",
+    "clashWarning": "至少有一场演出与另一个收藏时间冲突。"
+  },
+  "news": {
+    "title": "资讯",
+    "pinned": "置顶",
+    "now": "现在：{{artist}} @ {{stage}}"
+  },
+  "info": {
+    "title": "信息",
+    "notFound": "未找到该信息页。"
+  },
+  "sponsors": {
+    "title": "赞助商",
+    "tier": {
+      "main": "Presented by",
+      "premium": "高级合作伙伴",
+      "partner": "合作伙伴",
+      "supporter": "支持者"
+    }
+  },
+  "tickets": {
+    "title": "门票",
+    "open": "打开",
+    "shop": "前往购票商店"
+  },
+  "artist": {
+    "playtimes": "演出时间",
+    "favorite": "加入收藏",
+    "favorited": "已收藏",
+    "notFound": "未找到该艺人。"
+  },
+  "install": {
+    "cta": "安装应用以便离线使用。",
+    "ios1": "添加到主屏幕：",
+    "ios2": "分享 →“添加到主屏幕”。",
+    "button": "安装",
+    "close": "关闭"
+  },
+  "weather": {
+    "title": "天气",
+    "today": "今天",
+    "tomorrow": "明天",
+    "dayAfter": "后天",
+    "todayShort": "今天",
+    "tomorrowShort": "明天",
+    "now": "当前",
+    "updated": "已更新",
+    "stale": "数据可能已过期",
+    "noData": "暂无数据",
+    "section": {
+      "morning": "上午",
+      "noon": "中午",
+      "evening": "傍晚",
+      "night": "夜间"
+    }
+  },
+  "map": {
+    "title": "地图",
+    "all": "全部",
+    "noPois": "地图上没有地点。"
+  },
+  "search": {
+    "title": "搜索",
+    "noResults": "没有与“{{query}}”相关的结果。"
+  },
+  "push": {
+    "noKey": "未配置 VAPID 公钥。",
+    "denied": "通知未被允许。",
+    "saveFailed": "订阅保存失败（HTTP {{status}}）。",
+    "catInfo": "信息",
+    "catLineup": "阵容",
+    "catGeneral": "综合",
+    "catSafety": "安全",
+    "alwaysOn": "（始终开启）",
+    "myPlan": "我的日程",
+    "myPlanHint": "（演出开始前提醒）"
+  },
+  "poi": {
+    "stage": "舞台",
+    "wc": "洗手间",
+    "food": "餐饮",
+    "drink": "饮品",
+    "firstaid": "急救站",
+    "atm": "取款机",
+    "info": "咨询处",
+    "entrance": "入口",
+    "exit": "出口",
+    "camping": "露营区",
+    "caravan": "房车区",
+    "cashless": "无现金支付",
+    "shuttle": "接驳车",
+    "merch": "周边商品",
+    "parking": "停车场",
+    "generic": "地点"
+  }
+}

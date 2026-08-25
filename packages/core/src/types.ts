@@ -3,9 +3,9 @@
 // Alle Zeitstempel: ISO 8601 mit Offset (z. B. "2026-07-31T22:00:00+02:00").
 
 // Lokalisierbares Textfeld: einfacher String (einsprachig, kompatibel zum
-// Altbestand) ODER Sprach-Map. Auflösung in den Apps (Festivadget lt(),
+// Altbestand) ODER Sprach-Map (beliebige Besucher-Sprachcodes, z. B. it/pl/zh-CN). Auflösung in den Apps (Festivadget lt(),
 // CrewCare visitor-Helfer): Sprache -> en -> de -> erster Wert.
-export type LocalizedText = string | Partial<Record<"de" | "en" | "fr" | "es", string>>;
+export type LocalizedText = string | Partial<Record<string, string>>;
 
 export interface FestivalDay {
   id: string; // "fr" | "sa" | "so"

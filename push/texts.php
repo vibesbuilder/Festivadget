@@ -6,7 +6,19 @@
 
 declare(strict_types=1);
 
-const PUSH_LANGS = ['de', 'en', 'fr', 'es'];
+// All visitor languages (code => native display name). Single source for the
+// push layer, the subscribe endpoint and the CMS default-language dropdown.
+// The admin/CMS UI itself stays four-language (de/en/fr/es).
+const FESTIVADGET_LANGS = [
+    'de' => 'Deutsch', 'en' => 'English', 'fr' => 'Français', 'es' => 'Español',
+    'it' => 'Italiano', 'nl' => 'Nederlands', 'cs' => 'Čeština', 'pl' => 'Polski',
+    'pt' => 'Português', 'fi' => 'Suomi', 'hu' => 'Magyar', 'sk' => 'Slovenčina',
+    'hr' => 'Hrvatski', 'da' => 'Dansk', 'sv' => 'Svenska', 'uk' => 'Українська',
+    'ro' => 'Română', 'sl' => 'Slovenščina', 'tr' => 'Türkçe',
+    'pt-BR' => 'Português (Brasil)', 'zh-CN' => '简体中文', 'ja-JP' => '日本語',
+    'ko-KR' => '한국어',
+];
+define('PUSH_LANGS', array_keys(FESTIVADGET_LANGS));
 
 const PUSH_TEXTS = [
     'en' => [
@@ -24,6 +36,25 @@ const PUSH_TEXTS = [
         'Gleich: {name}' => 'Pronto: {name}',
         'Neuigkeit'      => 'Novedad',
     ],
+    'it' => ['Gleich live' => 'Tra poco dal vivo', 'Gleich: {name}' => 'A breve: {name}', 'Neuigkeit' => 'Novità'],
+    'nl' => ['Gleich live' => 'Zo meteen live', 'Gleich: {name}' => 'Zo meteen: {name}', 'Neuigkeit' => 'Nieuws'],
+    'cs' => ['Gleich live' => 'Brzy naživo', 'Gleich: {name}' => 'Brzy: {name}', 'Neuigkeit' => 'Novinka'],
+    'pl' => ['Gleich live' => 'Wkrótce na żywo', 'Gleich: {name}' => 'Wkrótce: {name}', 'Neuigkeit' => 'Aktualność'],
+    'pt' => ['Gleich live' => 'Em breve ao vivo', 'Gleich: {name}' => 'A seguir: {name}', 'Neuigkeit' => 'Novidade'],
+    'fi' => ['Gleich live' => 'Pian livenä', 'Gleich: {name}' => 'Seuraavaksi: {name}', 'Neuigkeit' => 'Uutinen'],
+    'hu' => ['Gleich live' => 'Hamarosan élőben', 'Gleich: {name}' => 'Hamarosan: {name}', 'Neuigkeit' => 'Hír'],
+    'sk' => ['Gleich live' => 'Čoskoro naživo', 'Gleich: {name}' => 'Čoskoro: {name}', 'Neuigkeit' => 'Novinka'],
+    'hr' => ['Gleich live' => 'Uskoro uživo', 'Gleich: {name}' => 'Uskoro: {name}', 'Neuigkeit' => 'Novost'],
+    'da' => ['Gleich live' => 'Snart live', 'Gleich: {name}' => 'Snart: {name}', 'Neuigkeit' => 'Nyhed'],
+    'sv' => ['Gleich live' => 'Snart live', 'Gleich: {name}' => 'Strax: {name}', 'Neuigkeit' => 'Nyhet'],
+    'uk' => ['Gleich live' => 'Скоро наживо', 'Gleich: {name}' => 'Скоро: {name}', 'Neuigkeit' => 'Новина'],
+    'ro' => ['Gleich live' => 'În curând live', 'Gleich: {name}' => 'Urmează: {name}', 'Neuigkeit' => 'Noutate'],
+    'sl' => ['Gleich live' => 'Kmalu v živo', 'Gleich: {name}' => 'Kmalu: {name}', 'Neuigkeit' => 'Novica'],
+    'tr' => ['Gleich live' => 'Birazdan sahnede', 'Gleich: {name}' => 'Sırada: {name}', 'Neuigkeit' => 'Haber'],
+    'pt-BR' => ['Gleich live' => 'Em breve ao vivo', 'Gleich: {name}' => 'A seguir: {name}', 'Neuigkeit' => 'Novidade'],
+    'zh-CN' => ['Gleich live' => '即将开演', 'Gleich: {name}' => '即将登场：{name}', 'Neuigkeit' => '新消息'],
+    'ja-JP' => ['Gleich live' => 'まもなく開演', 'Gleich: {name}' => 'まもなく：{name}', 'Neuigkeit' => 'お知らせ'],
+    'ko-KR' => ['Gleich live' => '곧 공연 시작', 'Gleich: {name}' => '곧 시작: {name}', 'Neuigkeit' => '새 소식'],
 ];
 
 /** Translate a generated push text (German is the key language, en fallback). */
@@ -49,6 +80,11 @@ function push_localize($value, string $lang): string
     foreach ([$lang, 'en', 'de', 'fr', 'es'] as $candidate) {
         if (!empty($value[$candidate])) {
             return (string) $value[$candidate];
+        }
+    }
+    foreach ($value as $text) {
+        if (!empty($text)) {
+            return (string) $text;
         }
     }
     return '';

@@ -1,0 +1,164 @@
+{
+  "nav": {
+    "home": "Ana sayfa",
+    "lineup": "Line-up",
+    "timetable": "Program",
+    "myplan": "Planım",
+    "map": "Harita",
+    "more": "Daha fazla"
+  },
+  "more": {
+    "title": "Daha fazla",
+    "favorites": "Programım",
+    "news": "Haberler",
+    "map": "Harita",
+    "info": "Bilgiler",
+    "sponsors": "Sponsorlar",
+    "tickets": "Biletler",
+    "search": "Ara",
+    "contact": "İletişim",
+    "impressum": "Künye",
+    "language": "Dil",
+    "theme": "Dark / Light",
+    "weather": "Hava durumu"
+  },
+  "common": {
+    "loading": "Yükleniyor …",
+    "error": "Bir şeyler ters gitti.",
+    "retry": "Tekrar dene",
+    "offline": "Çevrimdışı",
+    "lastUpdate": "Durum: {{time}}",
+    "empty": "Henüz içerik yok.",
+    "close": "Kapat",
+    "notFound": "Bulunamadı"
+  },
+  "home": {
+    "now": "Şimdi",
+    "upNext": "Sırada",
+    "overview": "Program özeti",
+    "newsfeed": "Haberler",
+    "nextFavorite": "Sıradaki favorin",
+    "video": "Videoyu izle",
+    "all": "Tümü"
+  },
+  "lineup": {
+    "title": "Line-up",
+    "allGenres": "Tümü",
+    "headliner": "Headliner",
+    "noActs": "Bugün sahne alan yok."
+  },
+  "timetable": {
+    "title": "Program",
+    "grid": "Izgara",
+    "list": "Liste",
+    "favoritesOnly": "Sadece favoriler",
+    "now": "Şimdi",
+    "clash": "Çakışma",
+    "noSlots": "Bu seçim için gösterim yok.",
+    "allHidden": "Tüm sahneler gizlendi.",
+    "addPlan": "Planıma ekle",
+    "removePlan": "Planımdan çıkar"
+  },
+  "favorites": {
+    "title": "Planım",
+    "empty": "Henüz favori yok. Bir sanatçının yanındaki yıldıza dokun.",
+    "emptyTitle": "Henüz favori yok",
+    "explain": "Line-up'ta veya programda bir sanatçının yanındaki yıldıza dokunarak onu kişisel planına ekle. Tüm favorilerin burada kronolojik olarak görünür – çakışma uyarısı ve takvimin için .ics dışa aktarımıyla birlikte.",
+    "exportAll": "Tüm tarihleri takvime kaydet",
+    "reminder": "Hatırlatma (.ics)",
+    "clashWarning": "En az bir gösterim başka bir favorinle çakışıyor."
+  },
+  "news": {
+    "title": "Haberler",
+    "pinned": "Sabitlendi",
+    "now": "Şimdi: {{artist}} @ {{stage}}"
+  },
+  "info": {
+    "title": "Bilgiler",
+    "notFound": "Bilgi sayfası bulunamadı."
+  },
+  "sponsors": {
+    "title": "Sponsorlar",
+    "tier": {
+      "main": "Presented by",
+      "premium": "Premium partner",
+      "partner": "Partner",
+      "supporter": "Destekçi"
+    }
+  },
+  "tickets": {
+    "title": "Biletler",
+    "open": "Aç",
+    "shop": "Bilet mağazasına git"
+  },
+  "artist": {
+    "playtimes": "Stage Time",
+    "favorite": "Favorilere ekle",
+    "favorited": "Favori",
+    "notFound": "Sanatçı bulunamadı."
+  },
+  "install": {
+    "cta": "Çevrimdışı kullanım için uygulamayı yükle.",
+    "ios1": "Ana ekrana ekle:",
+    "ios2": "Paylaş → „Ana ekrana ekle“.",
+    "button": "Yükle",
+    "close": "Kapat"
+  },
+  "weather": {
+    "title": "Hava durumu",
+    "today": "Bugün",
+    "tomorrow": "Yarın",
+    "dayAfter": "Öbür gün",
+    "todayShort": "bugün",
+    "tomorrowShort": "yarın",
+    "now": "şu an",
+    "updated": "Güncellendi",
+    "stale": "veriler güncel olmayabilir",
+    "noData": "henüz veri yok",
+    "section": {
+      "morning": "Sabah",
+      "noon": "Öğlen",
+      "evening": "Akşam",
+      "night": "Gece"
+    }
+  },
+  "map": {
+    "title": "Harita",
+    "all": "Tümü",
+    "noPois": "Haritada nokta yok."
+  },
+  "search": {
+    "title": "Ara",
+    "noResults": "„{{query}}“ için sonuç yok."
+  },
+  "push": {
+    "noKey": "Genel VAPID anahtarı yapılandırılmamış.",
+    "denied": "Bildirimlere izin verilmedi.",
+    "saveFailed": "Abonelik kaydedilemedi (HTTP {{status}}).",
+    "catInfo": "Bilgiler",
+    "catLineup": "Line-up",
+    "catGeneral": "Genel",
+    "catSafety": "Güvenlik",
+    "alwaysOn": "(her zaman açık)",
+    "myPlan": "Planım",
+    "myPlanHint": "(konser öncesi hatırlatma)"
+  },
+  "poi": {
+    "stage": "Sahne",
+    "wc": "WC",
+    "food": "Yemek",
+    "drink": "İçecekler",
+    "firstaid": "İlk yardım",
+    "atm": "ATM",
+    "info": "Bilgi",
+    "entrance": "Giriş",
+    "exit": "Çıkış",
+    "camping": "Kamp",
+    "caravan": "Karavan",
+    "cashless": "Cashless",
+    "shuttle": "Servis",
+    "merch": "Merch",
+    "parking": "Otopark",
+    "generic": "Nokta"
+  }
+}

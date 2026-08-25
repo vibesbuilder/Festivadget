@@ -1,0 +1,164 @@
+{
+  "nav": {
+    "home": "Start",
+    "lineup": "Line-up",
+    "timetable": "Program",
+    "myplan": "Mój plan",
+    "map": "Mapa",
+    "more": "Więcej"
+  },
+  "more": {
+    "title": "Więcej",
+    "favorites": "Mój program",
+    "news": "Aktualności",
+    "map": "Mapa",
+    "info": "Informacje",
+    "sponsors": "Sponsorzy",
+    "tickets": "Bilety",
+    "search": "Szukaj",
+    "contact": "Kontakt",
+    "impressum": "Nota prawna",
+    "language": "Język",
+    "theme": "Dark / Light",
+    "weather": "Pogoda"
+  },
+  "common": {
+    "loading": "Ładowanie …",
+    "error": "Coś poszło nie tak.",
+    "retry": "Spróbuj ponownie",
+    "offline": "Offline",
+    "lastUpdate": "Stan: {{time}}",
+    "empty": "Brak treści.",
+    "close": "Zamknij",
+    "notFound": "Nie znaleziono"
+  },
+  "home": {
+    "now": "Teraz",
+    "upNext": "Następnie",
+    "overview": "Przegląd programu",
+    "newsfeed": "Aktualności",
+    "nextFavorite": "Twój następny ulubieniec",
+    "video": "Obejrzyj wideo",
+    "all": "Wszystkie"
+  },
+  "lineup": {
+    "title": "Line-up",
+    "allGenres": "Wszystkie",
+    "headliner": "Headliner",
+    "noActs": "Brak występów tego dnia."
+  },
+  "timetable": {
+    "title": "Program",
+    "grid": "Siatka",
+    "list": "Lista",
+    "favoritesOnly": "Tylko ulubione",
+    "now": "Teraz",
+    "clash": "Kolizja",
+    "noSlots": "Brak slotów dla tego wyboru.",
+    "allHidden": "Wszystkie sceny ukryte.",
+    "addPlan": "Dodaj do mojego planu",
+    "removePlan": "Usuń z mojego planu"
+  },
+  "favorites": {
+    "title": "Mój plan",
+    "empty": "Brak ulubionych. Stuknij gwiazdkę przy wykonawcy.",
+    "emptyTitle": "Brak ulubionych",
+    "explain": "Stuknij gwiazdkę przy wykonawcy w line-upie lub w programie, aby dodać go do swojego osobistego planu. Wszyscy Twoi ulubieńcy pojawią się tutaj chronologicznie – z ostrzeżeniem o kolizjach i eksportem .ics do kalendarza.",
+    "exportAll": "Zapisz wszystkie terminy w kalendarzu",
+    "reminder": "Przypomnienie (.ics)",
+    "clashWarning": "Co najmniej jeden punkt programu koliduje z innym ulubionym."
+  },
+  "news": {
+    "title": "Aktualności",
+    "pinned": "Przypięte",
+    "now": "Teraz: {{artist}} @ {{stage}}"
+  },
+  "info": {
+    "title": "Informacje",
+    "notFound": "Nie znaleziono strony z informacjami."
+  },
+  "sponsors": {
+    "title": "Sponsorzy",
+    "tier": {
+      "main": "Presented by",
+      "premium": "Partner premium",
+      "partner": "Partner",
+      "supporter": "Wspierający"
+    }
+  },
+  "tickets": {
+    "title": "Bilety",
+    "open": "Otwórz",
+    "shop": "Do sklepu z biletami"
+  },
+  "artist": {
+    "playtimes": "Stage Time",
+    "favorite": "Dodaj do ulubionych",
+    "favorited": "Ulubione",
+    "notFound": "Nie znaleziono wykonawcy."
+  },
+  "install": {
+    "cta": "Zainstaluj aplikację, aby korzystać offline.",
+    "ios1": "Do ekranu początkowego:",
+    "ios2": "Udostępnij → „Do ekranu początkowego”.",
+    "button": "Zainstaluj",
+    "close": "Zamknij"
+  },
+  "weather": {
+    "title": "Pogoda",
+    "today": "Dziś",
+    "tomorrow": "Jutro",
+    "dayAfter": "Pojutrze",
+    "todayShort": "dziś",
+    "tomorrowShort": "jutro",
+    "now": "teraz",
+    "updated": "Zaktualizowano",
+    "stale": "dane mogą być nieaktualne",
+    "noData": "brak danych",
+    "section": {
+      "morning": "Rano",
+      "noon": "Południe",
+      "evening": "Wieczór",
+      "night": "Noc"
+    }
+  },
+  "map": {
+    "title": "Mapa",
+    "all": "Wszystkie",
+    "noPois": "Brak punktów na mapie."
+  },
+  "search": {
+    "title": "Szukaj",
+    "noResults": "Brak wyników dla „{{query}}”."
+  },
+  "push": {
+    "noKey": "Nie skonfigurowano publicznego klucza VAPID.",
+    "denied": "Powiadomienia niedozwolone.",
+    "saveFailed": "Nie udało się zapisać subskrypcji (HTTP {{status}}).",
+    "catInfo": "Informacje",
+    "catLineup": "Line-up",
+    "catGeneral": "Ogólne",
+    "catSafety": "Bezpieczeństwo",
+    "alwaysOn": "(zawsze aktywne)",
+    "myPlan": "Mój plan",
+    "myPlanHint": "(przypomnienie przed koncertem)"
+  },
+  "poi": {
+    "stage": "Scena",
+    "wc": "WC",
+    "food": "Jedzenie",
+    "drink": "Napoje",
+    "firstaid": "Pierwsza pomoc",
+    "atm": "Bankomat",
+    "info": "Info",
+    "entrance": "Wejście",
+    "exit": "Wyjście",
+    "camping": "Camping",
+    "caravan": "Kamper",
+    "cashless": "Cashless",
+    "shuttle": "Shuttle",
+    "merch": "Merch",
+    "parking": "Parking",
+    "generic": "Punkt"
+  }
+}

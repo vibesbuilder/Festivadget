@@ -1,0 +1,164 @@
+{
+  "nav": {
+    "home": "Etusivu",
+    "lineup": "Esiintyjät",
+    "timetable": "Aikataulu",
+    "myplan": "Oma ohjelma",
+    "map": "Kartta",
+    "more": "Lisää"
+  },
+  "more": {
+    "title": "Lisää",
+    "favorites": "Oma aikataulu",
+    "news": "Uutiset",
+    "map": "Kartta",
+    "info": "Tietoa",
+    "sponsors": "Sponsorit",
+    "tickets": "Liput",
+    "search": "Haku",
+    "contact": "Yhteystiedot",
+    "impressum": "Julkaisutiedot",
+    "language": "Kieli",
+    "theme": "Dark / Light",
+    "weather": "Sää"
+  },
+  "common": {
+    "loading": "Ladataan …",
+    "error": "Jokin meni pieleen.",
+    "retry": "Yritä uudelleen",
+    "offline": "Offline",
+    "lastUpdate": "Tilanne: {{time}}",
+    "empty": "Ei vielä sisältöä.",
+    "close": "Sulje",
+    "notFound": "Ei löytynyt"
+  },
+  "home": {
+    "now": "Nyt",
+    "upNext": "Seuraavaksi",
+    "overview": "Ohjelma",
+    "newsfeed": "Uutiset",
+    "nextFavorite": "Seuraava suosikkisi",
+    "video": "Katso video",
+    "all": "Kaikki"
+  },
+  "lineup": {
+    "title": "Esiintyjät",
+    "allGenres": "Kaikki",
+    "headliner": "Pääesiintyjä",
+    "noActs": "Ei esiintyjiä tänä päivänä."
+  },
+  "timetable": {
+    "title": "Aikataulu",
+    "grid": "Ruudukko",
+    "list": "Lista",
+    "favoritesOnly": "Vain suosikit",
+    "now": "Nyt",
+    "clash": "Päällekkäisyys",
+    "noSlots": "Ei esityksiä tälle valinnalle.",
+    "allHidden": "Kaikki lavat piilotettu.",
+    "addPlan": "Lisää omaan ohjelmaan",
+    "removePlan": "Poista omasta ohjelmasta"
+  },
+  "favorites": {
+    "title": "Oma ohjelma",
+    "empty": "Ei vielä suosikkeja. Napauta tähteä esiintyjän kohdalla.",
+    "emptyTitle": "Ei vielä suosikkeja",
+    "explain": "Napauta tähteä esiintyjän kohdalla esiintyjälistassa tai aikataulussa lisätäksesi sen omaan ohjelmaasi. Kaikki suosikkisi näkyvät täällä aikajärjestyksessä – mukana varoitus päällekkäisyyksistä ja .ics-vienti kalenteriisi.",
+    "exportAll": "Tallenna kaikki kalenteriin",
+    "reminder": "Muistutus (.ics)",
+    "clashWarning": "Vähintään yksi esitys on päällekkäin toisen suosikin kanssa."
+  },
+  "news": {
+    "title": "Uutiset",
+    "pinned": "Kiinnitetty",
+    "now": "Nyt: {{artist}} @ {{stage}}"
+  },
+  "info": {
+    "title": "Tietoa",
+    "notFound": "Tietosivua ei löytynyt."
+  },
+  "sponsors": {
+    "title": "Sponsorit",
+    "tier": {
+      "main": "Presented by",
+      "premium": "Premium-kumppani",
+      "partner": "Kumppani",
+      "supporter": "Tukija"
+    }
+  },
+  "tickets": {
+    "title": "Liput",
+    "open": "Avaa",
+    "shop": "Lippukauppaan"
+  },
+  "artist": {
+    "playtimes": "Stage Time",
+    "favorite": "Lisää suosikkeihin",
+    "favorited": "Suosikki",
+    "notFound": "Esiintyjää ei löytynyt."
+  },
+  "install": {
+    "cta": "Asenna sovellus offline-käyttöä varten.",
+    "ios1": "Lisää Koti-valikkoon:",
+    "ios2": "Jaa → ”Lisää Koti-valikkoon”.",
+    "button": "Asenna",
+    "close": "Sulje"
+  },
+  "weather": {
+    "title": "Sää",
+    "today": "Tänään",
+    "tomorrow": "Huomenna",
+    "dayAfter": "Ylihuomenna",
+    "todayShort": "tänään",
+    "tomorrowShort": "huomenna",
+    "now": "nyt",
+    "updated": "Päivitetty",
+    "stale": "tiedot voivat olla vanhentuneita",
+    "noData": "ei vielä tietoja",
+    "section": {
+      "morning": "Aamu",
+      "noon": "Keskipäivä",
+      "evening": "Ilta",
+      "night": "Yö"
+    }
+  },
+  "map": {
+    "title": "Kartta",
+    "all": "Kaikki",
+    "noPois": "Ei pisteitä kartalla."
+  },
+  "search": {
+    "title": "Haku",
+    "noResults": "Ei tuloksia haulle ”{{query}}”."
+  },
+  "push": {
+    "noKey": "Julkista VAPID-avainta ei ole määritetty.",
+    "denied": "Ilmoitukset eivät ole sallittuja.",
+    "saveFailed": "Tilausta ei voitu tallentaa (HTTP {{status}}).",
+    "catInfo": "Tietoa",
+    "catLineup": "Esiintyjät",
+    "catGeneral": "Yleistä",
+    "catSafety": "Turvallisuus",
+    "alwaysOn": "(aina käytössä)",
+    "myPlan": "Oma ohjelma",
+    "myPlanHint": "(muistutus ennen keikkaa)"
+  },
+  "poi": {
+    "stage": "Lava",
+    "wc": "WC",
+    "food": "Ruoka",
+    "drink": "Juomat",
+    "firstaid": "Ensiapu",
+    "atm": "Pankkiautomaatti",
+    "info": "Info",
+    "entrance": "Sisäänkäynti",
+    "exit": "Uloskäynti",
+    "camping": "Leirintä",
+    "caravan": "Asuntovaunu",
+    "cashless": "Cashless",
+    "shuttle": "Shuttle",
+    "merch": "Merch",
+    "parking": "Pysäköinti",
+    "generic": "Piste"
+  }
+}

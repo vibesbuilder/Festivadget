@@ -1,0 +1,164 @@
+{
+  "nav": {
+    "home": "Kezdőlap",
+    "lineup": "Fellépők",
+    "timetable": "Menetrend",
+    "myplan": "Saját terv",
+    "map": "Térkép",
+    "more": "Továbbiak"
+  },
+  "more": {
+    "title": "Továbbiak",
+    "favorites": "Saját menetrend",
+    "news": "Hírek",
+    "map": "Térkép",
+    "info": "Információk",
+    "sponsors": "Szponzorok",
+    "tickets": "Jegyek",
+    "search": "Keresés",
+    "contact": "Kapcsolat",
+    "impressum": "Impresszum",
+    "language": "Nyelv",
+    "theme": "Dark / Light",
+    "weather": "Időjárás"
+  },
+  "common": {
+    "loading": "Betöltés …",
+    "error": "Valami hiba történt.",
+    "retry": "Próbáld újra",
+    "offline": "Offline",
+    "lastUpdate": "Állapot: {{time}}",
+    "empty": "Még nincs tartalom.",
+    "close": "Bezárás",
+    "notFound": "Nem található"
+  },
+  "home": {
+    "now": "Most",
+    "upNext": "Következik",
+    "overview": "Programáttekintés",
+    "newsfeed": "Hírek",
+    "nextFavorite": "A következő kedvenced",
+    "video": "Videó megtekintése",
+    "all": "Összes"
+  },
+  "lineup": {
+    "title": "Fellépők",
+    "allGenres": "Összes",
+    "headliner": "Headliner",
+    "noActs": "Ezen a napon nincs fellépő."
+  },
+  "timetable": {
+    "title": "Menetrend",
+    "grid": "Rács",
+    "list": "Lista",
+    "favoritesOnly": "Csak kedvencek",
+    "now": "Most",
+    "clash": "Ütközés",
+    "noSlots": "Nincs program ehhez a kiválasztáshoz.",
+    "allHidden": "Minden színpad elrejtve.",
+    "addPlan": "Hozzáadás a saját tervhez",
+    "removePlan": "Eltávolítás a saját tervből"
+  },
+  "favorites": {
+    "title": "Saját terv",
+    "empty": "Még nincsenek kedvencek. Koppints a csillagra egy fellépőnél.",
+    "emptyTitle": "Még nincsenek kedvencek",
+    "explain": "Koppints a csillagra egy fellépőnél a fellépőlistában vagy a menetrendben, hogy hozzáadd a saját tervedhez. Minden kedvenced itt jelenik meg időrendben – ütközési figyelmeztetéssel és .ics-exporttal a naptáradba.",
+    "exportAll": "Összes időpont mentése a naptárba",
+    "reminder": "Emlékeztető (.ics)",
+    "clashWarning": "Legalább egy programpont ütközik egy másik kedvenceddel."
+  },
+  "news": {
+    "title": "Hírek",
+    "pinned": "Kitűzve",
+    "now": "Most: {{artist}} @ {{stage}}"
+  },
+  "info": {
+    "title": "Információk",
+    "notFound": "Az információs oldal nem található."
+  },
+  "sponsors": {
+    "title": "Szponzorok",
+    "tier": {
+      "main": "Presented by",
+      "premium": "Prémium partner",
+      "partner": "Partner",
+      "supporter": "Támogató"
+    }
+  },
+  "tickets": {
+    "title": "Jegyek",
+    "open": "Megnyitás",
+    "shop": "A jegyboltba"
+  },
+  "artist": {
+    "playtimes": "Stage Time",
+    "favorite": "Hozzáadás a kedvencekhez",
+    "favorited": "Kedvenc",
+    "notFound": "A fellépő nem található."
+  },
+  "install": {
+    "cta": "Telepítsd az appot offline használathoz.",
+    "ios1": "A kezdőképernyőre:",
+    "ios2": "Megosztás → „Hozzáadás a kezdőképernyőhöz”.",
+    "button": "Telepítés",
+    "close": "Bezárás"
+  },
+  "weather": {
+    "title": "Időjárás",
+    "today": "Ma",
+    "tomorrow": "Holnap",
+    "dayAfter": "Holnapután",
+    "todayShort": "ma",
+    "tomorrowShort": "holnap",
+    "now": "most",
+    "updated": "Frissítve",
+    "stale": "az adatok elavultak lehetnek",
+    "noData": "még nincs adat",
+    "section": {
+      "morning": "Reggel",
+      "noon": "Délben",
+      "evening": "Este",
+      "night": "Éjjel"
+    }
+  },
+  "map": {
+    "title": "Térkép",
+    "all": "Összes",
+    "noPois": "Nincsenek pontok a térképen."
+  },
+  "search": {
+    "title": "Keresés",
+    "noResults": "Nincs találat erre: „{{query}}”."
+  },
+  "push": {
+    "noKey": "Nincs beállítva nyilvános VAPID-kulcs.",
+    "denied": "Az értesítések nem engedélyezettek.",
+    "saveFailed": "A feliratkozást nem sikerült menteni (HTTP {{status}}).",
+    "catInfo": "Információk",
+    "catLineup": "Fellépők",
+    "catGeneral": "Általános",
+    "catSafety": "Biztonság",
+    "alwaysOn": "(mindig aktív)",
+    "myPlan": "Saját terv",
+    "myPlanHint": "(emlékeztető a koncert előtt)"
+  },
+  "poi": {
+    "stage": "Színpad",
+    "wc": "WC",
+    "food": "Étel",
+    "drink": "Italok",
+    "firstaid": "Elsősegély",
+    "atm": "Bankautomata",
+    "info": "Infó",
+    "entrance": "Bejárat",
+    "exit": "Kijárat",
+    "camping": "Kemping",
+    "caravan": "Lakókocsi",
+    "cashless": "Cashless",
+    "shuttle": "Shuttle",
+    "merch": "Merch",
+    "parking": "Parkoló",
+    "generic": "Pont"
+  }
+}

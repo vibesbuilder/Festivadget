@@ -5,6 +5,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/texts.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -50,7 +51,7 @@ if ($action === 'subscribe') {
     // App language of the subscription (drives the language of the push texts).
     // Missing field (old client) -> NULL = instance default.
     $lang = null;
-    if (in_array((string) ($body['lang'] ?? ''), ['de', 'en', 'fr', 'es'], true)) {
+    if (in_array((string) ($body['lang'] ?? ''), PUSH_LANGS, true)) {
         $lang = (string) $body['lang'];
     }
 

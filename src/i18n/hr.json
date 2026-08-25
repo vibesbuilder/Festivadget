@@ -1,0 +1,164 @@
+{
+  "nav": {
+    "home": "Početna",
+    "lineup": "Line-up",
+    "timetable": "Raspored",
+    "myplan": "Moj plan",
+    "map": "Karta",
+    "more": "Više"
+  },
+  "more": {
+    "title": "Više",
+    "favorites": "Moj raspored",
+    "news": "Novosti",
+    "map": "Karta",
+    "info": "Informacije",
+    "sponsors": "Sponzori",
+    "tickets": "Ulaznice",
+    "search": "Pretraga",
+    "contact": "Kontakt",
+    "impressum": "Impresum",
+    "language": "Jezik",
+    "theme": "Dark / Light",
+    "weather": "Vrijeme"
+  },
+  "common": {
+    "loading": "Učitavanje …",
+    "error": "Nešto je pošlo po zlu.",
+    "retry": "Pokušaj ponovno",
+    "offline": "Offline",
+    "lastUpdate": "Stanje: {{time}}",
+    "empty": "Još nema sadržaja.",
+    "close": "Zatvori",
+    "notFound": "Nije pronađeno"
+  },
+  "home": {
+    "now": "Sada",
+    "upNext": "Slijedi",
+    "overview": "Pregled programa",
+    "newsfeed": "Novosti",
+    "nextFavorite": "Tvoj sljedeći favorit",
+    "video": "Pogledaj video",
+    "all": "Sve"
+  },
+  "lineup": {
+    "title": "Line-up",
+    "allGenres": "Sve",
+    "headliner": "Headliner",
+    "noActs": "Nema nastupa ovog dana."
+  },
+  "timetable": {
+    "title": "Raspored",
+    "grid": "Mreža",
+    "list": "Popis",
+    "favoritesOnly": "Samo favoriti",
+    "now": "Sada",
+    "clash": "Preklapanje",
+    "noSlots": "Nema termina za ovaj odabir.",
+    "allHidden": "Sve pozornice skrivene.",
+    "addPlan": "Dodaj u moj plan",
+    "removePlan": "Ukloni iz mog plana"
+  },
+  "favorites": {
+    "title": "Moj plan",
+    "empty": "Još nema favorita. Dodirni zvjezdicu kod izvođača.",
+    "emptyTitle": "Još nema favorita",
+    "explain": "Dodirni zvjezdicu kod izvođača u line-upu ili rasporedu kako bi ga dodao u svoj osobni plan. Svi tvoji favoriti pojavit će se ovdje kronološki – uz upozorenje na preklapanja i .ics-izvoz za tvoj kalendar.",
+    "exportAll": "Spremi sve termine u kalendar",
+    "reminder": "Podsjetnik (.ics)",
+    "clashWarning": "Najmanje jedan nastup preklapa se s drugim favoritom."
+  },
+  "news": {
+    "title": "Novosti",
+    "pinned": "Prikvačeno",
+    "now": "Sada: {{artist}} @ {{stage}}"
+  },
+  "info": {
+    "title": "Informacije",
+    "notFound": "Stranica s informacijama nije pronađena."
+  },
+  "sponsors": {
+    "title": "Sponzori",
+    "tier": {
+      "main": "Presented by",
+      "premium": "Premium partner",
+      "partner": "Partner",
+      "supporter": "Podupiratelj"
+    }
+  },
+  "tickets": {
+    "title": "Ulaznice",
+    "open": "Otvori",
+    "shop": "U trgovinu ulaznica"
+  },
+  "artist": {
+    "playtimes": "Stage Time",
+    "favorite": "Dodaj u favorite",
+    "favorited": "Favorit",
+    "notFound": "Izvođač nije pronađen."
+  },
+  "install": {
+    "cta": "Instaliraj aplikaciju za offline korištenje.",
+    "ios1": "Na početni zaslon:",
+    "ios2": "Dijeli → „Dodaj na početni zaslon“.",
+    "button": "Instaliraj",
+    "close": "Zatvori"
+  },
+  "weather": {
+    "title": "Vrijeme",
+    "today": "Danas",
+    "tomorrow": "Sutra",
+    "dayAfter": "Prekosutra",
+    "todayShort": "danas",
+    "tomorrowShort": "sutra",
+    "now": "trenutno",
+    "updated": "Ažurirano",
+    "stale": "podaci su možda zastarjeli",
+    "noData": "još nema podataka",
+    "section": {
+      "morning": "Ujutro",
+      "noon": "Podne",
+      "evening": "Navečer",
+      "night": "Noću"
+    }
+  },
+  "map": {
+    "title": "Karta",
+    "all": "Sve",
+    "noPois": "Nema točaka na karti."
+  },
+  "search": {
+    "title": "Pretraga",
+    "noResults": "Nema rezultata za „{{query}}“."
+  },
+  "push": {
+    "noKey": "Javni VAPID ključ nije konfiguriran.",
+    "denied": "Obavijesti nisu dopuštene.",
+    "saveFailed": "Pretplatu nije bilo moguće spremiti (HTTP {{status}}).",
+    "catInfo": "Informacije",
+    "catLineup": "Line-up",
+    "catGeneral": "Općenito",
+    "catSafety": "Sigurnost",
+    "alwaysOn": "(uvijek aktivno)",
+    "myPlan": "Moj plan",
+    "myPlanHint": "(podsjetnik prije koncerta)"
+  },
+  "poi": {
+    "stage": "Pozornica",
+    "wc": "WC",
+    "food": "Hrana",
+    "drink": "Pića",
+    "firstaid": "Prva pomoć",
+    "atm": "Bankomat",
+    "info": "Info",
+    "entrance": "Ulaz",
+    "exit": "Izlaz",
+    "camping": "Kamp",
+    "caravan": "Kamp-kućica",
+    "cashless": "Cashless",
+    "shuttle": "Shuttle",
+    "merch": "Merch",
+    "parking": "Parking",
+    "generic": "Točka"
+  }
+}

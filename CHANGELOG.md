@@ -5,7 +5,20 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.0.0/), Versionier
 
 ## [Unreleased]
 
+### Added
+- **19 neue Besucher-Sprachen** (insgesamt 23): Italienisch, Niederländisch,
+  Tschechisch, Polnisch, Portugiesisch, Finnisch, Ungarisch, Slowakisch,
+  Kroatisch, Dänisch, Schwedisch, Ukrainisch, Rumänisch, Slowenisch, Türkisch,
+  Portugiesisch (Brasilien), Chinesisch (vereinfacht), Japanisch, Koreanisch.
+  Umschaltbar unter „Mehr", inkl. Datumsformaten, Push-Kurztexten und
+  CMS-Standard-Sprache-Auswahl; Admin-UI/CMS bleibt viersprachig (de/en/fr/es).
+- Inhalts-Sprach-Maps akzeptieren beliebige Besucher-Sprachcodes; die
+  CMS-Editoren zeigen zusätzliche Sprachen mit vorhandenem Inhalt an und
+  erhalten sie beim Speichern.
+
 ### Fixed
+- Push-Kategorien-Auswahl (Glocke) war fest deutsch beschriftet – jetzt über
+  die App-Übersetzungen (alle Sprachen).
 - **Admin-UI → Update zeigt die installierte Version jetzt auf allen
   Installationen**: Der Build erzeugt `dist/VERSION` (aus package.json), sodass
   auch per `deploy-data.bat full` betriebene Instanzen (ohne Release-Paket)

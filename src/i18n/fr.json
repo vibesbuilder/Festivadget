@@ -134,7 +134,14 @@
   "push": {
     "noKey": "Aucune clé publique VAPID configurée.",
     "denied": "Notifications non autorisées.",
-    "saveFailed": "L'abonnement n'a pas pu être enregistré (HTTP {{status}})."
+    "saveFailed": "L'abonnement n'a pas pu être enregistré (HTTP {{status}}).",
+    "catInfo": "Infos",
+    "catLineup": "Line-Up",
+    "catGeneral": "Général",
+    "catSafety": "Sécurité",
+    "alwaysOn": "(toujours actif)",
+    "myPlan": "Mon planning",
+    "myPlanHint": "(rappel avant le début du concert)"
   },
   "poi": {
     "stage": "Scène",

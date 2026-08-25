@@ -1,0 +1,164 @@
+{
+  "nav": {
+    "home": "Domov",
+    "lineup": "Line-up",
+    "timetable": "Urnik",
+    "myplan": "Moj načrt",
+    "map": "Zemljevid",
+    "more": "Več"
+  },
+  "more": {
+    "title": "Več",
+    "favorites": "Moj urnik",
+    "news": "Novice",
+    "map": "Zemljevid",
+    "info": "Informacije",
+    "sponsors": "Sponzorji",
+    "tickets": "Vstopnice",
+    "search": "Iskanje",
+    "contact": "Kontakt",
+    "impressum": "Kolofon",
+    "language": "Jezik",
+    "theme": "Dark / Light",
+    "weather": "Vreme"
+  },
+  "common": {
+    "loading": "Nalaganje …",
+    "error": "Nekaj je šlo narobe.",
+    "retry": "Poskusi znova",
+    "offline": "Brez povezave",
+    "lastUpdate": "Stanje: {{time}}",
+    "empty": "Še ni vsebine.",
+    "close": "Zapri",
+    "notFound": "Ni najdeno"
+  },
+  "home": {
+    "now": "Zdaj",
+    "upNext": "Sledi",
+    "overview": "Pregled programa",
+    "newsfeed": "Novice",
+    "nextFavorite": "Tvoj naslednji favorit",
+    "video": "Oglej si video",
+    "all": "Vse"
+  },
+  "lineup": {
+    "title": "Line-up",
+    "allGenres": "Vse",
+    "headliner": "Headliner",
+    "noActs": "Ta dan ni nastopov."
+  },
+  "timetable": {
+    "title": "Urnik",
+    "grid": "Mreža",
+    "list": "Seznam",
+    "favoritesOnly": "Samo priljubljeni",
+    "now": "Zdaj",
+    "clash": "Prekrivanje",
+    "noSlots": "Za ta izbor ni terminov.",
+    "allHidden": "Vsi odri so skriti.",
+    "addPlan": "Dodaj v moj načrt",
+    "removePlan": "Odstrani iz mojega načrta"
+  },
+  "favorites": {
+    "title": "Moj načrt",
+    "empty": "Še ni priljubljenih. Tapni zvezdico ob izvajalcu.",
+    "emptyTitle": "Še ni priljubljenih",
+    "explain": "Tapni zvezdico ob izvajalcu v line-upu ali urniku, da ga dodaš v svoj osebni načrt. Vsi tvoji priljubljeni se nato prikažejo tukaj kronološko – z opozorilom ob prekrivanjih in izvozom .ics za tvoj koledar.",
+    "exportAll": "Shrani vse termine v koledar",
+    "reminder": "Opomnik (.ics)",
+    "clashWarning": "Vsaj ena točka programa se prekriva z drugim priljubljenim."
+  },
+  "news": {
+    "title": "Novice",
+    "pinned": "Pripeto",
+    "now": "Zdaj: {{artist}} @ {{stage}}"
+  },
+  "info": {
+    "title": "Informacije",
+    "notFound": "Strani z informacijami ni mogoče najti."
+  },
+  "sponsors": {
+    "title": "Sponzorji",
+    "tier": {
+      "main": "Presented by",
+      "premium": "Premium partner",
+      "partner": "Partner",
+      "supporter": "Podpornik"
+    }
+  },
+  "tickets": {
+    "title": "Vstopnice",
+    "open": "Odpri",
+    "shop": "V trgovino z vstopnicami"
+  },
+  "artist": {
+    "playtimes": "Stage Time",
+    "favorite": "Dodaj med priljubljene",
+    "favorited": "Priljubljeno",
+    "notFound": "Izvajalca ni mogoče najti."
+  },
+  "install": {
+    "cta": "Namesti aplikacijo za uporabo brez povezave.",
+    "ios1": "Na začetni zaslon:",
+    "ios2": "Deli → „Dodaj na začetni zaslon“.",
+    "button": "Namesti",
+    "close": "Zapri"
+  },
+  "weather": {
+    "title": "Vreme",
+    "today": "Danes",
+    "tomorrow": "Jutri",
+    "dayAfter": "Pojutrišnjem",
+    "todayShort": "danes",
+    "tomorrowShort": "jutri",
+    "now": "trenutno",
+    "updated": "Posodobljeno",
+    "stale": "podatki so morda zastareli",
+    "noData": "še ni podatkov",
+    "section": {
+      "morning": "Zjutraj",
+      "noon": "Opoldne",
+      "evening": "Zvečer",
+      "night": "Ponoči"
+    }
+  },
+  "map": {
+    "title": "Zemljevid",
+    "all": "Vse",
+    "noPois": "Na zemljevidu ni točk."
+  },
+  "search": {
+    "title": "Iskanje",
+    "noResults": "Ni zadetkov za „{{query}}“."
+  },
+  "push": {
+    "noKey": "Javni ključ VAPID ni nastavljen.",
+    "denied": "Obvestila niso dovoljena.",
+    "saveFailed": "Naročnine ni bilo mogoče shraniti (HTTP {{status}}).",
+    "catInfo": "Informacije",
+    "catLineup": "Line-up",
+    "catGeneral": "Splošno",
+    "catSafety": "Varnost",
+    "alwaysOn": "(vedno aktivno)",
+    "myPlan": "Moj načrt",
+    "myPlanHint": "(opomnik pred koncertom)"
+  },
+  "poi": {
+    "stage": "Oder",
+    "wc": "WC",
+    "food": "Hrana",
+    "drink": "Pijača",
+    "firstaid": "Prva pomoč",
+    "atm": "Bankomat",
+    "info": "Info",
+    "entrance": "Vhod",
+    "exit": "Izhod",
+    "camping": "Kamp",
+    "caravan": "Avtodom",
+    "cashless": "Cashless",
+    "shuttle": "Shuttle",
+    "merch": "Merch",
+    "parking": "Parkirišče",
+    "generic": "Točka"
+  }
+}

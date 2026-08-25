@@ -414,7 +414,7 @@ if (cms_logged_in() && ($_POST['do'] ?? '') !== '' && $_POST['do'] !== 'logout' 
                 }
                 // Default app language (while the guest has not chosen themselves).
                 $ld = (string) ($_POST['languageDefault'] ?? '');
-                if (in_array($ld, ['de', 'en', 'fr', 'es'], true)) {
+                if (in_array($ld, PUSH_LANGS, true)) {
                     $cfg['languageDefault'] = $ld;
                 } else {
                     unset($cfg['languageDefault']);
@@ -948,15 +948,16 @@ $cmsTitle = trim((string) ($cmsFest['name'] ?? '')) ?: 'Festivadget';
           </div>
           <label class="fld"><span><?= cms_h(cms_t('Text (Markdown)')) ?> (de)</span>
             <textarea name="items[<?= $i ?>][body][de]"><?= cms_h(cms_loc_get($it['body'] ?? '', 'de')) ?></textarea></label>
-          <?php $hasTr = false;
-          foreach (['en', 'fr', 'es'] as $tl) {
+          <?php $trLangs = cms_loc_form_langs($it['title'] ?? '', $it['body'] ?? '');
+          $hasTr = false;
+          foreach ($trLangs as $tl) {
               if (cms_loc_get($it['title'] ?? '', $tl) !== '' || cms_loc_get($it['body'] ?? '', $tl) !== '') {
                   $hasTr = true;
               }
           } ?>
           <details <?= $hasTr ? 'open' : '' ?>>
             <summary class="muted"><?= cms_h(cms_t('Übersetzungen (en/fr/es) – leer = englischer bzw. deutscher Fallback')) ?></summary>
-            <?php foreach (['en', 'fr', 'es'] as $tl): ?>
+            <?php foreach ($trLangs as $tl): ?>
               <div class="grid2" style="margin-top:.5rem">
                 <label class="fld"><span><?= cms_h(cms_t('Titel')) ?> (<?= $tl ?>)</span>
                   <input type="text" name="items[<?= $i ?>][title][<?= $tl ?>]" value="<?= cms_h(cms_loc_get($it['title'] ?? '', $tl)) ?>"></label>
@@ -1221,10 +1222,9 @@ $cmsTitle = trim((string) ($cmsFest['name'] ?? '')) ?: 'Festivadget';
         <?php $ld = (string) ($cfg['languageDefault'] ?? ''); ?>
         <select name="languageDefault">
           <option value="" <?= $ld === '' ? 'selected' : '' ?>><?= cms_h(cms_t('Build-Standard')) ?></option>
-          <option value="de" <?= $ld === 'de' ? 'selected' : '' ?>>Deutsch</option>
-          <option value="en" <?= $ld === 'en' ? 'selected' : '' ?>>English</option>
-          <option value="fr" <?= $ld === 'fr' ? 'selected' : '' ?>>Français</option>
-          <option value="es" <?= $ld === 'es' ? 'selected' : '' ?>>Español</option>
+          <?php foreach (FESTIVADGET_LANGS as $lc => $ln): ?>
+            <option value="<?= cms_h($lc) ?>" <?= $ld === $lc ? 'selected' : '' ?>><?= cms_h($ln) ?></option>
+          <?php endforeach; ?>
         </select>
       </label>
 
@@ -1340,8 +1340,9 @@ $cmsTitle = trim((string) ($cmsFest['name'] ?? '')) ?: 'Festivadget';
             <label class="fld"><span><?= cms_h(cms_t('Link-URL (optional)')) ?></span>
               <input type="text" name="news[<?= $i ?>][linkUrl]" value="<?= cms_h((string) ($it['link']['url'] ?? '')) ?>"></label>
           </div>
-          <?php $hasTr = false;
-          foreach (['en', 'fr', 'es'] as $tl) {
+          <?php $trLangs = cms_loc_form_langs($it['title'] ?? '', $it['body'] ?? '', $it['link']['label'] ?? '');
+          $hasTr = false;
+          foreach ($trLangs as $tl) {
               if (cms_loc_get($it['title'] ?? '', $tl) !== '' || cms_loc_get($it['body'] ?? '', $tl) !== ''
                   || cms_loc_get($it['link']['label'] ?? '', $tl) !== '') {
                   $hasTr = true;
@@ -1349,7 +1350,7 @@ $cmsTitle = trim((string) ($cmsFest['name'] ?? '')) ?: 'Festivadget';
           } ?>
           <details <?= $hasTr ? 'open' : '' ?>>
             <summary class="muted"><?= cms_h(cms_t('Übersetzungen (en/fr/es) – leer = englischer bzw. deutscher Fallback')) ?></summary>
-            <?php foreach (['en', 'fr', 'es'] as $tl): ?>
+            <?php foreach ($trLangs as $tl): ?>
               <div class="grid2" style="margin-top:.5rem">
                 <label class="fld"><span><?= cms_h(cms_t('Titel')) ?> (<?= $tl ?>)</span>
                   <input type="text" name="news[<?= $i ?>][title][<?= $tl ?>]" value="<?= cms_h(cms_loc_get($it['title'] ?? '', $tl)) ?>"></label>

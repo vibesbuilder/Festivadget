@@ -1,0 +1,164 @@
+{
+  "nav": {
+    "home": "Acasă",
+    "lineup": "Line-up",
+    "timetable": "Program",
+    "myplan": "Planul meu",
+    "map": "Hartă",
+    "more": "Mai multe"
+  },
+  "more": {
+    "title": "Mai multe",
+    "favorites": "Programul meu",
+    "news": "Noutăți",
+    "map": "Hartă",
+    "info": "Informații",
+    "sponsors": "Sponsori",
+    "tickets": "Bilete",
+    "search": "Căutare",
+    "contact": "Contact",
+    "impressum": "Date de contact legale",
+    "language": "Limbă",
+    "theme": "Dark / Light",
+    "weather": "Vreme"
+  },
+  "common": {
+    "loading": "Se încarcă …",
+    "error": "Ceva n-a mers bine.",
+    "retry": "Încearcă din nou",
+    "offline": "Offline",
+    "lastUpdate": "Actualizat: {{time}}",
+    "empty": "Încă nu există conținut.",
+    "close": "Închide",
+    "notFound": "Nu a fost găsit"
+  },
+  "home": {
+    "now": "Acum",
+    "upNext": "Urmează",
+    "overview": "Prezentarea programului",
+    "newsfeed": "Noutăți",
+    "nextFavorite": "Următorul tău favorit",
+    "video": "Vezi videoclipul",
+    "all": "Toate"
+  },
+  "lineup": {
+    "title": "Line-up",
+    "allGenres": "Toate",
+    "headliner": "Headliner",
+    "noActs": "Nicio reprezentație în această zi."
+  },
+  "timetable": {
+    "title": "Program",
+    "grid": "Grilă",
+    "list": "Listă",
+    "favoritesOnly": "Doar favorite",
+    "now": "Acum",
+    "clash": "Suprapunere",
+    "noSlots": "Niciun interval pentru această selecție.",
+    "allHidden": "Toate scenele sunt ascunse.",
+    "addPlan": "Adaugă la planul meu",
+    "removePlan": "Elimină din planul meu"
+  },
+  "favorites": {
+    "title": "Planul meu",
+    "empty": "Încă nu ai favorite. Atinge steaua de lângă un artist.",
+    "emptyTitle": "Încă nu ai favorite",
+    "explain": "Atinge steaua de lângă un artist în line-up sau în program pentru a-l adăuga la planul tău personal. Toate favoritele tale apar aici cronologic – cu avertizare la suprapuneri și export .ics pentru calendarul tău.",
+    "exportAll": "Salvează toate datele în calendar",
+    "reminder": "Memento (.ics)",
+    "clashWarning": "Cel puțin o reprezentație se suprapune cu un alt favorit."
+  },
+  "news": {
+    "title": "Noutăți",
+    "pinned": "Fixat",
+    "now": "Acum: {{artist}} @ {{stage}}"
+  },
+  "info": {
+    "title": "Informații",
+    "notFound": "Pagina de informații nu a fost găsită."
+  },
+  "sponsors": {
+    "title": "Sponsori",
+    "tier": {
+      "main": "Presented by",
+      "premium": "Partener premium",
+      "partner": "Partener",
+      "supporter": "Susținător"
+    }
+  },
+  "tickets": {
+    "title": "Bilete",
+    "open": "Deschide",
+    "shop": "Către magazinul de bilete"
+  },
+  "artist": {
+    "playtimes": "Stage Time",
+    "favorite": "Adaugă la favorite",
+    "favorited": "Favorit",
+    "notFound": "Artistul nu a fost găsit."
+  },
+  "install": {
+    "cta": "Instalează aplicația pentru utilizare offline.",
+    "ios1": "Pe ecranul principal:",
+    "ios2": "Partajează → „Adaugă la ecranul principal”.",
+    "button": "Instalează",
+    "close": "Închide"
+  },
+  "weather": {
+    "title": "Vreme",
+    "today": "Azi",
+    "tomorrow": "Mâine",
+    "dayAfter": "Poimâine",
+    "todayShort": "azi",
+    "tomorrowShort": "mâine",
+    "now": "acum",
+    "updated": "Actualizat",
+    "stale": "datele pot fi învechite",
+    "noData": "încă nu există date",
+    "section": {
+      "morning": "Dimineața",
+      "noon": "Prânz",
+      "evening": "Seara",
+      "night": "Noaptea"
+    }
+  },
+  "map": {
+    "title": "Hartă",
+    "all": "Toate",
+    "noPois": "Niciun punct pe hartă."
+  },
+  "search": {
+    "title": "Căutare",
+    "noResults": "Niciun rezultat pentru „{{query}}”."
+  },
+  "push": {
+    "noKey": "Nicio cheie publică VAPID configurată.",
+    "denied": "Notificările nu sunt permise.",
+    "saveFailed": "Abonamentul nu a putut fi salvat (HTTP {{status}}).",
+    "catInfo": "Informații",
+    "catLineup": "Line-up",
+    "catGeneral": "General",
+    "catSafety": "Siguranță",
+    "alwaysOn": "(mereu activ)",
+    "myPlan": "Planul meu",
+    "myPlanHint": "(memento înainte de concert)"
+  },
+  "poi": {
+    "stage": "Scenă",
+    "wc": "WC",
+    "food": "Mâncare",
+    "drink": "Băuturi",
+    "firstaid": "Prim ajutor",
+    "atm": "Bancomat",
+    "info": "Info",
+    "entrance": "Intrare",
+    "exit": "Ieșire",
+    "camping": "Camping",
+    "caravan": "Rulotă",
+    "cashless": "Cashless",
+    "shuttle": "Shuttle",
+    "merch": "Merch",
+    "parking": "Parcare",
+    "generic": "Punct"
+  }
+}

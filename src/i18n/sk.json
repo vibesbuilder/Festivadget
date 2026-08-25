@@ -1,0 +1,164 @@
+{
+  "nav": {
+    "home": "Domov",
+    "lineup": "Line-up",
+    "timetable": "Program",
+    "myplan": "Môj plán",
+    "map": "Mapa",
+    "more": "Viac"
+  },
+  "more": {
+    "title": "Viac",
+    "favorites": "Môj program",
+    "news": "Novinky",
+    "map": "Mapa",
+    "info": "Informácie",
+    "sponsors": "Sponzori",
+    "tickets": "Vstupenky",
+    "search": "Hľadať",
+    "contact": "Kontakt",
+    "impressum": "Tiráž",
+    "language": "Jazyk",
+    "theme": "Dark / Light",
+    "weather": "Počasie"
+  },
+  "common": {
+    "loading": "Načítava sa …",
+    "error": "Niečo sa pokazilo.",
+    "retry": "Skúsiť znova",
+    "offline": "Offline",
+    "lastUpdate": "Stav: {{time}}",
+    "empty": "Zatiaľ žiadny obsah.",
+    "close": "Zavrieť",
+    "notFound": "Nenájdené"
+  },
+  "home": {
+    "now": "Práve teraz",
+    "upNext": "Nasleduje",
+    "overview": "Prehľad programu",
+    "newsfeed": "Novinky",
+    "nextFavorite": "Tvoj ďalší obľúbenec",
+    "video": "Pozrieť video",
+    "all": "Všetko"
+  },
+  "lineup": {
+    "title": "Line-up",
+    "allGenres": "Všetko",
+    "headliner": "Headliner",
+    "noActs": "V tento deň nikto nevystupuje."
+  },
+  "timetable": {
+    "title": "Program",
+    "grid": "Mriežka",
+    "list": "Zoznam",
+    "favoritesOnly": "Len obľúbené",
+    "now": "Teraz",
+    "clash": "Prekrytie",
+    "noSlots": "Pre tento výber nie sú žiadne sloty.",
+    "allHidden": "Všetky pódiá skryté.",
+    "addPlan": "Pridať do môjho plánu",
+    "removePlan": "Odobrať z môjho plánu"
+  },
+  "favorites": {
+    "title": "Môj plán",
+    "empty": "Zatiaľ žiadni obľúbenci. Ťukni na hviezdičku pri interpretovi.",
+    "emptyTitle": "Zatiaľ žiadni obľúbenci",
+    "explain": "Ťukni na hviezdičku pri interpretovi v line-upe alebo v programe a pridaj ho do svojho osobného plánu. Všetci tvoji obľúbenci sa potom zobrazia tu chronologicky – vrátane upozornenia na prekrytia a exportu .ics do kalendára.",
+    "exportAll": "Uložiť všetky termíny do kalendára",
+    "reminder": "Pripomienka (.ics)",
+    "clashWarning": "Najmenej jeden bod programu sa prekrýva s iným obľúbencom."
+  },
+  "news": {
+    "title": "Novinky",
+    "pinned": "Pripnuté",
+    "now": "Teraz: {{artist}} @ {{stage}}"
+  },
+  "info": {
+    "title": "Informácie",
+    "notFound": "Stránka s informáciami sa nenašla."
+  },
+  "sponsors": {
+    "title": "Sponzori",
+    "tier": {
+      "main": "Presented by",
+      "premium": "Prémiový partner",
+      "partner": "Partner",
+      "supporter": "Podporovateľ"
+    }
+  },
+  "tickets": {
+    "title": "Vstupenky",
+    "open": "Otvoriť",
+    "shop": "Do obchodu so vstupenkami"
+  },
+  "artist": {
+    "playtimes": "Stage Time",
+    "favorite": "Pridať k obľúbeným",
+    "favorited": "Obľúbené",
+    "notFound": "Interpret sa nenašiel."
+  },
+  "install": {
+    "cta": "Nainštaluj si aplikáciu na offline použitie.",
+    "ios1": "Na plochu:",
+    "ios2": "Zdieľať → „Pridať na plochu“.",
+    "button": "Inštalovať",
+    "close": "Zavrieť"
+  },
+  "weather": {
+    "title": "Počasie",
+    "today": "Dnes",
+    "tomorrow": "Zajtra",
+    "dayAfter": "Pozajtra",
+    "todayShort": "dnes",
+    "tomorrowShort": "zajtra",
+    "now": "aktuálne",
+    "updated": "Aktualizované",
+    "stale": "údaje môžu byť zastarané",
+    "noData": "zatiaľ žiadne údaje",
+    "section": {
+      "morning": "Ráno",
+      "noon": "Obed",
+      "evening": "Večer",
+      "night": "Noc"
+    }
+  },
+  "map": {
+    "title": "Mapa",
+    "all": "Všetko",
+    "noPois": "Žiadne body na mape."
+  },
+  "search": {
+    "title": "Hľadať",
+    "noResults": "Žiadne výsledky pre „{{query}}“."
+  },
+  "push": {
+    "noKey": "Nie je nakonfigurovaný verejný kľúč VAPID.",
+    "denied": "Upozornenia nie sú povolené.",
+    "saveFailed": "Odber sa nepodarilo uložiť (HTTP {{status}}).",
+    "catInfo": "Informácie",
+    "catLineup": "Line-up",
+    "catGeneral": "Všeobecné",
+    "catSafety": "Bezpečnosť",
+    "alwaysOn": "(vždy aktívne)",
+    "myPlan": "Môj plán",
+    "myPlanHint": "(pripomienka pred začiatkom)"
+  },
+  "poi": {
+    "stage": "Pódium",
+    "wc": "WC",
+    "food": "Jedlo",
+    "drink": "Nápoje",
+    "firstaid": "Prvá pomoc",
+    "atm": "Bankomat",
+    "info": "Info",
+    "entrance": "Vchod",
+    "exit": "Východ",
+    "camping": "Kemping",
+    "caravan": "Karavan",
+    "cashless": "Cashless",
+    "shuttle": "Kyvadlová doprava",
+    "merch": "Merch",
+    "parking": "Parkovanie",
+    "generic": "Bod"
+  }
+}

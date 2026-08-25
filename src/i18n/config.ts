@@ -4,6 +4,25 @@ import de from "./de.json";
 import en from "./en.json";
 import fr from "./fr.json";
 import es from "./es.json";
+import it from "./it.json";
+import nl from "./nl.json";
+import cs from "./cs.json";
+import pl from "./pl.json";
+import pt from "./pt.json";
+import fi from "./fi.json";
+import hu from "./hu.json";
+import sk from "./sk.json";
+import hr from "./hr.json";
+import da from "./da.json";
+import sv from "./sv.json";
+import uk from "./uk.json";
+import ro from "./ro.json";
+import sl from "./sl.json";
+import tr from "./tr.json";
+import ptBR from "./pt-BR.json";
+import zhCN from "./zh-CN.json";
+import jaJP from "./ja-JP.json";
+import koKR from "./ko-KR.json";
 
 // Available app languages with native display names (language picker under "More").
 export const LANGUAGES = {
@@ -11,6 +30,25 @@ export const LANGUAGES = {
   en: "English",
   fr: "Français",
   es: "Español",
+  it: "Italiano",
+  nl: "Nederlands",
+  cs: "Čeština",
+  pl: "Polski",
+  pt: "Português",
+  fi: "Suomi",
+  hu: "Magyar",
+  sk: "Slovenčina",
+  hr: "Hrvatski",
+  da: "Dansk",
+  sv: "Svenska",
+  uk: "Українська",
+  ro: "Română",
+  sl: "Slovenščina",
+  tr: "Türkçe",
+  "pt-BR": "Português (Brasil)",
+  "zh-CN": "简体中文",
+  "ja-JP": "日本語",
+  "ko-KR": "한국어",
 } as const;
 
 export type AppLanguage = keyof typeof LANGUAGES;
@@ -44,9 +82,28 @@ void i18n.use(initReactI18next).init({
     en: { translation: en },
     fr: { translation: fr },
     es: { translation: es },
+    it: { translation: it },
+    nl: { translation: nl },
+    cs: { translation: cs },
+    pl: { translation: pl },
+    pt: { translation: pt },
+    fi: { translation: fi },
+    hu: { translation: hu },
+    sk: { translation: sk },
+    hr: { translation: hr },
+    da: { translation: da },
+    sv: { translation: sv },
+    uk: { translation: uk },
+    ro: { translation: ro },
+    sl: { translation: sl },
+    tr: { translation: tr },
+    "pt-BR": { translation: ptBR },
+    "zh-CN": { translation: zhCN },
+    "ja-JP": { translation: jaJP },
+    "ko-KR": { translation: koKR },
   },
   lng: storedLanguage(),
-  fallbackLng: "de",
+  fallbackLng: "en",
   interpolation: { escapeValue: false },
 });
 

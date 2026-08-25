@@ -134,7 +134,14 @@
   "push": {
     "noKey": "Kein VAPID-Public-Key konfiguriert.",
     "denied": "Benachrichtigungen nicht erlaubt.",
-    "saveFailed": "Abo konnte nicht gespeichert werden (HTTP {{status}})."
+    "saveFailed": "Abo konnte nicht gespeichert werden (HTTP {{status}}).",
+    "catInfo": "Infos",
+    "catLineup": "Line-Up",
+    "catGeneral": "Allgemein",
+    "catSafety": "Sicherheit",
+    "alwaysOn": "(immer aktiv)",
+    "myPlan": "Mein Plan",
+    "myPlanHint": "(Erinnerung vor Konzertbeginn)"
   },
   "poi": {
     "stage": "Bühne",

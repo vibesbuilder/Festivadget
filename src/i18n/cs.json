@@ -1,0 +1,164 @@
+{
+  "nav": {
+    "home": "Domů",
+    "lineup": "Line-up",
+    "timetable": "Program",
+    "myplan": "Můj plán",
+    "map": "Mapa",
+    "more": "Více"
+  },
+  "more": {
+    "title": "Více",
+    "favorites": "Můj program",
+    "news": "Novinky",
+    "map": "Mapa",
+    "info": "Informace",
+    "sponsors": "Sponzoři",
+    "tickets": "Vstupenky",
+    "search": "Hledat",
+    "contact": "Kontakt",
+    "impressum": "Tiráž",
+    "language": "Jazyk",
+    "theme": "Dark / Light",
+    "weather": "Počasí"
+  },
+  "common": {
+    "loading": "Načítání …",
+    "error": "Něco se pokazilo.",
+    "retry": "Zkusit znovu",
+    "offline": "Offline",
+    "lastUpdate": "Stav: {{time}}",
+    "empty": "Zatím žádný obsah.",
+    "close": "Zavřít",
+    "notFound": "Nenalezeno"
+  },
+  "home": {
+    "now": "Právě teď",
+    "upNext": "Následuje",
+    "overview": "Přehled programu",
+    "newsfeed": "Novinky",
+    "nextFavorite": "Tvůj další oblíbenec",
+    "video": "Přehrát video",
+    "all": "Vše"
+  },
+  "lineup": {
+    "title": "Line-up",
+    "allGenres": "Vše",
+    "headliner": "Headliner",
+    "noActs": "V tento den nevystupuje nikdo."
+  },
+  "timetable": {
+    "title": "Program",
+    "grid": "Mřížka",
+    "list": "Seznam",
+    "favoritesOnly": "Jen oblíbené",
+    "now": "Teď",
+    "clash": "Překrytí",
+    "noSlots": "Pro tento výběr nejsou žádné sloty.",
+    "allHidden": "Všechna pódia skryta.",
+    "addPlan": "Přidat do mého plánu",
+    "removePlan": "Odebrat z mého plánu"
+  },
+  "favorites": {
+    "title": "Můj plán",
+    "empty": "Zatím žádní oblíbenci. Klepni na hvězdičku u interpreta.",
+    "emptyTitle": "Zatím žádní oblíbenci",
+    "explain": "Klepni na hvězdičku u interpreta v line-upu nebo v programu a přidej ho do svého osobního plánu. Všichni tvoji oblíbenci se pak zobrazí zde chronologicky – včetně upozornění na překrytí a exportu .ics do kalendáře.",
+    "exportAll": "Uložit všechny termíny do kalendáře",
+    "reminder": "Připomenutí (.ics)",
+    "clashWarning": "Nejméně jeden bod programu se překrývá s jiným oblíbencem."
+  },
+  "news": {
+    "title": "Novinky",
+    "pinned": "Připnuto",
+    "now": "Teď: {{artist}} @ {{stage}}"
+  },
+  "info": {
+    "title": "Informace",
+    "notFound": "Stránka s informacemi nenalezena."
+  },
+  "sponsors": {
+    "title": "Sponzoři",
+    "tier": {
+      "main": "Presented by",
+      "premium": "Prémiový partner",
+      "partner": "Partner",
+      "supporter": "Podporovatel"
+    }
+  },
+  "tickets": {
+    "title": "Vstupenky",
+    "open": "Otevřít",
+    "shop": "Do obchodu se vstupenkami"
+  },
+  "artist": {
+    "playtimes": "Stage Time",
+    "favorite": "Přidat k oblíbeným",
+    "favorited": "Oblíbené",
+    "notFound": "Interpret nenalezen."
+  },
+  "install": {
+    "cta": "Nainstaluj si aplikaci pro offline použití.",
+    "ios1": "Na plochu:",
+    "ios2": "Sdílet → „Přidat na plochu“.",
+    "button": "Instalovat",
+    "close": "Zavřít"
+  },
+  "weather": {
+    "title": "Počasí",
+    "today": "Dnes",
+    "tomorrow": "Zítra",
+    "dayAfter": "Pozítří",
+    "todayShort": "dnes",
+    "tomorrowShort": "zítra",
+    "now": "aktuálně",
+    "updated": "Aktualizováno",
+    "stale": "data mohou být zastaralá",
+    "noData": "zatím žádná data",
+    "section": {
+      "morning": "Ráno",
+      "noon": "Poledne",
+      "evening": "Večer",
+      "night": "Noc"
+    }
+  },
+  "map": {
+    "title": "Mapa",
+    "all": "Vše",
+    "noPois": "Žádné body na mapě."
+  },
+  "search": {
+    "title": "Hledat",
+    "noResults": "Žádné výsledky pro „{{query}}“."
+  },
+  "push": {
+    "noKey": "Není nakonfigurován veřejný klíč VAPID.",
+    "denied": "Oznámení nejsou povolena.",
+    "saveFailed": "Odběr se nepodařilo uložit (HTTP {{status}}).",
+    "catInfo": "Informace",
+    "catLineup": "Line-up",
+    "catGeneral": "Obecné",
+    "catSafety": "Bezpečnost",
+    "alwaysOn": "(vždy aktivní)",
+    "myPlan": "Můj plán",
+    "myPlanHint": "(připomenutí před začátkem)"
+  },
+  "poi": {
+    "stage": "Pódium",
+    "wc": "WC",
+    "food": "Jídlo",
+    "drink": "Pití",
+    "firstaid": "První pomoc",
+    "atm": "Bankomat",
+    "info": "Info",
+    "entrance": "Vchod",
+    "exit": "Východ",
+    "camping": "Kemp",
+    "caravan": "Karavan",
+    "cashless": "Cashless",
+    "shuttle": "Kyvadlová doprava",
+    "merch": "Merch",
+    "parking": "Parkování",
+    "generic": "Bod"
+  }
+}

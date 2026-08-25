@@ -1,0 +1,164 @@
+{
+  "nav": {
+    "home": "Home",
+    "lineup": "Line-Up",
+    "timetable": "Timetable",
+    "myplan": "Il mio piano",
+    "map": "Mappa",
+    "more": "Altro"
+  },
+  "more": {
+    "title": "Altro",
+    "favorites": "Il mio timetable",
+    "news": "Newsfeed",
+    "map": "Mappa",
+    "info": "Info",
+    "sponsors": "Sponsor",
+    "tickets": "Biglietti",
+    "search": "Cerca",
+    "contact": "Contatti",
+    "impressum": "Note legali",
+    "language": "Lingua",
+    "theme": "Dark / Light",
+    "weather": "Meteo"
+  },
+  "common": {
+    "loading": "Caricamento …",
+    "error": "Qualcosa è andato storto.",
+    "retry": "Riprova",
+    "offline": "Offline",
+    "lastUpdate": "Aggiornato: {{time}}",
+    "empty": "Ancora nessun contenuto.",
+    "close": "Chiudi",
+    "notFound": "Non trovato"
+  },
+  "home": {
+    "now": "Ora",
+    "upNext": "A seguire",
+    "overview": "Programma",
+    "newsfeed": "Newsfeed",
+    "nextFavorite": "Il tuo prossimo preferito",
+    "video": "Guarda il video",
+    "all": "Tutti"
+  },
+  "lineup": {
+    "title": "Line-Up",
+    "allGenres": "Tutti",
+    "headliner": "Headliner",
+    "noActs": "Nessun artista in questo giorno."
+  },
+  "timetable": {
+    "title": "Timetable",
+    "grid": "Griglia",
+    "list": "Elenco",
+    "favoritesOnly": "Solo preferiti",
+    "now": "Ora",
+    "clash": "Sovrapposizione",
+    "noSlots": "Nessuno slot per questa selezione.",
+    "allHidden": "Tutti i palchi nascosti.",
+    "addPlan": "Aggiungi al mio piano",
+    "removePlan": "Rimuovi dal mio piano"
+  },
+  "favorites": {
+    "title": "Il mio piano",
+    "empty": "Ancora nessun preferito. Tocca la stella accanto a un artista.",
+    "emptyTitle": "Ancora nessun preferito",
+    "explain": "Tocca la stella accanto a un artista nella Line-Up o nel Timetable per aggiungerlo al tuo piano personale. Tutti i tuoi preferiti appariranno qui in ordine cronologico – con avviso in caso di sovrapposizioni ed esportazione .ics per il tuo calendario.",
+    "exportAll": "Salva tutte le date nel calendario",
+    "reminder": "Promemoria (.ics)",
+    "clashWarning": "Almeno un evento si sovrappone a un altro preferito."
+  },
+  "news": {
+    "title": "Newsfeed",
+    "pinned": "In evidenza",
+    "now": "Ora: {{artist}} @ {{stage}}"
+  },
+  "info": {
+    "title": "Info",
+    "notFound": "Pagina info non trovata."
+  },
+  "sponsors": {
+    "title": "Sponsor",
+    "tier": {
+      "main": "Presented by",
+      "premium": "Partner premium",
+      "partner": "Partner",
+      "supporter": "Supporter"
+    }
+  },
+  "tickets": {
+    "title": "Biglietti",
+    "open": "Apri",
+    "shop": "Vai al negozio biglietti"
+  },
+  "artist": {
+    "playtimes": "Stage Time",
+    "favorite": "Aggiungi ai preferiti",
+    "favorited": "Preferito",
+    "notFound": "Artista non trovato."
+  },
+  "install": {
+    "cta": "Installa l'app per l'uso offline.",
+    "ios1": "Aggiungi alla schermata Home:",
+    "ios2": "Condividi → „Aggiungi alla schermata Home“.",
+    "button": "Installa",
+    "close": "Chiudi"
+  },
+  "weather": {
+    "title": "Meteo",
+    "today": "Oggi",
+    "tomorrow": "Domani",
+    "dayAfter": "Dopodomani",
+    "todayShort": "oggi",
+    "tomorrowShort": "domani",
+    "now": "adesso",
+    "updated": "Aggiornato",
+    "stale": "dati forse non aggiornati",
+    "noData": "ancora nessun dato",
+    "section": {
+      "morning": "Mattina",
+      "noon": "Mezzogiorno",
+      "evening": "Sera",
+      "night": "Notte"
+    }
+  },
+  "map": {
+    "title": "Mappa",
+    "all": "Tutti",
+    "noPois": "Nessun punto sulla mappa."
+  },
+  "search": {
+    "title": "Cerca",
+    "noResults": "Nessun risultato per «{{query}}»."
+  },
+  "push": {
+    "noKey": "Nessuna chiave pubblica VAPID configurata.",
+    "denied": "Notifiche non consentite.",
+    "saveFailed": "Impossibile salvare l'iscrizione (HTTP {{status}}).",
+    "catInfo": "Info",
+    "catLineup": "Line-Up",
+    "catGeneral": "Generale",
+    "catSafety": "Sicurezza",
+    "alwaysOn": "(sempre attivo)",
+    "myPlan": "Il mio piano",
+    "myPlanHint": "(promemoria prima del concerto)"
+  },
+  "poi": {
+    "stage": "Palco",
+    "wc": "WC",
+    "food": "Cibo",
+    "drink": "Bevande",
+    "firstaid": "Primo soccorso",
+    "atm": "Bancomat",
+    "info": "Info",
+    "entrance": "Ingresso",
+    "exit": "Uscita",
+    "camping": "Camping",
+    "caravan": "Caravan",
+    "cashless": "Cashless",
+    "shuttle": "Navetta",
+    "merch": "Merch",
+    "parking": "Parcheggio",
+    "generic": "Punto"
+  }
+}
