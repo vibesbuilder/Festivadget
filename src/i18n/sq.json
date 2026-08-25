@@ -1,0 +1,164 @@
+{
+  "nav": {
+    "home": "Kryefaqja",
+    "lineup": "Line-up",
+    "timetable": "Orari",
+    "myplan": "Plani im",
+    "map": "Harta",
+    "more": "Më shumë"
+  },
+  "more": {
+    "title": "Më shumë",
+    "favorites": "Orari im",
+    "news": "Lajme",
+    "map": "Harta",
+    "info": "Informacione",
+    "sponsors": "Sponsorët",
+    "tickets": "Bileta",
+    "search": "Kërko",
+    "contact": "Kontakt",
+    "impressum": "Të dhënat ligjore",
+    "language": "Gjuha",
+    "theme": "Dark / Light",
+    "weather": "Moti"
+  },
+  "common": {
+    "loading": "Po ngarkohet …",
+    "error": "Diçka shkoi keq.",
+    "retry": "Provo përsëri",
+    "offline": "Offline",
+    "lastUpdate": "Gjendja: {{time}}",
+    "empty": "Ende pa përmbajtje.",
+    "close": "Mbyll",
+    "notFound": "Nuk u gjet"
+  },
+  "home": {
+    "now": "Tani",
+    "upNext": "Në vijim",
+    "overview": "Përmbledhja e programit",
+    "newsfeed": "Lajme",
+    "nextFavorite": "Të preferuarit e radhës",
+    "video": "Shiko videon",
+    "all": "Të gjitha"
+  },
+  "lineup": {
+    "title": "Line-up",
+    "allGenres": "Të gjitha",
+    "headliner": "Headliner",
+    "noActs": "Asnjë shfaqje këtë ditë."
+  },
+  "timetable": {
+    "title": "Orari",
+    "grid": "Rrjeta",
+    "list": "Lista",
+    "favoritesOnly": "Vetëm të preferuarat",
+    "now": "Tani",
+    "clash": "Mbivendosje",
+    "noSlots": "Asnjë slot për këtë përzgjedhje.",
+    "allHidden": "Të gjitha skenat janë fshehur.",
+    "addPlan": "Shto në planin tim",
+    "removePlan": "Hiq nga plani im"
+  },
+  "favorites": {
+    "title": "Plani im",
+    "empty": "Ende pa të preferuara. Prek yllin pranë një artisti.",
+    "emptyTitle": "Ende pa të preferuara",
+    "explain": "Prek yllin pranë një artisti në line-up ose në orar për ta shtuar në planin tënd personal. Të gjitha të preferuarat shfaqen këtu kronologjikisht – me paralajmërim për mbivendosje dhe eksport .ics për kalendarin tënd.",
+    "exportAll": "Ruaj të gjitha datat në kalendar",
+    "reminder": "Kujtesë (.ics)",
+    "clashWarning": "Të paktën një shfaqje mbivendoset me një tjetër të preferuar."
+  },
+  "news": {
+    "title": "Lajme",
+    "pinned": "E fiksuar",
+    "now": "Tani: {{artist}} @ {{stage}}"
+  },
+  "info": {
+    "title": "Informacione",
+    "notFound": "Faqja e informacionit nuk u gjet."
+  },
+  "sponsors": {
+    "title": "Sponsorët",
+    "tier": {
+      "main": "Presented by",
+      "premium": "Partner premium",
+      "partner": "Partner",
+      "supporter": "Mbështetës"
+    }
+  },
+  "tickets": {
+    "title": "Bileta",
+    "open": "Hap",
+    "shop": "Te dyqani i biletave"
+  },
+  "artist": {
+    "playtimes": "Stage Time",
+    "favorite": "Shto te të preferuarat",
+    "favorited": "E preferuar",
+    "notFound": "Artisti nuk u gjet."
+  },
+  "install": {
+    "cta": "Instalo aplikacionin për përdorim offline.",
+    "ios1": "Në ekranin kryesor:",
+    "ios2": "Ndaj → „Shto në ekranin kryesor“.",
+    "button": "Instalo",
+    "close": "Mbyll"
+  },
+  "weather": {
+    "title": "Moti",
+    "today": "Sot",
+    "tomorrow": "Nesër",
+    "dayAfter": "Pasnesër",
+    "todayShort": "sot",
+    "tomorrowShort": "nesër",
+    "now": "tani",
+    "updated": "Përditësuar",
+    "stale": "të dhënat mund të jenë të vjetruara",
+    "noData": "ende pa të dhëna",
+    "section": {
+      "morning": "Në mëngjes",
+      "noon": "Në mesditë",
+      "evening": "Në mbrëmje",
+      "night": "Natën"
+    }
+  },
+  "map": {
+    "title": "Harta",
+    "all": "Të gjitha",
+    "noPois": "Asnjë pikë në hartë."
+  },
+  "search": {
+    "title": "Kërko",
+    "noResults": "Asnjë rezultat për „{{query}}“."
+  },
+  "push": {
+    "noKey": "Nuk është konfiguruar çelësi publik VAPID.",
+    "denied": "Njoftimet nuk lejohen.",
+    "saveFailed": "Abonimi nuk u ruajt dot (HTTP {{status}}).",
+    "catInfo": "Informacione",
+    "catLineup": "Line-up",
+    "catGeneral": "Të përgjithshme",
+    "catSafety": "Siguria",
+    "alwaysOn": "(gjithmonë aktive)",
+    "myPlan": "Plani im",
+    "myPlanHint": "(kujtesë para koncertit)"
+  },
+  "poi": {
+    "stage": "Skena",
+    "wc": "WC",
+    "food": "Ushqim",
+    "drink": "Pije",
+    "firstaid": "Ndihma e parë",
+    "atm": "Bankomat",
+    "info": "Info",
+    "entrance": "Hyrja",
+    "exit": "Dalja",
+    "camping": "Kamping",
+    "caravan": "Karavan",
+    "cashless": "Cashless",
+    "shuttle": "Shuttle",
+    "merch": "Merch",
+    "parking": "Parkim",
+    "generic": "Pikë"
+  }
+}

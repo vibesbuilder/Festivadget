@@ -16,7 +16,9 @@ const FESTIVADGET_LANGS = [
     'hr' => 'Hrvatski', 'da' => 'Dansk', 'sv' => 'Svenska', 'uk' => 'Українська',
     'ro' => 'Română', 'sl' => 'Slovenščina', 'tr' => 'Türkçe',
     'pt-BR' => 'Português (Brasil)', 'zh-CN' => '简体中文', 'ja-JP' => '日本語',
-    'ko-KR' => '한국어',
+    'ko-KR' => '한국어', 'sq' => 'Shqip', 'af' => 'Afrikaans', 'el' => 'Ελληνικά',
+    'hi' => 'हिन्दी', 'id' => 'Bahasa Indonesia', 'is' => 'Íslenska',
+    'nb' => 'Norsk (bokmål)', 'ru' => 'Русский', 'th' => 'ไทย',
 ];
 define('PUSH_LANGS', array_keys(FESTIVADGET_LANGS));
 
@@ -55,6 +57,15 @@ const PUSH_TEXTS = [
     'zh-CN' => ['Gleich live' => '即将开演', 'Gleich: {name}' => '即将登场：{name}', 'Neuigkeit' => '新消息'],
     'ja-JP' => ['Gleich live' => 'まもなく開演', 'Gleich: {name}' => 'まもなく：{name}', 'Neuigkeit' => 'お知らせ'],
     'ko-KR' => ['Gleich live' => '곧 공연 시작', 'Gleich: {name}' => '곧 시작: {name}', 'Neuigkeit' => '새 소식'],
+    'sq' => ['Gleich live' => 'Së shpejti live', 'Gleich: {name}' => 'Së shpejti: {name}', 'Neuigkeit' => 'Lajm'],
+    'af' => ['Gleich live' => 'Binnekort regstreeks', 'Gleich: {name}' => 'Binnekort: {name}', 'Neuigkeit' => 'Nuus'],
+    'el' => ['Gleich live' => 'Σε λίγο live', 'Gleich: {name}' => 'Σε λίγο: {name}', 'Neuigkeit' => 'Νέο'],
+    'hi' => ['Gleich live' => 'जल्द ही लाइव', 'Gleich: {name}' => 'जल्द ही: {name}', 'Neuigkeit' => 'समाचार'],
+    'id' => ['Gleich live' => 'Segera tampil', 'Gleich: {name}' => 'Segera: {name}', 'Neuigkeit' => 'Berita'],
+    'is' => ['Gleich live' => 'Bráðum í beinni', 'Gleich: {name}' => 'Bráðum: {name}', 'Neuigkeit' => 'Frétt'],
+    'nb' => ['Gleich live' => 'Snart live', 'Gleich: {name}' => 'Snart: {name}', 'Neuigkeit' => 'Nyhet'],
+    'ru' => ['Gleich live' => 'Скоро на сцене', 'Gleich: {name}' => 'Скоро: {name}', 'Neuigkeit' => 'Новость'],
+    'th' => ['Gleich live' => 'ใกล้เริ่มการแสดง', 'Gleich: {name}' => 'เร็ว ๆ นี้: {name}', 'Neuigkeit' => 'ข่าว'],
 ];
 
 /** Translate a generated push text (German is the key language, en fallback). */

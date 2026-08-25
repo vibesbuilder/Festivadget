@@ -1,0 +1,164 @@
+{
+  "nav": {
+    "home": "Heim",
+    "lineup": "Line-up",
+    "timetable": "Dagskrá",
+    "myplan": "Mín áætlun",
+    "map": "Kort",
+    "more": "Meira"
+  },
+  "more": {
+    "title": "Meira",
+    "favorites": "Mín dagskrá",
+    "news": "Fréttir",
+    "map": "Kort",
+    "info": "Upplýsingar",
+    "sponsors": "Styrktaraðilar",
+    "tickets": "Miðar",
+    "search": "Leita",
+    "contact": "Hafa samband",
+    "impressum": "Lögupplýsingar",
+    "language": "Tungumál",
+    "theme": "Dark / Light",
+    "weather": "Veður"
+  },
+  "common": {
+    "loading": "Hleð …",
+    "error": "Eitthvað fór úrskeiðis.",
+    "retry": "Reyna aftur",
+    "offline": "Ónettengt",
+    "lastUpdate": "Staða: {{time}}",
+    "empty": "Ekkert efni ennþá.",
+    "close": "Loka",
+    "notFound": "Fannst ekki"
+  },
+  "home": {
+    "now": "Núna",
+    "upNext": "Næst",
+    "overview": "Yfirlit dagskrár",
+    "newsfeed": "Fréttir",
+    "nextFavorite": "Næsta uppáhaldið þitt",
+    "video": "Horfa á myndband",
+    "all": "Allt"
+  },
+  "lineup": {
+    "title": "Line-up",
+    "allGenres": "Allt",
+    "headliner": "Aðalnúmer",
+    "noActs": "Engin atriði þennan dag."
+  },
+  "timetable": {
+    "title": "Dagskrá",
+    "grid": "Tafla",
+    "list": "Listi",
+    "favoritesOnly": "Aðeins uppáhald",
+    "now": "Núna",
+    "clash": "Skörun",
+    "noSlots": "Engin atriði fyrir þetta val.",
+    "allHidden": "Öll svið falin.",
+    "addPlan": "Bæta við mína áætlun",
+    "removePlan": "Fjarlægja úr minni áætlun"
+  },
+  "favorites": {
+    "title": "Mín áætlun",
+    "empty": "Engin uppáhald ennþá. Ýttu á stjörnuna hjá flytjanda.",
+    "emptyTitle": "Engin uppáhald ennþá",
+    "explain": "Ýttu á stjörnuna hjá flytjanda í line-uppinu eða dagskránni til að bæta honum við þína persónulegu áætlun. Öll uppáhöldin þín birtast hér í tímaröð – með viðvörun um skörun og .ics-útflutningi fyrir dagatalið þitt.",
+    "exportAll": "Vista allar dagsetningar í dagatal",
+    "reminder": "Áminning (.ics)",
+    "clashWarning": "Að minnsta kosti eitt atriði skarast við annað uppáhald."
+  },
+  "news": {
+    "title": "Fréttir",
+    "pinned": "Fest",
+    "now": "Núna: {{artist}} @ {{stage}}"
+  },
+  "info": {
+    "title": "Upplýsingar",
+    "notFound": "Upplýsingasíða fannst ekki."
+  },
+  "sponsors": {
+    "title": "Styrktaraðilar",
+    "tier": {
+      "main": "Presented by",
+      "premium": "Premium samstarfsaðili",
+      "partner": "Samstarfsaðili",
+      "supporter": "Stuðningsaðili"
+    }
+  },
+  "tickets": {
+    "title": "Miðar",
+    "open": "Opna",
+    "shop": "Í miðasöluna"
+  },
+  "artist": {
+    "playtimes": "Stage Time",
+    "favorite": "Bæta við uppáhald",
+    "favorited": "Uppáhald",
+    "notFound": "Flytjandi fannst ekki."
+  },
+  "install": {
+    "cta": "Settu upp appið til að nota það ónettengt.",
+    "ios1": "Á heimaskjá:",
+    "ios2": "Deila → „Bæta á heimaskjá“.",
+    "button": "Setja upp",
+    "close": "Loka"
+  },
+  "weather": {
+    "title": "Veður",
+    "today": "Í dag",
+    "tomorrow": "Á morgun",
+    "dayAfter": "Hinn daginn",
+    "todayShort": "í dag",
+    "tomorrowShort": "á morgun",
+    "now": "núna",
+    "updated": "Uppfært",
+    "stale": "gögn gætu verið úrelt",
+    "noData": "engin gögn ennþá",
+    "section": {
+      "morning": "Morgunn",
+      "noon": "Hádegi",
+      "evening": "Kvöld",
+      "night": "Nótt"
+    }
+  },
+  "map": {
+    "title": "Kort",
+    "all": "Allt",
+    "noPois": "Engir punktar á kortinu."
+  },
+  "search": {
+    "title": "Leita",
+    "noResults": "Engar niðurstöður fyrir „{{query}}“."
+  },
+  "push": {
+    "noKey": "Enginn opinber VAPID-lykill stilltur.",
+    "denied": "Tilkynningar ekki leyfðar.",
+    "saveFailed": "Ekki tókst að vista áskriftina (HTTP {{status}}).",
+    "catInfo": "Upplýsingar",
+    "catLineup": "Line-up",
+    "catGeneral": "Almennt",
+    "catSafety": "Öryggi",
+    "alwaysOn": "(alltaf virkt)",
+    "myPlan": "Mín áætlun",
+    "myPlanHint": "(áminning fyrir tónleika)"
+  },
+  "poi": {
+    "stage": "Svið",
+    "wc": "Salerni",
+    "food": "Matur",
+    "drink": "Drykkir",
+    "firstaid": "Skyndihjálp",
+    "atm": "Hraðbanki",
+    "info": "Upplýsingar",
+    "entrance": "Inngangur",
+    "exit": "Útgangur",
+    "camping": "Tjaldsvæði",
+    "caravan": "Húsbíll",
+    "cashless": "Cashless",
+    "shuttle": "Skutla",
+    "merch": "Varningur",
+    "parking": "Bílastæði",
+    "generic": "Punktur"
+  }
+}

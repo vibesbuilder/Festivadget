@@ -1,0 +1,164 @@
+{
+  "nav": {
+    "home": "Tuis",
+    "lineup": "Line-up",
+    "timetable": "Program",
+    "myplan": "My plan",
+    "map": "Kaart",
+    "more": "Meer"
+  },
+  "more": {
+    "title": "Meer",
+    "favorites": "My program",
+    "news": "Nuus",
+    "map": "Kaart",
+    "info": "Inligting",
+    "sponsors": "Borge",
+    "tickets": "Kaartjies",
+    "search": "Soek",
+    "contact": "Kontak",
+    "impressum": "Regsinligting",
+    "language": "Taal",
+    "theme": "Dark / Light",
+    "weather": "Weer"
+  },
+  "common": {
+    "loading": "Laai tans …",
+    "error": "Iets het verkeerd geloop.",
+    "retry": "Probeer weer",
+    "offline": "Vanlyn",
+    "lastUpdate": "Stand: {{time}}",
+    "empty": "Nog geen inhoud nie.",
+    "close": "Maak toe",
+    "notFound": "Nie gevind nie"
+  },
+  "home": {
+    "now": "Nou",
+    "upNext": "Volgende",
+    "overview": "Programoorsig",
+    "newsfeed": "Nuus",
+    "nextFavorite": "Jou volgende gunsteling",
+    "video": "Kyk video",
+    "all": "Almal"
+  },
+  "lineup": {
+    "title": "Line-up",
+    "allGenres": "Almal",
+    "headliner": "Headliner",
+    "noActs": "Geen optredes op hierdie dag nie."
+  },
+  "timetable": {
+    "title": "Program",
+    "grid": "Rooster",
+    "list": "Lys",
+    "favoritesOnly": "Slegs gunstelinge",
+    "now": "Nou",
+    "clash": "Oorvleueling",
+    "noSlots": "Geen optredes vir hierdie keuse nie.",
+    "allHidden": "Alle verhoë is versteek.",
+    "addPlan": "Voeg by my plan",
+    "removePlan": "Verwyder uit my plan"
+  },
+  "favorites": {
+    "title": "My plan",
+    "empty": "Nog geen gunstelinge nie. Tik op die ster by 'n kunstenaar.",
+    "emptyTitle": "Nog geen gunstelinge nie",
+    "explain": "Tik op die ster by 'n kunstenaar in die line-up of program om dit by jou persoonlike plan te voeg. Al jou gunstelinge verskyn hier chronologies – met waarskuwing by oorvleuelings en .ics-uitvoer vir jou kalender.",
+    "exportAll": "Stoor alle datums in kalender",
+    "reminder": "Herinnering (.ics)",
+    "clashWarning": "Ten minste een optrede oorvleuel met 'n ander gunsteling."
+  },
+  "news": {
+    "title": "Nuus",
+    "pinned": "Vasgespeld",
+    "now": "Nou: {{artist}} @ {{stage}}"
+  },
+  "info": {
+    "title": "Inligting",
+    "notFound": "Inligtingsblad nie gevind nie."
+  },
+  "sponsors": {
+    "title": "Borge",
+    "tier": {
+      "main": "Presented by",
+      "premium": "Premium-vennoot",
+      "partner": "Vennoot",
+      "supporter": "Ondersteuner"
+    }
+  },
+  "tickets": {
+    "title": "Kaartjies",
+    "open": "Maak oop",
+    "shop": "Na die kaartjiewinkel"
+  },
+  "artist": {
+    "playtimes": "Stage Time",
+    "favorite": "Voeg by gunstelinge",
+    "favorited": "Gunsteling",
+    "notFound": "Kunstenaar nie gevind nie."
+  },
+  "install": {
+    "cta": "Installeer die app vir vanlyn gebruik.",
+    "ios1": "Na die tuisskerm:",
+    "ios2": "Deel → „Voeg by tuisskerm“.",
+    "button": "Installeer",
+    "close": "Maak toe"
+  },
+  "weather": {
+    "title": "Weer",
+    "today": "Vandag",
+    "tomorrow": "Môre",
+    "dayAfter": "Oormôre",
+    "todayShort": "vandag",
+    "tomorrowShort": "môre",
+    "now": "nou",
+    "updated": "Bygewerk",
+    "stale": "data is dalk verouderd",
+    "noData": "nog geen data nie",
+    "section": {
+      "morning": "Oggend",
+      "noon": "Middag",
+      "evening": "Aand",
+      "night": "Nag"
+    }
+  },
+  "map": {
+    "title": "Kaart",
+    "all": "Almal",
+    "noPois": "Geen punte op die kaart nie."
+  },
+  "search": {
+    "title": "Soek",
+    "noResults": "Geen resultate vir „{{query}}“ nie."
+  },
+  "push": {
+    "noKey": "Geen publieke VAPID-sleutel opgestel nie.",
+    "denied": "Kennisgewings nie toegelaat nie.",
+    "saveFailed": "Intekening kon nie gestoor word nie (HTTP {{status}}).",
+    "catInfo": "Inligting",
+    "catLineup": "Line-up",
+    "catGeneral": "Algemeen",
+    "catSafety": "Veiligheid",
+    "alwaysOn": "(altyd aan)",
+    "myPlan": "My plan",
+    "myPlanHint": "(herinnering voor die konsert)"
+  },
+  "poi": {
+    "stage": "Verhoog",
+    "wc": "Toilette",
+    "food": "Kos",
+    "drink": "Drankies",
+    "firstaid": "Noodhulp",
+    "atm": "OTM",
+    "info": "Info",
+    "entrance": "Ingang",
+    "exit": "Uitgang",
+    "camping": "Kampeer",
+    "caravan": "Karavaan",
+    "cashless": "Cashless",
+    "shuttle": "Pendeldiens",
+    "merch": "Merch",
+    "parking": "Parkering",
+    "generic": "Punt"
+  }
+}

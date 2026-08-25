@@ -1,0 +1,164 @@
+{
+  "nav": {
+    "home": "Hjem",
+    "lineup": "Line-up",
+    "timetable": "Program",
+    "myplan": "Min plan",
+    "map": "Kart",
+    "more": "Mer"
+  },
+  "more": {
+    "title": "Mer",
+    "favorites": "Mitt program",
+    "news": "Nyheter",
+    "map": "Kart",
+    "info": "Info",
+    "sponsors": "Sponsorer",
+    "tickets": "Billetter",
+    "search": "Søk",
+    "contact": "Kontakt",
+    "impressum": "Juridisk informasjon",
+    "language": "Språk",
+    "theme": "Dark / Light",
+    "weather": "Vær"
+  },
+  "common": {
+    "loading": "Laster …",
+    "error": "Noe gikk galt.",
+    "retry": "Prøv igjen",
+    "offline": "Frakoblet",
+    "lastUpdate": "Status: {{time}}",
+    "empty": "Ikke noe innhold ennå.",
+    "close": "Lukk",
+    "notFound": "Ikke funnet"
+  },
+  "home": {
+    "now": "Nå",
+    "upNext": "Neste",
+    "overview": "Programoversikt",
+    "newsfeed": "Nyheter",
+    "nextFavorite": "Din neste favoritt",
+    "video": "Se video",
+    "all": "Alle"
+  },
+  "lineup": {
+    "title": "Line-up",
+    "allGenres": "Alle",
+    "headliner": "Headliner",
+    "noActs": "Ingen opptredener denne dagen."
+  },
+  "timetable": {
+    "title": "Program",
+    "grid": "Rutenett",
+    "list": "Liste",
+    "favoritesOnly": "Kun favoritter",
+    "now": "Nå",
+    "clash": "Overlapp",
+    "noSlots": "Ingen slots for dette utvalget.",
+    "allHidden": "Alle scener skjult.",
+    "addPlan": "Legg til i min plan",
+    "removePlan": "Fjern fra min plan"
+  },
+  "favorites": {
+    "title": "Min plan",
+    "empty": "Ingen favoritter ennå. Trykk på stjernen ved en artist.",
+    "emptyTitle": "Ingen favoritter ennå",
+    "explain": "Trykk på stjernen ved en artist i line-upen eller programmet for å legge den til i din personlige plan. Alle favorittene dine vises her kronologisk – med varsel ved overlapp og .ics-eksport til kalenderen din.",
+    "exportAll": "Lagre alle tidspunkter i kalenderen",
+    "reminder": "Påminnelse (.ics)",
+    "clashWarning": "Minst ett programpunkt overlapper med en annen favoritt."
+  },
+  "news": {
+    "title": "Nyheter",
+    "pinned": "Festet",
+    "now": "Nå: {{artist}} @ {{stage}}"
+  },
+  "info": {
+    "title": "Info",
+    "notFound": "Infosiden ble ikke funnet."
+  },
+  "sponsors": {
+    "title": "Sponsorer",
+    "tier": {
+      "main": "Presented by",
+      "premium": "Premiumpartner",
+      "partner": "Partner",
+      "supporter": "Støttespiller"
+    }
+  },
+  "tickets": {
+    "title": "Billetter",
+    "open": "Åpne",
+    "shop": "Til billettbutikken"
+  },
+  "artist": {
+    "playtimes": "Stage Time",
+    "favorite": "Legg til som favoritt",
+    "favorited": "Favoritt",
+    "notFound": "Artist ikke funnet."
+  },
+  "install": {
+    "cta": "Installer appen for frakoblet bruk.",
+    "ios1": "Til hjemskjermen:",
+    "ios2": "Del → «Legg til på Hjem-skjermen».",
+    "button": "Installer",
+    "close": "Lukk"
+  },
+  "weather": {
+    "title": "Vær",
+    "today": "I dag",
+    "tomorrow": "I morgen",
+    "dayAfter": "I overmorgen",
+    "todayShort": "i dag",
+    "tomorrowShort": "i morgen",
+    "now": "akkurat nå",
+    "updated": "Oppdatert",
+    "stale": "data kan være utdaterte",
+    "noData": "ingen data ennå",
+    "section": {
+      "morning": "Morgen",
+      "noon": "Midt på dagen",
+      "evening": "Kveld",
+      "night": "Natt"
+    }
+  },
+  "map": {
+    "title": "Kart",
+    "all": "Alle",
+    "noPois": "Ingen punkter på kartet."
+  },
+  "search": {
+    "title": "Søk",
+    "noResults": "Ingen treff for «{{query}}»."
+  },
+  "push": {
+    "noKey": "Ingen offentlig VAPID-nøkkel konfigurert.",
+    "denied": "Varsler er ikke tillatt.",
+    "saveFailed": "Abonnementet kunne ikke lagres (HTTP {{status}}).",
+    "catInfo": "Info",
+    "catLineup": "Line-up",
+    "catGeneral": "Generelt",
+    "catSafety": "Sikkerhet",
+    "alwaysOn": "(alltid på)",
+    "myPlan": "Min plan",
+    "myPlanHint": "(påminnelse før konserten)"
+  },
+  "poi": {
+    "stage": "Scene",
+    "wc": "WC",
+    "food": "Mat",
+    "drink": "Drikke",
+    "firstaid": "Førstehjelp",
+    "atm": "Minibank",
+    "info": "Info",
+    "entrance": "Inngang",
+    "exit": "Utgang",
+    "camping": "Camping",
+    "caravan": "Campingvogn",
+    "cashless": "Cashless",
+    "shuttle": "Shuttle",
+    "merch": "Merch",
+    "parking": "Parkering",
+    "generic": "Punkt"
+  }
+}

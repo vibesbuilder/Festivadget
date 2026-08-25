@@ -5,11 +5,15 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.0.0/), Versionier
 
 ## [Unreleased]
 
+## [1.7.0] - 2026-08-25
+
 ### Added
-- **19 neue Besucher-Sprachen** (insgesamt 23): Italienisch, Niederländisch,
+- **28 neue Besucher-Sprachen** (insgesamt 32): Italienisch, Niederländisch,
   Tschechisch, Polnisch, Portugiesisch, Finnisch, Ungarisch, Slowakisch,
   Kroatisch, Dänisch, Schwedisch, Ukrainisch, Rumänisch, Slowenisch, Türkisch,
-  Portugiesisch (Brasilien), Chinesisch (vereinfacht), Japanisch, Koreanisch.
+  Portugiesisch (Brasilien), Chinesisch (vereinfacht), Japanisch, Koreanisch,
+  Albanisch, Afrikaans, Griechisch, Hindi, Indonesisch, Isländisch,
+  Norwegisch (Bokmål), Russisch, Thai.
   Umschaltbar unter „Mehr", inkl. Datumsformaten, Push-Kurztexten und
   CMS-Standard-Sprache-Auswahl; Admin-UI/CMS bleibt viersprachig (de/en/fr/es).
 - Inhalts-Sprach-Maps akzeptieren beliebige Besucher-Sprachcodes; die

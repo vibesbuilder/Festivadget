@@ -1,0 +1,164 @@
+{
+  "nav": {
+    "home": "Beranda",
+    "lineup": "Line-up",
+    "timetable": "Jadwal",
+    "myplan": "Rencanaku",
+    "map": "Peta",
+    "more": "Lainnya"
+  },
+  "more": {
+    "title": "Lainnya",
+    "favorites": "Jadwalku",
+    "news": "Berita",
+    "map": "Peta",
+    "info": "Informasi",
+    "sponsors": "Sponsor",
+    "tickets": "Tiket",
+    "search": "Cari",
+    "contact": "Kontak",
+    "impressum": "Informasi hukum",
+    "language": "Bahasa",
+    "theme": "Dark / Light",
+    "weather": "Cuaca"
+  },
+  "common": {
+    "loading": "Memuat …",
+    "error": "Terjadi kesalahan.",
+    "retry": "Coba lagi",
+    "offline": "Offline",
+    "lastUpdate": "Per: {{time}}",
+    "empty": "Belum ada konten.",
+    "close": "Tutup",
+    "notFound": "Tidak ditemukan"
+  },
+  "home": {
+    "now": "Sekarang",
+    "upNext": "Berikutnya",
+    "overview": "Ikhtisar program",
+    "newsfeed": "Berita",
+    "nextFavorite": "Favoritmu berikutnya",
+    "video": "Tonton video",
+    "all": "Semua"
+  },
+  "lineup": {
+    "title": "Line-up",
+    "allGenres": "Semua",
+    "headliner": "Headliner",
+    "noActs": "Tidak ada penampilan hari ini."
+  },
+  "timetable": {
+    "title": "Jadwal",
+    "grid": "Kisi",
+    "list": "Daftar",
+    "favoritesOnly": "Hanya favorit",
+    "now": "Sekarang",
+    "clash": "Bentrok",
+    "noSlots": "Tidak ada slot untuk pilihan ini.",
+    "allHidden": "Semua panggung disembunyikan.",
+    "addPlan": "Tambahkan ke rencanaku",
+    "removePlan": "Hapus dari rencanaku"
+  },
+  "favorites": {
+    "title": "Rencanaku",
+    "empty": "Belum ada favorit. Ketuk bintang di samping artis.",
+    "emptyTitle": "Belum ada favorit",
+    "explain": "Ketuk bintang di samping artis di line-up atau jadwal untuk menambahkannya ke rencana pribadimu. Semua favoritmu akan tampil di sini secara kronologis – lengkap dengan peringatan bentrok dan ekspor .ics untuk kalendermu.",
+    "exportAll": "Simpan semua jadwal ke kalender",
+    "reminder": "Pengingat (.ics)",
+    "clashWarning": "Setidaknya satu penampilan bentrok dengan favorit lain."
+  },
+  "news": {
+    "title": "Berita",
+    "pinned": "Disematkan",
+    "now": "Sekarang: {{artist}} @ {{stage}}"
+  },
+  "info": {
+    "title": "Informasi",
+    "notFound": "Halaman informasi tidak ditemukan."
+  },
+  "sponsors": {
+    "title": "Sponsor",
+    "tier": {
+      "main": "Presented by",
+      "premium": "Mitra premium",
+      "partner": "Mitra",
+      "supporter": "Pendukung"
+    }
+  },
+  "tickets": {
+    "title": "Tiket",
+    "open": "Buka",
+    "shop": "Ke toko tiket"
+  },
+  "artist": {
+    "playtimes": "Stage Time",
+    "favorite": "Tambahkan ke favorit",
+    "favorited": "Favorit",
+    "notFound": "Artis tidak ditemukan."
+  },
+  "install": {
+    "cta": "Pasang aplikasi untuk penggunaan offline.",
+    "ios1": "Ke layar utama:",
+    "ios2": "Bagikan → “Tambah ke Layar Utama”.",
+    "button": "Pasang",
+    "close": "Tutup"
+  },
+  "weather": {
+    "title": "Cuaca",
+    "today": "Hari ini",
+    "tomorrow": "Besok",
+    "dayAfter": "Lusa",
+    "todayShort": "hari ini",
+    "tomorrowShort": "besok",
+    "now": "saat ini",
+    "updated": "Diperbarui",
+    "stale": "data mungkin sudah usang",
+    "noData": "belum ada data",
+    "section": {
+      "morning": "Pagi",
+      "noon": "Siang",
+      "evening": "Sore",
+      "night": "Malam"
+    }
+  },
+  "map": {
+    "title": "Peta",
+    "all": "Semua",
+    "noPois": "Tidak ada titik di peta."
+  },
+  "search": {
+    "title": "Cari",
+    "noResults": "Tidak ada hasil untuk “{{query}}”."
+  },
+  "push": {
+    "noKey": "Kunci publik VAPID belum dikonfigurasi.",
+    "denied": "Notifikasi tidak diizinkan.",
+    "saveFailed": "Langganan tidak dapat disimpan (HTTP {{status}}).",
+    "catInfo": "Informasi",
+    "catLineup": "Line-up",
+    "catGeneral": "Umum",
+    "catSafety": "Keamanan",
+    "alwaysOn": "(selalu aktif)",
+    "myPlan": "Rencanaku",
+    "myPlanHint": "(pengingat sebelum konser)"
+  },
+  "poi": {
+    "stage": "Panggung",
+    "wc": "Toilet",
+    "food": "Makanan",
+    "drink": "Minuman",
+    "firstaid": "P3K",
+    "atm": "ATM",
+    "info": "Info",
+    "entrance": "Pintu masuk",
+    "exit": "Pintu keluar",
+    "camping": "Perkemahan",
+    "caravan": "Karavan",
+    "cashless": "Cashless",
+    "shuttle": "Shuttle",
+    "merch": "Merch",
+    "parking": "Parkir",
+    "generic": "Titik"
+  }
+}

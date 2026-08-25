@@ -23,6 +23,15 @@ import ptBR from "./pt-BR.json";
 import zhCN from "./zh-CN.json";
 import jaJP from "./ja-JP.json";
 import koKR from "./ko-KR.json";
+import sq from "./sq.json";
+import af from "./af.json";
+import el from "./el.json";
+import hi from "./hi.json";
+import idID from "./id.json";
+import isIS from "./is.json";
+import nb from "./nb.json";
+import ru from "./ru.json";
+import th from "./th.json";
 
 // Available app languages with native display names (language picker under "More").
 export const LANGUAGES = {
@@ -49,6 +58,15 @@ export const LANGUAGES = {
   "zh-CN": "简体中文",
   "ja-JP": "日本語",
   "ko-KR": "한국어",
+  sq: "Shqip",
+  af: "Afrikaans",
+  el: "Ελληνικά",
+  hi: "हिन्दी",
+  id: "Bahasa Indonesia",
+  is: "Íslenska",
+  nb: "Norsk (bokmål)",
+  ru: "Русский",
+  th: "ไทย",
 } as const;
 
 export type AppLanguage = keyof typeof LANGUAGES;
@@ -101,6 +119,15 @@ void i18n.use(initReactI18next).init({
     "zh-CN": { translation: zhCN },
     "ja-JP": { translation: jaJP },
     "ko-KR": { translation: koKR },
+    sq: { translation: sq },
+    af: { translation: af },
+    el: { translation: el },
+    hi: { translation: hi },
+    id: { translation: idID },
+    is: { translation: isIS },
+    nb: { translation: nb },
+    ru: { translation: ru },
+    th: { translation: th },
   },
   lng: storedLanguage(),
   fallbackLng: "en",
