@@ -5,6 +5,12 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.0.0/), Versionier
 
 ## [Unreleased]
 
+### Fixed
+- **Admin-UI → Update zeigt die installierte Version jetzt auf allen
+  Installationen**: Der Build erzeugt `dist/VERSION` (aus package.json), sodass
+  auch per `deploy-data.bat full` betriebene Instanzen (ohne Release-Paket)
+  ihre Versionsnummer sehen statt „unbekannt".
+
 ## [1.6.0] - 2026-08-20
 
 ### Added

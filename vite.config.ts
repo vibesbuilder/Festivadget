@@ -2,7 +2,7 @@ import { defineConfig, type Plugin } from "vite";
 import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
 import { fileURLToPath, URL } from "node:url";
-import { copyFileSync, mkdirSync, readdirSync } from "node:fs";
+import { copyFileSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 // Ship the manuals (Markdown, all languages): docs/*.md and IMPLEMENTATION*.md
@@ -22,6 +22,20 @@ function copyDocsPlugin(): Plugin {
       for (const f of readdirSync(root)) {
         if (/^IMPLEMENTATION(\.\w+)?\.md$/.test(f)) copyFileSync(join(root, f), join(out, f));
       }
+    },
+  };
+}
+
+// Write dist/VERSION (from package.json) so every deployment - not only
+// release-package installs - carries its version; the CMS update tab shows it.
+function writeVersionPlugin(): Plugin {
+  return {
+    name: "festivadget:write-version",
+    apply: "build",
+    closeBundle() {
+      const root = fileURLToPath(new URL(".", import.meta.url));
+      const pkg = JSON.parse(readFileSync(join(root, "package.json"), "utf-8")) as { version: string };
+      writeFileSync(join(root, "dist", "VERSION"), pkg.version);
     },
   };
 }
@@ -65,6 +79,7 @@ export default defineConfig({
   plugins: [
     react(),
     copyDocsPlugin(),
+    writeVersionPlugin(),
     VitePWA({
       registerType: "autoUpdate",
       // Custom service worker (phase 5: web push). Caching logic lives in src/sw.ts.
