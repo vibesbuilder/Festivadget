@@ -18,15 +18,62 @@ param([switch]$SkipBuild)
 $ErrorActionPreference = "Stop"
 $app = Split-Path -Parent $PSScriptRoot   # .../Festivadget (App-Ordner)
 
+# --- 0. Locate Node and pnpm ------------------------------------------------------
+# PATH alone is not reliable: a terminal that was already open when Node or pnpm
+# was installed still carries the old PATH, and an "as administrator" window may
+# even run under a different user profile. So look in the usual install locations
+# too, and fall back to Corepack, which ships with Node, starts its own node.exe
+# and runs the pnpm version pinned in package.json.
+function Resolve-Pnpm {
+    # Node first: pnpm brings its own, but the shims pnpm writes to
+    # node_modules\.bin call a bare "node" - without it the build dies halfway.
+    if (-not (Get-Command node.exe -ErrorAction SilentlyContinue)) {
+        $nodeDir = @(
+            "$env:ProgramFiles\nodejs",
+            "$env:LOCALAPPDATA\Programs\nodejs",
+            "${env:ProgramFiles(x86)}\nodejs"
+        ) | Where-Object { $_ -and (Test-Path (Join-Path $_ "node.exe")) } | Select-Object -First 1
+        if (-not $nodeDir) {
+            throw "Node not found. Install it from nodejs.org, then open a NEW terminal."
+        }
+        Write-Host "== Adding $nodeDir to PATH - Node was not reachable from this terminal"
+        $env:Path = "$nodeDir;$env:Path"
+    }
+
+    $cmd = (Get-Command pnpm.cmd, pnpm.exe -ErrorAction SilentlyContinue | Select-Object -First 1).Source
+    if (-not $cmd) {
+        $cmd = @(
+            "$env:APPDATA\npm\pnpm.cmd",
+            "$env:USERPROFILE\AppData\Roaming\npm\pnpm.cmd",
+            "$env:LOCALAPPDATA\pnpm\pnpm.exe",
+            "$env:ProgramFiles\nodejs\pnpm.cmd"
+        ) | Where-Object { Test-Path $_ } | Select-Object -First 1
+    }
+    if ($cmd) { return [pscustomobject]@{ Cmd = $cmd; Prefix = @() } }
+
+    $corepack = (Get-Command corepack.cmd, corepack.exe -ErrorAction SilentlyContinue | Select-Object -First 1).Source
+    if (-not $corepack -and (Test-Path "$env:ProgramFiles\nodejs\corepack.cmd")) {
+        $corepack = "$env:ProgramFiles\nodejs\corepack.cmd"
+    }
+    if (-not $corepack) {
+        throw "pnpm not found. Install it once with 'npm install -g pnpm', then open a NEW terminal."
+    }
+    $env:COREPACK_ENABLE_DOWNLOAD_PROMPT = "0"
+    return [pscustomobject]@{ Cmd = $corepack; Prefix = @("pnpm") }
+}
+
 # --- 1. Neutral app build (without instance values from the local .env) ---------
 if (-not $SkipBuild) {
     Write-Host "== Build (neutral: vite --mode release clears instance env via .env.release)"
+    $pn = Resolve-Pnpm
+    $pnArgs = @($pn.Prefix)
+    Write-Host "== Using $($pn.Cmd) $($pn.Prefix)"
     # CAUTION: $env:X = "" DELETES the variable under PowerShell -> the local
     # .env would win (that is how the RID VAPID key ended up in v1.2.x packages).
     # Hence .env.release (empty overrides) + vite --mode release.
-    pnpm -C $app exec tsc -b
+    & $pn.Cmd @pnArgs -C $app exec tsc -b
     if ($LASTEXITCODE -ne 0) { throw "tsc failed." }
-    pnpm -C $app exec vite build --mode release
+    & $pn.Cmd @pnArgs -C $app exec vite build --mode release
     if ($LASTEXITCODE -ne 0) { throw "vite build failed." }
 }
 if (-not (Test-Path "$app\dist\index.html")) { throw "dist/ missing - build first." }
