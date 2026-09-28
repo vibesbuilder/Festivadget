@@ -9,7 +9,8 @@ REM                                 vendor\ (config stays server-side, vendor: d
 REM
 REM Flow data/full: pnpm run import -> build:data -> build, then upload.
 REM Flow push: upload only (PHP needs no build).
-REM Prerequisites: Node/pnpm in PATH, curl (included in Windows 10/11), deploy.env.bat created.
+REM Prerequisites: Node and pnpm installed, curl (included in Windows 10/11), deploy.env.bat
+REM created. pnpm is looked up in PATH and in the usual install locations (see :findpnpm).
 REM Note: this file lives in the app folder Festivadget\ and jumps here via cd /d "%~dp0";
 REM the pnpm scripts thus run in the "festivadget" package.
 
@@ -26,17 +27,76 @@ set "MODE=data"
 if /i "%~1"=="full" set "MODE=full"
 if /i "%~1"=="push" goto :uploadpush
 
+REM --- :findnode - make sure Node is reachable ---------------------------
+REM pnpm brings its own Node, but the bin shims it writes to node_modules\.bin
+REM call a bare "node", so a shell without Node in PATH fails in the middle of a
+REM build step instead of here. Put the Node directory in front of PATH if needed.
+set "NODEDIR="
+for %%P in (node.exe) do if not defined NODEDIR set "NODEDIR=%%~dp$PATH:P"
+if defined NODEDIR goto :nodeok
+if exist "%ProgramFiles%\nodejs\node.exe" set "NODEDIR=%ProgramFiles%\nodejs\"
+if not defined NODEDIR if exist "%LOCALAPPDATA%\Programs\nodejs\node.exe" set "NODEDIR=%LOCALAPPDATA%\Programs\nodejs\"
+if not defined NODEDIR if exist "%ProgramFiles(x86)%\nodejs\node.exe" set "NODEDIR=%ProgramFiles(x86)%\nodejs\"
+if not defined NODEDIR (
+  echo [Error] Node not found. Searched PATH, "%ProgramFiles%\nodejs",
+  echo         "%LOCALAPPDATA%\Programs\nodejs" and "%ProgramFiles(x86)%\nodejs".
+  echo         Install Node from nodejs.org, then open a NEW terminal.
+  goto :fail
+)
+echo   adding %NODEDIR% to PATH - Node was not reachable from this terminal
+set "PATH=%NODEDIR%;%PATH%"
+:nodeok
+
+REM --- :findpnpm - locate pnpm -------------------------------------------
+REM PATH first, then the usual install locations, and Corepack as a last resort.
+REM A terminal that was already open when pnpm or Node was installed still carries
+REM the old PATH, and an elevated window may run under a different profile - in
+REM both cases a bare "pnpm" fails although the machine is set up correctly.
+set "PNPM="
+set "PNPMARG="
+for %%P in (pnpm.cmd pnpm.exe pnpm.bat) do if not defined PNPM set "PNPM=%%~$PATH:P"
+if not defined PNPM if exist "%APPDATA%\npm\pnpm.cmd" set "PNPM=%APPDATA%\npm\pnpm.cmd"
+if not defined PNPM if exist "%USERPROFILE%\AppData\Roaming\npm\pnpm.cmd" set "PNPM=%USERPROFILE%\AppData\Roaming\npm\pnpm.cmd"
+if not defined PNPM if exist "%LOCALAPPDATA%\pnpm\pnpm.exe" set "PNPM=%LOCALAPPDATA%\pnpm\pnpm.exe"
+if not defined PNPM if exist "%ProgramFiles%\nodejs\pnpm.cmd" set "PNPM=%ProgramFiles%\nodejs\pnpm.cmd"
+
+REM Corepack ships with Node, starts its own node.exe and runs the pnpm version
+REM pinned in package.json, so it works even where no pnpm is installed at all.
+for %%P in (corepack.cmd corepack.exe) do if not defined PNPM if not "%%~$PATH:P"=="" (
+  set "PNPM=%%~$PATH:P"
+  set "PNPMARG=pnpm"
+)
+if not defined PNPM if exist "%ProgramFiles%\nodejs\corepack.cmd" (
+  set "PNPM=%ProgramFiles%\nodejs\corepack.cmd"
+  set "PNPMARG=pnpm"
+)
+if defined PNPMARG set "COREPACK_ENABLE_DOWNLOAD_PROMPT=0"
+
+if not defined PNPM (
+  echo [Error] Neither pnpm nor Node/Corepack found. Searched:
+  echo           - PATH
+  echo           - %APPDATA%\npm\pnpm.cmd
+  echo           - %USERPROFILE%\AppData\Roaming\npm\pnpm.cmd
+  echo           - %LOCALAPPDATA%\pnpm\pnpm.exe
+  echo           - %ProgramFiles%\nodejs\
+  echo         Install Node from nodejs.org, then: npm install -g pnpm
+  echo         Already installed? Open a NEW terminal - an open window keeps the old PATH,
+  echo         and an "as administrator" window may run under a different user profile.
+  goto :fail
+)
+
 echo(
 echo === 1/4  Import from sources (pnpm run import) ===
-call pnpm run import || goto :fail
+echo   using %PNPM% %PNPMARG%
+call "%PNPM%" %PNPMARG% run import || goto :fail
 
 echo(
 echo === 2/4  Validation + version.json (pnpm run build:data) ===
-call pnpm run build:data || goto :fail
+call "%PNPM%" %PNPMARG% run build:data || goto :fail
 
 echo(
 echo === 3/4  Production build (pnpm run build) ===
-call pnpm run build || goto :fail
+call "%PNPM%" %PNPMARG% run build || goto :fail
 
 if /i "%MODE%"=="full" goto :uploadfull
 
