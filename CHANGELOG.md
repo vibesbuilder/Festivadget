@@ -5,6 +5,20 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.0.0/), Versionier
 
 ## [Unreleased]
 
+### Fixed
+- **Deploy und Release-Build finden pnpm und Node selbst.** `deploy-data.bat` und
+  `tools/build-release.ps1` setzten voraus, dass `pnpm` im PATH steht. In einem
+  Terminal, das schon vor der pnpm-Installation offen war – oder das unter einem
+  anderen Profil läuft, etwa „als Administrator" –, brach der Deploy sofort mit
+  „pnpm konnte nicht gefunden werden" ab, obwohl der Rechner korrekt eingerichtet
+  war. Gesucht wird nun der Reihe nach in PATH, `%APPDATA%\npm`,
+  `%USERPROFILE%\AppData\Roaming\npm`, `%LOCALAPPDATA%\pnpm`, im Node-Ordner und
+  zuletzt über Corepack, das mit Node kommt und die in `package.json` gepinnte
+  pnpm-Version zieht. Ist Node nicht erreichbar, kommt sein Ordner vor den PATH:
+  pnpm bringt zwar ein eigenes Node mit, die Shims in `node_modules\.bin` rufen
+  aber ein nacktes `node` auf. Wird nichts gefunden, endet der Lauf mit der Liste
+  der durchsuchten Orte statt mit einer nackten Fehlermeldung.
+
 ## [1.8.0] - 2026-09-28
 
 ### Added
