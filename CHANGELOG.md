@@ -5,6 +5,8 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.0.0/), Versionier
 
 ## [Unreleased]
 
+## [1.8.1] - 2026-09-28
+
 ### Fixed
 - **Deploy und Release-Build finden pnpm und Node selbst.** `deploy-data.bat` und
   `tools/build-release.ps1` setzten voraus, dass `pnpm` im PATH steht. In einem
