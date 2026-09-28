@@ -1,10 +1,12 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import type { Artist } from "@/types";
 
 // Artist card with a 4:5 portrait image (§2, §12.1).
 // `showImage = false` -> compact card without image (name/genre), e.g. for acts
 // beyond the image limit in the line-up (see LINEUP_IMAGE_LIMIT in config.ts).
 export function ArtistCard({ artist, showImage = true }: { artist: Artist; showImage?: boolean }) {
+  const { t } = useTranslation();
   if (!showImage) {
     const genres = (artist.genres ?? []).join(" · ");
     return (
@@ -14,7 +16,7 @@ export function ArtistCard({ artist, showImage = true }: { artist: Artist; showI
       >
         {artist.isHeadliner && (
           <span className="inline-block w-fit rounded bg-rid-accent px-1.5 py-0.5 text-[10px] font-bold uppercase text-black">
-            Headliner
+            {t("lineup.headliner")}
           </span>
         )}
         {artist.isDj && (
@@ -52,7 +54,7 @@ export function ArtistCard({ artist, showImage = true }: { artist: Artist; showI
           <div className="mb-1 flex flex-wrap gap-1">
             {artist.isHeadliner && (
               <span className="inline-block rounded bg-rid-accent px-1.5 py-0.5 text-[10px] font-bold uppercase text-black">
-                Headliner
+                {t("lineup.headliner")}
               </span>
             )}
             {artist.isDj && (

@@ -30,7 +30,9 @@
     "lastUpdate": "Stav: {{time}}",
     "empty": "Zatiaľ žiadny obsah.",
     "close": "Zavrieť",
-    "notFound": "Nenájdené"
+    "notFound": "Nenájdené",
+    "embedded": "Vložený obsah",
+    "pageMissing": "Táto stránka neexistuje."
   },
   "home": {
     "now": "Práve teraz",
@@ -57,7 +59,8 @@
     "noSlots": "Pre tento výber nie sú žiadne sloty.",
     "allHidden": "Všetky pódiá skryté.",
     "addPlan": "Pridať do môjho plánu",
-    "removePlan": "Odobrať z môjho plánu"
+    "removePlan": "Odobrať z môjho plánu",
+    "cancelled": "zrušené"
   },
   "favorites": {
     "title": "Môj plán",
@@ -129,6 +132,7 @@
   },
   "search": {
     "title": "Hľadať",
+    "placeholder": "Interpreti, vystúpenia, informácie, miesta …",
     "noResults": "Žiadne výsledky pre „{{query}}“."
   },
   "push": {
@@ -141,7 +145,24 @@
     "catSafety": "Bezpečnosť",
     "alwaysOn": "(vždy aktívne)",
     "myPlan": "Môj plán",
-    "myPlanHint": "(pripomienka pred začiatkom)"
+    "myPlanHint": "(pripomienka pred začiatkom)",
+    "title": "Upozornenia",
+    "pushTitle": "Push upozornenia",
+    "turnOff": "Vypnúť upozornenia",
+    "teaser": "Začiatky koncertov a dôležité informácie na zamknutej obrazovke.",
+    "moreInfo": "Viac informácií",
+    "enable": "Zapnúť",
+    "blocked": "Upozornenia sú v prehliadači zablokované – povoľ ich v nastaveniach stránky.",
+    "ios": {
+      "title": "Zapnúť upozornenia",
+      "lead": "Pridaj si {{appName}} na <b>plochu</b> – len tak môžeš dostávať push upozornenia na <b>zamknutú obrazovku</b> svojho iPhonu/iPadu (napr. začiatky koncertov a bezpečnostné upozornenia, vyber si sám).",
+      "step1": "Dole ťukni na ikonu zdieľania <icon/>",
+      "step2": "Vyber <chip>Pridať na plochu <icon/></chip>",
+      "step3": "Otvor {{appName}} z plochy",
+      "step4": "V aplikácii ťukni pri položke <b>Upozornenia</b> na <b>Zapnúť</b>",
+      "ok": "Rozumiem",
+      "appFallback": "aplikáciu"
+    }
   },
   "poi": {
     "stage": "Pódium",

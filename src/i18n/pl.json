@@ -30,7 +30,9 @@
     "lastUpdate": "Stan: {{time}}",
     "empty": "Brak treści.",
     "close": "Zamknij",
-    "notFound": "Nie znaleziono"
+    "notFound": "Nie znaleziono",
+    "embedded": "Osadzona treść",
+    "pageMissing": "Ta strona nie istnieje."
   },
   "home": {
     "now": "Teraz",
@@ -57,7 +59,8 @@
     "noSlots": "Brak slotów dla tego wyboru.",
     "allHidden": "Wszystkie sceny ukryte.",
     "addPlan": "Dodaj do mojego planu",
-    "removePlan": "Usuń z mojego planu"
+    "removePlan": "Usuń z mojego planu",
+    "cancelled": "odwołane"
   },
   "favorites": {
     "title": "Mój plan",
@@ -129,6 +132,7 @@
   },
   "search": {
     "title": "Szukaj",
+    "placeholder": "Artyści, występy, informacje, miejsca …",
     "noResults": "Brak wyników dla „{{query}}”."
   },
   "push": {
@@ -141,7 +145,24 @@
     "catSafety": "Bezpieczeństwo",
     "alwaysOn": "(zawsze aktywne)",
     "myPlan": "Mój plan",
-    "myPlanHint": "(przypomnienie przed koncertem)"
+    "myPlanHint": "(przypomnienie przed koncertem)",
+    "title": "Powiadomienia",
+    "pushTitle": "Powiadomienia push",
+    "turnOff": "Wyłącz powiadomienia",
+    "teaser": "Początki koncertów i ważne informacje na ekranie blokady.",
+    "moreInfo": "Więcej informacji",
+    "enable": "Włącz",
+    "blocked": "Powiadomienia są zablokowane w przeglądarce – zezwól na nie w ustawieniach witryny.",
+    "ios": {
+      "title": "Włącz powiadomienia",
+      "lead": "Dodaj {{appName}} do <b>ekranu początkowego</b> – tylko wtedy otrzymasz powiadomienia push na <b>ekranie blokady</b> swojego iPhone'a/iPada (np. początki koncertów i komunikaty bezpieczeństwa, wybierasz sam).",
+      "step1": "Stuknij ikonę udostępniania <icon/> na dole",
+      "step2": "Wybierz <chip>Do ekranu początkowego <icon/></chip>",
+      "step3": "Otwórz {{appName}} z ekranu początkowego",
+      "step4": "W aplikacji stuknij <b>Włącz</b> przy pozycji <b>Powiadomienia</b>",
+      "ok": "Rozumiem",
+      "appFallback": "aplikację"
+    }
   },
   "poi": {
     "stage": "Scena",

@@ -30,7 +30,9 @@
     "lastUpdate": "Stand: {{time}}",
     "empty": "Nog geen inhoud nie.",
     "close": "Maak toe",
-    "notFound": "Nie gevind nie"
+    "notFound": "Nie gevind nie",
+    "embedded": "Ingebedde inhoud",
+    "pageMissing": "Hierdie bladsy bestaan nie."
   },
   "home": {
     "now": "Nou",
@@ -57,7 +59,8 @@
     "noSlots": "Geen optredes vir hierdie keuse nie.",
     "allHidden": "Alle verhoë is versteek.",
     "addPlan": "Voeg by my plan",
-    "removePlan": "Verwyder uit my plan"
+    "removePlan": "Verwyder uit my plan",
+    "cancelled": "gekanselleer"
   },
   "favorites": {
     "title": "My plan",
@@ -129,6 +132,7 @@
   },
   "search": {
     "title": "Soek",
+    "placeholder": "Kunstenaars, optredes, inligting, plekke …",
     "noResults": "Geen resultate vir „{{query}}“ nie."
   },
   "push": {
@@ -141,7 +145,24 @@
     "catSafety": "Veiligheid",
     "alwaysOn": "(altyd aan)",
     "myPlan": "My plan",
-    "myPlanHint": "(herinnering voor die konsert)"
+    "myPlanHint": "(herinnering voor die konsert)",
+    "title": "Kennisgewings",
+    "pushTitle": "Push-kennisgewings",
+    "turnOff": "Skakel kennisgewings af",
+    "teaser": "Konsertbegin en belangrike inligting op jou sluitskerm.",
+    "moreInfo": "Meer inligting",
+    "enable": "Aktiveer",
+    "blocked": "Kennisgewings is in die blaaier geblokkeer – laat dit asseblief in die werfinstellings toe.",
+    "ios": {
+      "title": "Aktiveer kennisgewings",
+      "lead": "Voeg {{appName}} by jou <b>tuisskerm</b> – net so kan jy push-kennisgewings op die <b>sluitskerm</b> van jou iPhone/iPad ontvang (bv. konsertbegin en veiligheidskennisgewings, jy kies self).",
+      "step1": "Tik onder op die deel-ikoon <icon/>",
+      "step2": "Kies <chip>Voeg by tuisskerm <icon/></chip>",
+      "step3": "Maak {{appName}} van die tuisskerm af oop",
+      "step4": "Tik in die app by <b>Kennisgewings</b> op <b>Aktiveer</b>",
+      "ok": "Verstaan",
+      "appFallback": "die app"
+    }
   },
   "poi": {
     "stage": "Verhoog",

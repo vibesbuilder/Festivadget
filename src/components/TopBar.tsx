@@ -1,11 +1,13 @@
 import { Link } from "react-router-dom";
 import { Search } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useFestival } from "@/data/queries";
 import { useAppConfig } from "@/data/useAppConfig";
 import { PushBellButton } from "./PushBellButton";
 
 // Slim top bar: logo artwork (max. 36px high, 300px wide) + bell + search.
 export function TopBar() {
+  const { t } = useTranslation();
   const { data: festival } = useFestival();
   // Customer logo from the branding (CMS); empty = build logo.
   const { branding } = useAppConfig();
@@ -16,10 +18,10 @@ export function TopBar() {
       style={{ paddingTop: "var(--safe-top)" }}
     >
       <div className="mx-auto flex max-w-app items-center justify-between gap-3 px-4 py-3">
-        <Link to="/" className="flex min-w-0 items-center" aria-label={festival?.name ?? "Home"}>
+        <Link to="/" className="flex min-w-0 items-center" aria-label={festival?.name ?? t("nav.home")}>
           <img
             src={branding?.logo || "/img/logo.png"}
-            alt={festival?.name ?? "ROCK IM DORF Festival 2026"}
+            alt={festival?.name ?? ""}
             className="h-9 w-auto max-w-[300px] object-contain"
           />
         </Link>
@@ -27,7 +29,7 @@ export function TopBar() {
           <PushBellButton />
           <Link
             to="/search"
-            aria-label="Search"
+            aria-label={t("search.title")}
             className="rounded-full p-2 text-rid-muted hover:text-rid-accent"
           >
             <Search size={20} />

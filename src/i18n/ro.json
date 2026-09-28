@@ -30,7 +30,9 @@
     "lastUpdate": "Actualizat: {{time}}",
     "empty": "Încă nu există conținut.",
     "close": "Închide",
-    "notFound": "Nu a fost găsit"
+    "notFound": "Nu a fost găsit",
+    "embedded": "Conținut încorporat",
+    "pageMissing": "Această pagină nu există."
   },
   "home": {
     "now": "Acum",
@@ -57,7 +59,8 @@
     "noSlots": "Niciun interval pentru această selecție.",
     "allHidden": "Toate scenele sunt ascunse.",
     "addPlan": "Adaugă la planul meu",
-    "removePlan": "Elimină din planul meu"
+    "removePlan": "Elimină din planul meu",
+    "cancelled": "anulat"
   },
   "favorites": {
     "title": "Planul meu",
@@ -129,6 +132,7 @@
   },
   "search": {
     "title": "Căutare",
+    "placeholder": "Artiști, reprezentații, informații, locuri …",
     "noResults": "Niciun rezultat pentru „{{query}}”."
   },
   "push": {
@@ -141,7 +145,24 @@
     "catSafety": "Siguranță",
     "alwaysOn": "(mereu activ)",
     "myPlan": "Planul meu",
-    "myPlanHint": "(memento înainte de concert)"
+    "myPlanHint": "(memento înainte de concert)",
+    "title": "Notificări",
+    "pushTitle": "Notificări push",
+    "turnOff": "Dezactivează notificările",
+    "teaser": "Începutul concertelor și informații importante pe ecranul de blocare.",
+    "moreInfo": "Mai multe informații",
+    "enable": "Activează",
+    "blocked": "Notificările sunt blocate în browser – permite-le din setările site-ului.",
+    "ios": {
+      "title": "Activează notificările",
+      "lead": "Adaugă {{appName}} pe <b>ecranul principal</b> – doar așa poți primi notificări push pe <b>ecranul de blocare</b> al iPhone-ului/iPad-ului tău (de ex. începutul concertelor și anunțuri de siguranță, tu alegi).",
+      "step1": "Atinge pictograma de partajare <icon/> din partea de jos",
+      "step2": "Alege <chip>Adaugă la ecranul principal <icon/></chip>",
+      "step3": "Deschide {{appName}} de pe ecranul principal",
+      "step4": "În aplicație, atinge <b>Activează</b> la <b>Notificări</b>",
+      "ok": "Am înțeles",
+      "appFallback": "aplicația"
+    }
   },
   "poi": {
     "stage": "Scenă",

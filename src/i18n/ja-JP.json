@@ -30,7 +30,9 @@
     "lastUpdate": "更新：{{time}}",
     "empty": "まだコンテンツがありません。",
     "close": "閉じる",
-    "notFound": "見つかりません"
+    "notFound": "見つかりません",
+    "embedded": "埋め込みコンテンツ",
+    "pageMissing": "このページは存在しません。"
   },
   "home": {
     "now": "ただいま",
@@ -57,7 +59,8 @@
     "noSlots": "この条件に該当する出演はありません。",
     "allHidden": "すべてのステージが非表示です。",
     "addPlan": "マイプランに追加",
-    "removePlan": "マイプランから削除"
+    "removePlan": "マイプランから削除",
+    "cancelled": "中止"
   },
   "favorites": {
     "title": "マイプラン",
@@ -129,6 +132,7 @@
   },
   "search": {
     "title": "検索",
+    "placeholder": "アーティスト、出演、情報、場所…",
     "noResults": "「{{query}}」に一致する結果はありません。"
   },
   "push": {
@@ -141,7 +145,24 @@
     "catSafety": "安全",
     "alwaysOn": "（常にオン）",
     "myPlan": "マイプラン",
-    "myPlanHint": "（開演前のリマインダー）"
+    "myPlanHint": "（開演前のリマインダー）",
+    "title": "通知",
+    "pushTitle": "プッシュ通知",
+    "turnOff": "通知をオフにする",
+    "teaser": "開演やお知らせをロック画面にお届けします。",
+    "moreInfo": "詳しく見る",
+    "enable": "オンにする",
+    "blocked": "通知がブラウザでブロックされています。サイトの設定で許可してください。",
+    "ios": {
+      "title": "通知をオンにする",
+      "lead": "{{appName}}を<b>ホーム画面</b>に追加してください。iPhone/iPadの<b>ロック画面</b>でプッシュ通知を受け取るにはこの操作が必要です（開演のお知らせや安全情報など、受け取る内容は選べます）。",
+      "step1": "画面下の共有アイコン <icon/> をタップ",
+      "step2": "<chip>ホーム画面に追加 <icon/></chip>を選択",
+      "step3": "ホーム画面から{{appName}}を開く",
+      "step4": "アプリ内の<b>通知</b>で<b>オンにする</b>をタップ",
+      "ok": "OK",
+      "appFallback": "このアプリ"
+    }
   },
   "poi": {
     "stage": "ステージ",

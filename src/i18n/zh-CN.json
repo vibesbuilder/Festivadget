@@ -30,7 +30,9 @@
     "lastUpdate": "更新于：{{time}}",
     "empty": "暂无内容。",
     "close": "关闭",
-    "notFound": "未找到"
+    "notFound": "未找到",
+    "embedded": "嵌入内容",
+    "pageMissing": "此页面不存在。"
   },
   "home": {
     "now": "现在",
@@ -57,7 +59,8 @@
     "noSlots": "此筛选条件下没有演出。",
     "allHidden": "所有舞台均已隐藏。",
     "addPlan": "加入我的日程",
-    "removePlan": "从我的日程移除"
+    "removePlan": "从我的日程移除",
+    "cancelled": "已取消"
   },
   "favorites": {
     "title": "我的日程",
@@ -129,6 +132,7 @@
   },
   "search": {
     "title": "搜索",
+    "placeholder": "艺人、演出、信息、地点…",
     "noResults": "没有与“{{query}}”相关的结果。"
   },
   "push": {
@@ -141,7 +145,24 @@
     "catSafety": "安全",
     "alwaysOn": "（始终开启）",
     "myPlan": "我的日程",
-    "myPlanHint": "（演出开始前提醒）"
+    "myPlanHint": "（演出开始前提醒）",
+    "title": "通知",
+    "pushTitle": "推送通知",
+    "turnOff": "关闭通知",
+    "teaser": "演出开始和重要信息直接显示在锁屏上。",
+    "moreInfo": "了解更多",
+    "enable": "开启",
+    "blocked": "通知已被浏览器阻止，请在网站设置中允许。",
+    "ios": {
+      "title": "开启通知",
+      "lead": "将 {{appName}} 添加到<b>主屏幕</b>——只有这样才能在 iPhone/iPad 的<b>锁屏</b>上接收推送通知（例如演出开始和安全提示，可自行选择）。",
+      "step1": "点击底部的分享图标 <icon/>",
+      "step2": "选择<chip>添加到主屏幕 <icon/></chip>",
+      "step3": "从主屏幕打开 {{appName}}",
+      "step4": "在应用中点击<b>通知</b>旁的<b>开启</b>",
+      "ok": "知道了",
+      "appFallback": "本应用"
+    }
   },
   "poi": {
     "stage": "舞台",

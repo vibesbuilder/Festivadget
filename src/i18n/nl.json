@@ -30,7 +30,9 @@
     "lastUpdate": "Stand: {{time}}",
     "empty": "Nog geen inhoud.",
     "close": "Sluiten",
-    "notFound": "Niet gevonden"
+    "notFound": "Niet gevonden",
+    "embedded": "Ingesloten inhoud",
+    "pageMissing": "Deze pagina bestaat niet."
   },
   "home": {
     "now": "Nu",
@@ -57,7 +59,8 @@
     "noSlots": "Geen slots voor deze selectie.",
     "allHidden": "Alle podia verborgen.",
     "addPlan": "Toevoegen aan mijn planning",
-    "removePlan": "Verwijderen uit mijn planning"
+    "removePlan": "Verwijderen uit mijn planning",
+    "cancelled": "geannuleerd"
   },
   "favorites": {
     "title": "Mijn planning",
@@ -129,6 +132,7 @@
   },
   "search": {
     "title": "Zoeken",
+    "placeholder": "Acts, optredens, info, locaties …",
     "noResults": "Geen resultaten voor „{{query}}”."
   },
   "push": {
@@ -141,7 +145,24 @@
     "catSafety": "Veiligheid",
     "alwaysOn": "(altijd actief)",
     "myPlan": "Mijn planning",
-    "myPlanHint": "(herinnering voor aanvang)"
+    "myPlanHint": "(herinnering voor aanvang)",
+    "title": "Meldingen",
+    "pushTitle": "Pushmeldingen",
+    "turnOff": "Meldingen uitschakelen",
+    "teaser": "Aanvang van optredens & belangrijke info op je toegangsscherm.",
+    "moreInfo": "Meer info",
+    "enable": "Inschakelen",
+    "blocked": "Meldingen zijn geblokkeerd in de browser – sta ze toe in de site-instellingen.",
+    "ios": {
+      "title": "Meldingen inschakelen",
+      "lead": "Zet {{appName}} op je <b>beginscherm</b> – alleen zo kun je pushmeldingen ontvangen op het <b>toegangsscherm</b> van je iPhone/iPad (bijv. aanvang van optredens & veiligheidsmeldingen, je kiest zelf).",
+      "step1": "Tik onderaan op het deelsymbool <icon/>",
+      "step2": "Kies <chip>Zet op beginscherm <icon/></chip>",
+      "step3": "Open {{appName}} vanaf het beginscherm",
+      "step4": "Tik in de app bij <b>Meldingen</b> op <b>Inschakelen</b>",
+      "ok": "Begrepen",
+      "appFallback": "de app"
+    }
   },
   "poi": {
     "stage": "Podium",

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import { Share, Plus, X } from "lucide-react";
 import { useFestival } from "@/data/queries";
 
@@ -33,7 +33,7 @@ export function IosInstallPopup() {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const { data: festival } = useFestival();
-  const appName = festival?.shortName ?? festival?.name ?? "die App";
+  const appName = festival?.shortName ?? festival?.name ?? t("push.ios.appFallback");
 
   // Show automatically on first start (iOS, not installed yet).
   useEffect(() => {
@@ -69,16 +69,14 @@ export function IosInstallPopup() {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mb-3 flex items-start justify-between gap-3">
-          <h2 className="text-lg font-bold">Benachrichtigungen aktivieren</h2>
+          <h2 className="text-lg font-bold">{t("push.ios.title")}</h2>
           <button onClick={dismiss} aria-label={t("common.close")} className="p-1 text-rid-muted">
             <X size={20} />
           </button>
         </div>
 
         <p className="text-sm text-rid-text/90">
-          Füge {appName} zum <strong>Home-Bildschirm</strong> hinzu – nur so kannst du
-          Push-Benachrichtigungen am <strong>Sperrbildschirm</strong> deines iPhone/iPad empfangen
-          (z. B. Konzertstarts & Sicherheitshinweise, wähle selbst).
+          <Trans i18nKey="push.ios.lead" values={{ appName }} components={{ b: <strong /> }} />
         </p>
 
         <ol className="mt-4 space-y-3 text-sm">
@@ -86,35 +84,39 @@ export function IosInstallPopup() {
             <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-rid-surface-2 font-bold">
               1
             </span>
-            <span className="flex items-center gap-1">
-              Unten auf das Teilen-Symbol
-              <Share size={16} className="text-rid-accent" /> tippen
+            <span>
+              <Trans
+                i18nKey="push.ios.step1"
+                components={{ icon: <Share size={16} className="inline text-rid-accent" /> }}
+              />
             </span>
           </li>
           <li className="flex items-center gap-3">
             <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-rid-surface-2 font-bold">
               2
             </span>
-            <span className="flex items-center gap-1">
-              <span className="inline-flex items-center gap-1 rounded bg-rid-surface-2 px-1.5 py-0.5">
-                Zum Home-Bildschirm <Plus size={14} className="text-rid-accent" />
-              </span>
-              wählen
+            <span>
+              <Trans
+                i18nKey="push.ios.step2"
+                components={{
+                  chip: <span className="inline-block rounded bg-rid-surface-2 px-1.5 py-0.5" />,
+                  icon: <Plus size={14} className="inline text-rid-accent" />,
+                }}
+              />
             </span>
           </li>
           <li className="flex items-center gap-3">
             <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-rid-surface-2 font-bold">
               3
             </span>
-            <span>{appName} vom Home-Bildschirm öffnen</span>
+            <span>{t("push.ios.step3", { appName })}</span>
           </li>
           <li className="flex items-center gap-3">
             <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-rid-surface-2 font-bold">
               4
             </span>
             <span>
-              In der App bei <strong>Benachrichtigungen</strong> auf <strong>Aktivieren</strong>{" "}
-              klicken
+              <Trans i18nKey="push.ios.step4" components={{ b: <strong /> }} />
             </span>
           </li>
         </ol>
@@ -123,7 +125,7 @@ export function IosInstallPopup() {
           onClick={dismiss}
           className="mt-5 w-full rounded-full bg-rid-accent py-2.5 font-semibold text-black"
         >
-          Verstanden
+          {t("push.ios.ok")}
         </button>
       </div>
     </div>

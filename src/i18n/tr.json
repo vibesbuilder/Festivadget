@@ -30,7 +30,9 @@
     "lastUpdate": "Durum: {{time}}",
     "empty": "Henüz içerik yok.",
     "close": "Kapat",
-    "notFound": "Bulunamadı"
+    "notFound": "Bulunamadı",
+    "embedded": "Gömülü içerik",
+    "pageMissing": "Bu sayfa mevcut değil."
   },
   "home": {
     "now": "Şimdi",
@@ -57,7 +59,8 @@
     "noSlots": "Bu seçim için gösterim yok.",
     "allHidden": "Tüm sahneler gizlendi.",
     "addPlan": "Planıma ekle",
-    "removePlan": "Planımdan çıkar"
+    "removePlan": "Planımdan çıkar",
+    "cancelled": "iptal edildi"
   },
   "favorites": {
     "title": "Planım",
@@ -129,6 +132,7 @@
   },
   "search": {
     "title": "Ara",
+    "placeholder": "Sanatçılar, gösterimler, bilgiler, yerler …",
     "noResults": "„{{query}}“ için sonuç yok."
   },
   "push": {
@@ -141,7 +145,24 @@
     "catSafety": "Güvenlik",
     "alwaysOn": "(her zaman açık)",
     "myPlan": "Planım",
-    "myPlanHint": "(konser öncesi hatırlatma)"
+    "myPlanHint": "(konser öncesi hatırlatma)",
+    "title": "Bildirimler",
+    "pushTitle": "Push bildirimleri",
+    "turnOff": "Bildirimleri kapat",
+    "teaser": "Konser başlangıçları ve önemli bilgiler kilit ekranında.",
+    "moreInfo": "Daha fazla bilgi",
+    "enable": "Etkinleştir",
+    "blocked": "Bildirimler tarayıcıda engellenmiş – lütfen site ayarlarından izin ver.",
+    "ios": {
+      "title": "Bildirimleri etkinleştir",
+      "lead": "Uygulamayı <b>ana ekrana</b> ekle – iPhone/iPad'inin <b>kilit ekranında</b> push bildirimi almanın tek yolu bu (ör. konser başlangıçları ve güvenlik duyuruları, seçim senin).",
+      "step1": "Alttaki paylaş simgesine <icon/> dokun",
+      "step2": "<chip>Ana ekrana ekle <icon/></chip> seçeneğini seç",
+      "step3": "Uygulamayı ana ekrandan aç",
+      "step4": "Uygulamada <b>Bildirimler</b> bölümünde <b>Etkinleştir</b>'e dokun",
+      "ok": "Anladım",
+      "appFallback": "uygulama"
+    }
   },
   "poi": {
     "stage": "Sahne",

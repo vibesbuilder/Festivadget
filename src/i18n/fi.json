@@ -30,7 +30,9 @@
     "lastUpdate": "Tilanne: {{time}}",
     "empty": "Ei vielä sisältöä.",
     "close": "Sulje",
-    "notFound": "Ei löytynyt"
+    "notFound": "Ei löytynyt",
+    "embedded": "Upotettu sisältö",
+    "pageMissing": "Tätä sivua ei ole olemassa."
   },
   "home": {
     "now": "Nyt",
@@ -57,7 +59,8 @@
     "noSlots": "Ei esityksiä tälle valinnalle.",
     "allHidden": "Kaikki lavat piilotettu.",
     "addPlan": "Lisää omaan ohjelmaan",
-    "removePlan": "Poista omasta ohjelmasta"
+    "removePlan": "Poista omasta ohjelmasta",
+    "cancelled": "peruttu"
   },
   "favorites": {
     "title": "Oma ohjelma",
@@ -129,6 +132,7 @@
   },
   "search": {
     "title": "Haku",
+    "placeholder": "Esiintyjät, esitykset, info, paikat …",
     "noResults": "Ei tuloksia haulle ”{{query}}”."
   },
   "push": {
@@ -141,7 +145,24 @@
     "catSafety": "Turvallisuus",
     "alwaysOn": "(aina käytössä)",
     "myPlan": "Oma ohjelma",
-    "myPlanHint": "(muistutus ennen keikkaa)"
+    "myPlanHint": "(muistutus ennen keikkaa)",
+    "title": "Ilmoitukset",
+    "pushTitle": "Push-ilmoitukset",
+    "turnOff": "Poista ilmoitukset käytöstä",
+    "teaser": "Keikkojen alkamiset ja tärkeät tiedot lukitusnäytölle.",
+    "moreInfo": "Lisätietoja",
+    "enable": "Ota käyttöön",
+    "blocked": "Ilmoitukset on estetty selaimessa – salli ne sivuston asetuksissa.",
+    "ios": {
+      "title": "Ota ilmoitukset käyttöön",
+      "lead": "Lisää {{appName}} <b>Koti-valikkoon</b> – vain siten voit saada push-ilmoituksia iPhonen/iPadin <b>lukitusnäytölle</b> (esim. keikkojen alkamiset ja turvallisuustiedotteet, valitse itse).",
+      "step1": "Napauta alhaalla jakokuvaketta <icon/>",
+      "step2": "Valitse <chip>Lisää Koti-valikkoon <icon/></chip>",
+      "step3": "Avaa {{appName}} Koti-valikosta",
+      "step4": "Napauta sovelluksessa kohdassa <b>Ilmoitukset</b> painiketta <b>Ota käyttöön</b>",
+      "ok": "Selvä",
+      "appFallback": "sovellus"
+    }
   },
   "poi": {
     "stage": "Lava",

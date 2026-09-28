@@ -30,7 +30,9 @@
     "lastUpdate": "As of: {{time}}",
     "empty": "No content yet.",
     "close": "Close",
-    "notFound": "Not found"
+    "notFound": "Not found",
+    "embedded": "Embedded content",
+    "pageMissing": "This page does not exist."
   },
   "home": {
     "now": "Now",
@@ -57,7 +59,8 @@
     "noSlots": "No slots for this selection.",
     "allHidden": "All stages hidden.",
     "addPlan": "Add to My plan",
-    "removePlan": "Remove from My plan"
+    "removePlan": "Remove from My plan",
+    "cancelled": "cancelled"
   },
   "favorites": {
     "title": "My Plan",
@@ -129,6 +132,7 @@
   },
   "search": {
     "title": "Search",
+    "placeholder": "Acts, slots, info, places …",
     "noResults": "No results for “{{query}}”."
   },
   "push": {
@@ -141,7 +145,24 @@
     "catSafety": "Safety",
     "alwaysOn": "(always on)",
     "myPlan": "My Plan",
-    "myPlanHint": "(reminder before showtime)"
+    "myPlanHint": "(reminder before showtime)",
+    "title": "Notifications",
+    "pushTitle": "Push notifications",
+    "turnOff": "Turn off notifications",
+    "teaser": "Show starts & important info on your lock screen.",
+    "moreInfo": "More info",
+    "enable": "Enable",
+    "blocked": "Notifications are blocked in the browser – please allow them in the site settings.",
+    "ios": {
+      "title": "Enable notifications",
+      "lead": "Add {{appName}} to your <b>Home Screen</b> – only then can you receive push notifications on the <b>lock screen</b> of your iPhone/iPad (e.g. show starts & safety notices, you choose).",
+      "step1": "Tap the share icon <icon/> at the bottom",
+      "step2": "Choose <chip>Add to Home Screen <icon/></chip>",
+      "step3": "Open {{appName}} from the Home Screen",
+      "step4": "In the app, tap <b>Enable</b> under <b>Notifications</b>",
+      "ok": "Got it",
+      "appFallback": "the app"
+    }
   },
   "poi": {
     "stage": "Stage",

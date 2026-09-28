@@ -30,7 +30,9 @@
     "lastUpdate": "Status: {{time}}",
     "empty": "Intet indhold endnu.",
     "close": "Luk",
-    "notFound": "Ikke fundet"
+    "notFound": "Ikke fundet",
+    "embedded": "Indlejret indhold",
+    "pageMissing": "Denne side findes ikke."
   },
   "home": {
     "now": "Nu",
@@ -57,7 +59,8 @@
     "noSlots": "Ingen slots for dette valg.",
     "allHidden": "Alle scener skjult.",
     "addPlan": "Føj til min plan",
-    "removePlan": "Fjern fra min plan"
+    "removePlan": "Fjern fra min plan",
+    "cancelled": "aflyst"
   },
   "favorites": {
     "title": "Min plan",
@@ -129,6 +132,7 @@
   },
   "search": {
     "title": "Søg",
+    "placeholder": "Kunstnere, optrædener, info, steder …",
     "noResults": "Ingen resultater for ”{{query}}”."
   },
   "push": {
@@ -141,7 +145,24 @@
     "catSafety": "Sikkerhed",
     "alwaysOn": "(altid aktiv)",
     "myPlan": "Min plan",
-    "myPlanHint": "(påmindelse før koncerten)"
+    "myPlanHint": "(påmindelse før koncerten)",
+    "title": "Notifikationer",
+    "pushTitle": "Push-notifikationer",
+    "turnOff": "Slå notifikationer fra",
+    "teaser": "Koncertstarter og vigtig info på låseskærmen.",
+    "moreInfo": "Mere info",
+    "enable": "Slå til",
+    "blocked": "Notifikationer er blokeret i browseren – tillad dem i webstedets indstillinger.",
+    "ios": {
+      "title": "Slå notifikationer til",
+      "lead": "Føj {{appName}} til din <b>hjemmeskærm</b> – kun sådan kan du modtage push-notifikationer på <b>låseskærmen</b> på din iPhone/iPad (f.eks. koncertstarter og sikkerhedsmeddelelser, du vælger selv).",
+      "step1": "Tryk på delingsikonet <icon/> nederst",
+      "step2": "Vælg <chip>Føj til hjemmeskærm <icon/></chip>",
+      "step3": "Åbn {{appName}} fra hjemmeskærmen",
+      "step4": "Tryk på <b>Slå til</b> under <b>Notifikationer</b> i appen",
+      "ok": "Forstået",
+      "appFallback": "appen"
+    }
   },
   "poi": {
     "stage": "Scene",

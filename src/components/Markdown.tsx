@@ -3,6 +3,7 @@ import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 // Uniform Markdown rendering for bio/info/news (§3, §12.9).
 // Additionally supports embedded (sanitized) HTML from the CMS import:
@@ -51,6 +52,7 @@ const schema = {
 };
 
 export function Markdown({ children }: { children: string }) {
+  const { t } = useTranslation();
   return (
     <div className="space-y-3 leading-relaxed text-rid-text">
       <ReactMarkdown
@@ -102,7 +104,7 @@ export function Markdown({ children }: { children: string }) {
             iframeAllowed(props.src as string | undefined) ? (
               <iframe
                 {...props}
-                title={(props.title as string) || "Eingebetteter Inhalt"}
+                title={(props.title as string) || t("common.embedded")}
                 className="w-full rounded-xl border-0"
               />
             ) : null,

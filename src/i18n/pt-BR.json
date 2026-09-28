@@ -30,7 +30,9 @@
     "lastUpdate": "Atualizado: {{time}}",
     "empty": "Ainda sem conteúdo.",
     "close": "Fechar",
-    "notFound": "Não encontrado"
+    "notFound": "Não encontrado",
+    "embedded": "Conteúdo incorporado",
+    "pageMissing": "Esta página não existe."
   },
   "home": {
     "now": "Agora",
@@ -57,7 +59,8 @@
     "noSlots": "Nenhum horário para esta seleção.",
     "allHidden": "Todos os palcos ocultos.",
     "addPlan": "Adicionar ao meu plano",
-    "removePlan": "Remover do meu plano"
+    "removePlan": "Remover do meu plano",
+    "cancelled": "cancelado"
   },
   "favorites": {
     "title": "Meu plano",
@@ -129,6 +132,7 @@
   },
   "search": {
     "title": "Buscar",
+    "placeholder": "Artistas, shows, informações, locais …",
     "noResults": "Nenhum resultado para “{{query}}”."
   },
   "push": {
@@ -141,7 +145,24 @@
     "catSafety": "Segurança",
     "alwaysOn": "(sempre ativo)",
     "myPlan": "Meu plano",
-    "myPlanHint": "(lembrete antes do show)"
+    "myPlanHint": "(lembrete antes do show)",
+    "title": "Notificações",
+    "pushTitle": "Notificações push",
+    "turnOff": "Desativar notificações",
+    "teaser": "Início dos shows e informações importantes na tela bloqueada.",
+    "moreInfo": "Mais informações",
+    "enable": "Ativar",
+    "blocked": "As notificações estão bloqueadas no navegador – permita-as nas configurações do site.",
+    "ios": {
+      "title": "Ativar notificações",
+      "lead": "Adicione {{appName}} à <b>tela de início</b> – só assim você recebe notificações push na <b>tela bloqueada</b> do seu iPhone/iPad (p. ex. início dos shows e avisos de segurança, você escolhe).",
+      "step1": "Toque no ícone de compartilhar <icon/> na parte inferior",
+      "step2": "Escolha <chip>Adicionar à Tela de Início <icon/></chip>",
+      "step3": "Abra {{appName}} pela tela de início",
+      "step4": "No app, toque em <b>Ativar</b> em <b>Notificações</b>",
+      "ok": "Entendi",
+      "appFallback": "o app"
+    }
   },
   "poi": {
     "stage": "Palco",

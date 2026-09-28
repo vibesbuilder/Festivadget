@@ -30,7 +30,9 @@
     "lastUpdate": "Per: {{time}}",
     "empty": "Belum ada konten.",
     "close": "Tutup",
-    "notFound": "Tidak ditemukan"
+    "notFound": "Tidak ditemukan",
+    "embedded": "Konten tersemat",
+    "pageMissing": "Halaman ini tidak ada."
   },
   "home": {
     "now": "Sekarang",
@@ -57,7 +59,8 @@
     "noSlots": "Tidak ada slot untuk pilihan ini.",
     "allHidden": "Semua panggung disembunyikan.",
     "addPlan": "Tambahkan ke rencanaku",
-    "removePlan": "Hapus dari rencanaku"
+    "removePlan": "Hapus dari rencanaku",
+    "cancelled": "dibatalkan"
   },
   "favorites": {
     "title": "Rencanaku",
@@ -129,6 +132,7 @@
   },
   "search": {
     "title": "Cari",
+    "placeholder": "Artis, penampilan, info, lokasi …",
     "noResults": "Tidak ada hasil untuk “{{query}}”."
   },
   "push": {
@@ -141,7 +145,24 @@
     "catSafety": "Keamanan",
     "alwaysOn": "(selalu aktif)",
     "myPlan": "Rencanaku",
-    "myPlanHint": "(pengingat sebelum konser)"
+    "myPlanHint": "(pengingat sebelum konser)",
+    "title": "Notifikasi",
+    "pushTitle": "Notifikasi push",
+    "turnOff": "Matikan notifikasi",
+    "teaser": "Awal konser & info penting di layar kunci.",
+    "moreInfo": "Info selengkapnya",
+    "enable": "Aktifkan",
+    "blocked": "Notifikasi diblokir di browser – izinkan di pengaturan situs.",
+    "ios": {
+      "title": "Aktifkan notifikasi",
+      "lead": "Tambahkan {{appName}} ke <b>layar utama</b> – hanya dengan cara ini kamu bisa menerima notifikasi push di <b>layar kunci</b> iPhone/iPad-mu (mis. awal konser & info keselamatan, pilih sendiri).",
+      "step1": "Ketuk ikon bagikan <icon/> di bawah",
+      "step2": "Pilih <chip>Tambah ke Layar Utama <icon/></chip>",
+      "step3": "Buka {{appName}} dari layar utama",
+      "step4": "Di aplikasi, ketuk <b>Aktifkan</b> pada <b>Notifikasi</b>",
+      "ok": "Mengerti",
+      "appFallback": "aplikasi"
+    }
   },
   "poi": {
     "stage": "Panggung",

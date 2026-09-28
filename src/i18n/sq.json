@@ -30,7 +30,9 @@
     "lastUpdate": "Gjendja: {{time}}",
     "empty": "Ende pa përmbajtje.",
     "close": "Mbyll",
-    "notFound": "Nuk u gjet"
+    "notFound": "Nuk u gjet",
+    "embedded": "Përmbajtje e integruar",
+    "pageMissing": "Kjo faqe nuk ekziston."
   },
   "home": {
     "now": "Tani",
@@ -57,7 +59,8 @@
     "noSlots": "Asnjë slot për këtë përzgjedhje.",
     "allHidden": "Të gjitha skenat janë fshehur.",
     "addPlan": "Shto në planin tim",
-    "removePlan": "Hiq nga plani im"
+    "removePlan": "Hiq nga plani im",
+    "cancelled": "anuluar"
   },
   "favorites": {
     "title": "Plani im",
@@ -129,6 +132,7 @@
   },
   "search": {
     "title": "Kërko",
+    "placeholder": "Artistë, shfaqje, informacione, vende …",
     "noResults": "Asnjë rezultat për „{{query}}“."
   },
   "push": {
@@ -141,7 +145,24 @@
     "catSafety": "Siguria",
     "alwaysOn": "(gjithmonë aktive)",
     "myPlan": "Plani im",
-    "myPlanHint": "(kujtesë para koncertit)"
+    "myPlanHint": "(kujtesë para koncertit)",
+    "title": "Njoftimet",
+    "pushTitle": "Njoftimet push",
+    "turnOff": "Çaktivizo njoftimet",
+    "teaser": "Fillimi i koncerteve dhe informacione të rëndësishme në ekranin e kyçjes.",
+    "moreInfo": "Më shumë informacion",
+    "enable": "Aktivizo",
+    "blocked": "Njoftimet janë të bllokuara në shfletues – lejoji te cilësimet e faqes.",
+    "ios": {
+      "title": "Aktivizo njoftimet",
+      "lead": "Shto aplikacionin në <b>ekranin kryesor</b> – vetëm kështu mund të marrësh njoftime push në <b>ekranin e kyçjes</b> të iPhone/iPad-it tënd (p.sh. fillimi i koncerteve dhe njoftime sigurie, zgjedh vetë).",
+      "step1": "Prek ikonën e ndarjes <icon/> poshtë",
+      "step2": "Zgjidh <chip>Shto në ekranin kryesor <icon/></chip>",
+      "step3": "Hap aplikacionin nga ekrani kryesor",
+      "step4": "Në aplikacion, te <b>Njoftimet</b> prek <b>Aktivizo</b>",
+      "ok": "E kuptova",
+      "appFallback": "aplikacioni"
+    }
   },
   "poi": {
     "stage": "Skena",

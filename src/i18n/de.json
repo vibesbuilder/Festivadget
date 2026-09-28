@@ -30,7 +30,9 @@
     "lastUpdate": "Stand: {{time}}",
     "empty": "Noch keine Inhalte.",
     "close": "Schließen",
-    "notFound": "Nicht gefunden"
+    "notFound": "Nicht gefunden",
+    "embedded": "Eingebetteter Inhalt",
+    "pageMissing": "Diese Seite gibt es nicht."
   },
   "home": {
     "now": "Jetzt",
@@ -57,7 +59,8 @@
     "noSlots": "Keine Slots für diese Auswahl.",
     "allHidden": "Alle Bühnen ausgeblendet.",
     "addPlan": "Zu Mein Plan hinzufügen",
-    "removePlan": "Aus Mein Plan entfernen"
+    "removePlan": "Aus Mein Plan entfernen",
+    "cancelled": "abgesagt"
   },
   "favorites": {
     "title": "Mein Plan",
@@ -129,6 +132,7 @@
   },
   "search": {
     "title": "Suche",
+    "placeholder": "Acts, Slots, Infos, Orte …",
     "noResults": "Keine Treffer für „{{query}}“."
   },
   "push": {
@@ -141,7 +145,24 @@
     "catSafety": "Sicherheit",
     "alwaysOn": "(immer aktiv)",
     "myPlan": "Mein Plan",
-    "myPlanHint": "(Erinnerung vor Konzertbeginn)"
+    "myPlanHint": "(Erinnerung vor Konzertbeginn)",
+    "title": "Benachrichtigungen",
+    "pushTitle": "Push-Benachrichtigungen",
+    "turnOff": "Benachrichtigungen ausschalten",
+    "teaser": "Konzertstarts & wichtige Infos auf den Sperrbildschirm.",
+    "moreInfo": "Mehr Infos",
+    "enable": "Aktivieren",
+    "blocked": "Benachrichtigungen sind im Browser blockiert – bitte in den Seiteneinstellungen erlauben.",
+    "ios": {
+      "title": "Benachrichtigungen aktivieren",
+      "lead": "Füge {{appName}} zum <b>Home-Bildschirm</b> hinzu – nur so kannst du Push-Benachrichtigungen am <b>Sperrbildschirm</b> deines iPhone/iPad empfangen (z. B. Konzertstarts & Sicherheitshinweise, wähle selbst).",
+      "step1": "Unten auf das Teilen-Symbol <icon/> tippen",
+      "step2": "<chip>Zum Home-Bildschirm <icon/></chip> wählen",
+      "step3": "{{appName}} vom Home-Bildschirm öffnen",
+      "step4": "In der App bei <b>Benachrichtigungen</b> auf <b>Aktivieren</b> klicken",
+      "ok": "Verstanden",
+      "appFallback": "die App"
+    }
   },
   "poi": {
     "stage": "Bühne",

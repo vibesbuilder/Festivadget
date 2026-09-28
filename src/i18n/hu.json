@@ -30,7 +30,9 @@
     "lastUpdate": "Állapot: {{time}}",
     "empty": "Még nincs tartalom.",
     "close": "Bezárás",
-    "notFound": "Nem található"
+    "notFound": "Nem található",
+    "embedded": "Beágyazott tartalom",
+    "pageMissing": "Ez az oldal nem létezik."
   },
   "home": {
     "now": "Most",
@@ -57,7 +59,8 @@
     "noSlots": "Nincs program ehhez a kiválasztáshoz.",
     "allHidden": "Minden színpad elrejtve.",
     "addPlan": "Hozzáadás a saját tervhez",
-    "removePlan": "Eltávolítás a saját tervből"
+    "removePlan": "Eltávolítás a saját tervből",
+    "cancelled": "elmarad"
   },
   "favorites": {
     "title": "Saját terv",
@@ -129,6 +132,7 @@
   },
   "search": {
     "title": "Keresés",
+    "placeholder": "Előadók, programok, infók, helyszínek …",
     "noResults": "Nincs találat erre: „{{query}}”."
   },
   "push": {
@@ -141,7 +145,24 @@
     "catSafety": "Biztonság",
     "alwaysOn": "(mindig aktív)",
     "myPlan": "Saját terv",
-    "myPlanHint": "(emlékeztető a koncert előtt)"
+    "myPlanHint": "(emlékeztető a koncert előtt)",
+    "title": "Értesítések",
+    "pushTitle": "Push-értesítések",
+    "turnOff": "Értesítések kikapcsolása",
+    "teaser": "Koncertkezdések és fontos infók a zárolási képernyőn.",
+    "moreInfo": "További infók",
+    "enable": "Bekapcsolás",
+    "blocked": "Az értesítések le vannak tiltva a böngészőben – engedélyezd őket a webhely beállításaiban.",
+    "ios": {
+      "title": "Értesítések bekapcsolása",
+      "lead": "Add hozzá az appot a <b>kezdőképernyőhöz</b> – csak így kaphatsz push-értesítéseket az iPhone-od/iPaded <b>zárolási képernyőjén</b> (pl. koncertkezdések és biztonsági közlemények, te választasz).",
+      "step1": "Koppints lent a megosztás ikonra <icon/>",
+      "step2": "Válaszd ezt: <chip>Hozzáadás a kezdőképernyőhöz <icon/></chip>",
+      "step3": "Nyisd meg az appot a kezdőképernyőről",
+      "step4": "Az appban az <b>Értesítések</b> résznél koppints a <b>Bekapcsolás</b> gombra",
+      "ok": "Értem",
+      "appFallback": "az app"
+    }
   },
   "poi": {
     "stage": "Színpad",

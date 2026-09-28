@@ -30,7 +30,9 @@
     "lastUpdate": "Atualizado: {{time}}",
     "empty": "Ainda sem conteúdos.",
     "close": "Fechar",
-    "notFound": "Não encontrado"
+    "notFound": "Não encontrado",
+    "embedded": "Conteúdo incorporado",
+    "pageMissing": "Esta página não existe."
   },
   "home": {
     "now": "Agora",
@@ -57,7 +59,8 @@
     "noSlots": "Sem horários para esta seleção.",
     "allHidden": "Todos os palcos ocultos.",
     "addPlan": "Adicionar ao meu plano",
-    "removePlan": "Remover do meu plano"
+    "removePlan": "Remover do meu plano",
+    "cancelled": "cancelado"
   },
   "favorites": {
     "title": "O meu plano",
@@ -129,6 +132,7 @@
   },
   "search": {
     "title": "Pesquisar",
+    "placeholder": "Artistas, atuações, informações, locais …",
     "noResults": "Sem resultados para «{{query}}»."
   },
   "push": {
@@ -141,7 +145,24 @@
     "catSafety": "Segurança",
     "alwaysOn": "(sempre ativo)",
     "myPlan": "O meu plano",
-    "myPlanHint": "(lembrete antes do concerto)"
+    "myPlanHint": "(lembrete antes do concerto)",
+    "title": "Notificações",
+    "pushTitle": "Notificações push",
+    "turnOff": "Desativar notificações",
+    "teaser": "Início dos concertos e informações importantes no ecrã bloqueado.",
+    "moreInfo": "Mais informações",
+    "enable": "Ativar",
+    "blocked": "As notificações estão bloqueadas no navegador – permite-as nas definições do site.",
+    "ios": {
+      "title": "Ativar notificações",
+      "lead": "Adiciona {{appName}} ao <b>ecrã principal</b> – só assim podes receber notificações push no <b>ecrã bloqueado</b> do teu iPhone/iPad (p. ex. início dos concertos e avisos de segurança, tu escolhes).",
+      "step1": "Toca no ícone de partilha <icon/> em baixo",
+      "step2": "Escolhe <chip>Adicionar ao ecrã principal <icon/></chip>",
+      "step3": "Abre {{appName}} a partir do ecrã principal",
+      "step4": "Na app, toca em <b>Ativar</b> em <b>Notificações</b>",
+      "ok": "Percebi",
+      "appFallback": "a app"
+    }
   },
   "poi": {
     "stage": "Palco",

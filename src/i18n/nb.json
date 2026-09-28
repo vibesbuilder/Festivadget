@@ -30,7 +30,9 @@
     "lastUpdate": "Status: {{time}}",
     "empty": "Ikke noe innhold ennå.",
     "close": "Lukk",
-    "notFound": "Ikke funnet"
+    "notFound": "Ikke funnet",
+    "embedded": "Innebygd innhold",
+    "pageMissing": "Denne siden finnes ikke."
   },
   "home": {
     "now": "Nå",
@@ -57,7 +59,8 @@
     "noSlots": "Ingen slots for dette utvalget.",
     "allHidden": "Alle scener skjult.",
     "addPlan": "Legg til i min plan",
-    "removePlan": "Fjern fra min plan"
+    "removePlan": "Fjern fra min plan",
+    "cancelled": "avlyst"
   },
   "favorites": {
     "title": "Min plan",
@@ -129,6 +132,7 @@
   },
   "search": {
     "title": "Søk",
+    "placeholder": "Artister, opptredener, info, steder …",
     "noResults": "Ingen treff for «{{query}}»."
   },
   "push": {
@@ -141,7 +145,24 @@
     "catSafety": "Sikkerhet",
     "alwaysOn": "(alltid på)",
     "myPlan": "Min plan",
-    "myPlanHint": "(påminnelse før konserten)"
+    "myPlanHint": "(påminnelse før konserten)",
+    "title": "Varsler",
+    "pushTitle": "Push-varsler",
+    "turnOff": "Slå av varsler",
+    "teaser": "Konsertstarter og viktig info på låseskjermen.",
+    "moreInfo": "Mer info",
+    "enable": "Slå på",
+    "blocked": "Varsler er blokkert i nettleseren – tillat dem i nettstedsinnstillingene.",
+    "ios": {
+      "title": "Slå på varsler",
+      "lead": "Legg til {{appName}} på <b>Hjem-skjermen</b> – bare slik kan du motta push-varsler på <b>låseskjermen</b> på iPhone/iPad (f.eks. konsertstarter og sikkerhetsmeldinger, du velger selv).",
+      "step1": "Trykk på deleikonet <icon/> nederst",
+      "step2": "Velg <chip>Legg til på Hjem-skjermen <icon/></chip>",
+      "step3": "Åpne {{appName}} fra Hjem-skjermen",
+      "step4": "Trykk på <b>Slå på</b> under <b>Varsler</b> i appen",
+      "ok": "Forstått",
+      "appFallback": "appen"
+    }
   },
   "poi": {
     "stage": "Scene",

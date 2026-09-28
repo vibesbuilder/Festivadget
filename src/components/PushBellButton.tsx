@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Bell, Loader2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { usePushActive, useRefreshPush } from "@/lib/usePush";
 import { unsubscribePush } from "@/lib/push";
 import { PushCategoryPicker } from "./PushCategoryPicker";
@@ -7,6 +8,7 @@ import { PushCategoryPicker } from "./PushCategoryPicker";
 // Bell in the header (left of the search): only visible while push is active.
 // Opens a popover for category selection + "turn off notifications".
 export function PushBellButton() {
+  const { t } = useTranslation();
   const { supported, active } = usePushActive();
   const refresh = useRefreshPush();
   const [open, setOpen] = useState(false);
@@ -39,7 +41,7 @@ export function PushBellButton() {
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen((o) => !o)}
-        aria-label="Benachrichtigungen"
+        aria-label={t("push.title")}
         aria-expanded={open}
         className="shrink-0 rounded-full p-2 text-rid-accent hover:text-rid-accent"
       >
@@ -47,7 +49,7 @@ export function PushBellButton() {
       </button>
       {open && (
         <div className="absolute right-0 z-50 mt-2 w-64 rounded-xl border border-rid-border bg-rid-surface p-3 shadow-2xl">
-          <p className="mb-2 text-xs font-medium text-rid-muted">Push-Benachrichtigungen</p>
+          <p className="mb-2 text-xs font-medium text-rid-muted">{t("push.pushTitle")}</p>
           <PushCategoryPicker />
           <button
             onClick={turnOff}
@@ -55,7 +57,7 @@ export function PushBellButton() {
             className="mt-3 flex w-full items-center justify-center gap-2 rounded-full bg-rid-surface-2 px-3 py-1.5 text-sm text-rid-text disabled:opacity-50"
           >
             {busy && <Loader2 size={14} className="animate-spin" />}
-            Benachrichtigungen ausschalten
+            {t("push.turnOff")}
           </button>
         </div>
       )}

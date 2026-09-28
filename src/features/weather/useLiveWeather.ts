@@ -42,7 +42,7 @@ export function useLiveWeather() {
     queryKey: ["live-weather"],
     queryFn: async ({ signal }) => {
       const res = await fetch(WEATHER_URL, { signal });
-      if (!res.ok) throw new Error(`Wetter: HTTP ${res.status}`);
+      if (!res.ok) throw new Error(`Weather: HTTP ${res.status}`);
       return (await res.json()) as LiveWeather;
     },
     staleTime: 10 * 60_000, // server caches 15 min - the client need not ask more often.

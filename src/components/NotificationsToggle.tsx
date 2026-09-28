@@ -32,7 +32,7 @@ export function NotificationsToggle() {
     setError(null);
     try {
       await subscribePush();
-      refresh(); // Glocke im Header erscheint, dieser Schalter verschwindet
+      refresh(); // the bell in the header appears, this toggle disappears
     } catch (e) {
       setError(e instanceof Error ? e.message : t("common.error"));
     } finally {
@@ -45,16 +45,16 @@ export function NotificationsToggle() {
       <div className="flex items-center gap-3">
         <BellOff size={20} className="text-rid-muted" />
         <div className="flex-1">
-          <p className="font-medium">Benachrichtigungen</p>
+          <p className="font-medium">{t("push.title")}</p>
           <p className="text-xs text-rid-muted">
-            Konzertstarts & wichtige Infos auf den Sperrbildschirm.{" "}
+            {t("push.teaser")}{" "}
             {isIosNotStandalone() && (
               <button
                 type="button"
                 onClick={() => window.dispatchEvent(new Event(IOS_POPUP_EVENT))}
                 className="font-medium text-rid-accent underline underline-offset-2"
               >
-                Mehr Infos
+                {t("push.moreInfo")}
               </button>
             )}
           </p>
@@ -64,14 +64,12 @@ export function NotificationsToggle() {
           disabled={busy || denied}
           className="shrink-0 rounded-full bg-rid-accent px-3 py-1.5 text-sm font-medium text-black disabled:opacity-50"
         >
-          {busy ? <Loader2 size={16} className="animate-spin" /> : "Aktivieren"}
+          {busy ? <Loader2 size={16} className="animate-spin" /> : t("push.enable")}
         </button>
       </div>
 
       {denied && (
-        <p className="mt-2 text-xs text-rid-accent-2">
-          Benachrichtigungen sind im Browser blockiert – bitte in den Seiteneinstellungen erlauben.
-        </p>
+        <p className="mt-2 text-xs text-rid-accent-2">{t("push.blocked")}</p>
       )}
       {error && <p className="mt-2 text-xs text-rid-accent-2">{error}</p>}
     </div>

@@ -30,7 +30,9 @@
     "lastUpdate": "Stav: {{time}}",
     "empty": "Zatím žádný obsah.",
     "close": "Zavřít",
-    "notFound": "Nenalezeno"
+    "notFound": "Nenalezeno",
+    "embedded": "Vložený obsah",
+    "pageMissing": "Tato stránka neexistuje."
   },
   "home": {
     "now": "Právě teď",
@@ -57,7 +59,8 @@
     "noSlots": "Pro tento výběr nejsou žádné sloty.",
     "allHidden": "Všechna pódia skryta.",
     "addPlan": "Přidat do mého plánu",
-    "removePlan": "Odebrat z mého plánu"
+    "removePlan": "Odebrat z mého plánu",
+    "cancelled": "zrušeno"
   },
   "favorites": {
     "title": "Můj plán",
@@ -129,6 +132,7 @@
   },
   "search": {
     "title": "Hledat",
+    "placeholder": "Interpreti, vystoupení, informace, místa …",
     "noResults": "Žádné výsledky pro „{{query}}“."
   },
   "push": {
@@ -141,7 +145,24 @@
     "catSafety": "Bezpečnost",
     "alwaysOn": "(vždy aktivní)",
     "myPlan": "Můj plán",
-    "myPlanHint": "(připomenutí před začátkem)"
+    "myPlanHint": "(připomenutí před začátkem)",
+    "title": "Oznámení",
+    "pushTitle": "Push oznámení",
+    "turnOff": "Vypnout oznámení",
+    "teaser": "Začátky koncertů a důležité informace na zamčené obrazovce.",
+    "moreInfo": "Více informací",
+    "enable": "Zapnout",
+    "blocked": "Oznámení jsou v prohlížeči blokována – povol je v nastavení webu.",
+    "ios": {
+      "title": "Zapnout oznámení",
+      "lead": "Přidej si {{appName}} na <b>plochu</b> – jen tak můžeš dostávat push oznámení na <b>zamčenou obrazovku</b> svého iPhonu/iPadu (např. začátky koncertů a bezpečnostní upozornění, vyber si sám).",
+      "step1": "Dole klepni na ikonu sdílení <icon/>",
+      "step2": "Vyber <chip>Přidat na plochu <icon/></chip>",
+      "step3": "Otevři {{appName}} z plochy",
+      "step4": "V aplikaci klepni u položky <b>Oznámení</b> na <b>Zapnout</b>",
+      "ok": "Rozumím",
+      "appFallback": "aplikaci"
+    }
   },
   "poi": {
     "stage": "Pódium",

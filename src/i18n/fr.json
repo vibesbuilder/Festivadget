@@ -30,7 +30,9 @@
     "lastUpdate": "Mise à jour : {{time}}",
     "empty": "Pas encore de contenu.",
     "close": "Fermer",
-    "notFound": "Introuvable"
+    "notFound": "Introuvable",
+    "embedded": "Contenu intégré",
+    "pageMissing": "Cette page n'existe pas."
   },
   "home": {
     "now": "En ce moment",
@@ -57,7 +59,8 @@
     "noSlots": "Aucun créneau pour cette sélection.",
     "allHidden": "Toutes les scènes sont masquées.",
     "addPlan": "Ajouter à Mon programme",
-    "removePlan": "Retirer de Mon programme"
+    "removePlan": "Retirer de Mon programme",
+    "cancelled": "annulé"
   },
   "favorites": {
     "title": "Mon planning",
@@ -129,6 +132,7 @@
   },
   "search": {
     "title": "Recherche",
+    "placeholder": "Artistes, créneaux, infos, lieux …",
     "noResults": "Aucun résultat pour « {{query}} »."
   },
   "push": {
@@ -141,7 +145,24 @@
     "catSafety": "Sécurité",
     "alwaysOn": "(toujours actif)",
     "myPlan": "Mon planning",
-    "myPlanHint": "(rappel avant le début du concert)"
+    "myPlanHint": "(rappel avant le début du concert)",
+    "title": "Notifications",
+    "pushTitle": "Notifications push",
+    "turnOff": "Désactiver les notifications",
+    "teaser": "Débuts de concerts & infos importantes sur l'écran verrouillé.",
+    "moreInfo": "En savoir plus",
+    "enable": "Activer",
+    "blocked": "Les notifications sont bloquées dans le navigateur – autorise-les dans les réglages du site.",
+    "ios": {
+      "title": "Activer les notifications",
+      "lead": "Ajoute {{appName}} à ton <b>écran d'accueil</b> – c'est la seule façon de recevoir les notifications push sur l'<b>écran verrouillé</b> de ton iPhone/iPad (p. ex. débuts de concerts & consignes de sécurité, à toi de choisir).",
+      "step1": "Touche l'icône de partage <icon/> en bas",
+      "step2": "Choisis <chip>Sur l'écran d'accueil <icon/></chip>",
+      "step3": "Ouvre {{appName}} depuis l'écran d'accueil",
+      "step4": "Dans l'app, touche <b>Activer</b> sous <b>Notifications</b>",
+      "ok": "Compris",
+      "appFallback": "l'app"
+    }
   },
   "poi": {
     "stage": "Scène",

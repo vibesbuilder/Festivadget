@@ -29,7 +29,7 @@ export default function Search() {
           autoFocus
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Acts, Slots, Infos, Orte …"
+          placeholder={t("search.placeholder")}
           className="w-full bg-transparent text-rid-text outline-none placeholder:text-rid-muted"
         />
       </div>

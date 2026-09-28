@@ -30,7 +30,9 @@
     "lastUpdate": "Actualizado: {{time}}",
     "empty": "Aún no hay contenido.",
     "close": "Cerrar",
-    "notFound": "No encontrado"
+    "notFound": "No encontrado",
+    "embedded": "Contenido integrado",
+    "pageMissing": "Esta página no existe."
   },
   "home": {
     "now": "Ahora",
@@ -57,7 +59,8 @@
     "noSlots": "No hay horarios para esta selección.",
     "allHidden": "Todos los escenarios están ocultos.",
     "addPlan": "Añadir a Mi plan",
-    "removePlan": "Quitar de Mi plan"
+    "removePlan": "Quitar de Mi plan",
+    "cancelled": "cancelado"
   },
   "favorites": {
     "title": "Mi plan",
@@ -129,6 +132,7 @@
   },
   "search": {
     "title": "Búsqueda",
+    "placeholder": "Artistas, actuaciones, información, lugares …",
     "noResults": "Sin resultados para «{{query}}»."
   },
   "push": {
@@ -141,7 +145,24 @@
     "catSafety": "Seguridad",
     "alwaysOn": "(siempre activo)",
     "myPlan": "Mi plan",
-    "myPlanHint": "(recordatorio antes del concierto)"
+    "myPlanHint": "(recordatorio antes del concierto)",
+    "title": "Notificaciones",
+    "pushTitle": "Notificaciones push",
+    "turnOff": "Desactivar notificaciones",
+    "teaser": "Inicio de conciertos e información importante en la pantalla de bloqueo.",
+    "moreInfo": "Más información",
+    "enable": "Activar",
+    "blocked": "Las notificaciones están bloqueadas en el navegador: permítelas en los ajustes del sitio.",
+    "ios": {
+      "title": "Activar notificaciones",
+      "lead": "Añade {{appName}} a tu <b>pantalla de inicio</b>: solo así podrás recibir notificaciones push en la <b>pantalla de bloqueo</b> de tu iPhone/iPad (p. ej. inicio de conciertos y avisos de seguridad, tú eliges).",
+      "step1": "Toca el icono de compartir <icon/> abajo",
+      "step2": "Elige <chip>Añadir a pantalla de inicio <icon/></chip>",
+      "step3": "Abre {{appName}} desde la pantalla de inicio",
+      "step4": "En la app, toca <b>Activar</b> en <b>Notificaciones</b>",
+      "ok": "Entendido",
+      "appFallback": "la app"
+    }
   },
   "poi": {
     "stage": "Escenario",

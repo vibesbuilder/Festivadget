@@ -30,7 +30,9 @@
     "lastUpdate": "Staða: {{time}}",
     "empty": "Ekkert efni ennþá.",
     "close": "Loka",
-    "notFound": "Fannst ekki"
+    "notFound": "Fannst ekki",
+    "embedded": "Innfellt efni",
+    "pageMissing": "Þessi síða er ekki til."
   },
   "home": {
     "now": "Núna",
@@ -57,7 +59,8 @@
     "noSlots": "Engin atriði fyrir þetta val.",
     "allHidden": "Öll svið falin.",
     "addPlan": "Bæta við mína áætlun",
-    "removePlan": "Fjarlægja úr minni áætlun"
+    "removePlan": "Fjarlægja úr minni áætlun",
+    "cancelled": "aflýst"
   },
   "favorites": {
     "title": "Mín áætlun",
@@ -129,6 +132,7 @@
   },
   "search": {
     "title": "Leita",
+    "placeholder": "Listamenn, atriði, upplýsingar, staðir …",
     "noResults": "Engar niðurstöður fyrir „{{query}}“."
   },
   "push": {
@@ -141,7 +145,24 @@
     "catSafety": "Öryggi",
     "alwaysOn": "(alltaf virkt)",
     "myPlan": "Mín áætlun",
-    "myPlanHint": "(áminning fyrir tónleika)"
+    "myPlanHint": "(áminning fyrir tónleika)",
+    "title": "Tilkynningar",
+    "pushTitle": "Push-tilkynningar",
+    "turnOff": "Slökkva á tilkynningum",
+    "teaser": "Upphaf tónleika og mikilvægar upplýsingar á lásskjáinn.",
+    "moreInfo": "Nánari upplýsingar",
+    "enable": "Virkja",
+    "blocked": "Tilkynningar eru lokaðar í vafranum – leyfðu þær í stillingum síðunnar.",
+    "ios": {
+      "title": "Virkja tilkynningar",
+      "lead": "Bættu appinu á <b>heimaskjáinn</b> – aðeins þannig geturðu fengið push-tilkynningar á <b>lásskjáinn</b> á iPhone/iPad (t.d. upphaf tónleika og öryggistilkynningar, þú ræður).",
+      "step1": "Ýttu á deilitáknið <icon/> neðst",
+      "step2": "Veldu <chip>Bæta á heimaskjá <icon/></chip>",
+      "step3": "Opnaðu appið af heimaskjánum",
+      "step4": "Í appinu, ýttu á <b>Virkja</b> undir <b>Tilkynningar</b>",
+      "ok": "Skilið",
+      "appFallback": "appið"
+    }
   },
   "poi": {
     "stage": "Svið",

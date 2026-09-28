@@ -30,7 +30,9 @@
     "lastUpdate": "Status: {{time}}",
     "empty": "Inget innehåll ännu.",
     "close": "Stäng",
-    "notFound": "Hittades inte"
+    "notFound": "Hittades inte",
+    "embedded": "Inbäddat innehåll",
+    "pageMissing": "Den här sidan finns inte."
   },
   "home": {
     "now": "Nu",
@@ -57,7 +59,8 @@
     "noSlots": "Inga tider för detta urval.",
     "allHidden": "Alla scener dolda.",
     "addPlan": "Lägg till i min plan",
-    "removePlan": "Ta bort från min plan"
+    "removePlan": "Ta bort från min plan",
+    "cancelled": "inställt"
   },
   "favorites": {
     "title": "Min plan",
@@ -129,6 +132,7 @@
   },
   "search": {
     "title": "Sök",
+    "placeholder": "Artister, spelningar, info, platser …",
     "noResults": "Inga träffar för ”{{query}}”."
   },
   "push": {
@@ -141,7 +145,24 @@
     "catSafety": "Säkerhet",
     "alwaysOn": "(alltid på)",
     "myPlan": "Min plan",
-    "myPlanHint": "(påminnelse före konserten)"
+    "myPlanHint": "(påminnelse före konserten)",
+    "title": "Notiser",
+    "pushTitle": "Pushnotiser",
+    "turnOff": "Stäng av notiser",
+    "teaser": "Konsertstarter och viktig info på låsskärmen.",
+    "moreInfo": "Mer info",
+    "enable": "Aktivera",
+    "blocked": "Notiser är blockerade i webbläsaren – tillåt dem i webbplatsens inställningar.",
+    "ios": {
+      "title": "Aktivera notiser",
+      "lead": "Lägg till {{appName}} på din <b>hemskärm</b> – bara så kan du få pushnotiser på <b>låsskärmen</b> på din iPhone/iPad (t.ex. konsertstarter och säkerhetsmeddelanden, du väljer själv).",
+      "step1": "Tryck på delningsikonen <icon/> längst ned",
+      "step2": "Välj <chip>Lägg till på hemskärmen <icon/></chip>",
+      "step3": "Öppna {{appName}} från hemskärmen",
+      "step4": "Tryck på <b>Aktivera</b> under <b>Notiser</b> i appen",
+      "ok": "Jag förstår",
+      "appFallback": "appen"
+    }
   },
   "poi": {
     "stage": "Scen",

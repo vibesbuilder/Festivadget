@@ -30,7 +30,9 @@
     "lastUpdate": "Stanje: {{time}}",
     "empty": "Še ni vsebine.",
     "close": "Zapri",
-    "notFound": "Ni najdeno"
+    "notFound": "Ni najdeno",
+    "embedded": "Vdelana vsebina",
+    "pageMissing": "Ta stran ne obstaja."
   },
   "home": {
     "now": "Zdaj",
@@ -57,7 +59,8 @@
     "noSlots": "Za ta izbor ni terminov.",
     "allHidden": "Vsi odri so skriti.",
     "addPlan": "Dodaj v moj načrt",
-    "removePlan": "Odstrani iz mojega načrta"
+    "removePlan": "Odstrani iz mojega načrta",
+    "cancelled": "odpovedano"
   },
   "favorites": {
     "title": "Moj načrt",
@@ -129,6 +132,7 @@
   },
   "search": {
     "title": "Iskanje",
+    "placeholder": "Izvajalci, nastopi, informacije, kraji …",
     "noResults": "Ni zadetkov za „{{query}}“."
   },
   "push": {
@@ -141,7 +145,24 @@
     "catSafety": "Varnost",
     "alwaysOn": "(vedno aktivno)",
     "myPlan": "Moj načrt",
-    "myPlanHint": "(opomnik pred koncertom)"
+    "myPlanHint": "(opomnik pred koncertom)",
+    "title": "Obvestila",
+    "pushTitle": "Potisna obvestila",
+    "turnOff": "Izklopi obvestila",
+    "teaser": "Začetki koncertov in pomembne informacije na zaklenjenem zaslonu.",
+    "moreInfo": "Več informacij",
+    "enable": "Vklopi",
+    "blocked": "Obvestila so v brskalniku blokirana – dovoli jih v nastavitvah spletnega mesta.",
+    "ios": {
+      "title": "Vklopi obvestila",
+      "lead": "Dodaj {{appName}} na <b>začetni zaslon</b> – samo tako lahko prejemaš potisna obvestila na <b>zaklenjenem zaslonu</b> svojega iPhona/iPada (npr. začetki koncertov in varnostna obvestila, izbereš sam).",
+      "step1": "Spodaj tapni ikono za deljenje <icon/>",
+      "step2": "Izberi <chip>Dodaj na začetni zaslon <icon/></chip>",
+      "step3": "Odpri {{appName}} z začetnega zaslona",
+      "step4": "V aplikaciji pri <b>Obvestila</b> tapni <b>Vklopi</b>",
+      "ok": "Razumem",
+      "appFallback": "aplikacijo"
+    }
   },
   "poi": {
     "stage": "Oder",

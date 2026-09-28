@@ -1,10 +1,12 @@
 import { useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useFestival, useSponsors } from "@/data/queries";
 
 // Footer at the end of every page: event name (festival facts), "Presented by",
 // below it the logos of the main sponsors (tier "main"). Without a main sponsor
 // the footer disappears entirely.
 export function PresentedByFooter() {
+  const { t } = useTranslation();
   const { pathname } = useLocation();
   const { data } = useSponsors();
   const { data: festival } = useFestival();
@@ -20,7 +22,7 @@ export function PresentedByFooter() {
   return (
     <footer className="flex flex-col items-center gap-2 pt-5 text-center">
       {festival?.name && <span className="text-sm font-semibold">{festival.name}</span>}
-      <span className="text-xs uppercase tracking-wide text-rid-muted">Presented by</span>
+      <span className="text-xs uppercase tracking-wide text-rid-muted">{t("sponsors.tier.main")}</span>
       <div className="flex flex-wrap items-center justify-center gap-4">
         {main.map((s) => {
           const logo = (

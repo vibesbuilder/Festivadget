@@ -30,7 +30,9 @@
     "lastUpdate": "Stanje: {{time}}",
     "empty": "Još nema sadržaja.",
     "close": "Zatvori",
-    "notFound": "Nije pronađeno"
+    "notFound": "Nije pronađeno",
+    "embedded": "Ugrađeni sadržaj",
+    "pageMissing": "Ova stranica ne postoji."
   },
   "home": {
     "now": "Sada",
@@ -57,7 +59,8 @@
     "noSlots": "Nema termina za ovaj odabir.",
     "allHidden": "Sve pozornice skrivene.",
     "addPlan": "Dodaj u moj plan",
-    "removePlan": "Ukloni iz mog plana"
+    "removePlan": "Ukloni iz mog plana",
+    "cancelled": "otkazano"
   },
   "favorites": {
     "title": "Moj plan",
@@ -129,6 +132,7 @@
   },
   "search": {
     "title": "Pretraga",
+    "placeholder": "Izvođači, nastupi, informacije, mjesta …",
     "noResults": "Nema rezultata za „{{query}}“."
   },
   "push": {
@@ -141,7 +145,24 @@
     "catSafety": "Sigurnost",
     "alwaysOn": "(uvijek aktivno)",
     "myPlan": "Moj plan",
-    "myPlanHint": "(podsjetnik prije koncerta)"
+    "myPlanHint": "(podsjetnik prije koncerta)",
+    "title": "Obavijesti",
+    "pushTitle": "Push obavijesti",
+    "turnOff": "Isključi obavijesti",
+    "teaser": "Počeci koncerata i važne informacije na zaključanom zaslonu.",
+    "moreInfo": "Više informacija",
+    "enable": "Uključi",
+    "blocked": "Obavijesti su blokirane u pregledniku – dopusti ih u postavkama stranice.",
+    "ios": {
+      "title": "Uključi obavijesti",
+      "lead": "Dodaj {{appName}} na <b>početni zaslon</b> – samo tako možeš primati push obavijesti na <b>zaključanom zaslonu</b> svog iPhonea/iPada (npr. počeci koncerata i sigurnosne obavijesti, biraš sam).",
+      "step1": "Dodirni ikonu dijeljenja <icon/> na dnu",
+      "step2": "Odaberi <chip>Dodaj na početni zaslon <icon/></chip>",
+      "step3": "Otvori {{appName}} s početnog zaslona",
+      "step4": "U aplikaciji kod stavke <b>Obavijesti</b> dodirni <b>Uključi</b>",
+      "ok": "Razumijem",
+      "appFallback": "aplikaciju"
+    }
   },
   "poi": {
     "stage": "Pozornica",
