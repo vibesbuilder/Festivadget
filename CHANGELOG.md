@@ -18,6 +18,23 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.0.0/), Versionier
   pnpm bringt zwar ein eigenes Node mit, die Shims in `node_modules\.bin` rufen
   aber ein nacktes `node` auf. Wird nichts gefunden, endet der Lauf mit der Liste
   der durchsuchten Orte statt mit einer nackten Fehlermeldung.
+- **Suche: Platzhalter im Eingabefeld war fest deutsch** („Acts, Slots, Infos,
+  Orte …") – jetzt über die App-Übersetzungen (`search.placeholder`, alle
+  32 Sprachen).
+- **Push-Bereich war fest deutsch:** die Karte „Benachrichtigungen" (Aktivieren,
+  Hinweis bei blockiertem Browser), das Glocken-Menü im Header und die
+  iOS-Anleitung „Zum Home-Bildschirm" folgen jetzt der App-Sprache
+  (`push.*`, `push.ios.*`, alle 32 Sprachen).
+- **Weitere fest kodierte Texte übersetzt:** „Überschneidung" und „[abgesagt]" in
+  der Timetable-Liste, „Headliner" auf den Artist-Karten, „Presented by" im
+  Seitenfuß, die Beschriftung des Such-Symbols und der Ersatztitel eingebetteter
+  Inhalte.
+- **404-Seite** zeigte den Roadmap-Text „Dieser Bereich wird in einer kommenden
+  Phase umgesetzt." – jetzt „Diese Seite gibt es nicht." in der App-Sprache.
+- **Logo-Alternativtext** fiel ohne Festivaldaten auf „ROCK IM DORF Festival 2026"
+  zurück – der instanzspezifische Name ist entfernt.
+- **README:** Das Wetter-Modul liefert eine Vorhersage, keine Unwetterwarnungen –
+  die Feature-Liste (de/en) nannte Warnungen, die es in Festivadget nicht gibt.
 
 ## [1.8.0] - 2026-09-28
 
