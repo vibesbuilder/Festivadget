@@ -5,6 +5,8 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.0.0/), Versionier
 
 ## [Unreleased]
 
+## [1.8.0] - 2026-09-28
+
 ### Added
 - **Push an eine zufällige Auswahl (Gewinnspiele).** Je News wählt man im CMS die
   **Push-Empfänger**: „Alle" (Vorgabe) oder „Zufällig (Gewinnspiel)" mit Anzahl.
@@ -20,6 +22,17 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.0.0/), Versionier
 ### Changed
 - **CMS-Tab „News": Das Formular für eine neue News steht jetzt ganz oben** statt
   ganz unten – der Weg zum Schreiben ist kürzer.
+- **Werkzeuge:** pnpm ist auf **12.8.0** festgenagelt (`packageManager` in der
+  `package.json`) – wer das Repo klont, bekommt automatisch dieselbe Version.
+  Die alte `.npmrc` ist entfallen; seit pnpm 10/11 liest pnpm dort nur noch
+  Registry- und Anmeldedaten, die Einträge waren wirkungslos.
+
+### Security
+- **Entwicklungs-Abhängigkeiten aufgefrischt** (5 Dependabot-Meldungen, alle
+  „hoch"): `sharp` 0.35.2 → 0.35.4 (Lücken in libheif; genutzt nur von
+  `scripts/gen-icons.ts`) und `fast-uri` 3.1.5 → 3.1.8 (4× CVSS 7.5, kommt über
+  `vite-plugin-pwa` → `workbox-build` → `ajv`). Nichts davon wird an Besucher
+  ausgeliefert – betroffen war nur der Bau-Rechner.
 
 ## [1.7.0] - 2026-08-25
 
