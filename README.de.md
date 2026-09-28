@@ -65,7 +65,7 @@ Inhalte ersetzt du direkt im CMS. Updates sind ein Klick im CMS-Tab
 - **Web-Push** (optional): Benachrichtigungen auf den Sperrbildschirm inkl.
   Kategorien-Auswahl durch die Besucher – Backend sind schlanke PHP-Dateien auf
   demselben Webspace, kein eigener Server nötig.
-- **Wetter** (optional): Vorhersage + Unwetterwarnungen mit wählbarem Anbieter.
+- **Wetter** (optional): Vorhersage mit wählbarem Anbieter.
 - **Globale Suche** über Artists, Programm, Infos und POIs.
 - **Infos, Sponsoren, Tickets**: frei befüllbare Info-Seiten (Markdown),
   Sponsoren-Grid, Ticket-Einbindung.

@@ -64,7 +64,7 @@ replace the content right in the CMS. Updates are one click in the CMS
 - **Web push** (optional): lock-screen notifications including per-category opt-in
   for visitors – the backend is a set of lightweight PHP files on the same shared
   web space, no dedicated server required.
-- **Weather** (optional): forecast + severe weather warnings with a selectable provider.
+- **Weather** (optional): forecast with a selectable provider.
 - **Global search** across artists, programme, info pages and POIs.
 - **Info pages, sponsors, tickets**: freely editable info pages (Markdown), sponsor
   grid, ticket shop embedding.
