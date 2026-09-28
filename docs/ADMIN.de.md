@@ -122,6 +122,10 @@ Telegram-`live-news.json` wird weiterhin **zusätzlich** gemischt.)
    gemischt. Der Cron pusht neue Einträge automatisch (Kategorie-Filter, siehe `docs/PUSH.de.md`).
    **Auto-Push-Kategorien** wählt man unter „Einstellungen" (`pushNewsCategories`).
    Push-Tab sendet sofort an alle Abos (`push_broadcast` aus `sender.php`).
+   Das Formular für eine neue News steht **ganz oben** im Tab. Je News wählt man
+   die **Push-Empfänger**: alle (Vorgabe) oder eine **zufällige Auswahl** mit
+   Anzahl, optional **nur als Push** (nicht im Newsfeed) – für Gewinnspiele,
+   siehe `docs/PUSH.de.md`.
 5. **Live-Override für alle Domänen** ✅ — `useDataset` bevorzugt
    `data/app-<domain>.json` (siehe oben). Fundament für 6/7.
 6. **Content-Editoren je Domäne**

@@ -81,25 +81,46 @@ function push_broadcast(array $payload): array
 }
 
 /**
+ * Recipient query for a news push: safety reaches EVERY subscription, any other
+ * category only those that chose it (categories NULL = all, empty = safety only).
+ *
+ * $limit > 0 draws that many subscriptions at random (prize draws). ORDER BY RAND()
+ * is fine for the subscription counts of a festival app and keeps the draw in one
+ * statement - no state, no pre-selection. $limit is cast to int, never interpolated
+ * as text.
+ * @return array{0:string,1:array<int,string>}
+ */
+function push_news_query(string $category, int $limit = 0): array
+{
+    $random = $limit > 0 ? ' ORDER BY RAND() LIMIT ' . (int) $limit : '';
+    if ($category === 'safety') {
+        return ['SELECT endpoint, p256dh, auth, lang FROM push_subscriptions' . $random, []];
+    }
+    return [
+        'SELECT endpoint, p256dh, auth, lang FROM push_subscriptions'
+        . ' WHERE categories IS NULL OR FIND_IN_SET(?, categories)' . $random,
+        [$category],
+    ];
+}
+
+/**
  * Category-aware news push: safety goes to EVERYONE; otherwise only to
  * subscriptions that chose this category (categories NULL = all, empty = safety only).
  * title/body may be language maps ({de:…,en:…}); the text is resolved per
  * subscription language and only truncated afterwards.
+ *
+ * $limit > 0 draws that many subscriptions at random instead of sending to all
+ * (prize draws). The draw happens HERE, i.e. at send time - never when the news
+ * is written - so a scheduled news picks its winners the moment it goes out.
  * @return array{total:int,sent:int,removed:int}
  */
-function push_send_news(array $payload, string $category): array
+function push_send_news(array $payload, string $category, int $limit = 0): array
 {
     $pdo = push_db();
-    if ($category === 'safety') {
-        $rows = $pdo->query('SELECT endpoint, p256dh, auth, lang FROM push_subscriptions')->fetchAll();
-    } else {
-        $stmt = $pdo->prepare(
-            'SELECT endpoint, p256dh, auth, lang FROM push_subscriptions
-             WHERE categories IS NULL OR FIND_IN_SET(?, categories)'
-        );
-        $stmt->execute([$category]);
-        $rows = $stmt->fetchAll();
-    }
+    [$sql, $params] = push_news_query($category, $limit);
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute($params);
+    $rows = $stmt->fetchAll();
 
     $total = ['total' => 0, 'sent' => 0, 'removed' => 0];
     foreach (push_rows_by_lang($rows) as $lang => $group) {

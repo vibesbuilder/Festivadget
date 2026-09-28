@@ -103,6 +103,9 @@ export function useNewsFeed(): { items: FeedItem[]; safety: FeedItem[]; isLoadin
     const newsBase = adminNews ?? news ?? [];
     const firstOpenMs = getFirstOpenAt();
     const editorial: FeedItem[] = [...newsBase, ...(liveNews ?? [])].filter((n) => {
+      // Push-only items (prize draws) are delivered as a push notification to the
+      // drawn subscriptions and never appear in the feed.
+      if (n.pushOnly) return false;
       const published = parse(n.publishAt) <= now;
       const notExpired = !n.expiresAt || parse(n.expiresAt) > now;
       // Hide X minutes after the first app open (per device).

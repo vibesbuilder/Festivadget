@@ -61,6 +61,13 @@ export interface NewsItem {
   hideAfterFirstOpenMin?: number;
   image?: string;
   link?: { label: LocalizedText; url: string };
+  // Push targeting, set in the CMS (prize draws). "random" sends the push to
+  // pushCount randomly drawn subscriptions instead of all of them; the draw runs
+  // on the server at send time. pushOnly keeps the item out of the news feed, so
+  // only the drawn subscriptions ever see it.
+  pushAudience?: "all" | "random";
+  pushCount?: number;
+  pushOnly?: boolean;
 }
 
 // §7.8 sponsors.json

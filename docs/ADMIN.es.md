@@ -137,7 +137,11 @@ se sigue mezclando **adicionalmente**.)
    El cron envía push automáticamente con las entradas nuevas (filtro por
    categoría, ver `docs/PUSH.es.md`). Las **categorías de push automático** se
    eligen en «Ajustes» (`pushNewsCategories`). La pestaña Push envía de
-   inmediato a todas las suscripciones (`push_broadcast` de `sender.php`).
+   inmediato a todas las suscripciones (`push_broadcast` de `sender.php`). El
+   formulario de una noticia nueva está **arriba del todo** en la pestaña. Por
+   noticia se eligen los **destinatarios del push**: todos (por defecto) o una
+   **selección aleatoria** con su número, opcionalmente **solo como push** (fuera
+   del feed), para sorteos; ver `docs/PUSH.es.md`.
 5. **Override en vivo para todos los dominios** ✅ — `useDataset` prefiere
    `data/app-<dominio>.json` (ver arriba). Fundamento para 6/7.
 6. **Editores de contenido por dominio**

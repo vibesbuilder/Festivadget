@@ -177,6 +177,19 @@ immer). Manuelle Pushes aus `push/admin.php` gehen weiterhin an **alle** Abos.
 > Quelle der News für den Auto-Push ist `data/admin-news.json` (der „News"-Tab im CMS), sonst
 > der Build-Stand `news.json`.
 
+### Gewinnspiele: Push an eine zufällige Auswahl
+
+Jede News geht wahlweise an **alle** (Vorgabe) oder an eine **zufällige Auswahl**: im
+„News"-Tab „Zufällig (Gewinnspiel)" wählen und die Anzahl der Empfänger eintragen. Gezogen
+wird am Server erst im Moment des Sendens (`ORDER BY RAND() LIMIT n` in `push_news_query()`),
+nie beim Speichern – eine geplante News zieht ihre Gewinner also beim Versand. Der
+Kategorie-Filter gilt weiterhin.
+
+Mit **„Nur als Push senden"** bleibt die News aus dem Newsfeed heraus (`pushOnly: true`):
+Nur die gezogenen Abos sehen die Nachricht – Sinn eines Gewinnspiels und zugleich ein Anreiz,
+Push zu aktivieren. Beachte: `admin-news.json` liegt öffentlich am Webspace – also keine
+Gutschein-Codes oder andere Geheimnisse in den Text schreiben.
+
 ## Sicherheit
 
 - `push/config.php` und `push/vendor/` sind in `.gitignore` und werden per `.htaccess`

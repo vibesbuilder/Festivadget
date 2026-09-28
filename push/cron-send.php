@@ -203,8 +203,11 @@ if ($autoPushNews) {
         if ($ref === 'news:' || isset($seen[$ref])) {
             continue;
         }
-        // Only relevant news (chosen categories OR pinned).
-        $relevant = in_array($item['category'] ?? '', $categories, true) || !empty($item['pinned']);
+        // Only relevant news (chosen categories OR pinned). Push-only items exist
+        // solely to be pushed (they never show up in the feed), so they always count.
+        $relevant = in_array($item['category'] ?? '', $categories, true)
+            || !empty($item['pinned'])
+            || !empty($item['pushOnly']);
         if (!$relevant) {
             continue;
         }
@@ -229,12 +232,14 @@ if ($autoPushNews) {
 
         // title/body may be language maps; resolution + truncation per subscription
         // language is handled by push_send_news.
+        // Prize draws: pick the winners now, right before sending.
+        $limit = ($item['pushAudience'] ?? '') === 'random' ? (int) ($item['pushCount'] ?? 0) : 0;
         $report = push_send_news([
             'title' => $item['title'] ?? '',
             'body'  => $item['body'] ?? '',
             'url'   => '/news',
             'tag'   => 'news',
-        ], (string) ($item['category'] ?? 'general'));
+        ], (string) ($item['category'] ?? 'general'), $limit);
         $ins->execute([$ref]);
         $result['news']++;
         $result['sent'] += $report['sent'];

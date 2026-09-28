@@ -132,7 +132,11 @@ fil – le `live-news.json` de Telegram continue d'être mélangé **en plus**.)
    cron pousse automatiquement les nouvelles entrées (filtre par catégorie,
    voir `docs/PUSH.fr.md`). Les **catégories de push auto** se choisissent sous
    « Réglages » (`pushNewsCategories`). L'onglet Push envoie immédiatement à
-   tous les abonnements (`push_broadcast` de `sender.php`).
+   tous les abonnements (`push_broadcast` de `sender.php`). Le formulaire d'une
+   nouvelle actu se trouve **tout en haut** de l'onglet. Pour chaque actu, on
+   choisit les **destinataires du push** : tous (par défaut) ou une **sélection
+   aléatoire** avec un nombre, éventuellement **uniquement en push** (hors du
+   fil) – pour les tirages au sort, voir `docs/PUSH.fr.md`.
 5. **Override live pour tous les domaines** ✅ — `useDataset` préfère
    `data/app-<domaine>.json` (voir plus haut). Fondation pour 6/7.
 6. **Éditeurs de contenu par domaine**

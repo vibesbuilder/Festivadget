@@ -204,6 +204,20 @@ toujours vers **tous** les abonnements.
 > La source des actus pour le push auto est `data/admin-news.json` (l'onglet
 > « Actus » du CMS), sinon l'état du build `news.json`.
 
+### Tirages au sort : push à une sélection aléatoire
+
+Chaque actu vise soit **tout le monde** (par défaut), soit une **sélection aléatoire** :
+dans l'onglet « Actus », choisir « Aléatoire (tirage au sort) » et indiquer le nombre de
+destinataires. Le tirage a lieu sur le serveur au moment de l'envoi
+(`ORDER BY RAND() LIMIT n` dans `push_news_query()`), jamais à l'enregistrement : une actu
+programmée tire donc ses gagnants au moment du départ. Le filtre de catégorie s'applique
+toujours.
+
+Avec **« Envoyer uniquement en push »**, l'actu reste hors du fil (`pushOnly: true`) : seuls
+les abonnements tirés au sort voient le message – tout l'intérêt d'un tirage, et une
+incitation à activer le push. Attention : `admin-news.json` est un fichier public sur
+l'hébergement – n'y mettez ni codes promo ni autres secrets.
+
 ## Sécurité
 
 - `push/config.php` et `push/vendor/` sont dans `.gitignore` et protégés en

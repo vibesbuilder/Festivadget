@@ -190,6 +190,19 @@ still go to **all** subscriptions.
 > The news source for the auto-push is `data/admin-news.json` (the "News" tab
 > in the CMS), otherwise the build state `news.json`.
 
+### Prize draws: push to a random subset
+
+Each news item can target **everyone** (default) or a **random draw**: in the
+"News" tab pick "Random (prize draw)" plus the number of recipients. The draw runs
+on the server the moment the push goes out (`ORDER BY RAND() LIMIT n` in
+`push_news_query()`) - never when the item is saved, so a scheduled news picks its
+winners at send time. The category filter still applies.
+
+With **"Send as push only"** the item is kept out of the news feed
+(`pushOnly: true`): only the drawn subscriptions ever see the message - the point of
+a draw, and an incentive to enable push. Keep in mind that `admin-news.json` is a
+public file on the web space: do not put voucher codes or other secrets in the text.
+
 ## Security
 
 - `push/config.php` and `push/vendor/` are in `.gitignore` and additionally

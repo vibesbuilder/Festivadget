@@ -124,7 +124,10 @@ file exists, it **replaces** `news.json` in the feed – Telegram
    automatically (category filter, see `docs/PUSH.md`). **Auto-push
    categories** are chosen under "Settings" (`pushNewsCategories`). The push
    tab sends immediately to all subscriptions (`push_broadcast` from
-   `sender.php`).
+   `sender.php`). The form for a new item sits at the **top** of the tab. Per
+   item you choose the **push recipients**: everyone (default) or a **random
+   draw** with a number of recipients, optionally **push only** (kept out of
+   the feed) - for prize draws, see `docs/PUSH.md`.
 5. **Live override for all domains** ✅ — `useDataset` prefers
    `data/app-<domain>.json` (see above). Foundation for 6/7.
 6. **Content editors per domain**

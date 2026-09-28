@@ -200,6 +200,19 @@ igualmente a **todas** las suscripciones.
 > La fuente de noticias del push automático es `data/admin-news.json` (la
 > pestaña «Noticias» del CMS); si no, el estado del build `news.json`.
 
+### Sorteos: push a una selección aleatoria
+
+Cada noticia se dirige a **todos** (por defecto) o a una **selección aleatoria**: en la
+pestaña «Noticias» elige «Aleatorio (sorteo)» e indica el número de destinatarios. El sorteo
+ocurre en el servidor justo al enviar (`ORDER BY RAND() LIMIT n` en `push_news_query()`),
+nunca al guardar: una noticia programada sortea sus ganadores en el momento del envío. El
+filtro de categoría se sigue aplicando.
+
+Con **«Enviar solo como push»** la noticia se mantiene fuera del feed (`pushOnly: true`):
+solo los suscriptores sorteados ven el mensaje, que es el sentido de un sorteo y a la vez un
+incentivo para activar el push. Ten en cuenta que `admin-news.json` es un archivo público en
+el alojamiento: no pongas códigos de descuento ni otros secretos en el texto.
+
 ## Seguridad
 
 - `push/config.php` y `push/vendor/` están en `.gitignore` y además protegidos

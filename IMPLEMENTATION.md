@@ -446,6 +446,10 @@ interface NewsItem {
   publishAt: string;      // client shows it only from this point in time
   expiresAt?: string; pinned?: boolean;
   image?: string; link?: { label: LocalizedText; url: string };
+  // Push targeting, set in the CMS (see docs/PUSH.md): "random" draws pushCount
+  // subscriptions at send time instead of pushing to all of them; pushOnly keeps
+  // the item out of the feed, so only the drawn subscriptions see it.
+  pushAudience?: "all" | "random"; pushCount?: number; pushOnly?: boolean;
 }
 ```
 > **Localizable content**: `title`, `body` and `link.label` accept either a plain

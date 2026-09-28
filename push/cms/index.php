@@ -467,6 +467,16 @@ if (cms_logged_in() && ($_POST['do'] ?? '') !== '' && $_POST['do'] !== 'logout' 
                     if (!empty($row['pinned'])) {
                         $item['pinned'] = true;
                     }
+                    // Push targeting (prize draws): a random subset instead of all
+                    // subscriptions, optionally push-only (kept out of the feed).
+                    // The draw itself happens at send time, not here.
+                    if (($row['pushAudience'] ?? 'all') === 'random') {
+                        $item['pushAudience'] = 'random';
+                        $item['pushCount'] = max(1, (int) ($row['pushCount'] ?? 1));
+                        if (!empty($row['pushOnly'])) {
+                            $item['pushOnly'] = true;
+                        }
+                    }
                     $lurl = trim((string) ($row['linkUrl'] ?? ''));
                     if ($lurl !== '') {
                         $label = cms_loc_from_post($row['linkLabel'] ?? '');
@@ -512,7 +522,8 @@ if (cms_logged_in() && ($_POST['do'] ?? '') !== '' && $_POST['do'] !== 'logout' 
                             if ($pub > $nowDt) { $skipped++; continue; } // erst ab Veröffentlichung
                             $r = push_send_news(
                                 ['title' => $it['title'] ?? '', 'body' => $it['body'] ?? '', 'url' => '/news', 'tag' => 'news'],
-                                (string) ($it['category'] ?? 'general')
+                                (string) ($it['category'] ?? 'general'),
+                                ($it['pushAudience'] ?? '') === 'random' ? (int) ($it['pushCount'] ?? 0) : 0
                             );
                             $ins->execute([$ref]);
                             $sent += (int) ($r['sent'] ?? 0);
@@ -1288,8 +1299,9 @@ $cmsTitle = trim((string) ($cmsFest['name'] ?? '')) ?: 'Festivadget';
     </form>
 
   <?php elseif ($tab === 'news'):
+    // The empty form for a new entry sits at the TOP (shortest way to "write news").
     $items = cms_news_items();
-    $items[] = ['id' => '', 'title' => '', 'body' => '', 'category' => 'general', 'publishAt' => '', 'expiresAt' => '', 'pinned' => false, 'link' => null, '__new' => true]; ?>
+    array_unshift($items, ['id' => '', 'title' => '', 'body' => '', 'category' => 'general', 'publishAt' => '', 'expiresAt' => '', 'pinned' => false, 'link' => null, '__new' => true]); ?>
     <form method="post" class="card">
       <input type="hidden" name="do" value="save_news">
       <input type="hidden" name="csrf" value="<?= cms_h($csrf) ?>">
@@ -1361,6 +1373,24 @@ $cmsTitle = trim((string) ($cmsFest['name'] ?? '')) ?: 'Festivadget';
                 <textarea name="news[<?= $i ?>][body][<?= $tl ?>]"><?= cms_h(cms_loc_get($it['body'] ?? '', $tl)) ?></textarea></label>
             <?php endforeach; ?>
           </details>
+          <?php $aud = (($it['pushAudience'] ?? 'all') === 'random') ? 'random' : 'all';
+          $rndOff = $aud === 'random' ? '' : ' disabled'; ?>
+          <div class="grid2">
+            <label class="fld"><span><?= cms_h(cms_t('Push-Empfänger')) ?></span>
+              <select name="news[<?= $i ?>][pushAudience]"
+                onchange="var f=this.closest('.item').querySelectorAll('[data-rnd]');for(var k=0;k&lt;f.length;k++){f[k].disabled=this.value!=='random';}">
+                <option value="all" <?= $aud === 'all' ? 'selected' : '' ?>><?= cms_h(cms_t('Alle')) ?></option>
+                <option value="random" <?= $aud === 'random' ? 'selected' : '' ?>><?= cms_h(cms_t('Zufällig (Gewinnspiel)')) ?></option>
+              </select></label>
+            <label class="fld"><span><?= cms_h(cms_t('Anzahl Empfänger')) ?></span>
+              <input type="number" min="1" step="1" data-rnd<?= $rndOff ?> name="news[<?= $i ?>][pushCount]"
+                value="<?= cms_h((string) ($it['pushCount'] ?? '')) ?>"></label>
+          </div>
+          <label class="row">
+            <input type="checkbox" data-rnd<?= $rndOff ?> name="news[<?= $i ?>][pushOnly]" value="1" <?= !empty($it['pushOnly']) ? 'checked' : '' ?>>
+            <span><?= cms_t('Nur als Push senden – <b>nicht im Newsfeed anzeigen</b> <span class="muted">(nur die gezogenen Abos sehen die Nachricht)</span>') ?></span>
+          </label>
+          <p class="muted" style="margin:.2rem 0 0"><?= cms_h(cms_t('Die Empfänger werden erst beim Senden gezogen – auch bei einem später automatisch gesendeten Push.')) ?></p>
           <label class="row">
             <input type="checkbox" name="news[<?= $i ?>][pushNow]" value="1">
             <span><?= cms_t('Beim Speichern <b>sofort pushen</b> <span class="muted">(einmalig; nur wenn bereits veröffentlicht; Web-Push muss eingerichtet sein)</span>') ?></span>

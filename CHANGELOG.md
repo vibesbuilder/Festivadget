@@ -5,6 +5,22 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.0.0/), Versionier
 
 ## [Unreleased]
 
+### Added
+- **Push an eine zufällige Auswahl (Gewinnspiele).** Je News wählt man im CMS die
+  **Push-Empfänger**: „Alle" (Vorgabe) oder „Zufällig (Gewinnspiel)" mit Anzahl.
+  Gezogen wird erst im Moment des Sendens (`ORDER BY RAND() LIMIT n` in
+  `push_news_query()`) – auch bei einer News, die der Cron später automatisch
+  verschickt. Der Kategorie-Filter gilt unverändert weiter.
+- **„Nur als Push senden"** je News (`pushOnly`): Der Eintrag bleibt aus dem
+  Newsfeed heraus, nur die gezogenen Abos bekommen die Nachricht – der Anreiz,
+  Push zu aktivieren. Hinweis: `admin-news.json` liegt öffentlich am Webspace,
+  also keine Gutschein-Codes in den Text schreiben.
+- Neue optionale News-Felder `pushAudience`, `pushCount`, `pushOnly` (§7.7).
+
+### Changed
+- **CMS-Tab „News": Das Formular für eine neue News steht jetzt ganz oben** statt
+  ganz unten – der Weg zum Schreiben ist kürzer.
+
 ## [1.7.0] - 2026-08-25
 
 ### Added
