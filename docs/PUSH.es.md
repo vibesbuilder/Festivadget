@@ -27,14 +27,14 @@ El backend es deliberadamente mínimo: unos pocos **archivos PHP** en la carpeta
 > **Atajo de subida:** `deploy-data.bat push` sube todos los `push\*.php`,
 > excepto `config.php`/`config.example.php`/`vapid-keys.php` (y sin `vendor\`).
 
-La parte cliente (service worker + interruptor «Activar notificaciones» bajo
-**Más**) ya está incluida en la app.
+La parte cliente (service worker + la tarjeta «Notificaciones» en inicio y bajo
+**Mi plan**) ya está incluida en la app.
 
 ## Dos máquinas: ¿quién hace qué?
 
 Intervienen **dos** lugares. Cada paso está marcado con su lugar:
 
-- 💻 **PC local** (tu equipo Windows con Node/npm + el proyecto): construir la
+- 💻 **PC local** (tu equipo Windows con Node/pnpm + el proyecto): construir la
   app, generar claves, preparar `config.php`, subirlo todo con
   `deploy-data.bat`/FTP.
 - 🌐 **Hosting** (p. ej. World4You): aquí corren los **archivos PHP** +
@@ -42,7 +42,7 @@ Intervienen **dos** lugares. Cada paso está marcado con su lugar:
   lo incluye) **o** en el **panel del cliente** (cron, base de datos), o
   directamente nada: entonces lo haces todo en el PC y solo subes archivos.
 
-> Regla básica: **todos los comandos `npm …` = 💻 PC.** **PHP/cron/BD = 🌐
+> Regla básica: **todos los comandos `pnpm …` = 💻 PC.** **PHP/cron/BD = 🌐
 > hosting.** Si tu hosting **no tiene SSH**, no necesitas allí **ninguna línea
 > de comandos**: todo se hace en el PC y se sube por FTP (ver notas por paso).
 
@@ -84,8 +84,8 @@ un `cronSecret` (cadena aleatoria). `config.php` está en `.gitignore`.
 ### 5. 💻 Desplegar la app
 La clave pública ya no necesita entrar en el build: la app la obtiene en
 tiempo de ejecución vía `push/vapid.php` (que lee `config.php`) y la recuerda
-en `localStorage`. Basta con ejecutar **`deploy-data.bat full`**: el
-interruptor «Notificaciones» bajo **Más** aparece en cuanto la clave es
+en `localStorage`. Basta con ejecutar **`deploy-data.bat full`**: la
+tarjeta «Notificaciones» en inicio aparece en cuanto la clave es
 accesible.
 *(Alternativa opcional: definir `VITE_VAPID_PUBLIC_KEY` en el `.env` de la
 app; entonces el interruptor está desde la primera carga, sin petición al
@@ -173,7 +173,7 @@ historial; las cifras actuales se ven igualmente en vivo.
 ## Pruebas
 
 1. Abrir la app por **HTTPS** (el push requiere HTTPS; iOS solo como PWA instalada, iOS 16.4+).
-2. En **Más → Notificaciones → Activar**, crear la suscripción (el navegador pide permiso).
+2. En **inicio** (o bajo **Mi plan**), tocar **Notificaciones → Activar** para crear la suscripción (el navegador pide permiso).
 3. Abrir `push/admin.php`, iniciar sesión, enviar un mensaje de prueba → aparece la notificación.
 4. Probar el cron: `php push/cron-send.php` (CLI) o llamar a la URL con `?key=`; el informe JSON muestra `candidates`/`sent`.
 
@@ -212,6 +212,20 @@ Con **«Enviar solo como push»** la noticia se mantiene fuera del feed (`pushOn
 solo los suscriptores sorteados ven el mensaje, que es el sentido de un sorteo y a la vez un
 incentivo para activar el push. Ten en cuenta que `admin-news.json` es un archivo público en
 el alojamiento: no pongas códigos de descuento ni otros secretos en el texto.
+
+## Idioma de los push (por suscripción)
+
+Cada suscripción guarda el **idioma de la app** del dispositivo
+(`push_subscriptions.lang`; la app lo envía al suscribirse y lo vuelve a
+sincronizar cuando el visitante cambia de idioma). Los push se componen
+entonces por idioma: los títulos y textos de noticias que sean mapas de
+idiomas (ver `docs/DATEN.es.md`, 2.4) se resuelven como en la app (idioma de
+la suscripción → `en` → `de` → primer valor), y los textos generados del
+resumen «Pronto en directo» y de los recordatorios de «Mi plan» vienen de
+`push/texts.php`, que contiene textos cortos para los 32 idiomas de la app.
+Las suscripciones sin idioma (filas antiguas) reciben el valor por defecto de
+`app-config.json` → `languageDefault`; si no, inglés. La columna `lang` se
+añade automáticamente en la primera ejecución tras la actualización.
 
 ## Seguridad
 

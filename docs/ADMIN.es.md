@@ -39,7 +39,10 @@ para todos los administradores (guardado en `push/cms-settings.json`, bloqueado
 por `.htaccess`, nunca en el repositorio). El alemán es el idioma fuente; la
 tabla de traducción está en `push/cms/i18n.php` (función `cms_t()`), las claves
 que falten recaen en alemán. El **idioma de la app** lo elige cada visitante de
-forma independiente dentro de la propia app (alemán/inglés/francés/español).
+forma independiente dentro de la propia app (uno de 32 idiomas, lista en el
+README). El valor por defecto para quienes aún no han elegido se fija en
+Ajustes → «Idioma predeterminado de la app» (`languageDefault`); los contenidos
+se pueden traducir por idioma (ver «Contenidos multilingües en los editores»).
 
 ## Pestaña Ayuda
 
@@ -125,10 +128,16 @@ se sigue mezclando **adicionalmente**.)
    Joomla/WordPress» trae título/texto del artículo **solo** para las entradas
    así marcadas; la estructura y las entradas manuales se conservan. (Primero
    guardar, luego importar.)
-3. **Ajustes globales** ✅ — `lineupImageLimit` (artistas con imagen),
-   `background` (gráfico de fondo on/off), `themeDefault` (`dark`/`light`,
-   solo aplica mientras el visitante no elija por sí mismo). En
-   `app-config.json`.
+3. **Ajustes globales** ✅ — en `app-config.json`: `lineupImageLimit`
+   (artistas con imagen), `background`/`backgroundImage` (gráfico de fondo
+   on/off, imagen propia de las subidas), `homeHeader` (nombre del festival +
+   fecha en inicio), `themeDefault` (`dark`/`light`) y `languageDefault` (uno
+   de los 32 idiomas de la app); ambos solo aplican mientras el visitante no
+   elija por sí mismo; `contactUrl`/`impressumUrl` (destinos de las entradas
+   «Contacto» y «Aviso legal» del menú Más; sin URL la entrada queda oculta,
+   porque cada instancia tiene su propio aviso legal) y la automatización de
+   push (`autoPushNews`, `autoPushUpcoming`, `upcomingWindowMin`,
+   `pushNewsCategories`; ver `docs/PUSH.es.md`).
 4. **Noticias y push** ✅ — editor de noticias (título, texto Markdown,
    categoría, fijar, publicación/caducidad, enlace opcional) →
    `data/admin-news.json`. **Única** gestión de noticias: se rellena la primera
@@ -193,6 +202,65 @@ se sigue mezclando **adicionalmente**.)
    segura (`rehype-raw`+`rehype-sanitize`, lista blanca adicional de hosts de
    iframe en el cliente).
 
+## Contenidos multilingües en los editores
+
+Los visitantes eligen uno de 32 idiomas de la app; los contenidos pueden
+acompañarlos. En los editores de **infos**, **noticias** (título, texto, texto
+del enlace), **POI** (nombre, descripción), **categorías de POI** (etiqueta) y
+**artistas** (bio), cada campo de texto tiene un bloque desplegable
+**«Traducciones»** (en/fr/es por defecto). Un campo con solo el texto alemán
+sigue siendo una cadena simple, totalmente compatible con datos monolingües.
+Los demás idiomas que ya tengan contenido (p. ej. desde el editor JSON)
+aparecen también en el bloque y se conservan al guardar. Los días del
+festival y las notas de entradas se traducen con el editor JSON de la pestaña
+«Contenido». Formato y orden de respaldo: `docs/DATEN.es.md`, apartado 2.4.
+
+## Pestaña Tiempo
+
+Proveedor meteorológico y ubicación para el widget de inicio y la página del
+tiempo. Se guarda en `push/weather-settings.json` (bloqueado por `.htaccess`,
+puede contener claves de API; sustituye a `weather` en `push/config.php`).
+
+- **Proveedor**: GeoSphere Austria (Austria, sin clave), MET Norway (mundial,
+  sin clave), OpenWeather o WeatherAPI.com (mundial, requiere clave de API
+  gratuita, que se introduce en el mismo formulario). La atribución mostrada en
+  la app sigue al proveedor.
+- **Ubicación**: latitud/longitud más un nombre para mostrar; con GeoSphere,
+  opcionalmente un ID de estación TAWES para el valor «ahora».
+- **«Guardar y probar la conexión»** guarda, vacía la caché y obtiene una
+  previsión de inmediato; los errores aparecen en la pestaña «Registro».
+- El servidor guarda la previsión en caché 15 minutos
+  (`push/weather-cache.json`, sin cron); **«Vaciar la caché del tiempo»** fuerza
+  una descarga nueva.
+
+## Pestaña Estadísticas
+
+Cifras de uso anónimas de la app, recogidas por `push/track.php` en la tabla
+`app_stats_events` (la misma base de datos que push; SQLite posible para
+pruebas locales). Por cada página vista solo se guardan la hora, el nombre de
+la página, el idioma, el tema y dos identificadores **aleatorios**
+(dispositivo, sesión): sin IP, sin user agent, sin cookies. El contador solo
+funciona en el build de producción.
+
+Se muestran: páginas vistas, dispositivos únicos y sesiones (total / últimos 7
+días / hoy), las secciones más usadas, una serie diaria de los últimos 14
+días, la distribución por horas (en los días del festival; si no, los últimos
+7 días), instalaciones PWA y dispositivos que abren la app como PWA instalada,
+además de la distribución de idiomas y temas. El **historial de suscripciones
+push** (cifras por categoría, escritas por el cron) también aparece aquí y se
+puede exportar a CSV. **«Restablecer estadísticas»** borra todos los datos de
+páginas vistas; el historial de suscripciones se conserva.
+
+## Pestaña Registro
+
+Registro del servidor (tabla `app_log`, conservado 90 días): envíos push,
+cambios de suscripción, inicios de sesión de administración, errores de
+tiempo/Telegram y errores de cliente notificados por la app
+(`push/track.php`, como máximo 5 por sesión). Las entradas tienen un nivel
+(`info`/`warn`/`error`) y una fuente (`push`, `auth`, `weather`, `client`, …);
+la pestaña muestra las 200 más recientes, se filtra por nivel y fuente y se
+puede vaciar por completo. No se registran IP ni datos personales.
+
 ## Obtener un token Bearer de la API de Joomla (para el importador)
 
 El token se **genera en Joomla** (por usuario), no se «encuentra» en ninguna
@@ -232,6 +300,14 @@ inválido/ausente.
 | `themeDefault`     | `"dark"\|"light"?`  | Tema por defecto mientras el visitante no elija él mismo.   |
 | `homeVideo`        | `object?`           | Vídeo de intro en inicio (`{url, source, enabled}`), gestionado en la pestaña CMS «Branding». |
 | `branding`         | `object?`           | Imagen de marca (colores, fuente, logo, título, iconos), gestionada en la pestaña CMS «Branding». |
+| `homeHeader`       | `boolean?`          | Nombre del festival + fecha en inicio (por defecto: on).    |
+| `languageDefault`  | `string?`           | Idioma por defecto de la app mientras el visitante no elija (uno de los 32 códigos; si no, el valor del build, si no `en`). |
+| `contactUrl`       | `string?`           | Destino de la entrada «Contacto» del menú Más; vacío = entrada oculta. |
+| `impressumUrl`     | `string?`           | Destino de la entrada «Aviso legal» del menú Más; vacío = entrada oculta. |
+| `autoPushNews`     | `boolean?`          | El cron envía automáticamente las noticias nuevas (ver `docs/PUSH.es.md`). |
+| `autoPushUpcoming` | `boolean?`          | Resumen «Pronto en directo» + recordatorios de «Mi plan» vía cron. |
+| `upcomingWindowMin`| `number?`           | Antelación del resumen en minutos (por defecto 60).         |
+| `pushNewsCategories` | `string[]?`       | Categorías que el cron envía automáticamente (`info`/`lineup`/`general`; seguridad siempre). |
 
 Claves del menú Más: `news`, `map`, `info`, `sponsors`, `tickets`, `contact`,
 `impressum`, `theme`, `language` (deben coincidir con `src/routes/More.tsx`).

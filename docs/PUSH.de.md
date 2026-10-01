@@ -25,21 +25,21 @@ und `gmp` **oder** `bcmath`, dazu **MySQL** und **Cron**.
 > **Upload-Kurzweg:** `deploy-data.bat push` lädt alle `push\*.php` hoch –
 > außer `config.php`/`config.example.php`/`vapid-keys.php` (und ohne `vendor\`).
 
-Die Client-Seite (Service Worker + „Benachrichtigungen aktivieren"-Schalter unter **Mehr**)
-ist bereits in der App enthalten.
+Die Client-Seite (Service Worker + die Karte „Benachrichtigungen" auf Home und unter
+**Mein Plan**) ist bereits in der App enthalten.
 
 ## Zwei Maschinen – wer macht was?
 
 Es sind **zwei** Orte beteiligt. Jeder Schritt unten ist mit dem Ort markiert:
 
-- 💻 **Lokaler PC** (dein Windows-Rechner mit Node/npm + dem Projekt): App bauen, Keys
+- 💻 **Lokaler PC** (dein Windows-Rechner mit Node/pnpm + dem Projekt): App bauen, Keys
   erzeugen, `config.php` vorbereiten, alles per `deploy-data.bat`/FTP hochladen.
 - 🌐 **Webspace** (World4You): hier laufen die **PHP-Dateien** + **MySQL** + **Cron**.
   Befehle dort gibst du **per SSH** ein (falls dein Tarif SSH hat) **oder** im
   **Kundenbereich** (Cron, Datenbank) bzw. gar nicht direkt – dann erledigst du alles am
   PC und lädst nur Dateien hoch.
 
-> Faustregel: **Alle `npm …`-Befehle = 💻 PC.** **PHP/Cron/DB = 🌐 Webspace.**
+> Faustregel: **Alle `pnpm …`-Befehle = 💻 PC.** **PHP/Cron/DB = 🌐 Webspace.**
 > Hat dein Webspace **kein SSH**, brauchst du dort **keine Kommandozeile** – du machst alles
 > am PC und lädst per FTP hoch (siehe Hinweise je Schritt).
 
@@ -79,7 +79,7 @@ ein `cronSecret` (zufällige Zeichenkette). `config.php` ist gitignored.
 ### 5. 💻 App deployen
 Der Public-Key muss **nicht** mehr in den Build: Die App holt ihn zur Laufzeit von
 `push/vapid.php` (liest `config.php`) und merkt ihn sich in `localStorage`. Einfach
-**`deploy-data.bat full`** ausführen – der „Benachrichtigungen"-Schalter unter **Mehr**
+**`deploy-data.bat full`** ausführen – die Karte „Benachrichtigungen" auf Home
 erscheint, sobald der Key erreichbar ist.
 *(Optionaler Fallback: `VITE_VAPID_PUBLIC_KEY` in der App-`.env` setzen – dann ist der
 Schalter schon beim allerersten Seitenaufruf ohne Backend-Anfrage da.)*
@@ -153,7 +153,7 @@ trotzdem live sichtbar.
 ## Testen
 
 1. App über **HTTPS** öffnen (Push braucht HTTPS; iOS nur als installierte PWA, iOS 16.4+).
-2. Unter **Mehr → Benachrichtigungen → Aktivieren** das Abo anlegen (Browser fragt um Erlaubnis).
+2. Auf **Home** (oder unter **Mein Plan**) bei **Benachrichtigungen → Aktivieren** das Abo anlegen (Browser fragt um Erlaubnis).
 3. `push/admin.php` öffnen, anmelden, Testnachricht senden → Notification erscheint.
 4. Cron testen: `php push/cron-send.php` (CLI) bzw. die URL mit `?key=` aufrufen – JSON-Report zeigt `candidates`/`sent`.
 
@@ -189,6 +189,19 @@ Mit **„Nur als Push senden"** bleibt die News aus dem Newsfeed heraus (`pushOn
 Nur die gezogenen Abos sehen die Nachricht – Sinn eines Gewinnspiels und zugleich ein Anreiz,
 Push zu aktivieren. Beachte: `admin-news.json` liegt öffentlich am Webspace – also keine
 Gutschein-Codes oder andere Geheimnisse in den Text schreiben.
+
+## Push-Sprache (je Abo)
+
+Jedes Abo merkt sich die **App-Sprache** des Geräts
+(`push_subscriptions.lang`; die App schickt sie beim Abonnieren mit und gleicht
+sie beim Sprachwechsel neu ab). Pushs werden dann je Sprache zusammengesetzt:
+News-Titel und -Texte, die Sprach-Maps sind (siehe `docs/DATEN.de.md`, 2.4),
+werden wie in der App aufgelöst (Abo-Sprache → `en` → `de` → erster Wert), die
+erzeugten Texte des „Gleich live"-Digests und der „Mein Plan"-Erinnerungen
+kommen aus `push/texts.php`, das Kurztexte für alle 32 App-Sprachen enthält.
+Abos ohne Sprache (ältere Zeilen) bekommen die Vorgabe aus `app-config.json`
+→ `languageDefault`, sonst Englisch. Die Spalte `lang` wird beim ersten Lauf
+nach dem Update automatisch angelegt.
 
 ## Sicherheit
 

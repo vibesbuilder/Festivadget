@@ -37,7 +37,10 @@ serverseitig für alle Admins (gespeichert in `push/cms-settings.json`, per
 `.htaccess` gesperrt, nie im Repo). Deutsch ist die Quellsprache; die
 Übersetzungstabelle liegt in `push/cms/i18n.php` (Funktion `cms_t()`), fehlende
 Schlüssel fallen auf Deutsch zurück. Die **App-Sprache** wählt jeder Gast
-unabhängig davon selbst in der App (Deutsch/Englisch/Französisch/Spanisch).
+unabhängig davon selbst in der App (eine von 32 Sprachen, Liste in der
+README). Die Vorgabe für Gäste, die noch nicht gewählt haben, steht unter
+Einstellungen → „Standard-Sprache der App" (`languageDefault`); Inhalte lassen
+sich je Sprache übersetzen (siehe „Mehrsprachige Inhalte in den Editoren").
 
 ## Hilfe-Tab
 
@@ -112,9 +115,16 @@ Telegram-`live-news.json` wird weiterhin **zusätzlich** gemischt.)
    importieren" zieht **nur** für die so markierten Einträge Titel/Text aus dem
    Artikel; Struktur und manuelle Einträge bleiben. (Erst speichern, dann
    importieren.)
-3. **Globale Einstellungen** ✅ — `lineupImageLimit` (Acts mit Bild),
-   `background` (Hintergrundgrafik an/aus), `themeDefault` (`dark`/`light`,
-   greift nur solange der Gast nicht selbst umschaltet). In `app-config.json`.
+3. **Globale Einstellungen** ✅ — in `app-config.json`: `lineupImageLimit`
+   (Acts mit Bild), `background`/`backgroundImage` (Hintergrundgrafik an/aus,
+   eigenes Bild aus den Uploads), `homeHeader` (Festivalname + Datum auf Home),
+   `themeDefault` (`dark`/`light`) und `languageDefault` (eine der 32
+   App-Sprachen) – beide greifen nur, solange der Gast nicht selbst wählt –,
+   `contactUrl`/`impressumUrl` (Ziele der MEHR-Punkte „Kontakt" und
+   „Impressum"; ohne URL bleibt der Punkt ausgeblendet, weil jede Instanz ihr
+   eigenes Impressum hat) sowie die Push-Automatik (`autoPushNews`,
+   `autoPushUpcoming`, `upcomingWindowMin`, `pushNewsCategories` – siehe
+   `docs/PUSH.de.md`).
 4. **News & Push** ✅ — News-Editor (Titel, Markdown-Text, Kategorie, anpinnen,
    Veröffentlichen/Ablauf, optionaler Link) → `data/admin-news.json`. **Einzige**
    News-Verwaltung: beim ersten Öffnen aus `news.json` vorbefüllt, danach **ersetzt**
@@ -166,6 +176,63 @@ Telegram-`live-news.json` wird weiterhin **zusätzlich** gemischt.)
    fremde iframes werden entfernt (`cms_clean_html`). Die App rendert das sicher
    (`rehype-raw`+`rehype-sanitize`, zusätzliche iframe-Host-Whitelist im Client).
 
+## Mehrsprachige Inhalte in den Editoren
+
+Gäste wählen eine von 32 App-Sprachen; Inhalte können mitziehen. In den
+Editoren für **Infos**, **News** (Titel, Text, Link-Text), **POIs** (Name,
+Beschreibung), **POI-Kategorien** (Label) und **Artists** (Bio) hat jedes
+Textfeld einen aufklappbaren Block **„Übersetzungen"** (standardmäßig
+en/fr/es). Ein Feld mit nur dem deutschen Text bleibt ein einfacher String –
+voll kompatibel mit einsprachigen Daten. Weitere Sprachen, die bereits Inhalt
+tragen (z. B. aus dem JSON-Editor), erscheinen ebenfalls im Block und bleiben
+beim Speichern erhalten. Festivaltage und Ticket-Hinweise werden über den
+JSON-Editor im Tab „Inhalte" übersetzt. Format und Fallback-Reihenfolge:
+`docs/DATEN.de.md`, Abschnitt 2.4.
+
+## Wetter-Tab
+
+Wetter-Anbieter und Standort für das Home-Widget und die Wetterseite.
+Gespeichert in `push/weather-settings.json` (per `.htaccess` gesperrt, kann
+API-Keys enthalten; überschreibt `weather` in `push/config.php`).
+
+- **Anbieter**: GeoSphere Austria (Österreich, kein Key), MET Norway (weltweit,
+  kein Key), OpenWeather oder WeatherAPI.com (weltweit, kostenloser API-Key
+  nötig – wird im selben Formular eingetragen). Die Attribution in der App
+  folgt dem Anbieter.
+- **Standort**: Breite/Länge plus Anzeigename; bei GeoSphere optional eine
+  TAWES-Station-ID für den Messwert „aktuell".
+- **„Speichern & Verbindung testen"** speichert, leert den Cache und holt
+  sofort eine Vorhersage – Fehler landen im Tab „Protokoll".
+- Der Server cacht die Vorhersage 15 Minuten (`push/weather-cache.json`, kein
+  Cron nötig); **„Wetter-Cache leeren"** erzwingt einen frischen Abruf.
+
+## Statistik-Tab
+
+Anonyme Nutzungszahlen der App, gesammelt von `push/track.php` in der Tabelle
+`app_stats_events` (gleiche Datenbank wie Push; für lokale Tests auch
+SQLite). Je Seitenaufruf werden nur Zeit, Seitenname, Sprache, Theme und zwei
+**zufällige** Kennungen (Gerät, Sitzung) gespeichert – keine IPs, keine
+User-Agents, keine Cookies. Der Zähler läuft nur im Produktions-Build.
+
+Angezeigt werden: Seitenaufrufe, eindeutige Geräte und Sitzungen (gesamt /
+letzte 7 Tage / heute), die meistgenutzten Bereiche, ein Tagesverlauf der
+letzten 14 Tage, die Stunden-Verteilung (an den Festivaltagen, sonst die
+letzten 7 Tage), PWA-Installationen und Geräte, die die App als installierte
+PWA starten, sowie die Sprach- und Theme-Verteilung. Der
+**Push-Abo-Verlauf** (Zahlen je Kategorie, vom Cron geschrieben) steht
+ebenfalls hier und lässt sich als CSV exportieren. **„Statistik
+zurücksetzen"** löscht alle Seitenaufruf-Daten; der Abo-Verlauf bleibt.
+
+## Protokoll-Tab
+
+Server-Protokoll (Tabelle `app_log`, 90 Tage aufbewahrt): Push-Versand,
+Abo-Änderungen, Admin-Logins, Wetter-/Telegram-Fehler und von der App
+gemeldete Client-Fehler (`push/track.php`, höchstens 5 je Sitzung). Einträge
+haben eine Stufe (`info`/`warn`/`error`) und eine Quelle (`push`, `auth`,
+`weather`, `client`, …); der Tab zeigt die neuesten 200, filtert nach Stufe
+und Quelle und lässt sich komplett leeren. IPs oder personenbezogene Daten
+werden nicht protokolliert.
+
 ## Joomla API Bearer-Token besorgen (für den Server-Importer)
 
 Der Token wird **in Joomla erzeugt** (pro Benutzer), nicht irgendwo „gefunden":
@@ -201,6 +268,14 @@ Der Token wird **in Joomla erzeugt** (pro Benutzer), nicht irgendwo „gefunden"
 | `themeDefault`     | `"dark"\|"light"?`  | Standard-Theme, solange der Gast nicht selbst wählt.|
 | `homeVideo`        | `object?`           | Intro-Video auf Home (`{url, source, enabled}`), gepflegt im CMS-Tab „Branding". |
 | `branding`         | `object?`           | Kunden-Branding (Farben, Schrift, Logo, Titel, Icons) – gepflegt über den CMS-Tab „Branding". |
+| `homeHeader`       | `boolean?`          | Festivalname + Datum auf Home (Default: an).        |
+| `languageDefault`  | `string?`           | Standard-Sprache der App, solange der Gast nicht selbst wählt (einer der 32 Codes; sonst Build-Vorgabe, sonst `en`). |
+| `contactUrl`       | `string?`           | Ziel des MEHR-Punkts „Kontakt"; leer = Punkt ausgeblendet. |
+| `impressumUrl`     | `string?`           | Ziel des MEHR-Punkts „Impressum"; leer = Punkt ausgeblendet. |
+| `autoPushNews`     | `boolean?`          | Cron pusht neue News automatisch (siehe `docs/PUSH.de.md`). |
+| `autoPushUpcoming` | `boolean?`          | „Gleich live"-Digest + „Mein Plan"-Erinnerungen per Cron. |
+| `upcomingWindowMin`| `number?`           | Vorlaufzeit des Digests in Minuten (Default 60).    |
+| `pushNewsCategories` | `string[]?`       | Kategorien, die der Cron automatisch pusht (`info`/`lineup`/`general`; Sicherheit immer). |
 
 MEHR-Schlüssel: `news`, `map`, `info`, `sponsors`, `tickets`, `contact`,
 `impressum`, `theme`, `language` (müssen mit `src/routes/More.tsx`

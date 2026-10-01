@@ -111,7 +111,7 @@ depuis le CSS T4**) :
 - **Date/heure/fuseau :** Luxon (indispensable à cause de `Europe/Vienna` + débordement de minuit)
 - **Carte :** Leaflet (`CRS.Simple`, ImageOverlay)
 - **PWA / service worker :** `vite-plugin-pwa` (Workbox en dessous)
-- **i18n :** `react-i18next` (de par défaut, en optionnel)
+- **i18n :** `react-i18next` (32 langues visiteurs, voir §14)
 - **Icônes :** `lucide-react`
 - **Rendu Markdown (infos/actus/bio) :** `react-markdown` + `remark-gfm`
 - **Génération `.ics` :** mini-fonction maison (pas de paquet nécessaire)
@@ -445,7 +445,7 @@ interface MapConfig {
 
 ### 7.7 `news.json`
 ```ts
-type LocalizedText = string | Partial<Record<"de" | "en" | "fr" | "es", string>>;
+type LocalizedText = string | Partial<Record<string, string>>; // clés = codes de langue de l'app (§14)
 type NewsCategory = "info" | "safety" | "lineup" | "general";
 interface NewsItem {
   id: string; title: LocalizedText; body: LocalizedText; category: NewsCategory;
@@ -669,20 +669,35 @@ Source configurable individuellement par page (§6.1, `info.overrides`).
 
 ## 14. Internationalisation (i18n)
 
-`react-i18next`, défaut **de**, optionnellement **en/fr/es**. Chaînes d'UI dans
-`src/i18n/{de,en,fr,es}.json`. Données de contenu monolingues (de) ; champs
-`*_en` optionnels possibles plus tard, pas dans le MVP.
+`react-i18next`. Les chaînes d'UI se trouvent dans `src/i18n/<code>.json`
+pour **32 langues visiteurs** (de, en, fr, es, it, nl, cs, pl, pt, fi, hu, sk,
+hr, da, sv, uk, ro, sl, tr, pt-BR, zh-CN, ja-JP, ko-KR, sq, af, el, hi, id, is,
+nb, ru, th ; registre `LANGUAGES` dans `src/i18n/config.ts`, `fallbackLng:
+en`). Le visiteur change de langue sous « Plus » ; le choix est conservé dans
+le store UI. Valeur par défaut sans choix : `languageDefault` de
+`app-config.json` (CMS → Réglages), sinon la variable de build
+`VITE_DEFAULT_LANGUAGE`, sinon `en`. Les formats de date suivent la langue ;
+le RTL n'est pas pris en charge.
+
+Les contenus sont multilingues via `LocalizedText` (§7.7) : un champ texte est
+une chaîne ou une carte de langues dont les clés sont ces codes, résolue par
+`lt()` dans `src/lib/localized.ts` (langue → en → de → première valeur).
+S'applique aux infos, actus, libellés de jours, POI et catégories, bios
+d'artistes et notes de billetterie ; le côté PHP (`push/texts.php`) résout de
+la même façon pour les push, envoyés dans la langue de l'abonnement.
+L'admin/CMS reste en quatre langues (de/en/fr/es, `push/cms/i18n.php`). Guide
+de maintenance : `docs/DATEN.fr.md`, section 2.4.
 
 ---
 
 ## 15. Build & déploiement (World4You)
 
 1. Créer `.env` avec les identifiants (depuis `.env.example`).
-2. `npm run import` → `import-from-source.ts` lit `content-sources.config.ts`,
+2. `pnpm run import` → `import-from-source.ts` lit `content-sources.config.ts`,
    récupère par élément de menu depuis manual/Joomla/WordPress, télécharge les
    images localement, écrit `public/data/*`.
-3. `npm run build:data` → valide le schéma, génère `version.json` (hashes).
-4. `npm run build` → build Vite vers `dist/`.
+3. `pnpm run build:data` → valide le schéma, génère `version.json` (hashes).
+4. `pnpm run build` → build Vite vers `dist/`.
 5. Téléverser `dist/` par SFTP dans le docroot du sous-domaine
    (`demo.festivadget.com`). **HTTPS obligatoire.**
 6. `.htaccess` (Apache) : repli SPA + en-têtes.

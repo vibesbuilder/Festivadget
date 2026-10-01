@@ -38,8 +38,11 @@ serveur pour tous les admins (stockée dans `push/cms-settings.json`, bloquée
 par `.htaccess`, jamais dans le dépôt). L'allemand est la langue source ; la
 table de traduction se trouve dans `push/cms/i18n.php` (fonction `cms_t()`),
 les clés manquantes retombent sur l'allemand. La **langue de l'app** est
-choisie indépendamment par chaque visiteur dans l'app elle-même
-(allemand/anglais/français/espagnol).
+choisie indépendamment par chaque visiteur dans l'app elle-même (l'une des
+32 langues, liste dans le README). La valeur par défaut pour les visiteurs
+qui n'ont pas encore choisi se règle sous Réglages → « Langue par défaut de
+l'app » (`languageDefault`) ; les contenus se traduisent par langue (voir
+« Contenus multilingues dans les éditeurs »).
 
 ## Onglet Aide
 
@@ -120,10 +123,16 @@ fil – le `live-news.json` de Telegram continue d'être mélangé **en plus**.)
    Joomla/WordPress » ne tire le titre/texte de l'article **que** pour les
    entrées ainsi marquées ; la structure et les entrées manuelles restent.
    (D'abord enregistrer, puis importer.)
-3. **Réglages globaux** ✅ — `lineupImageLimit` (artistes avec image),
-   `background` (fond graphique on/off), `themeDefault` (`dark`/`light`, ne
-   s'applique que tant que le visiteur n'a pas choisi lui-même). Dans
-   `app-config.json`.
+3. **Réglages globaux** ✅ — dans `app-config.json` : `lineupImageLimit`
+   (artistes avec image), `background`/`backgroundImage` (fond graphique
+   on/off, image personnelle issue des uploads), `homeHeader` (nom du festival
+   + date sur l'accueil), `themeDefault` (`dark`/`light`) et `languageDefault`
+   (l'une des 32 langues de l'app) – tous deux ne s'appliquent que tant que le
+   visiteur n'a pas choisi lui-même –, `contactUrl`/`impressumUrl` (cibles des
+   entrées « Contact » et « Mentions légales » du menu Plus ; sans URL l'entrée
+   reste masquée, chaque instance ayant ses propres mentions légales) ainsi que
+   l'automatisation push (`autoPushNews`, `autoPushUpcoming`,
+   `upcomingWindowMin`, `pushNewsCategories` – voir `docs/PUSH.fr.md`).
 4. **Actus & push** ✅ — éditeur d'actus (titre, texte Markdown, catégorie,
    épinglage, publication/expiration, lien optionnel) → `data/admin-news.json`.
    **Seule** gestion des actus : pré-remplie depuis `news.json` à la première
@@ -189,6 +198,68 @@ fil – le `live-news.json` de Telegram continue d'être mélangé **en plus**.)
    sécurité (`rehype-raw`+`rehype-sanitize`, liste blanche d'hôtes iframe
    supplémentaire côté client).
 
+## Contenus multilingues dans les éditeurs
+
+Les visiteurs choisissent l'une des 32 langues de l'app ; les contenus peuvent
+suivre. Dans les éditeurs d'**infos**, d'**actus** (titre, texte, libellé du
+lien), de **POI** (nom, description), de **catégories de POI** (libellé) et
+d'**artistes** (bio), chaque champ texte possède un bloc dépliable
+**« Traductions »** (en/fr/es par défaut). Un champ ne contenant que le texte
+allemand reste une simple chaîne – entièrement compatible avec des données
+monolingues. Les autres langues qui portent déjà du contenu (p. ex. via
+l'éditeur JSON) apparaissent aussi dans le bloc et sont conservées à
+l'enregistrement. Les jours du festival et les notes de billetterie se
+traduisent via l'éditeur JSON de l'onglet « Contenus ». Format et ordre de
+repli : `docs/DATEN.fr.md`, section 2.4.
+
+## Onglet Météo
+
+Fournisseur météo et lieu pour le widget de l'accueil et la page météo.
+Stockés dans `push/weather-settings.json` (bloqué par `.htaccess`, peut
+contenir des clés d'API ; remplace `weather` dans `push/config.php`).
+
+- **Fournisseur** : GeoSphere Austria (Autriche, sans clé), MET Norway
+  (mondial, sans clé), OpenWeather ou WeatherAPI.com (mondial, clé d'API
+  gratuite requise – saisie dans le même formulaire). L'attribution affichée
+  dans l'app suit le fournisseur.
+- **Lieu** : latitude/longitude plus un nom d'affichage ; pour GeoSphere, en
+  option un identifiant de station TAWES pour la mesure « actuelle ».
+- **« Enregistrer & tester la connexion »** enregistre, vide le cache et
+  récupère aussitôt une prévision – les erreurs apparaissent dans l'onglet
+  « Journal ».
+- Le serveur met la prévision en cache 15 minutes (`push/weather-cache.json`,
+  aucun cron nécessaire) ; **« Vider le cache météo »** force une nouvelle
+  récupération.
+
+## Onglet Statistiques
+
+Chiffres d'utilisation anonymes de l'app, collectés par `push/track.php` dans
+la table `app_stats_events` (même base que le push ; SQLite possible pour les
+tests locaux). Par page vue, seuls l'heure, le nom de la page, la langue, le
+thème et deux identifiants **aléatoires** (appareil, session) sont stockés –
+pas d'IP, pas de user agent, pas de cookie. Le compteur ne tourne que dans le
+build de production.
+
+Affichés : pages vues, appareils uniques et sessions (total / 7 derniers
+jours / aujourd'hui), les sections les plus utilisées, une série quotidienne
+des 14 derniers jours, la répartition horaire (les jours du festival, sinon
+les 7 derniers jours), les installations PWA et les appareils qui lancent
+l'app comme PWA installée, ainsi que la répartition des langues et des
+thèmes. L'**historique des abonnements push** (effectifs par catégorie, écrit
+par le cron) figure ici aussi et s'exporte en CSV. **« Réinitialiser les
+statistiques »** supprime toutes les données de pages vues ; l'historique des
+abonnements est conservé.
+
+## Onglet Journal
+
+Journal serveur (table `app_log`, conservé 90 jours) : envois push,
+changements d'abonnement, connexions admin, erreurs météo/Telegram et erreurs
+client signalées par l'app (`push/track.php`, au plus 5 par session). Les
+entrées ont un niveau (`info`/`warn`/`error`) et une source (`push`, `auth`,
+`weather`, `client`, …) ; l'onglet affiche les 200 plus récentes, se filtre
+par niveau et source et peut être vidé entièrement. Aucune IP ni donnée
+personnelle n'est journalisée.
+
 ## Obtenir un jeton Bearer de l'API Joomla (pour l'importeur serveur)
 
 Le jeton est **généré dans Joomla** (par utilisateur), il ne se « trouve » pas :
@@ -228,6 +299,14 @@ jeton invalide/manquant.
 | `themeDefault`     | `"dark"\|"light"?`  | Thème par défaut tant que le visiteur n'a pas choisi.      |
 | `homeVideo`        | `object?`           | Vidéo d'intro sur l'accueil (`{url, source, enabled}`), gérée dans l'onglet CMS « Branding ». |
 | `branding`         | `object?`           | Identité client (couleurs, police, logo, titre, icônes) – gérée via l'onglet CMS « Branding ». |
+| `homeHeader`       | `boolean?`          | Nom du festival + date sur l'accueil (défaut : on).        |
+| `languageDefault`  | `string?`           | Langue par défaut de l'app tant que le visiteur n'a pas choisi (l'un des 32 codes ; sinon la valeur du build, sinon `en`). |
+| `contactUrl`       | `string?`           | Cible de l'entrée « Contact » du menu Plus ; vide = entrée masquée. |
+| `impressumUrl`     | `string?`           | Cible de l'entrée « Mentions légales » du menu Plus ; vide = entrée masquée. |
+| `autoPushNews`     | `boolean?`          | Le cron pousse automatiquement les nouvelles actus (voir `docs/PUSH.fr.md`). |
+| `autoPushUpcoming` | `boolean?`          | Digest « Bientôt en live » + rappels « Mon planning » via cron. |
+| `upcomingWindowMin`| `number?`           | Délai d'anticipation du digest en minutes (défaut 60).     |
+| `pushNewsCategories` | `string[]?`       | Catégories poussées automatiquement par le cron (`info`/`lineup`/`general` ; sécurité toujours). |
 
 Clés du menu Plus : `news`, `map`, `info`, `sponsors`, `tickets`, `contact`,
 `impressum`, `theme`, `language` (doivent correspondre à `src/routes/More.tsx`).

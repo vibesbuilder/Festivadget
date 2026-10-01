@@ -108,7 +108,7 @@ Tokens als Tailwind-Theme (Platzhalter — **exakte Hex/Fonts aus T4-CSS verifiz
 - **Datum/Zeit/Zeitzone:** Luxon (zwingend wegen `Europe/Vienna` + Mitternachtsüberlauf)
 - **Karte:** Leaflet (`CRS.Simple`, ImageOverlay)
 - **PWA / Service Worker:** `vite-plugin-pwa` (Workbox darunter)
-- **i18n:** `react-i18next` (de Standard, en optional)
+- **i18n:** `react-i18next` (32 Besucher-Sprachen, siehe §14)
 - **Icons:** `lucide-react`
 - **Markdown-Rendering (Info/News/Bio):** `react-markdown` + `remark-gfm`
 - **`.ics`-Erzeugung:** eigene Mini-Funktion (kein Paket nötig)
@@ -429,7 +429,7 @@ interface MapConfig {
 
 ### 7.7 `news.json`
 ```ts
-type LocalizedText = string | Partial<Record<"de" | "en" | "fr" | "es", string>>;
+type LocalizedText = string | Partial<Record<string, string>>; // Schlüssel = App-Sprachcodes (§14)
 type NewsCategory = "info" | "safety" | "lineup" | "general";
 interface NewsItem {
   id: string; title: LocalizedText; body: LocalizedText; category: NewsCategory;
@@ -640,18 +640,33 @@ falls Shop Framing per `X-Frame-Options`/CSP verbietet (KUPF/Öticket prüfen).
 
 ## 14. Internationalisierung (i18n)
 
-`react-i18next`, Standard **de**, optional **en**. UI-Strings in `src/i18n/{de,en}.json`.
-Inhaltsdaten einsprachig (de); optionale `*_en`-Felder später möglich, nicht im MVP.
+`react-i18next`. UI-Strings liegen in `src/i18n/<code>.json` für **32
+Besucher-Sprachen** (de, en, fr, es, it, nl, cs, pl, pt, fi, hu, sk, hr, da,
+sv, uk, ro, sl, tr, pt-BR, zh-CN, ja-JP, ko-KR, sq, af, el, hi, id, is, nb, ru,
+th; Registry `LANGUAGES` in `src/i18n/config.ts`, `fallbackLng: en`). Der Gast
+schaltet unter „Mehr" um; die Wahl liegt im UI-Store. Vorgabe ohne Wahl:
+`languageDefault` aus `app-config.json` (CMS → Einstellungen), sonst die
+Build-Variable `VITE_DEFAULT_LANGUAGE`, sonst `en`. Datumsformate folgen der
+Sprache; RTL wird nicht unterstützt.
+
+Inhalte sind über `LocalizedText` (§7.7) mehrsprachig: Ein Textfeld ist ein
+String oder eine Sprach-Map mit diesen Codes als Schlüssel, aufgelöst mit
+`lt()` in `src/lib/localized.ts` (Sprache → en → de → erster Wert). Gilt für
+Infos, News, Tages-Labels, POIs und Kategorien, Artist-Bios und
+Ticket-Hinweise; die PHP-Seite (`push/texts.php`) löst für Pushs identisch auf,
+die in der Abo-Sprache rausgehen. Admin-UI/CMS bleibt viersprachig
+(de/en/fr/es, `push/cms/i18n.php`). Pflege-Anleitung: `docs/DATEN.de.md`,
+Abschnitt 2.4.
 
 ---
 
 ## 15. Build & Deployment (World4You)
 
 1. `.env` mit Credentials anlegen (aus `.env.example`).
-2. `npm run import` → `import-from-source.ts` liest `content-sources.config.ts`, holt je Menüpunkt
+2. `pnpm run import` → `import-from-source.ts` liest `content-sources.config.ts`, holt je Menüpunkt
    aus manual/Joomla/WordPress, lädt Bilder lokal, schreibt `public/data/*`.
-3. `npm run build:data` → validiert Schema, erzeugt `version.json` (Hashes).
-4. `npm run build` → Vite-Build nach `dist/`.
+3. `pnpm run build:data` → validiert Schema, erzeugt `version.json` (Hashes).
+4. `pnpm run build` → Vite-Build nach `dist/`.
 5. Upload `dist/` per SFTP auf Subdomain-Docroot (`demo.festivadget.com`). **HTTPS Pflicht.**
 6. `.htaccess` (Apache): SPA-Fallback + Header.
 

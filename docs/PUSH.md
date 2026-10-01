@@ -26,14 +26,14 @@ Prerequisites: **PHP 8.1+** with `openssl`, `mbstring` and `gmp` **or**
 > **Upload shortcut:** `deploy-data.bat push` uploads all `push\*.php` –
 > except `config.php`/`config.example.php`/`vapid-keys.php` (and without `vendor\`).
 
-The client side (service worker + "Enable notifications" toggle under **More**)
-is already included in the app.
+The client side (service worker + the "Notifications" card on the home page
+and under **My plan**) is already included in the app.
 
 ## Two machines – who does what?
 
 **Two** places are involved. Every step below is marked with the place:
 
-- 💻 **Local PC** (your Windows machine with Node/npm + the project): build the
+- 💻 **Local PC** (your Windows machine with Node/pnpm + the project): build the
   app, generate keys, prepare `config.php`, upload everything via
   `deploy-data.bat`/FTP.
 - 🌐 **Web space** (e.g. World4You): this is where the **PHP files** + **MySQL**
@@ -41,7 +41,7 @@ is already included in the app.
   **or** in the **customer panel** (cron, database) or not directly at all –
   then you do everything on the PC and only upload files.
 
-> Rule of thumb: **all `npm …` commands = 💻 PC.** **PHP/cron/DB = 🌐 web space.**
+> Rule of thumb: **all `pnpm …` commands = 💻 PC.** **PHP/cron/DB = 🌐 web space.**
 > If your web space has **no SSH**, you need **no command line** there – you do
 > everything on the PC and upload via FTP (see the notes per step).
 
@@ -84,7 +84,7 @@ a `cronSecret` (random string). `config.php` is gitignored.
 The public key no longer needs to go into the build: the app fetches it at
 runtime from `push/vapid.php` (which reads `config.php`) and remembers it in
 `localStorage`. Just run **`deploy-data.bat full`** – the "Notifications"
-toggle under **More** appears as soon as the key is reachable.
+card on the home page appears as soon as the key is reachable.
 *(Optional fallback: set `VITE_VAPID_PUBLIC_KEY` in the app `.env` – then the
 toggle is there on the very first page load without a backend request.)*
 
@@ -164,7 +164,7 @@ visible live.
 ## Testing
 
 1. Open the app via **HTTPS** (push needs HTTPS; iOS only as an installed PWA, iOS 16.4+).
-2. Under **More → Notifications → Enable** create the subscription (the browser asks for permission).
+2. On the **home page** (or under **My plan**) tap **Notifications → Enable** to create the subscription (the browser asks for permission).
 3. Open `push/admin.php`, log in, send a test message → notification appears.
 4. Test the cron: `php push/cron-send.php` (CLI) or call the URL with `?key=` – the JSON report shows `candidates`/`sent`.
 
@@ -202,6 +202,19 @@ With **"Send as push only"** the item is kept out of the news feed
 (`pushOnly: true`): only the drawn subscriptions ever see the message - the point of
 a draw, and an incentive to enable push. Keep in mind that `admin-news.json` is a
 public file on the web space: do not put voucher codes or other secrets in the text.
+
+## Push language (per subscription)
+
+Every subscription stores the **app language** of the device
+(`push_subscriptions.lang`; the app sends it when subscribing and re-syncs it
+when the visitor switches language). Pushes are then composed per language:
+news titles and texts that are language maps (see `docs/DATEN.md`, 2.4) are
+resolved like in the app (subscription language → `en` → `de` → first value),
+and the generated texts of the "On soon" digest and the "My plan" reminders
+come from `push/texts.php`, which carries short texts for all 32 app
+languages. Subscriptions without a language (older rows) get the default from
+`app-config.json` → `languageDefault`, otherwise English. The `lang` column is
+added automatically on the first run after the update.
 
 ## Security
 

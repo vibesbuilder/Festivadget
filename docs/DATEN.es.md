@@ -15,9 +15,9 @@ Esta guía explica dos cosas:
 El flujo es siempre:
 
 ```bash
-npm run import      # trae datos según content-sources.config.ts -> public/data/*.json
-npm run build:data  # valida + genera version.json (hashes)
-npm run build       # build de producción a dist/  (solo para el despliegue)
+pnpm run import      # trae datos según content-sources.config.ts -> public/data/*.json
+pnpm run build:data  # valida + genera version.json (hashes)
+pnpm run build       # build de producción a dist/  (solo para el despliegue)
 ```
 
 ---
@@ -57,7 +57,7 @@ JOOMLA_API_TOKEN=tu-token-real
 - El **nombre** `JOOMLA_API_TOKEN` debe coincidir con `tokenEnv` en
   `content-sources.config.ts` (por defecto: `tokenEnv: "JOOMLA_API_TOKEN"`).
 - El **valor** es el token de API generado en Joomla en 1.1.
-- `npm run import` carga el `.env` **automáticamente** (Node
+- `pnpm run import` carga el `.env` **automáticamente** (Node
   `process.loadEnvFile`) y pasa el token al adaptador de Joomla (como
   encabezado HTTP `Authorization: Bearer …`).
 
@@ -114,7 +114,7 @@ accesible por enlace directo (`/info/<id>`) (práctico para preparar/previsualiz
 ### 1.4 Importar
 
 ```bash
-npm run import && npm run build:data
+pnpm run import && pnpm run build:data
 ```
 
 El adaptador de Joomla (`scripts/adapters/joomla.ts`) llama a
@@ -155,7 +155,7 @@ actualmente el camino más robusto para los horarios es el CSV, ver abajo).
 Mientras una sección esté en `provider: "manual"`, los datos vienen de la
 carpeta [`content/`](../content/). Basta con rellenar allí los archivos de
 ejemplo con contenidos reales y ejecutar
-`npm run import && npm run build:data`.
+`pnpm run import && pnpm run build:data`.
 
 | Sección | Archivo | Formato |
 |---|---|---|
@@ -173,6 +173,7 @@ ejemplo con contenidos reales y ejecutar
 | Tiempo | `content/weather.json` | objeto |
 
 Las descripciones exactas de los campos están en `src/types/index.ts` o en
+Los campos de texto marcados como `LocalizedText` en el esquema también pueden ser un mapa de idiomas; ver **2.4**.
 IMPLEMENTATION.de.md §7.
 
 ### 2.0 Artistas (`content/artists.json`)
@@ -230,6 +231,12 @@ Opcional:
   de la primera apertura de la app en ese dispositivo** (individual por
   dispositivo; ideal para la noticia de bienvenida).
 - **`pinned`** (true) → arriba del feed. **`link`** → botón: `{ "label": "…", "url": "…" }`.
+- **`pushAudience`** / **`pushCount`** / **`pushOnly`** (opcional, normalmente
+  se fijan en la pestaña «Noticias» del CMS): `"pushAudience": "random"` envía
+  el push a `pushCount` suscripciones elegidas al azar en vez de a todas; el
+  sorteo se hace en el servidor en el momento del envío. `"pushOnly": true`
+  mantiene la noticia fuera del feed: solo las suscripciones sorteadas la ven
+  (sorteos, ver `docs/PUSH.es.md`).
 - Enlaces **dentro del texto** vía Markdown: `[texto](https://…)` o interno `[Mi plan](/favorites)`.
 
 ```json
@@ -316,3 +323,48 @@ Tras `import` + `build:data`, subir al servidor solo los `dist/data/*.json`
 modificados **y** `version.json`. La app consulta `version.json` cada 2 minutos
 y solo recarga los conjuntos de datos modificados: **no** hace falta
 reconstruir/subir la app completa (IMPLEMENTATION.de.md §15).
+
+### 2.4 Contenidos multilingües (mapas de idiomas)
+
+Los visitantes eligen uno de los **32 idiomas de la app** (lista en el
+README). Los contenidos pueden acompañarlos: donde el esquema indica
+`LocalizedText`, un campo de texto es **o bien** una cadena simple
+(monolingüe, como en todos los ejemplos anteriores) **o bien** un mapa de
+idiomas:
+
+```json
+{ "id": "parken", "title": { "de": "Anreise & Parken", "en": "Getting there & parking", "it": "Arrivo e parcheggio" } }
+```
+
+Campos que aceptan un mapa de idiomas:
+
+| Archivo | Campos |
+|---|---|
+| `info.json` | `title`, `body` |
+| `news.json` | `title`, `body`, `link.label` |
+| `festival.json` | `days[].label` |
+| `pois.json` | `name`, `description` |
+| `poi-categories.json` | `label` |
+| `artists.json` | `bio` |
+| `tickets.json` | `providers[].note` |
+
+Reglas:
+
+- Las **claves** son los códigos de idioma de la app: `de`, `en`, `fr`, `es`,
+  `it`, `nl`, `cs`, `pl`, `pt`, `fi`, `hu`, `sk`, `hr`, `da`, `sv`, `uk`,
+  `ro`, `sl`, `tr`, `pt-BR`, `zh-CN`, `ja-JP`, `ko-KR`, `sq`, `af`, `el`,
+  `hi`, `id`, `is`, `nb`, `ru`, `th` (la misma lista que `LANGUAGES` en
+  `src/i18n/config.ts`). Un mapa no tiene que estar completo.
+- **Resolución** en la app: idioma del visitante → `en` → `de` → el primer
+  valor presente. Un mapa con solo `en` y `de` ya sirve a todos los
+  visitantes, y un mapa parcial nunca muestra una página vacía.
+- Los **mensajes push** resuelven títulos y textos de las noticias del mismo
+  modo, según el idioma de la suscripción (ver `docs/PUSH.es.md`).
+- El **CMS** muestra bajo cada uno de estos campos un bloque «Traducciones»
+  en los editores de infos, noticias, POI, categorías de POI y artistas; los
+  días del festival y las notas de entradas se traducen con el editor JSON.
+  El contenido en otros idiomas se conserva al guardar. El importador del
+  servidor (Joomla/WordPress) escribe el texto importado en la entrada `de`
+  de un mapa existente y deja los demás idiomas intactos.
+- Todo lo demás (nombres de escenarios, de patrocinadores y de artistas,
+  géneros, notas de los slots) sigue siendo monolingüe.

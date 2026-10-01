@@ -109,7 +109,7 @@ T4 CSS**):
 - **Date/time/timezone:** Luxon (mandatory because of `Europe/Vienna` + midnight overflow)
 - **Map:** Leaflet (`CRS.Simple`, ImageOverlay)
 - **PWA / service worker:** `vite-plugin-pwa` (Workbox underneath)
-- **i18n:** `react-i18next` (de default, en optional)
+- **i18n:** `react-i18next` (32 visitor languages, see §14)
 - **Icons:** `lucide-react`
 - **Markdown rendering (info/news/bio):** `react-markdown` + `remark-gfm`
 - **`.ics` generation:** own mini function (no package needed)
@@ -439,7 +439,7 @@ interface MapConfig {
 
 ### 7.7 `news.json`
 ```ts
-type LocalizedText = string | Partial<Record<"de" | "en" | "fr" | "es", string>>;
+type LocalizedText = string | Partial<Record<string, string>>; // keys = app language codes (§14)
 type NewsCategory = "info" | "safety" | "lineup" | "general";
 interface NewsItem {
   id: string; title: LocalizedText; body: LocalizedText; category: NewsCategory;
@@ -656,20 +656,33 @@ Source per page individually configurable (§6.1, `info.overrides`).
 
 ## 14. Internationalization (i18n)
 
-`react-i18next`, default **de**, optionally **en/fr/es**. UI strings in
-`src/i18n/{de,en,fr,es}.json`. Content data monolingual (de); optional `*_en`
-fields possible later, not in the MVP.
+`react-i18next`. UI strings live in `src/i18n/<code>.json` for **32 visitor
+languages** (de, en, fr, es, it, nl, cs, pl, pt, fi, hu, sk, hr, da, sv, uk,
+ro, sl, tr, pt-BR, zh-CN, ja-JP, ko-KR, sq, af, el, hi, id, is, nb, ru, th;
+registry `LANGUAGES` in `src/i18n/config.ts`, `fallbackLng: en`). The visitor
+switches under "More"; the choice is persisted in the UI store. Default without
+a choice: `languageDefault` from `app-config.json` (CMS → Settings), otherwise
+the build variable `VITE_DEFAULT_LANGUAGE`, otherwise `en`. Date formats follow
+the language; RTL is not supported.
+
+Content is multilingual via `LocalizedText` (§7.7): a text field is a string or
+a language map keyed by these codes, resolved with `lt()` in
+`src/lib/localized.ts` (language → en → de → first value). Applies to info
+pages, news, day labels, POIs and categories, artist bios and ticket notes; the
+PHP side (`push/texts.php`) resolves identically for pushes, which go out in
+the subscription language. The admin UI/CMS stays four-language (de/en/fr/es,
+`push/cms/i18n.php`). Maintenance guide: `docs/DATEN.md`, section 2.4.
 
 ---
 
 ## 15. Build & deployment (World4You)
 
 1. Create `.env` with credentials (from `.env.example`).
-2. `npm run import` → `import-from-source.ts` reads
+2. `pnpm run import` → `import-from-source.ts` reads
    `content-sources.config.ts`, fetches per menu item from
    manual/Joomla/WordPress, downloads images locally, writes `public/data/*`.
-3. `npm run build:data` → validates the schema, generates `version.json` (hashes).
-4. `npm run build` → Vite build into `dist/`.
+3. `pnpm run build:data` → validates the schema, generates `version.json` (hashes).
+4. `pnpm run build` → Vite build into `dist/`.
 5. Upload `dist/` via SFTP to the subdomain docroot (`demo.festivadget.com`). **HTTPS mandatory.**
 6. `.htaccess` (Apache): SPA fallback + headers.
 

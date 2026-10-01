@@ -28,14 +28,14 @@ plus **MySQL** et **cron**.
 > `push\*.php` – sauf `config.php`/`config.example.php`/`vapid-keys.php`
 > (et sans `vendor\`).
 
-Le côté client (service worker + interrupteur « Activer les notifications »
-sous **Plus**) est déjà inclus dans l'app.
+Le côté client (service worker + la carte « Notifications » sur l'accueil et
+sous **Mon planning**) est déjà inclus dans l'app.
 
 ## Deux machines – qui fait quoi ?
 
 **Deux** endroits sont impliqués. Chaque étape ci-dessous est marquée :
 
-- 💻 **PC local** (ta machine Windows avec Node/npm + le projet) : construire
+- 💻 **PC local** (ta machine Windows avec Node/pnpm + le projet) : construire
   l'app, générer les clés, préparer `config.php`, tout téléverser via
   `deploy-data.bat`/FTP.
 - 🌐 **Espace web** (p. ex. World4You) : c'est là que tournent les **fichiers
@@ -44,7 +44,7 @@ sous **Plus**) est déjà inclus dans l'app.
   voire pas du tout directement – alors tu fais tout sur le PC et tu
   téléverses seulement des fichiers.
 
-> Règle simple : **toutes les commandes `npm …` = 💻 PC.** **PHP/cron/BDD = 🌐
+> Règle simple : **toutes les commandes `pnpm …` = 💻 PC.** **PHP/cron/BDD = 🌐
 > espace web.** Si ton espace web n'a **pas de SSH**, tu n'y as besoin
 > d'**aucune ligne de commande** – tout se fait sur le PC, upload par FTP
 > (voir les notes par étape).
@@ -88,7 +88,7 @@ un `cronSecret` (chaîne aléatoire). `config.php` est gitignored.
 La clé publique n'a plus besoin d'entrer dans le build : l'app la récupère à
 l'exécution via `push/vapid.php` (qui lit `config.php`) et la mémorise dans
 `localStorage`. Il suffit d'exécuter **`deploy-data.bat full`** –
-l'interrupteur « Notifications » sous **Plus** apparaît dès que la clé est
+la carte « Notifications » sur l'accueil apparaît dès que la clé est
 joignable.
 *(Repli optionnel : définir `VITE_VAPID_PUBLIC_KEY` dans le `.env` de l'app –
 l'interrupteur est alors présent dès le tout premier chargement, sans requête
@@ -177,7 +177,7 @@ chiffres actuels restent visibles en direct.
 ## Tester
 
 1. Ouvrir l'app en **HTTPS** (le push exige HTTPS ; iOS seulement en PWA installée, iOS 16.4+).
-2. Sous **Plus → Notifications → Activer**, créer l'abonnement (le navigateur demande la permission).
+2. Sur l'**accueil** (ou sous **Mon planning**), toucher **Notifications → Activer** pour créer l'abonnement (le navigateur demande la permission).
 3. Ouvrir `push/admin.php`, se connecter, envoyer un message test → la notification apparaît.
 4. Tester le cron : `php push/cron-send.php` (CLI) ou appeler l'URL avec `?key=` – le rapport JSON montre `candidates`/`sent`.
 
@@ -217,6 +217,20 @@ Avec **« Envoyer uniquement en push »**, l'actu reste hors du fil (`pushOnly: 
 les abonnements tirés au sort voient le message – tout l'intérêt d'un tirage, et une
 incitation à activer le push. Attention : `admin-news.json` est un fichier public sur
 l'hébergement – n'y mettez ni codes promo ni autres secrets.
+
+## Langue des push (par abonnement)
+
+Chaque abonnement mémorise la **langue de l'app** de l'appareil
+(`push_subscriptions.lang` ; l'app l'envoie à l'abonnement et la resynchronise
+quand le visiteur change de langue). Les push sont alors composés par langue :
+les titres et textes d'actus qui sont des cartes de langues (voir
+`docs/DATEN.fr.md`, 2.4) sont résolus comme dans l'app (langue de l'abonnement
+→ `en` → `de` → première valeur), et les textes générés du digest « Bientôt en
+live » et des rappels « Mon planning » viennent de `push/texts.php`, qui
+contient des textes courts pour les 32 langues de l'app. Les abonnements sans
+langue (anciennes lignes) reçoivent la valeur par défaut de `app-config.json`
+→ `languageDefault`, sinon l'anglais. La colonne `lang` est ajoutée
+automatiquement au premier passage après la mise à jour.
 
 ## Sécurité
 

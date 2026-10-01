@@ -37,7 +37,10 @@ for all admins (stored in `push/cms-settings.json`, blocked via `.htaccess`,
 never in the repo). German is the source language; the translation table lives
 in `push/cms/i18n.php` (function `cms_t()`), missing keys fall back to German.
 The **app language** is chosen by each visitor independently in the app itself
-(German/English/French/Spanish).
+(one of 32 languages, list in the README). The default for visitors who have
+not chosen yet is set under Settings → "Default app language"
+(`languageDefault`); content can be translated per language (see
+"Multilingual content in the editors" below).
 
 ## Help tab
 
@@ -113,9 +116,16 @@ file exists, it **replaces** `news.json` in the feed – Telegram
    Joomla/WordPress" pulls title/text from the article **only** for entries
    marked this way; structure and manual entries remain. (Save first, then
    import.)
-3. **Global settings** ✅ — `lineupImageLimit` (acts with image), `background`
-   (background artwork on/off), `themeDefault` (`dark`/`light`, only applies
-   until the visitor toggles themselves). In `app-config.json`.
+3. **Global settings** ✅ — in `app-config.json`: `lineupImageLimit` (acts
+   with image), `background`/`backgroundImage` (background artwork on/off, own
+   image from the uploads), `homeHeader` (festival name + date on the home
+   page), `themeDefault` (`dark`/`light`) and `languageDefault` (one of the 32
+   app languages) – both only apply until the visitor chooses themselves –,
+   `contactUrl`/`impressumUrl` (targets of the More entries "Contact" and
+   "Legal notice"; without a URL the entry stays hidden, because every instance
+   has its own legal notice) and the push automation (`autoPushNews`,
+   `autoPushUpcoming`, `upcomingWindowMin`, `pushNewsCategories` – see
+   `docs/PUSH.md`).
 4. **News & push** ✅ — news editor (title, Markdown text, category, pin,
    publish/expiry, optional link) → `data/admin-news.json`. **The only** news
    management: pre-filled from `news.json` on first open, afterwards it
@@ -174,6 +184,61 @@ file exists, it **replaces** `news.json` in the feed – Telegram
    (`rehype-raw`+`rehype-sanitize`, additional iframe host whitelist in the
    client).
 
+## Multilingual content in the editors
+
+Visitors pick one of 32 app languages; content can follow. In the editors for
+**info pages**, **news** (title, text, link label), **POIs** (name,
+description), **POI categories** (label) and **artists** (bio) every text
+field has a collapsible **"Translations"** block (en/fr/es by default). A field
+with only the German text stays a plain string – fully compatible with
+single-language data. Further languages that already carry content (e.g. from
+the JSON editor) appear in the block as well and are kept on save. Festival
+days and ticket notes are translated via the JSON editor in the "Content"
+tab. Format and fallback order: `docs/DATEN.md`, section 2.4.
+
+## Weather tab
+
+Weather provider and location for the home widget and the weather page.
+Stored in `push/weather-settings.json` (blocked via `.htaccess`, may contain
+API keys; overrides `weather` in `push/config.php`).
+
+- **Provider**: GeoSphere Austria (Austria, no key), MET Norway (worldwide, no
+  key), OpenWeather or WeatherAPI.com (worldwide, free API key required –
+  entered in the same form). The attribution shown in the app follows the
+  provider.
+- **Location**: latitude/longitude plus a display name; for GeoSphere
+  optionally a TAWES station ID for the "now" reading.
+- **"Save & test connection"** saves, clears the cache and fetches a forecast
+  right away – errors land in the "Log" tab.
+- The server caches the forecast for 15 minutes (`push/weather-cache.json`, no
+  cron needed); **"Clear weather cache"** forces a fresh fetch.
+
+## Statistics tab
+
+Anonymous usage figures of the app, collected by `push/track.php` into the
+table `app_stats_events` (same database as push; SQLite possible for local
+tests). Per page view only the time, page name, language, theme and two
+**random** identifiers (device, session) are stored – no IPs, no user agents,
+no cookies. The counter runs in the production build only.
+
+Shown: page views, unique devices and sessions (total / last 7 days / today),
+the most used sections, a daily series of the last 14 days, the hourly
+distribution (on the festival days, otherwise the last 7 days), PWA
+installations and devices starting the app as an installed PWA, plus the
+language and theme distribution. The **push subscription history** (counts per
+category, written by the cron) is shown here too and can be exported as CSV.
+**"Reset statistics"** deletes all page-view data; the subscription history is
+kept.
+
+## Log tab
+
+Server log (table `app_log`, kept for 90 days): push sends, subscription
+changes, admin logins, weather/Telegram errors and client errors reported by
+the app (`push/track.php`, at most 5 per session). Entries have a level
+(`info`/`warn`/`error`) and a source (`push`, `auth`, `weather`, `client`, …);
+the tab shows the newest 200, can be filtered by level and source and cleared
+entirely. No IPs or personal data are logged.
+
 ## Getting a Joomla API bearer token (for the server importer)
 
 The token is **generated in Joomla** (per user), not "found" somewhere:
@@ -210,6 +275,14 @@ token invalid/missing.
 | `themeDefault`     | `"dark"\|"light"?`  | Default theme until the visitor picks one themselves.  |
 | `homeVideo`        | `object?`           | Intro video on home (`{url, source, enabled}`), managed in the CMS "Branding" tab. |
 | `branding`         | `object?`           | Customer branding (colours, font, logo, title, icons) – managed via the CMS "Branding" tab. |
+| `homeHeader`       | `boolean?`          | Festival name + date on the home page (default: on). |
+| `languageDefault`  | `string?`           | Default app language until the visitor picks one (one of the 32 codes; otherwise the build default, else `en`). |
+| `contactUrl`       | `string?`           | Target of the More entry "Contact"; empty = entry hidden. |
+| `impressumUrl`     | `string?`           | Target of the More entry "Legal notice"; empty = entry hidden. |
+| `autoPushNews`     | `boolean?`          | Cron pushes new news items automatically (see `docs/PUSH.md`). |
+| `autoPushUpcoming` | `boolean?`          | "On soon" digest + "My plan" reminders via cron. |
+| `upcomingWindowMin`| `number?`           | Lead time of the digest in minutes (default 60). |
+| `pushNewsCategories` | `string[]?`       | Categories the cron pushes automatically (`info`/`lineup`/`general`; safety always). |
 
 More menu keys: `news`, `map`, `info`, `sponsors`, `tickets`, `contact`,
 `impressum`, `theme`, `language` (must match `src/routes/More.tsx`).
