@@ -5,6 +5,19 @@ Format nach [Keep a Changelog](https://keepachangelog.com/de/1.0.0/), Versionier
 
 ## [Unreleased]
 
+### Changed
+- **Manuals auf den Stand von 1.8.1 gebracht** (je de/en/fr/es): `docs/DATEN`
+  beschreibt die Sprach-Maps (`LocalizedText`) für Infos, News, Tages-Labels,
+  POIs, Kategorien, Bios und Ticket-Hinweise samt Fallback-Kette und den 32
+  Sprachcodes sowie die News-Felder `pushAudience`/`pushCount`/`pushOnly`;
+  `docs/ADMIN` dokumentiert die Tabs Wetter, Statistik und Protokoll, die
+  Übersetzungs-Blöcke der Editoren und die fehlenden Einstellungen
+  (`homeHeader`, `languageDefault`, `contactUrl`/`impressumUrl`,
+  Push-Automatik); `docs/PUSH` erklärt den Push in der Abo-Sprache und nennt
+  den richtigen Fundort der Benachrichtigungs-Karte (Home/Mein Plan);
+  IMPLEMENTATION §14 beschreibt den heutigen i18n-Stand statt des MVP. Alle
+  `npm run` → `pnpm run`.
+
 ## [1.8.1] - 2026-09-28
 
 ### Fixed
