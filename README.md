@@ -1,5 +1,7 @@
 # Festivadget
 
+https://github.com/user-attachments/assets/819e1f77-8868-4c6e-8fc0-8014c5fe74a4
+
 **🇩🇪 [Deutsche Version](README.de.md)**
 
 Installable, offline-capable **Progressive Web App** that acts as a visitor companion

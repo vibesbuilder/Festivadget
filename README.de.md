@@ -1,5 +1,7 @@
 # Festivadget
 
+https://github.com/user-attachments/assets/819e1f77-8868-4c6e-8fc0-8014c5fe74a4
+
 **🇬🇧 [English version](README.md)**
 
 Installierbare, offline-fähige **Progressive Web App** als Besucher-Begleiter für
