@@ -21,7 +21,7 @@
     "@rid/core": "workspace:*",
     "@rid/tokens": "workspace:*",
     "@tanstack/react-query": "^5.59.0",
-    "i18next": "^23.15.1",
+    "i18next": "^26.3.4",
     "idb-keyval": "^6.2.1",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.451.0",
